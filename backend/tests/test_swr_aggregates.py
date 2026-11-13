@@ -466,41 +466,39 @@ def test_warm_loads_every_aggregate_and_a_second_warm_is_free(monkeypatch):
         loaders[case.name] = FakeLoader(case.fresh_value)
         _prepare(case, monkeypatch, loaders[case.name])
     result = warmup.warm_aggregates()
-    assert result == {label: "ok" for label, _m, _f in warmup.WARM_STEPS}
+    assert result == {label: "ok" for label, _f in warmup.WARM_STEPS}
     assert all(l.runs == 1 for l in loaders.values())
     warmup.warm_aggregates()
     assert all(l.runs == 1 for l in loaders.values()), "already loaded: nothing runs again"
 
 
 def test_warm_steps_cover_the_six_aggregates():
-    assert [m for _l, m, _f in warmup.WARM_STEPS] == [
-        "backend.utils.rarity_score",
-        "backend.utils.price_plausibility",
-        "backend.intelligence.deal_score_cache",
-        "backend.db.repositories.listings_repo",
-        "backend.db.repositories.listings_repo",
-        "backend.db.repositories.grid_cards_repo",
+    """Each step calls the warm function of its aggregate (the loaders are patched out)."""
+    assert [label for label, _f in warmup.WARM_STEPS] == [
+        "rarity counts",
+        "price plausibility",
+        "deal-score bands",
+        "public listings count",
+        "featured cars",
+        "fallback dealer urls",
     ]
-    import importlib
-
-    for _label, module, func in warmup.WARM_STEPS:
-        assert callable(getattr(importlib.import_module(module), func))
+    assert all(callable(f) for _label, f in warmup.WARM_STEPS)
 
 
-def test_a_failing_warm_step_does_not_stop_the_others(monkeypatch):
-    steps = (
-        ("one", "backend.utils.swr_refresh", "does_not_exist"),
-        ("two", "backend.utils.aggregate_warmup", "warm_enabled"),
-    )
-    result = warmup.warm_aggregates(steps)
+def test_a_failing_warm_step_does_not_stop_the_others():
+    def broken():
+        raise RuntimeError("database unavailable")
+
+    ran = []
+    result = warmup.warm_aggregates((("one", broken), ("two", lambda: ran.append(1))))
     assert result["one"].startswith("failed")
-    assert result["two"] == "ok"
+    assert result["two"] == "ok" and ran == [1]
 
 
 def test_warm_stops_starting_steps_after_the_deadline():
-    steps = (("a", "backend.utils.aggregate_warmup", "warm_enabled"),) * 2
-    result = warmup.warm_aggregates(steps, deadline=time.monotonic() - 1)
-    assert set(result.values()) == {"skipped"}
+    ran = []
+    result = warmup.warm_aggregates((("a", lambda: ran.append(1)),) * 2, deadline=time.monotonic() - 1)
+    assert set(result.values()) == {"skipped"} and ran == []
 
 
 def test_warm_blocking_is_capped_so_a_slow_boot_cannot_fail_the_deploy(monkeypatch):

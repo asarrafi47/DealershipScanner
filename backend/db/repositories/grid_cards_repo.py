@@ -709,7 +709,7 @@ _BG_STALE_MAX = int(os.environ.get("GRID_CARDS_BG_STALE_MAX", "3000"))
 # Cars with no stored card at all (not served until built) are queued nearest first, up
 # to this many per request; the client's refetch queues the next ones.
 _BG_OMITTED_MAX = int(os.environ.get("GRID_CARDS_BG_OMITTED_MAX", "5000"))
-_storm_warned_at = 0.0
+_storm_warned_at = float("-inf")  # monotonic seconds of the last warning
 _STORM_WARN_EVERY_S = 300.0
 
 

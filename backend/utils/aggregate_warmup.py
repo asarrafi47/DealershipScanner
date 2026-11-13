@@ -17,27 +17,63 @@ at most 90) is the longest the worker waits.
 
 from __future__ import annotations
 
-import importlib
 import logging
 import os
 import threading
 import time
+from typing import Callable
 
 _log = logging.getLogger(__name__)
 
 DEFAULT_CAP_S = 45.0
 MAX_CAP_S = 90.0
 
-# (label, module, function). The six values the README groups as "the five aggregates":
+def _rarity() -> None:
+    from backend.utils.rarity_score import warm_inventory_counts
+
+    warm_inventory_counts()
+
+
+def _plausibility() -> None:
+    from backend.utils.price_plausibility import warm
+
+    warm()
+
+
+def _bands() -> None:
+    from backend.intelligence.deal_score_cache import warm
+
+    warm()
+
+
+def _count() -> None:
+    from backend.db.repositories.listings_repo import warm_public_listings_count
+
+    warm_public_listings_count()
+
+
+def _featured() -> None:
+    from backend.db.repositories.listings_repo import warm_featured_cars
+
+    warm_featured_cars()
+
+
+def _fallback() -> None:
+    from backend.db.repositories.grid_cards_repo import warm_fallback_dealer_urls
+
+    warm_fallback_dealer_urls()
+
+
+# (label, function). The six values the README groups as "the five aggregates":
 # rarity counts, price plausibility, deal-score bands, public count, featured cars and
 # the dealer fallback URLs.
-WARM_STEPS: tuple[tuple[str, str, str], ...] = (
-    ("rarity counts", "backend.utils.rarity_score", "warm_inventory_counts"),
-    ("price plausibility", "backend.utils.price_plausibility", "warm"),
-    ("deal-score bands", "backend.intelligence.deal_score_cache", "warm"),
-    ("public listings count", "backend.db.repositories.listings_repo", "warm_public_listings_count"),
-    ("featured cars", "backend.db.repositories.listings_repo", "warm_featured_cars"),
-    ("fallback dealer urls", "backend.db.repositories.grid_cards_repo", "warm_fallback_dealer_urls"),
+WARM_STEPS: tuple[tuple[str, Callable[[], None]], ...] = (
+    ("rarity counts", _rarity),
+    ("price plausibility", _plausibility),
+    ("deal-score bands", _bands),
+    ("public listings count", _count),
+    ("featured cars", _featured),
+    ("fallback dealer urls", _fallback),
 )
 
 
@@ -61,13 +97,13 @@ def warm_aggregates(steps=WARM_STEPS, *, deadline: float | None = None) -> dict[
     ``time.monotonic()`` value) no further step starts.
     """
     out: dict[str, str] = {}
-    for label, module, func in steps:
+    for label, func in steps:
         if deadline is not None and time.monotonic() >= deadline:
             out[label] = "skipped"
             continue
         t0 = time.perf_counter()
         try:
-            getattr(importlib.import_module(module), func)()
+            func()
             out[label] = "ok"
             _log.info("aggregate warm-up: %s ready (%.2fs)", label, time.perf_counter() - t0)
         except Exception as exc:

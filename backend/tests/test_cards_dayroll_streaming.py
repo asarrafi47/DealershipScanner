@@ -21,7 +21,6 @@ from __future__ import annotations
 import gzip
 import json
 import logging
-import sqlite3
 import threading
 import time
 import tracemalloc
@@ -65,13 +64,21 @@ def _origin():
     return zip_to_coords(ZIP)
 
 
+def _sql(statement: str, fetch: bool = False):
+    """Run one statement on the test inventory through the product connection (ints inlined)."""
+    from backend.db.inventory_db import db_conn
+
+    with db_conn() as conn:
+        cur = conn.execute(statement)
+        rows = cur.fetchall() if fetch else None
+        conn.commit()
+    return rows
+
+
 def _age_the_store(db, days: int):
     from backend.db.repositories import grid_cards_repo as gc
 
-    conn = sqlite3.connect(str(db.path))
-    conn.execute("UPDATE listings_grid_cards SET built_day = ?", (gc._today() - days,))
-    conn.commit()
-    conn.close()
+    _sql(f"UPDATE listings_grid_cards SET built_day = {int(gc._today() - days)}")
 
 
 def _no_background(monkeypatch):
@@ -174,10 +181,7 @@ def test_aged_cards_that_no_longer_match_their_row_are_still_refreshed(scoped, m
     lat, lon = _origin()
     gc.cards_near(lat, lon, 250)
     _age_the_store(scoped, 5)
-    conn = sqlite3.connect(str(scoped.path))
-    conn.execute("UPDATE cars SET price = price + 1")
-    conn.commit()
-    conn.close()
+    _change_everything(scoped)
     monkeypatch.setattr(gc, "_INLINE_REBUILD_MAX", 2)
     queued, _serialized = _no_background(monkeypatch)
     res = gc.cards_near(lat, lon, 250)
@@ -260,17 +264,16 @@ def test_an_old_stored_card_shows_the_right_days_through_the_store(scoped, monke
     lat, lon = _origin()
     first = gc.cards_near(lat, lon, 250)
     assert len(first.entries) == 5
-    conn = sqlite3.connect(str(scoped.path))
-    car_id, blob = conn.execute("SELECT car_id, card_json FROM listings_grid_cards ORDER BY car_id LIMIT 1").fetchone()
+    car_id, ckey, aux, bucket, price, ver, blob = _sql(
+        "SELECT car_id, content_key, aux_key, sort_bucket, sort_price, row_ver, card_json "
+        "FROM listings_grid_cards ORDER BY car_id LIMIT 1",
+        fetch=True,
+    )[0]
     card = json.loads(blob)
     assert "price_drop_days_ago" in card
     card["price_drop_amount"], card["price_drop_days_ago"] = 2500.0, 2
-    conn.execute(
-        "UPDATE listings_grid_cards SET card_json = ?, day_dep = 1 WHERE car_id = ?",
-        (json.dumps(card, separators=(",", ":")), car_id),
-    )
-    conn.commit()
-    conn.close()
+    # Write the card back the way the store does, flagged as date-dependent.
+    gc._store([(car_id, ckey, aux, 1, bucket, price, json.dumps(card, separators=(",", ":")))], {car_id: ver}, gc._today())
 
     def served():
         res = gc.cards_near(lat, lon, 250)
@@ -295,10 +298,7 @@ def test_an_old_stored_card_shows_the_right_days_through_the_store(scoped, monke
 
 
 def _change_everything(db):
-    conn = sqlite3.connect(str(db.path))
-    conn.execute("UPDATE cars SET price = price + 1")
-    conn.commit()
-    conn.close()
+    _sql("UPDATE cars SET price = price + 1")
 
 
 def test_a_stale_batch_over_the_cap_is_served_and_left_to_the_builder(scoped, monkeypatch, caplog):
@@ -309,7 +309,7 @@ def test_a_stale_batch_over_the_cap_is_served_and_left_to_the_builder(scoped, mo
     _change_everything(scoped)
     monkeypatch.setattr(gc, "_INLINE_REBUILD_MAX", 2)
     monkeypatch.setattr(gc, "_BG_STALE_MAX", 3)
-    monkeypatch.setattr(gc, "_storm_warned_at", 0.0)
+    monkeypatch.setattr(gc, "_storm_warned_at", float("-inf"))
     queued, serialized = _no_background(monkeypatch)
     with caplog.at_level(logging.WARNING, logger=gc._log.name):
         res = gc.cards_near(lat, lon, 250)
@@ -342,9 +342,7 @@ def test_missing_cards_are_queued_nearest_first_up_to_the_cap(scoped, monkeypatc
     lat, lon = _origin()
     res = gc.cards_near(lat, lon, 250)
     assert res.partial and len(queued) == 2
-    conn = sqlite3.connect(str(scoped.path))
-    dealers = [conn.execute("SELECT dealer_id FROM cars WHERE id = ?", (i,)).fetchone()[0] for i in queued]
-    conn.close()
+    dealers = [_sql(f"SELECT dealer_id FROM cars WHERE id = {int(i)}", fetch=True)[0][0] for i in queued]
     assert "far-motors-test" not in dealers, "the farthest car is not the one queued first"
 
 
@@ -409,10 +407,7 @@ def scope(scoped, client, monkeypatch):
 
 
 def _change_a_price(db, to: int = 31337):
-    conn = sqlite3.connect(str(db.path))
-    conn.execute("UPDATE cars SET price = ? WHERE title = '2022 Toyota Camry #1'", (to,))
-    conn.commit()
-    conn.close()
+    _sql(f"UPDATE cars SET price = {int(to)} WHERE title = '2022 Toyota Camry #1'")
 
 
 def test_token_change_serves_the_old_body_at_once_and_rebuilds_off_the_request(scope, scoped):

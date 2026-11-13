@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.24] - 2026-11-13
+
 ### Web speed (P6, P19 of docs/web_speed_search_2026_11/README.md)
 - P6, aggregates refreshed off the request: the rarity counts, price-plausibility medians, deal-score bands, public listings count, landing featured cars and the dealer fallback URLs are loaded once at the cold start, then served stale past their TTL while ONE background run reloads them (`backend/utils/swr_refresh.py`); a failing reload keeps the old value and is retried after 30 s; inline compute stays as the cold fallback and concurrent cold callers share one load. The rarity table is counted in SQL (`GROUP BY make, model, trim, exterior_color`), same Counters as the per-car loop.
 - P6, warm at start: `gunicorn.conf.py` `post_fork` loads the six aggregates before the worker accepts a connection (`backend/utils/aggregate_warmup.py`; `AGGREGATE_WARM=0` turns it off, `AGGREGATE_WARM_CAP_S`, default 45 s and at most 90 s, caps the wait). Never fatal.
