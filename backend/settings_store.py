@@ -34,6 +34,9 @@ class Spec:
     default: Any
     kind: str = "int"  # int | bool | tz | pcts
     max_value: int = 1_000_000  # an int above this is absurd and ignored
+    min_value: int = 0  # an int below this is ignored (a price of 0 would switch the dollar cap off)
+    ceiling_env: str = ""  # env-only hard ceiling: no row and no other setting can raise a value above it
+    ceiling_default: int = 0
 
 
 SPECS: dict[str, Spec] = {
@@ -47,14 +50,27 @@ SPECS: dict[str, Spec] = {
         Spec("chat.device_per_day", "CHAT_DEVICE_PER_DAY", 60),
         Spec("chat.ip_per_day", "CHAT_IP_PER_DAY", 100),
         Spec("chat.new_account_factor_pct", "CHAT_NEW_ACCOUNT_FACTOR_PCT", 50, max_value=100),
-        Spec("chat.budget_usd_per_day_cents", "CHAT_BUDGET_CENTS_PER_DAY", 500, max_value=100_000_000),
-        Spec("chat.budget_tokens_per_day", "CHAT_BUDGET_TOKENS_PER_DAY", 2_000_000, max_value=10_000_000_000),
-        # 0 = work it out from the price settings, or reserve no cost when prices are unset
-        Spec("chat.est_cost_micro_per_message", "CHAT_EST_COST_MICRO", 0, max_value=100_000_000),
+        Spec("chat.budget_usd_per_day_cents", "CHAT_BUDGET_CENTS_PER_DAY", 500, max_value=100_000_000,
+             ceiling_env="CHAT_BUDGET_HARD_MAX_CENTS", ceiling_default=2000),
+        Spec("chat.budget_tokens_per_day", "CHAT_BUDGET_TOKENS_PER_DAY", 2_000_000, max_value=10_000_000_000,
+             ceiling_env="CHAT_BUDGET_HARD_MAX_TOKENS", ceiling_default=8_000_000),
+        # Sub-budgets of the day's dollar and token budget: accounts under 24 hours old share
+        # ``new_account_budget_pct`` of it; accounts under 7 days old may use all but the
+        # ``established_reserve_pct`` that only established accounts (over 7 days) can reach.
+        Spec("chat.new_account_budget_pct", "CHAT_NEW_ACCOUNT_BUDGET_PCT", 25, max_value=100, min_value=1),
+        Spec("chat.established_reserve_pct", "CHAT_ESTABLISHED_RESERVE_PCT", 50, max_value=100),
+        # Non-zero from day one so the dollar cap is live before anyone measures real spend (Sonnet-class
+        # prices, above the Haiku-class chat model, so the estimate errs towards denying early).
+        # 15000 millionths of a dollar is 2500 tokens in plus 500 tokens out at those prices.
+        Spec("chat.est_cost_micro_per_message", "CHAT_EST_COST_MICRO", 15_000, max_value=100_000_000, min_value=1),
         Spec("chat.est_tokens_in_per_message", "CHAT_EST_TOKENS_IN", 2500, max_value=1_000_000),
         Spec("chat.est_tokens_out_per_message", "CHAT_EST_TOKENS_OUT", 500, max_value=1_000_000),
-        Spec("chat.price_in_micro_per_mtok", "CHAT_PRICE_IN_MICRO_PER_MTOK", 0, max_value=1_000_000_000),
-        Spec("chat.price_out_micro_per_mtok", "CHAT_PRICE_OUT_MICRO_PER_MTOK", 0, max_value=1_000_000_000),
+        Spec("chat.price_in_micro_per_mtok", "CHAT_PRICE_IN_MICRO_PER_MTOK", 3_000_000, max_value=1_000_000_000,
+             min_value=1),
+        Spec("chat.price_out_micro_per_mtok", "CHAT_PRICE_OUT_MICRO_PER_MTOK", 15_000_000, max_value=1_000_000_000,
+             min_value=1),
+        # Messages given back per account per hour when no answer text was shown (tokens never come back).
+        Spec("chat.giveback_per_hour", "CHAT_GIVEBACK_PER_HOUR", 3, max_value=100),
         Spec("chat.web_research_weight", "CHAT_WEB_RESEARCH_WEIGHT", 3, max_value=100),
         Spec("chat.reset_tz", "CHAT_RESET_TZ", "America/New_York", "tz"),
         Spec("chat.alert_pcts", "CHAT_ALERT_PCTS", (50, 80), "pcts"),
@@ -97,6 +113,12 @@ def _note(key: str, why: str) -> None:
     _log.warning("settings_store: ignoring a bad value for %s (%s); using the next level", key, why)
 
 
+def _ascii_digits(text: str) -> bool:
+    """True for a non-empty run of 0-9 only. ``str.isdigit`` also accepts superscripts and other
+    scripts' digits, and ``int`` raises on some of them."""
+    return bool(text) and text.isascii() and text.isdigit()
+
+
 def parse(spec: Spec, raw: Any) -> Any:
     """The validated value, or None when ``raw`` is not usable (caller falls to next level)."""
     text = str(raw).strip()
@@ -119,17 +141,17 @@ def parse(spec: Spec, raw: Any) -> Any:
             piece = piece.strip()
             if not piece:
                 continue
-            if not piece.isdigit() or not (1 <= int(piece) <= 1000):
+            if not _ascii_digits(piece) or not (1 <= int(piece) <= 1000):
                 return None
             out.append(int(piece))
         if not out or len(out) > 10:
             return None
         return tuple(sorted(set(out)))
     # int
-    if not text.isdigit():  # rejects "", "-1", "1.5", "abc"
+    if not _ascii_digits(text):  # rejects "", "-1", "1.5", "abc", "²" and "٣" (non-ASCII digits)
         return None
     n = int(text)
-    if n > spec.max_value:
+    if n > spec.max_value or n < spec.min_value:
         return None
     return n
 
@@ -154,15 +176,42 @@ def _load_rows() -> dict[str, str]:
                 rows = load_app_settings()
     except Exception as exc:  # missing table, database down: environment and defaults apply
         _note("app_settings", type(exc).__name__)
-        rows = {}
+        # A failed read is NOT cached: empty settings must not stand for 30 seconds after a blip
+        # (a stale "no rows" would silently undo every limit an admin tightened). The next call asks again.
+        return {}
     with _lock:
         _cache["at"] = now
         _cache["rows"] = rows
     return rows
 
 
+def _ceiling(spec: Spec) -> int | None:
+    """The env-only hard ceiling of ``spec`` (never read from a settings row), or None."""
+    if not spec.ceiling_env:
+        return None
+    raw = (os.environ.get(spec.ceiling_env) or "").strip()
+    if raw:
+        if _ascii_digits(raw) and int(raw) > 0:
+            return int(raw)
+        _note(spec.ceiling_env, "environment")
+    return spec.ceiling_default
+
+
 def resolve(key: str) -> tuple[Any, str]:
-    """(value, source) where source is ``row``, ``env`` or ``default``."""
+    """(value, source) where source is ``row``, ``env``, ``default`` or ``ceiling`` (clamped)."""
+    value, source = _resolve(key)
+    spec = SPECS[key]
+    cap = _ceiling(spec)
+    if cap is not None and isinstance(value, int) and value > cap:
+        mark = (key, "ceiling")
+        if mark not in _logged:
+            _logged.add(mark)
+            _log.warning("settings_store: %s is above its hard ceiling (%s); using the ceiling", key, spec.ceiling_env)
+        return cap, "ceiling"
+    return value, source
+
+
+def _resolve(key: str) -> tuple[Any, str]:
     spec = SPECS[key]
     row = _load_rows().get(key)
     if row is not None:

@@ -511,15 +511,19 @@ Run every command in a plain terminal from `/Users/asarrafi/Projects/DealershipS
   | V027 | incomplete_listings window columns (first_seen_at, last_scraped_at, scans_survived, pending) | N6.4 |
   | V028 | attribution evidence (persisted rooftop tier) | N8.6 |
   | V029 | `admin_users` (Postgres admin store, no TOTP columns) | N37.9 |
-  | V030 | `users.auth_epoch` (session revocation) | N30 |
-  | V031 | drop dead MFA columns from `users` | N30 |
-  | V032 | `listing_retirements` | P5B.3 (N9) |
-  | V033 | `listing_miss_strikes` | P5B.4 (N9) |
-  | V034 | `dealer_recipes` rev / compare-and-swap | P7.1 (N13) |
-  | V035 | `vdp_fetch_attempts` | P12A.5 (N18) |
-  | V036 | `epa_master` flags and provenance | P10A.3 (N22) |
-  | V037 | EPA re-link snapshot | P10B.6 (N23) |
-  | V038 | catalog constraints (unique key, RESTRICT, NOT VALID FK) | P10D.7 (N25) |
+  | V030 | `chat_usage_buckets`, `app_settings` (chat limits; file `V030__chat_usage.sql`, built in wave 1) | C1 |
+  | V031 | `auth_phone` tables (reserved, not built yet) | S5 |
+  | V032 | TOTP and recovery codes (reserved, not built yet) | S12 |
+  | | (V033 to V041 below were V030 to V038 until 2026-11-13: the auth_sms cards claimed V030 to V032 and none of the rows below is built on `dev` yet, so they move up by three, as docs/auth_sms/TASKS.md rule 5 says. Phase prose that names an old number resolves through this table.) | |
+  | V033 | `users.auth_epoch` (session revocation) | N30 |
+  | V034 | drop dead MFA columns from `users` | N30 |
+  | V035 | `listing_retirements` | P5B.3 (N9) |
+  | V036 | `listing_miss_strikes` | P5B.4 (N9) |
+  | V037 | `dealer_recipes` rev / compare-and-swap | P7.1 (N13) |
+  | V038 | `vdp_fetch_attempts` | P12A.5 (N18) |
+  | V039 | `epa_master` flags and provenance | P10A.3 (N22) |
+  | V040 | EPA re-link snapshot | P10B.6 (N23) |
+  | V041 | catalog constraints (unique key, RESTRICT, NOT VALID FK) | P10D.7 (N25) |
   | next | VALIDATE of the NOT VALID constraints (N26), backup-table drops (N28, owner-gated) | |
 
 ---
