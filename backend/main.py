@@ -22,6 +22,7 @@ from flask import Flask
 from backend.auth.apple_oauth import bp as apple_oauth_bp
 from backend.auth.google_oauth import bp as google_oauth_bp
 from backend.billing.routes import bp as billing_bp
+from backend.auth.phone.webhook import bp as twilio_webhook_bp
 from backend.dealer.admin import store_admin_bp
 
 # Site-admin hub pages (must load before first url_for in templates).
@@ -180,6 +181,7 @@ from backend.dealer.admin.operator_api import register_admin_operator_api
 register_admin_operator_api(app)
 app.register_blueprint(dealer_portal_bp)
 app.register_blueprint(billing_bp)
+app.register_blueprint(twilio_webhook_bp)  # POST /webhooks/twilio/verify; 404 while the phone flag is off
 app.register_blueprint(google_oauth_bp)
 app.register_blueprint(apple_oauth_bp)
 app.register_blueprint(ai_narrate_bp)

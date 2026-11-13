@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+## [1.5.29] - 2026-11-13
+### Changed (PR 16 review fixes)
+- Phone login: a Lookup that reports no line type is now refused (reason `no_line_type`) and not cached, so a VoIP number that reports nothing no longer passes.
+- Twilio start: the one retry now happens only when the connection could not be made; a read timeout or reset is never retried (it could send and bill a second text). `StartResult.attempts` records it.
+- Twilio callbacks: only `TWILIO_AUTH_TOKEN` validates a signature (an API key secret never can); the webhook answers 404 unless the flag is on and the token is set. The token is never required at boot; callbacks are not needed for launch.
+
+
+- Phone sign-in foundation, S4 (inert): `backend/auth/phone/turnstile.py` (`verify_turnstile(token, ip)` posts to Cloudflare siteverify with `TURNSTILE_SECRET_KEY`, 3-second timeout, fails closed, a token works once; injectable HTTP layer and a fake verifier for tests) and `backend/auth/phone/webhook.py` (`POST /webhooks/twilio/verify`: 404 while `AUTH_PHONE_LOGIN_ENABLED` is off, `X-Twilio-Signature` checked with the `twilio` request validator against `PUBLIC_BASE_URL`, 403 on a bad or missing signature, unknown events get 200, repeats by event id apply once, no bodies, numbers or codes in logs). Delivery events go to a `SendEventSink`; the send table arrives with S5 and its sink with S6, so until then events are acknowledged and dropped. The route is registered in `backend/main.py`, listed as signature-verified in `backend/web/security.py`, and classified in `test_csrf_coverage.py`.
+
+- Phone sign-in foundation, S3 (inert): `backend/auth/phone/twilio_verify.py`, the Twilio Verify adapter. `start` creates a Verify v2 SMS verification (one retry on a network error only), `check` runs a verification check, `lookup` asks Lookup v2 for the line type and refuses VoIP, landline and other non-mobile lines; answers are cached by phone hash for 30 days through a `LookupCache` interface (the database cache is wired in S6). API-key login (`TWILIO_ACCOUNT_SID`, `TWILIO_API_KEY_SID`, `TWILIO_API_KEY_SECRET`, `TWILIO_VERIFY_SERVICE_SID`), `TWILIO_AUTH_TOKEN` accepted as a fallback; 5-second timeouts; vendor error text never leaves the adapter and Twilio's own request logging (which prints the number) is switched off. `registry.py` returns it only when the variables exist. `twilio` added to `requirements-web.txt`. Tested with a fake client object only; nothing talks to Twilio.
+
+- Phone sign-in foundation, S2 (inert): `backend/auth/phone/provider.py` (`StartResult`, `CheckResult`, `LineInfo`, `PhoneVerifyProvider`, `LookupCache`, short reason codes, line-type classification), `fake_provider.py` (approves `000000`, keeps an outbox, can fail, throttle, report a VoIP line or stall; refuses to load in production), `lookup_cache.py` (in-process cache for tests), `registry.py` (picks the provider from `AUTH_PHONE_PROVIDER`, never the fake in production). No vendor or Flask imports in those modules.
+
+- Phone sign-in foundation, S1 (inert; `AUTH_PHONE_LOGIN_ENABLED` unset): `backend/auth/phone/numbers.py` (`normalize` to E.164 with the `phonenumbers` library, refusing invalid, premium-rate, shared-cost and non-allowed-country numbers; `mask`; `hash_phone` and `hash_ip` with `PHONE_HASH_PEPPER`) and `config.py` (every phone variable with its default, `enabled()`). Production start refuses when the flag is on with the fake provider or a missing pepper, Turnstile or Twilio value (`production_security.py`). `phonenumbers` added to `requirements-web.txt`.
+
 ## [1.5.28] - 2026-11-13
 
 - Review of PR 15: a device cookie with non-ASCII text in its signature part no longer causes a 500 on phone and chat routes (the cookie is checked whole before it is compared; the bad cookie is replaced). The gate keeps the estimate charged when no model usage was reported unless the route calls `Guard.no_model_call()` (a model call from another thread or a stream can no longer go uncounted). The gate fails closed with the "unavailable" answer (logged once, never an open gate, never a 500) when `PHONE_HASH_PEPPER` is unset in production; the boot still only requires the pepper when phone login is on, so production keeps booting until it is set. True-up locks rows in the same order as reserve (no deadlock). Tests added.
