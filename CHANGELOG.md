@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- F1, the site is free: with billing off (the shipped default) no shopper page shows a price, plan name or upgrade link (listings guest banner, dealer picker hint and car trim ladder text are hidden; `/premium` no longer prints prices), `GET /billing/plans` answers 404, and a production boot with `BILLING_STRIPE_ENABLED` on logs that billing is dormant by owner decision. No billing code, column or test removed. Test `backend/tests/test_billing_frozen.py`.
+
 ## [1.5.25] - 2026-11-13
 
 - Docs only: docs/auth_sms/ holds a survey of the user structure, a pay and Stripe audit (billing dormant, site free), the design for phone-number login with Twilio Verify text codes, the design for AI chat limits, and the task cards for them (no code change).

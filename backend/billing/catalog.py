@@ -1,6 +1,9 @@
 """
 Subscription package catalog — plan definitions, feature bundles, Stripe price mapping.
 
+Dormant since 2026-11-13: the site is free and features are not gated by plan any more
+(``BILLING_STRIPE_ENABLED`` stays unset). Kept as is in case paid plans return.
+
 Scaffold for multi-plan billing. Stripe Price IDs come from env (``STRIPE_PRICE_<PLAN>``)
 or legacy ``STRIPE_PREMIUM_PRICE_ID`` for the ``complete`` plan.
 """
