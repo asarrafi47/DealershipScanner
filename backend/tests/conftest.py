@@ -81,6 +81,10 @@ from pathlib import Path
 from typing import Any, Callable, Iterator
 from urllib.parse import urljoin, urlsplit
 
+# The dev hash pepper is opt-in (never implied by a missing PHONE_HASH_PEPPER); tests opt in once here.
+# A test about the unset case removes this variable itself.
+os.environ.setdefault("ALLOW_DEV_PHONE_PEPPER", "1")
+
 import pytest
 
 

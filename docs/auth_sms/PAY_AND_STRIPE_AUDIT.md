@@ -2,7 +2,7 @@
 
 > **Update 2026-11-13: dormant by owner decision.** The whole website is now free. There are no paid plans for now. The Stripe and plan code stays in the repository, unused, with `BILLING_STRIPE_ENABLED` off, and features are **not** gated by plan any more. This file is kept as a record of what the code does and as the checklist to use **if paid plans ever return**. The work cards that came out of it (P1 to P5) were replaced by cards for chat limits, because the AI chat is the only thing that now costs money per use: see `CHAT_LIMITS.md` and `TASKS.md` (F1, C1 to C6). Findings H1 to H4 and M1 to M8 below stay valid for a future revival; none of them matters while billing is off. Sections 7 and 8 are "if revived" lists, not to-dos. Card references to P1 to P5 inside this file now mean "future revival work", not queued cards.
 
-Audit of `dev` at VERSION 1.5.24 (2026-11-13). Documentation only. Paths relative to the repo root; `B/` is `backend/`.
+Audit of `dev` at VERSION 1.5.24 (2026-11-13; dev is now 1.5.25, and the citations `access.py:329-340` and `:334-337` are now `AccessContext.check`, `backend/billing/access.py:102-113`). Documentation only. Paths relative to the repo root; `B/` is `backend/`.
 
 **What I could only read in code.** This VM cannot reach Stripe or Railway. Nothing here was checked against a real Stripe account, a real webhook delivery, or Railway's variable list. Every statement about "what Stripe does" is from Stripe's documented behavior and from reading our code. Section 7 is the list the owner must tick in the dashboards.
 

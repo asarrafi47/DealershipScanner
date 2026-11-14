@@ -21,7 +21,7 @@ All model calls go through one function, `complete()` in `B/llm/client.py:422-51
 
 ## 2. The rules
 
-1. **Chat needs a signed-in account.** Already true in production (`B/billing/access.py:334`). With phone login every shopper account has a verified phone number.
+1. **Chat needs a signed-in account.** True in production for car chat, compare chat and sidebar chat (`B/billing/access.py:102-113`); car narration is public today and card C3 closes it. With phone login every shopper account has a verified phone number.
 2. **One gate for all four routes** (a function, `chat_budget.guard(...)`, used the same way everywhere). The old in-memory daily buckets (`chat:daily:*`, `aichat:daily:*`, `cmp:daily:*`) are removed. The short per-minute in-memory limits stay as a burst guard.
 3. **Limits are counted per account, per phone number, per device, per IP, and globally**, and **the strictest one wins**. Per phone number and per device are what stop someone from making new accounts to get a new allowance: a phone number is unique per account (`DESIGN.md` section 4) and its counter is kept by hash even after the account is deleted; the device is a long-lived cookie (`sc_dev`, `DESIGN.md` section 8).
 4. **Counters are stored in Postgres**, one small row per subject and time bucket, never in memory.
@@ -29,7 +29,7 @@ All model calls go through one function, `complete()` in `B/llm/client.py:422-51
 6. **Plain words when a limit is hit, with the time it resets.**
 7. **Numbers are changeable without a release**: a small settings table in Postgres, then environment variables, then code defaults (section 5).
 8. **A small admin page** shows usage (section 7).
-9. A message counts when it is accepted. A model failure or a refusal that returns no answer gives the message back (decrement) so users are not charged for our errors.
+9. A message counts when it is accepted. It is given back **only when the person received no answer text** (an exception before a reply, a refusal with empty text, a provider error); a reply cut off by the token limit that still returned text stays counted; tokens are never given back; give-backs are capped at 3 per account per hour; a streamed reply that produced any token is never given back.
 
 ## 3. Default numbers (proposed; the owner can change any of them later in the settings table)
 
@@ -43,9 +43,11 @@ All model calls go through one function, `complete()` in `B/llm/client.py:422-51
 | New accounts (under 24 hours old) | half of the account numbers | slows throw-away accounts |
 | Site-wide per day | **$5 and 2,000,000 tokens** (whichever comes first), alert at 50% and 80% | a guess; I do not have this site's real cost per message |
 | Web research inside a chat answer | counts as 3 messages | it is the expensive path (`B/utils/car_chat_policy.py:18-36`) |
-| Admins | exempt from per-account numbers, not from the site-wide cap | |
+| Admins | exempt from every per-subject number (account, account and car, phone, device, address) and from the new-account and reserve tiers (owner decision 2026-11-13); never from the site-wide cap | the code (`gate.py`, `Guard._charges`) does exactly this |
+| New accounts' share of the budget | at most 25% of the day's budget (`chat.new_account_budget_pct`); established accounts (over 7 days) keep a reserve of 50% (`chat.established_reserve_pct`) | a few fresh accounts cannot drain the day |
+| Per /24 (IPv4) or /48 (IPv6) | 150 a day | back-stop against address farms |
 
-About the dollar figure: I could not measure what one chat message costs here (no network, no production data). Card C2 records real token counts from the first day, and the admin page shows dollars per day and per message; then set the cap from real numbers. Until then the token cap works without any price list. Prices per million tokens are settings (`chat.price_in_micro_per_mtok`, `chat.price_out_micro_per_mtok`) that the owner or a session fills from the current Anthropic price page for the model in `ROLE_MODELS["chat"]` (`B/llm/client.py:57-80`); they are not hard-coded.
+About the dollar figure: I could not measure what one chat message costs here (no network, no production data). Card C2 records real token counts from the first day, and the admin page shows dollars per day and per message; then set the cap from real numbers. Until then the dollar cap runs on shipped fallback prices, so it is live from day one: 3 dollars in and 15 dollars out per million tokens (Sonnet-class, above the Haiku-class chat model, so the estimate errs towards denying early) and 15,000 millionths of a dollar (1.5 cents) estimated per message. They are settings (`chat.price_in_micro_per_mtok`, `chat.price_out_micro_per_mtok`, `chat.est_cost_micro_per_message`; a value of 0 is ignored, so no row can switch the dollar cap off) that the owner or a session sets from the current Anthropic price page for the model in `ROLE_MODELS["chat"]` (`B/llm/client.py:57-80`).
 
 ## 4. Data (new Postgres migration, next free number when built)
 
@@ -96,7 +98,7 @@ Order of precedence: row in `app_settings` > environment variable > code default
 | `chat.reset_tz` | `CHAT_RESET_TZ` | `America/New_York` |
 | `chat.alert_pcts` | `CHAT_ALERT_PCTS` | `50,80` |
 
-A zero means "no limit" for the per-subject numbers, as it does today; a zero budget means "chat off". Bad values (not a number, negative, absurdly large) are ignored with a log line and the next level is used. Every change through the admin page records who and when.
+Give-backs: a message is given back only when no answer text was shown (a reply cut short by the token limit that returned text stays counted), at most 3 per account per hour (`chat.giveback_per_hour`), and tokens are never given back. Money and token budgets are clamped to env-only hard ceilings (`CHAT_BUDGET_HARD_MAX_CENTS` default 2000, `CHAT_BUDGET_HARD_MAX_TOKENS` default 8,000,000) that no settings row can exceed. A zero means "no limit" for the per-subject numbers, as it does today (the admin form refuses it unless an "unlimited" box is ticked); a zero budget means "chat off". Bad values (not a number, negative, absurdly large) are ignored with a log line and the next level is used. Every change through the admin page records who and when.
 
 ## 6. How a message is checked
 
@@ -135,6 +137,9 @@ The JSON for the app has `error` (`user_chat_limit_reached`, `listing_chat_limit
 A nightly job (same style as the existing nightly card job) writes yesterday's totals to the log and exits non-zero if the budget was reached or usage passed an alert percentage, so the owner's scheduled routine can send a notification. Inside the web process the guard logs one `chat_budget` line when a day first passes 50% and 80% (once per level per day). Logs contain counts, percentages and hashes cut to 8 characters, never message text, phone numbers or names.
 
 ## 10. Risks
+
+- **Money exposure** (from the numbers above): with both caps working about 5 dollars a day (150 a month); with only the token cap working about 10 dollars a day; with the gate bypassed, spend is bounded only by the provider's own monthly limit, which the owner sets in the provider console before C3 is released (launch blocker, listed in C3 and S18). Prices are non-zero by default so the dollar cap is live from day one.
+- **Other model callers**: narration, window-sticker and vision paths (`packages_ensure.py`, `sticker.py`, `window_sticker_service.py`) run under the gate (C3); scanner enrichment, brochure reading and scripts are batch or operator-only and are checked by the test that lists every `complete()` call site (C2).
 
 - Estimates can be wrong at first; the cap is a safety net, not a bill. Set a spend limit at the model provider's console as the second line of defence (owner step).
 - Limits by IP can punish shared networks; that is why IP is a back-stop with a higher number.

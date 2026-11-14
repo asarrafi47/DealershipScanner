@@ -1,6 +1,6 @@
 # Phone-number login with text-message codes: design
 
-Status: proposal, nothing built. First written 2026-11-13, **revised the same day after the owner's decisions** (listed in section 1). Written against `dev` 1.5.24. Read `SURVEY.md` first for what exists; this file cites it as "survey". Cards are in `TASKS.md`; chat limits are in `CHAT_LIMITS.md`. Paths relative to the repo root; `B/` is `backend/`.
+Status: proposal, nothing built. First written 2026-11-13, **revised the same day after the owner's decisions** (listed in section 1). Written against `dev` 1.5.25. **Design review 2026-11-13:** a four-lens attack changed sections 4, 5, 6, 7, 8, 9, 10, 13, 15, 16, 17 and 20; see the Decisions log in `TASKS.md`. Read `SURVEY.md` first for what exists; this file cites it as "survey". Cards are in `TASKS.md`; chat limits are in `CHAT_LIMITS.md`. Paths relative to the repo root; `B/` is `backend/`.
 
 In one paragraph: a shopper types a phone number, ticks the consent box, passes a Cloudflare Turnstile check, and Twilio Verify texts a 6-digit code. The shopper types the code and the site signs them in with the same session cookie it uses today. A new number creates an account; a known number signs in. **For shoppers this is the only way in.** Admin and dealer accounts keep password sign-in.
 
@@ -10,7 +10,7 @@ Decided:
 - The whole site is free; Stripe and plan code stay in the repo but dormant, billing stays off (`PAY_AND_STRIPE_AUDIT.md`). Chat is the only thing with a per-use cost (`CHAT_LIMITS.md`).
 - Shoppers sign in by phone number plus text code only, from day one. Email-and-password sign-in for shoppers is removed.
 - Admin and dealer-portal accounts stay as they are; admins get an authenticator step (card S12); dealers stay password-only for now.
-- Provider: Twilio Verify (runner-up Telnyx Verify). Twilio Lookup line-type check blocks VoIP numbers. Cloudflare Turnstile is checked on the server for every send request.
+- Provider: Twilio Verify (runner-up Telnyx Verify), 20 dollar prepaid balance, no auto-recharge, no callbacks (webhooks) at launch. Twilio Lookup line-type check blocks VoIP numbers. Cloudflare Turnstile is checked on the server for every send request.
 - US numbers only. Support may replace the number on an account after proof. Made-up internal emails for phone accounts are fine.
 - Defaults and texts as given (sections 5, 6, 14 and 16).
 
@@ -81,14 +81,15 @@ New tables go in **inventory Postgres, never SQLite.** `backend/tests/test_no_sq
 ```sql
 CREATE TABLE auth_phone_identities (           -- one verified number per account, one account per number
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    phone_e164 TEXT NOT NULL,                  -- +14155550123
+    user_id BIGINT,                            -- NULL while state = reserving
+    phone_e164 TEXT NOT NULL,                  -- +14155550123, stored in clear on purpose (section 16)
     phone_hash TEXT NOT NULL,                  -- HMAC(PHONE_HASH_PEPPER, e164)
     country TEXT NOT NULL,
     line_type TEXT,                            -- from lookup at sign-up
     verified_at TIMESTAMPTZ NOT NULL,
     last_login_at TIMESTAMPTZ,
-    sessions_valid_after TIMESTAMPTZ,          -- "sign out everywhere" (section 9)
+    state TEXT NOT NULL DEFAULT 'active',      -- reserving | active (account creation order, card S6)
+    dormant_user_id BIGINT, detached_at TIMESTAMPTZ,  -- number detached after AUTH_PHONE_DORMANT_DAYS without sign-in
     consent_at TIMESTAMPTZ NOT NULL,           -- when the box was ticked
     consent_text_version TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -123,8 +124,9 @@ CREATE TABLE auth_phone_sends (                -- one row per text and per refus
     ip_hash TEXT NOT NULL,
     device_hash TEXT,
     country TEXT NOT NULL,
-    est_cost_cents NUMERIC(8,3) NOT NULL DEFAULT 0,
-    outcome TEXT NOT NULL                      -- sent | provider_error | blocked_turnstile | blocked_voip | blocked_country | blocked_limit | blocked_cap
+    est_cost_cents NUMERIC(8,3) NOT NULL DEFAULT 0,   -- set at insert from SMS_EST_COST_CENTS, never from callbacks
+    lookup_cost_cents NUMERIC(8,3) NOT NULL DEFAULT 0, -- SMS_EST_LOOKUP_CENTS, counted even for refused numbers
+    outcome TEXT NOT NULL                      -- pending | sent | unavailable | provider_error | blocked_turnstile | blocked_voip | blocked_country | blocked_limit | blocked_cap
 );
 -- indexes on (at), (phone_hash, at), (ip_hash, at), (device_hash, at)
 
@@ -138,7 +140,7 @@ CREATE TABLE auth_phone_wrong_tries (          -- wrong-code counter per phone t
 
 Chat limit tables (`chat_usage_buckets`, `app_settings`) are in `CHAT_LIMITS.md` section 4 and ship in their own migration. The earlier "trial marks" table is dropped: with no paid plans there are no trials.
 
-**Migration number:** `dev` ends at `V029`. The registry (`docs/NEXT_PHASES_PLAN_2026_10.md:504-522`) reserves V030 to V038 for other work (including `users.auth_epoch` and "drop dead MFA columns"), none of it on `dev` yet. Each card takes the first free number when it is built, after `ls migrations`, and never edits an applied file. `docs/ALL_POSTGRES_PLAN_2026_10.md` is still not in the repository (question 5, which you will answer).
+**Migration number:** `dev` ends at `V029`. Numbers are claimed in the registry (`docs/NEXT_PHASES_PLAN_2026_10.md:514-522`) in the same PR as the migration, not guessed from `ls`: integ files already queued (`users_auth_epoch`, `users_drop_dead_mfa_columns` and later) collide with a plain "next free" rule. Allocation: C1 = V030 (built in PR 15), S5 = V031, S12 = V032; the integ rows move up by three unless the owner decides the other order. Session revocation uses a new table `auth_session_epochs` in S5, and `sessions_valid_after` is dropped from the identities table. Never edit an applied file. `docs/ALL_POSTGRES_PLAN_2026_10.md` is still not in the repository (question 5, which you will answer).
 
 ### 4.3 Accounts without an email
 
@@ -150,18 +152,18 @@ Chat limit tables (`chat_usage_buckets`, `app_settings`) are in `CHAT_LIMITS.md`
 |---|---|
 | Code | 6 digits, single use |
 | Lifetime | **5 minutes**, enforced by our challenge row (`AUTH_PHONE_CODE_TTL_S`, 300). The login text must say the same number (see section 1) |
-| Wrong tries | 5, then the phone is locked for 15 minutes (my choice of lock length; tell me if you want another). **A new code does not reset the count** (`auth_phone_wrong_tries`) |
+| Wrong tries | 5 per challenge, reserved **before** the vendor call. The 5-try lock is per (phone, browser session or device); a phone-wide lock only after about 15 to 20 wrong tries a day across all challenges, so a stranger cannot lock the real holder out. A new code does not reset the count (`auth_phone_wrong_tries`) |
 | Resend | wait 60 seconds |
 | Per phone | at most 3 sends in 15 minutes and 5 a day |
 | Per IP | 5 an hour and 20 a day |
 | Per device | 5 a day |
-| Whole site | `SMS_DAILY_SEND_CAP` = 300 sends a day, alert at 150, and a spend cap of 15 dollars a day (`SMS_DAILY_SPEND_CAP_CENTS` = 1500). When either is hit, sends stop and the page says so |
+| Whole site | **Launch defaults for the first month: `SMS_DAILY_SEND_CAP` = 80 and `SMS_DAILY_SPEND_CAP_CENTS` = 500** (long-run targets 300 and 1500, raised only after a week of nightly totals and never in the same step as removing the allow-list). Alert at half. A prepaid guard stops sends at 90 percent of `sms.prepaid_cents` (default 2000) spent since `sms.topup_at`, counted from the app's own rows. Day boundary: midnight in `CHAT_RESET_TZ`. Pools: a number that already has an identity may use 100 percent, new numbers at most 50 percent (`SMS_NEW_NUMBER_SHARE_PCT`), resends 20 percent; per /24 (IPv4) or /48 (IPv6) at most 40 sends a day |
 | Countries | `SMS_ALLOWED_COUNTRIES` = `US` |
 | Line type | VoIP numbers (fixed and non-fixed) are refused for sign-up and sign-in via the lookup; landlines cannot receive texts and are refused too |
 | Fresh code before a number change | the account must have proved itself within the last 10 minutes |
-| Cookie | sign-in cookies last 30 days or more (section 9) |
+| Cookie | shoppers 30 days, admins 12 hours (section 9) |
 
-Each login costs about 6 cents (your figure); at 300 sends a day the worst case is about 18 dollars, so the 15-dollar cap is the stricter of the two, as intended.
+Each login costs about 6 cents for Verify plus about 1 cent for Lookup on a new number. The 20 dollar balance buys roughly 300 sign-ups in all, so a 15-dollar daily cap would let one bad day spend most of it; that is why the launch defaults are 5 dollars and 80 sends. Twilio's own low-balance emails (10 and 5 dollars) are an owner step.
 
 Guess odds: 5 tries on a million codes is 1 in 200,000 per lock window.
 
@@ -171,27 +173,28 @@ Guess odds: 5 tries on a million codes is 1 in 200,000 per lock window.
 2. Consent box ticked (server checks it; the text version is stored).
 3. **Turnstile:** the browser's token is verified on the server with Cloudflare's `siteverify` call (`TURNSTILE_SECRET_KEY`), sending the client IP; 3-second timeout; **fails closed** (no token, bad token, or Cloudflare unreachable means no text). A token works once.
 4. Normalise to E.164 and check the country list.
-5. Limits from the table above, counting rows in `auth_phone_sends` (durable), plus the wrong-tries lock.
-6. Whole-site send and spend caps.
-7. **Lookup** (line type): block VoIP and landline; cache the result by phone hash for 30 days to avoid paying twice.
-8. Start the Verify text, record the send, create the challenge, put `public_id` and a random nonce in the session cookie.
+Steps 5 and 6 are **reserve first**: in one Postgres transaction take `pg_advisory_xact_lock(hashtext('auth_phone_send_cap'))`, count the limits and pool shares in `auth_phone_sends`, check the wrong-tries lock and the site send, spend and prepaid caps, and INSERT the send row `pending` with its estimated cost (Lookup cost included even for refused numbers); commit.
+7. **Lookup** (line type): block VoIP and landline; cache the result by phone hash for 30 days (also for refused numbers); skipped for known numbers.
+8. Start the Verify text, update the send row to `sent` or `provider_error` (cost 0 if rejected), create the challenge, put `public_id` and a random nonce in the session cookie.
+
+Provider down, balance empty or a cap hit: `unavailable` and cap outcomes cost 0 and do not count against a person's limits; after 5 in a row a circuit breaker skips Twilio for 5 minutes; the owner gets one email a day per event (`cap_hit`, `cap_50pct`, breaker) at `OWNER_ALERT_EMAIL`. A runtime switch `auth_phone.sends_paused` stops sends without a release.
 
 Refusals are recorded as send rows with a `blocked_*` outcome so they appear in the counts. Every refusal looks the same to the person ("We could not send a code to that number. Check it and try again, or try later."), except the cap and busy message.
 
 ## 7. Codes: checking
 
-`POST` verify: the challenge must be open, unexpired, match this session's nonce, and the wrong-tries lock must not apply; then ask Twilio to check the code. A wrong code adds one to `auth_phone_wrong_tries`. An approved code closes the challenge in the same transaction (`UPDATE ... WHERE status='open' RETURNING`) so it works once. A code typed in another browser fails.
+`POST` verify: the challenge must be open, unexpired, match this session's nonce, and the wrong-tries lock must not apply; then ask Twilio to check the code. The attempt is reserved before the vendor call (`UPDATE ... SET attempts=attempts+1 WHERE status='open' AND attempts<5 AND expires_at>now() RETURNING`) and refunded only on network error or throttle. Vendor statuses map: approved; `max_attempts_reached` is too-many; `expired`, `deleted`, `failed` are expired; `pending` and `canceled` are wrong or unknown. A wrong code adds one to `auth_phone_wrong_tries`. An approved code closes the challenge in the same transaction (`UPDATE ... WHERE status='open' RETURNING`) so it works once. A code typed in another browser fails.
 
 ## 8. Device cookie and the real client address
 
-- **Device:** a random 128-bit signed cookie `sc_dev`, set before the first phone request and kept 400 days. Its hash is the "device" in limits. Clearing cookies gives a new device, which is why IP, phone and the whole-site cap exist too.
-- **IP address:** you asked to read `CF-Connecting-IP`. The site is already built to sit behind Cloudflare and then Railway's edge (`B/utils/client_ip.py:1-30`, `TRUSTED_PROXY_HOPS`, `TRUSTED_PROXY_CIDRS=cloudflare`). A header anyone can send is only safe if the request really came through Cloudflare, and the file's own notes say a request sent straight to the Railway address could forge it until that address is removed and the origin locked (`client_ip.py:30-33`). **Design:** a new function `phone_client_ip()` returns `CF-Connecting-IP` only when the existing trusted-proxy check says the request arrived through Cloudflare's ranges; otherwise it falls back to `client_ip()`. The same function serves chat limits. Owner question: is `sarraficars.com` proxied by Cloudflare (orange cloud) and has the `*.up.railway.app` address been removed?
+- **Device:** a rate-limit key only, never a trust signal (it never skips a code or marks a browser trusted). A random 128-bit signed cookie `sc_dev`, set before the first phone request and kept 400 days. Its hash is the "device" in limits. Clearing cookies gives a new device, which is why IP, phone and the whole-site cap exist too.
+- **IP address:** you asked to read `CF-Connecting-IP`. The site is already built to sit behind Cloudflare and then Railway's edge (`B/utils/client_ip.py:1-30`, `TRUSTED_PROXY_HOPS`, `TRUSTED_PROXY_CIDRS=cloudflare`). A header anyone can send is only safe if the request really came through Cloudflare, and the file's own notes say a request sent straight to the Railway address could forge it until that address is removed and the origin locked (`client_ip.py:30-33`). **Design:** a new function `phone_client_ip()` returns `CF-Connecting-IP` only when the existing trusted-proxy check says the request arrived through Cloudflare's ranges; otherwise it falls back to `client_ip()`; it also requires a shared-secret header added by a Cloudflare Transform Rule (`CF_ORIGIN_SECRET`), because any sender using Cloudflare's own servers can set the header. The same function serves chat limits. Owner question: is `sarraficars.com` proxied by Cloudflare (orange cloud) and has the `*.up.railway.app` address been removed?
 - IPv6 addresses are counted by /64 (as login limits are today, `B/auth/pages.py:35-51`).
 
 ## 9. Sessions: longer, with a way to cut them
 
-- Shopper sessions last **60 days, sliding**, configurable (`SESSION_DAYS_SHOPPER`, default 60; you asked for 30 or more). Today the lifetime is a fixed 14 days (`B/main.py:82`). Admin and dealer sessions must stay short (14 days): the cookie lifetime is global, so staff roles get an extra check on `auth_at` (set at login) that rejects a staff session older than `SESSION_DAYS_STAFF` (default 14).
-- A signed cookie cannot be revoked (survey 4). With 60-day cookies that matters more, so phone accounts get `sessions_valid_after`: a "sign out everywhere" button and an admin action set it to now; the per-request profile check (`B/billing/access.py:185-215`) rejects a phone session whose `auth_at` is older, using a 60-second per-worker cache. When the planned `users.auth_epoch` (registry V030) lands, move this onto it.
+- Lifetimes (owner decision 2026-11-13): shoppers **30 days, sliding** (`SESSION_DAYS_SHOPPER`, default 30); **admins and `/dev` operators 12 hours, absolute** (`SESSION_HOURS_ADMIN`, default 12); dealers and other staff 14 days, absolute (`SESSION_DAYS_STAFF`). Today the lifetime is a fixed 14 days (`B/main.py:82`). The cookie lifetime is global (30 days); one `before_request` hook reads the role from the database and applies the limit from `auth_at`, set inside `finalize_app_session`, `_finalize_dev_session` and both OAuth completions. See card S10.
+- A signed cookie cannot be revoked (survey 4). With 60-day cookies that matters more, so phone accounts get a row in `auth_session_epochs` (S5): a "sign out everywhere" button, a number change, a claim, an admin action, suspend, delete and a password change set `valid_after` to now; the session hook rejects any session whose `auth_at` is older (cache 5 s for admin and dealer, 30 s for shoppers; fails closed for admin and dealer). `build_access_context` (`B/billing/access.py:405-482`) is not the place for this; the new hook is. When the planned `users.auth_epoch` lands, move this onto it.
 - Session keys added at login: `auth_method` (`phone`, `password`) and `auth_at`.
 - After a number change or "sign out everywhere", other devices must sign in again (and pay the 6 cents).
 
@@ -209,7 +212,7 @@ What happens to the old routes:
 - `/staff/login` and `POST /api/auth/login` accept **only** staff and dealer roles. A shopper account that submits a password gets the same generic failure as any wrong password (no hint that the account exists or uses a phone), and the page header says "Shoppers sign in with a phone number."
 - `/register` and `POST /api/auth/register` no longer create shopper accounts: they redirect to the phone page (JSON: 410 `use_phone_sign_in`). Dealer registration is unchanged.
 - `/forgot-password`, `/reset-password`, email verification and `/resend-verification` stay available only for staff and dealer accounts and are hidden from shoppers.
-- Phone login **refuses** admin and dealer roles with the same generic failure and a log event.
+- Phone login **refuses** every account that fails `is_phone_eligible` (stored role `general_user`, or an empty role only with no dealer id, registry id and org id; active; not an env-admin) with the same generic failure and a log event; the claim flow (section 12) and number change use the same test. `/dealer/login` and `/api/auth/login` accept only `dealership_*` roles; `/staff/login` is the only password door for `admin` and then needs the S12 step; Google and Apple never open `/admin` or `/dev` without the authenticator step; `/dealer/register` is closed by default (`DEALER_SELF_REGISTER_ENABLED`).
 - Google and Apple routes: section 11.
 
 ## 11. Google and Apple sign-in: my recommendation
@@ -229,7 +232,7 @@ Facts: shopper data hangs on `users.id` (saved cars, saved searches, hidden deal
 **Recommended: "claim your old account" by email link, with start-fresh as the fallback.** No bulk mailing needed.
 1. After signing in by phone, a new person sees one plain line: "Had an account here before? Add it to this number." (also on the phone page for signed-out people).
 2. They type their old email. We always answer "If that email has an account, we sent a link" (no guessing which emails exist). The link is a one-time token (the existing reset-token pattern, `B/auth/password_reset.py:173-187`, 30 minutes; sent with the existing email sender, `B/utils/mfa_delivery.py:56-180`).
-3. The link opens a page that asks for the phone number and runs the normal text-code check (`purpose='claim'`). When it passes, the phone number is attached **to the old account** (the old `user_id` keeps all its data) and the person is signed in as that account. Nothing is copied or merged. Google and Apple accounts work the same way, because the token proves the email.
+3. The link only stores the token in the claimant's browser session (a `GET` changes nothing). The page asks for the phone number and runs the normal text-code check (`purpose='claim'`); the token is consumed in the same transaction as the approved code. When it passes, the phone number is attached **to the old account** (the old `user_id` keeps all its data), the old password, `google_sub`, `apple_sub` and email tokens are cleared, other sessions are cut (`auth_session_epochs`), the old email gets a notice, and the person is signed in as that account. Claim is for eligible shoppers only. Nothing is copied or merged. Google and Apple accounts work the same way, because the token proves the email.
 4. If the person had already signed up fresh with that number, the new empty account is merged into the old one by a small admin-reviewed action: re-key the shopper tables listed in survey 1.4 from the new id to the old id, then delete the new row. Card S5 includes the table list and a test that every `user_id` table is covered. If the new account already holds data, support decides.
 5. Requirements: transactional email must work (`RESEND_API_KEY`, `RESEND_FROM` set; `PASSWORD_RESET_ENABLED` is not required for this flow but the sender is; survey 5).
 6. After 90 days, unclaimed shopper accounts with a password and no phone are listed for the owner to delete or anonymise (comments and reviews keep a display name, per the privacy text). The claim link keeps working until then.
@@ -243,7 +246,7 @@ Cost of the recommendation: card S6 (claim flow), a few hundred lines. If you pi
 - Phone-only account, lost or changed number: a person who still has the old number signs in and changes it through the account page (fresh code to the old number, then a code to the new one, `purpose='change'`).
 - Lost number and no access: **support may replace the number after proof** (you agreed). Proof to ask for: the email used for a claim, a saved-search name or saved car, the approximate sign-up date. An admin uses a "replace phone number" action that texts a code to the new number, records an audit line (admin id, account id, reason; no number) and signs the account out everywhere.
 - If the account has a real email, a "your sign-in number changed" notice goes to it (last two digits only).
-- A recycled number: the new holder can sign in to the old account. Controls: fresh-code check before number changes; notice to a real email; encourage adding an email; chat limits count the phone hash so recycling does not mint allowance. Residual risk accepted and written here.
+- A recycled number: if a number has not been used to sign in for `AUTH_PHONE_DORMANT_DAYS` (default 180), a new holder gets a fresh empty account and the old data stays reachable only through the claim email. Within 180 days a new holder still reaches the account: that residual risk is accepted and written here. Other controls: fresh-code check before number changes; notice to a verified email (verified at least 24 hours earlier; a change started within 24 hours of an email change is held 24 hours); chat limits count the phone hash. Support replaces a number only after confirmation from the account's verified email plus a 24-hour hold and a notice; with no verified email the person starts a new account.
 - Staff and dealers recover by the existing reset-password flow.
 
 ## 14. Abuse cases and the control for each
@@ -264,7 +267,9 @@ Cost of the recommendation: card S6 (claim flow), a few hundred lines. If you pi
 
 UI rule: **no cards, boxes or pill badges** (owner decision `docs/remediation/OWNER_DECISIONS_LOG.md` D-N19; `docs/VISUAL_REVIEW_2026_09_28.md` rows 31-32: one flat primary button, underline fields). Plain headings, one column, sentences for states, text links for secondary actions, inline error lines. The Turnstile widget is a small embedded element the vendor draws; use its compact size and put it inline under the field.
 
-Phone page, top to bottom: heading "Sign in", one underline field "Mobile phone number", the Turnstile widget, an unticked checkbox with the consent text next to it, the flat button "Text me a code", a plain link "Staff sign-in". **Consent text (as you wrote it; draft for the lawyer in card S9):** "I agree to receive one-time login codes by text message from Sarrafi Cars at the number above. Message and data rates may apply. Message frequency: only when I request a code. Reply STOP to opt out or HELP for help. See our Terms and Privacy Policy. We do not sell or share your phone number or opt-in data with third parties for marketing." The button stays disabled until the box is ticked, and the server checks it too.
+Phone page, top to bottom: heading "Sign in", one underline field "Mobile phone number", the Turnstile widget, an unticked checkbox with the consent text next to it, the flat button "Text me a code", a plain link "Staff sign-in". **Consent text (as you wrote it; draft for the lawyer in card S14; it must also name the program "Sarrafi Cars", link to Terms and Privacy beside the box, give a support contact for HELP, and say carriers are not liable for delayed or undelivered messages):** "I agree to receive one-time login codes by text message from Sarrafi Cars at the number above. Message and data rates may apply. Message frequency: only when I request a code. Reply STOP to opt out or HELP for help. See our Terms and Privacy Policy. We do not sell or share your phone number or opt-in data with third parties for marketing." The button stays disabled until the box is ticked, and the server checks it too.
+
+Provider sentences (card S6 reasons): unavailable: "Sign-in by text is not available right now. Please try again later." Opted out: "Texts to this number are blocked. Reply START to the number, or use another number." Known numbers at a cap get the busy sentence; unknown numbers get the neutral failure.
 
 Code page: "We sent a 6-digit code to the number ending 23." One field, button "Sign in", text links "Send again" (counts down 60 seconds) and "Use a different number".
 
@@ -288,17 +293,19 @@ All phone routes answer 404 while `AUTH_PHONE_LOGIN_ENABLED` is off. New POST ro
 
 ## 16. Privacy
 
-- **Stored:** the phone number in E.164 (needed to text it and to show "ending 23"), a hash for limits, the consent time and text version, the line type. Hashes only in send rows, chat counters and logs. The code is never ours (Twilio holds it). No message text, no vendor text.
+- **Stored:** the phone number in E.164, **in clear text on purpose** (needed to text it and to show "ending 23"; the hash only keeps raw numbers out of limit, send, counter and log rows and does not protect against a leak of both the database and the pepper), a hash for limits, the consent time and text version, the line type. Hashes only in send rows, chat counters and logs. The code is never ours (Twilio holds it). No message text, no vendor text.
 - **Retention:** challenges 7 days after they end; send rows 30 days; wrong-try rows 24 hours after unlock; chat counters 35 days; identities until the account is deleted. A nightly job deletes by age.
 - **Deletion:** the person can ask to delete the account; the identity row and personal rows are deleted **within 30 days** (the Terms and Privacy pages say so). The chat counter for the phone hash can stay for 35 days then goes with the nightly job. Twilio keeps its own records under its own policy: review at account setup.
 - **Consent record:** `consent_at` and `consent_text_version` per identity; changing the consent text increments the version.
-- **Terms, Privacy Policy and consent page:** none exist on the site today (no template). Card S9 drafts them for owner approval: phone number treated as personal data, purposes (sign-in codes only), no sale or sharing for marketing, retention, deletion within 30 days, STOP/HELP, contact address. I am not a lawyer; the PR marks them as drafts.
+- **Terms, Privacy Policy and consent page:** none exist on the site today (no template). Card S14 drafts them for owner approval; the pages and the phone page show a DRAFT banner and the boot check refuses the flag until `LEGAL_PAGES_APPROVED_VERSION` equals the consent text version: phone number treated as personal data, purposes (sign-in codes only), no sale or sharing for marketing, retention, deletion within 30 days, STOP/HELP, contact address. I am not a lawyer; the PR marks them as drafts.
 - Admin lists show the last four digits only.
+- **Pepper runbook:** rotating `PHONE_HASH_PEPPER` resets counters and locks for at most 35 days (acceptable; login is unaffected because identities are found by `phone_e164`, never by hash; do not look identities up by hash). Sub-keys per domain (phone, ip, device) are derived from it.
+- **Deletion:** `purge_user_data` (card S7) removes the identity and every listed shopper table; chat counters and send rows keep only hashes and expire at 35 and 30 days (they are not deleted on request, because deleting them would reset allowances).
 
 ## 17. Twilio webhook and logs
 
-- `POST /webhooks/twilio/verify`: reads the form body, validates `X-Twilio-Signature` with the `twilio` library's request validator and `TWILIO_AUTH_TOKEN` (or the API key secret), using the public URL (`PUBLIC_BASE_URL`) the vendor was given; a bad or missing signature gets 403 and a count. Accepts delivery-status events (sent, delivered, failed, undeliverable) to update the send row outcome and cost estimate. **No message bodies, phone numbers or codes are logged** (only event type, our hashed reference, outcome). Unknown events return 200 and are ignored. Idempotent by vendor event id. CSRF-exempt by being listed as signature-protected.
-- Logger `auth_phone`, key=value lines: `event`, `provider`, `country`, `purpose`, `reason`, `latency_ms`, `phone_hash` and `ip_hash` cut to 8 characters. Events: start, blocked_turnstile, blocked_voip, blocked_country, blocked_limit, blocked_cap, provider_error, check_ok, check_wrong, check_locked, check_expired, signup, login, claim, change, cap_50pct (the 150-send alert), cap_hit, webhook_bad_signature.
+- **Not used at launch.** Costs, caps and delivery counts come from the app's own send rows (`SMS_EST_COST_CENTS` times sends), never from callbacks. The route stays in the code, inert (404 unless `TWILIO_WEBHOOK_ENABLED`; the validator uses `TWILIO_AUTH_TOKEN` only). When enabled: `POST /webhooks/twilio/verify` reads the form body, validates `X-Twilio-Signature` with the `twilio` library's request validator and `TWILIO_AUTH_TOKEN` (or the API key secret), using the public URL (`PUBLIC_BASE_URL`) the vendor was given; a bad or missing signature gets 403 and a count. Accepts delivery-status events (sent, delivered, failed, undeliverable) to update the send row outcome and cost estimate. **No message bodies, phone numbers or codes are logged** (only event type, our hashed reference, outcome). Unknown events return 200 and are ignored. Idempotent by vendor event id. CSRF-exempt by being listed as signature-protected.
+- Logger `auth_phone`, key=value lines: `event`, `provider`, `country`, `purpose`, `reason`, `latency_ms`, and a 6-character hash prefix only on `blocked_*` and `check_locked` events. Events: start, blocked_turnstile, blocked_voip, blocked_country, blocked_limit, blocked_cap, provider_error, check_ok, check_wrong, check_locked, check_expired, signup, login, claim, change, cap_50pct (the 150-send alert), cap_hit, webhook_bad_signature.
 - A nightly job (`backend/scripts/auth_phone_nightly.py`) writes yesterday's totals (sends, approvals, ratio, cost estimate, blocked by reason) and exits non-zero at the alert level so a scheduled routine can notify the owner.
 - A read-only operator page in `/dev` shows today's sends against the 300 and 15-dollar caps.
 
@@ -306,23 +313,23 @@ All phone routes answer 404 while `AUTH_PHONE_LOGIN_ENABLED` is off. New POST ro
 
 - `AUTH_PHONE_LOGIN_ENABLED`, default off. Off: phone routes 404, `/login` still shows the old form (so turning the flag on is the switch from email to phone). Because shopper password sign-in is removed from day one, **the flag flip is the launch**; before it, shoppers sign in the old way.
 - `AUTH_PHONE_ALLOWED_NUMBERS` (optional list) restricts phone sign-in to named numbers for the first test days (owner and friends) while the old form is still the default for everyone else; with it set, only listed numbers can use the phone page and the old form stays visible.
-- Rollout is card S14. Rollback: flag off puts the old form back for shoppers whose accounts still have a password; accounts created by phone have no usable password and **cannot sign in until the flag is back on**; warn before rolling back after launch.
+- Rollout is card S18. Rollback: flag off puts the old form back for shoppers whose accounts still have a password; accounts created by phone have no usable password and **cannot sign in until the flag is back on**; warn before rolling back after launch.
 
 ## 19. Pay structure and this design
 
-With everything free, there are no plans, trials or Stripe flows to protect: `users.id` is the only key. The plan columns, `B/billing/` and the checkout pages stay in the repository, dormant, with `BILLING_STRIPE_ENABLED` off (a test keeps it off and keeps the paid pages hidden). Phone verification is still useful later if paid plans or trials return: the verified, unique number is a good "one trial per person" key. See `PAY_AND_STRIPE_AUDIT.md` (kept as the revival checklist).
+With everything free (free means no plan gating; every feature still needs a phone sign-in in production), there are no plans, trials or Stripe flows to protect: `users.id` is the only key. The plan columns, `B/billing/` and the checkout pages stay in the repository, dormant, with `BILLING_STRIPE_ENABLED` off (a test keeps it off and keeps the paid pages hidden). Phone verification is still useful later if paid plans or trials return: the verified, unique number is a good "one trial per person" key. See `PAY_AND_STRIPE_AUDIT.md` (kept as the revival checklist).
 
 ## 20. Environment variables (names only)
 
 Names you listed: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` (or `TWILIO_API_KEY_SID` and `TWILIO_API_KEY_SECRET`), `TWILIO_VERIFY_SERVICE_SID`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `SMS_DAILY_SEND_CAP` (start 300), `SMS_ALLOWED_COUNTRIES` (`US`), `PHONE_HASH_PEPPER` (random, 32 or more characters).
 
-Names I add (all with safe defaults, so you only set them if you want to change a number): `AUTH_PHONE_LOGIN_ENABLED`, `AUTH_PHONE_PROVIDER` (`fake` or `twilio_verify`), `AUTH_PHONE_ALLOWED_NUMBERS`, `AUTH_PHONE_CODE_TTL_S` (300), `AUTH_PHONE_MAX_WRONG_TRIES` (5), `AUTH_PHONE_LOCK_MINUTES` (15), `AUTH_PHONE_RESEND_WAIT_S` (60), `SMS_DAILY_SPEND_CAP_CENTS` (1500), `SMS_ALERT_SEND_THRESHOLD` (150), `SMS_EST_COST_CENTS` (6), `AUTH_OAUTH_SHOPPERS_ENABLED` (off), `SESSION_DAYS_SHOPPER` (60), `SESSION_DAYS_STAFF` (14), plus the chat names in `CHAT_LIMITS.md` section 5. The per-phone, per-IP and per-device send limits are settings rows with the defaults in section 5 (same mechanism as chat). Production refuses to start with the flag on and the fake provider, a missing pepper, or a missing Turnstile or Twilio value.
+Names I add (all with safe defaults, so you only set them if you want to change a number): `AUTH_PHONE_LOGIN_ENABLED`, `AUTH_PHONE_PROVIDER` (`fake` or `twilio_verify`), `AUTH_PHONE_ALLOWED_NUMBERS`, `AUTH_PHONE_CODE_TTL_S` (300), `AUTH_PHONE_MAX_WRONG_TRIES` (5), `AUTH_PHONE_LOCK_MINUTES` (15), `AUTH_PHONE_RESEND_WAIT_S` (60), `SMS_DAILY_SPEND_CAP_CENTS` (1500), `SMS_ALERT_SEND_THRESHOLD` (150), `SMS_EST_COST_CENTS` (6), `AUTH_OAUTH_SHOPPERS_ENABLED` (off), `SESSION_DAYS_SHOPPER` (30), `SESSION_HOURS_ADMIN` (12), `SESSION_DAYS_STAFF` (14), `AUTH_PHONE_DORMANT_DAYS` (180), `SMS_EST_LOOKUP_CENTS` (1), `SMS_NEW_NUMBER_SHARE_PCT` (50), `TWILIO_WEBHOOK_ENABLED` (off), `LEGAL_PAGES_APPROVED_VERSION`, `CF_ORIGIN_SECRET`, `OWNER_ALERT_EMAIL`, `DEALER_SELF_REGISTER_ENABLED` (off), plus the chat names in `CHAT_LIMITS.md` section 5. The per-phone, per-IP and per-device send limits are settings rows with the defaults in section 5 (same mechanism as chat). Production refuses to start with the flag on and the fake provider, a missing pepper, or a missing Turnstile or Twilio value.
 
 ## 21. Risks
 
 - Texts are a weak login against SIM swap; that is why staff are excluded and number changes need a fresh code.
 - Every login costs money, including attackers' attempts; Turnstile first, then the caps, protect the bill. Set a spend alert at Twilio too.
-- With password sign-in removed, the vendor, Cloudflare or Twilio being down means shoppers cannot sign in; existing 60-day cookies keep most people in.
+- With password sign-in removed, the vendor, Cloudflare or Twilio being down means shoppers cannot sign in; existing 30-day cookies keep most people in.
 - The two-store write (SQLite user, Postgres identity) is not atomic; the compensating delete handles the race, and the users cutover removes the problem.
 - A person who loses a phone number and has no email or support proof loses the account.
 

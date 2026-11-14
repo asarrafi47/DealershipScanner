@@ -13,7 +13,8 @@ it to a list. This test walks ``app.url_map`` and, for every mutating
   ``api_admin_operator_`` prefixes, and both blueprint hooks.
 * ``in_view``: the view calls ``validate_csrf_header()`` itself (community
   comments; checked from source below).
-* ``exempt``: Stripe webhooks, verified by ``Stripe-Signature`` instead.
+* ``exempt``: Stripe webhooks (``Stripe-Signature``) and the Twilio Verify webhook
+  (``X-Twilio-Signature``), verified by their vendor signature instead.
 * ``mfa_stub``: 2FA was removed; these endpoints only redirect.
 
 Anything else fails ``test_every_mutating_rule_is_csrf_protected_or_classified``.
@@ -52,10 +53,17 @@ IN_VIEW = {
     ("api_dealer_comment_flag", "POST"): "_flag_comment",
 }
 
-# Server-to-server, verified by the Stripe-Signature header (billing/routes.py).
+# Server-to-server, verified by a vendor signature header: Stripe-Signature (billing/routes.py)
+# and X-Twilio-Signature (auth/phone/webhook.py). The value is what the view's source must show.
 EXEMPT = {
     ("billing.stripe_webhook", "POST"),
     ("billing.premium_webhook", "POST"),
+    ("twilio_webhook.twilio_verify_webhook", "POST"),
+}
+EXEMPT_SIGNATURE_MARKERS = {
+    "billing.stripe_webhook": ("Stripe-Signature", "invalid_signature"),
+    "billing.premium_webhook": ("Stripe-Signature", "invalid_signature"),
+    "twilio_webhook.twilio_verify_webhook": ("X-Twilio-Signature", "signature_is_valid"),
 }
 
 # 2FA removed: redirect-only handlers (auth/pages.py:280-292, dev/routes.py dev_mfa_gone;
@@ -177,7 +185,7 @@ def test_classification_entries_match_real_rules(app):
 
     for ep, _method in EXEMPT:
         src = inspect.getsource(app.view_functions[ep])
-        assert "Stripe-Signature" in src and "invalid_signature" in src, ep
+        assert all(marker in src for marker in EXEMPT_SIGNATURE_MARKERS[ep]), ep
 
     for ep, _method in pairs:
         if _is_mfa_stub(ep):

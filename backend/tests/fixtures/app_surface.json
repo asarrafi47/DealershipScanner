@@ -1425,6 +1425,13 @@
    [
     "GET"
    ]
+  ],
+  [
+   "/webhooks/twilio/verify",
+   "twilio_webhook.twilio_verify_webhook",
+   [
+    "POST"
+   ]
   ]
  ],
  "hooks": {
@@ -1441,14 +1448,16 @@
    "None": [
     "_per_request_csp_nonce",
     "_csrf_mutating_requests",
-    "_billing_gate_paid_routes"
+    "_billing_gate_paid_routes",
+    "_device_cookie_before"
    ]
   },
   "after_request_funcs": {
    "None": [
     "_static_cache_headers",
     "_gzip_large_json",
-    "_csp_headers"
+    "_csp_headers",
+    "_device_cookie_after"
    ]
   },
   "teardown_request_funcs": {},
@@ -1468,6 +1477,9 @@
     "_default_template_ctx_processor"
    ],
    "billing": [
+    "_default_template_ctx_processor"
+   ],
+   "twilio_webhook": [
     "_default_template_ctx_processor"
    ],
    "google_oauth": [

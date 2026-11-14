@@ -239,7 +239,7 @@ def _complete_login(user_id: int, *, is_new_user: bool = False):
     if is_admin_role(session.get("user_role")) or bool(session.get("user_is_premium")):
         return _post_login_redirect()
 
-    if oauth_post_intent == "premium" or is_new_user:
+    if Config.billing_stripe_enabled() and (oauth_post_intent == "premium" or is_new_user):
         session["post_auth_intent"] = "premium"
         session["auth_welcome_source"] = "apple_new" if is_new_user else "apple"
     return _post_login_redirect()

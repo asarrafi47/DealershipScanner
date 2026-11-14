@@ -86,6 +86,14 @@ _CSRF_HEADER_POST_ENDPOINTS = (
 )
 
 
+# POST endpoints that are deliberately NOT in any CSRF list above because the caller is a server,
+# not a browser, and the request proves itself with a vendor signature instead of a token:
+#   billing.stripe_webhook, billing.premium_webhook  (Stripe-Signature, backend/billing/routes.py)
+#   twilio_webhook.twilio_verify_webhook  (X-Twilio-Signature checked against the public URL,
+#       backend/auth/phone/webhook.py; 403 on a bad or missing signature, 404 while the phone
+#       callbacks are off). backend/tests/test_csrf_coverage.py (EXEMPT) is the one list of them: it
+#       classifies each as ``exempt`` and checks the view's source for its signature check.
+
 # Endpoint-name prefixes whose POST forms carry the csrf_token field.
 _CSRF_FORM_POST_PREFIXES = ("dealer_portal.", "store_admin.")
 

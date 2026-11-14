@@ -44,6 +44,7 @@
                     <dt>Account type</dt>
                     <dd>{{ role_label }}</dd>
                 </div>
+                {% if billing_on %}
                 {% if is_premium %}
                 <div class="account-profile__meta-row">
                     <dt>Plan</dt>
@@ -54,6 +55,7 @@
                     <dt>Billing</dt>
                     <dd><a href="{{ url_for('account_billing_page') }}">Plans &amp; subscription</a></dd>
                 </div>
+                {% endif %}
                 {% endif %}
             </dl>
 
