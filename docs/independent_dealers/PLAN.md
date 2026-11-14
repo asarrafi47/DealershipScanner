@@ -44,8 +44,8 @@ of the old Overture discovery is not used again.
 Platforms with evidence of serving independents (fixtures and code): **Overfuel** (2 of the 6
 fixture independents, `backend/scanner/synth/platforms/overfuel.py`), **server-rendered card pages**
 (`html_cards.py:17-24`, Quantum Auto Sales), **Dealer.com** and **Dealer eProcess** (1 each in the
-fixtures), **autoWALL** (`autowall.py`, a franchise store today, a generic HTML list), and
-**nabthat** (JSON-LD, `nabthat.py`). Platforms said to be common among used lots but with no
+fixtures), and **nabthat** (JSON-LD, `nabthat.py`). **autoWALL** (`autowall.py`, a generic HTML
+list) is seen only on a franchise store today. Platforms said to be common among used lots but with no
 fingerprint or template in `backend/scanner`: DealerCenter, Frazer, Carsforsale.com-hosted sites,
 Dealer Car Search, AutoManager, V12. All of these are **to verify**: their share is unknown until
 a census.
@@ -65,7 +65,8 @@ and used-only is `inaccurate` unless a person lists it (`assess.py:170-177`). Ca
 owner-gated:
 
 - **Small lot.** With the site's own total T from the walk report (L16), the floor becomes the
-  smaller of 20 and 90% of T, never under 3; a 15-car site that shows 15 cars and returns 14 passes.
+  smaller of 20 and 90% of T, never under 3, on the first scan and on every later scan (half the
+  baseline still applies once one exists); a 15-car site that shows 15 cars and returns 14 passes.
   Without T the 20-row floor stays, but an independent under it is `cannot_assess` for volume, not
   a failure.
 - **Used only.** Passes when the dealer is independent by name or host (not by the used-only signal,
@@ -83,8 +84,12 @@ owner-gated:
 The loop cannot onboard a dealer today: requests name only roster dealers (`unknown_dealer`,
 `docs/scan_loop/BUNDLE.md:226`). Card L28 adds an owner-written onboarding list in the private data
 repository (`config/onboard.json`, writer O, like `config/loop.json`) that the roster rule admits for
-`probe`, `validate` and `rescan` requests, with the dealer's URL. Onboarding dealers run only as
-requested runs, never in the nightly fleet, until they pass twice; then they hold cars and join the
+`probe`, `validate` and `rescan` requests, with the dealer's URL, which Railway passes to the
+dealer pipeline as the dealer's homepage for recipe synthesis (today the pipeline finds a URL only in
+`dealers.json` or in active cars, `backend/scanner/pipeline/run.py:74-84`). Onboarding dealers run
+only as requested runs until they pass twice (2 consecutive executed `rescan` requests with verdict
+`ok`, counted from the loop ledger). Their first rescan already writes cars, so
+`fleet_scan.load_roster` holds listed ids out explicitly until then (L28); after that they join the
 fleet roster by the existing rule.
 
 Batches (L33): 6 dealers per request (the loop's cap), at most 1 onboarding request per day at first
@@ -92,13 +97,16 @@ inside the existing 4 cycles, one metro at a time. Per dealer the bundle records
 stamped, verdict, minutes and requests used; per batch, the yield (dealers ok, cars added).
 
 Cost and time: a full fleet of about 458 dealers costs about 0.75 USD and 160 minutes on 8 shards
-(`docs/scan_loop/README.md` stage 1), so a batch of 6 small lots is under 1 cent and a few minutes.
+(`docs/scan_loop/README.md` stage 1), so the compute cost of a batch of 6 small lots is a few cents at most; time is recipe synthesis plus
+about 3 minutes of replay per dealer, roughly 20 to 60 minutes per batch run as one shard inside one
+of the 4 daily cycles. L33 records the measured minutes after the first batch.
 Google Places discovery is billed per call; the price is **to verify** in the Google Cloud console
 before the first metro; the call cap bounds it.
 
-**Stop rule.** Stop a metro after 2 batches in a row with fewer than 2 `ok` dealers of 6, or fewer
-than 10 cars per added dealer. Stop all onboarding at once, and tell the owner, on any VIN moved from
-an existing dealer, a fleet gate HOLD or FAIL that touches an onboarding dealer, a robots or terms
+**Stop rule.** Stop a metro after 2 batches in a row with fewer than 2 `ok` dealers of 6, or with a
+median under 5 stamped cars per `ok` dealer (small lots are welcome, empty ones are not). Stop all onboarding at once, and tell the owner, on any VIN moved from
+an existing dealer (the VIN owner guard events in the bundle), a fleet gate HOLD or FAIL that
+touches an onboarding dealer, a robots or terms
 problem, or a complaint from a dealer.
 
 ## 5. Second route: dealers with no scannable site
@@ -125,16 +133,21 @@ by name once merged). Card L34 is the bridge; it does not edit `docs/auth_sms/`.
 - **No evasion.** No login walls, no challenge solving, no browser. The scanner's TLS-impersonated
   fetch (`backend/scanner/synth/http.py:97`) is an existing escalation for franchise sites; for
   onboarding dealers it is off unless the owner decides otherwise (question 4 below).
-- **Rate.** Probes keep the existing 4-second spacing (`SCANNER_SYNTH_FETCH_DELAY`,
-  `backend/scripts/national_scan.py:28`) and a page cap; one dealer at a time per host.
+- **Rate.** Onboarding probes and rescans set a 4-second spacing explicitly
+  (`SCANNER_SYNTH_FETCH_DELAY=4`, as `backend/scripts/national_scan.py:28` does; the default is 0,
+  `backend/scanner/synth/http.py:69`) and a page cap; one dealer at a time per host (L32).
 - **Google data.** Google Maps Platform terms limit how long Places content other than the place ID
   may be stored; whether our registry columns comply is **to verify** before L30 runs.
 
 ## 7. Honest expected gain
 
-What we know: in the fixtures 6 of 172 dealers are independents and 1 scans `ok`; with L27, two more
-would likely pass (`lbmboaz-com` if it is truly used-only, `overdrive-usa-com` is a group store and
-stays out); the two Overfuel lots need price and trim work. What we do not know: how many
+What we know: in the fixtures 6 of 172 dealers are independents and 1 scans `ok`. L27 alone moves
+none of the other five to `ok`: `lbmboaz-com` (used 239, new 0) is also `inaccurate` for incomplete
+rows (25 of 239, floor 5%), and it is independent only by the used-only signal, which section 3 does
+not accept for the used-only pass, so it needs its fields fixed and a person's check;
+`overdrive-usa-com` is a group store and stays out; the two Overfuel lots need price and trim work;
+`autosavvy-com` needs its recipe repaired. L27 matters for the never-scanned small and used-only
+lots, whose number is **[DB]**. What we do not know: how many
 independents a metro has, how many have their own site and which platforms they use. The report
 (section 0) and the first census (L31) answer that.
 
@@ -149,7 +162,7 @@ releases and the decisions below.
 
 Risks: low yield per batch (stop rule); sites that need a browser (second route); VIN theft from a
 shared feed (single-store hosts only, VIN owner guard); new fleet-gate noise (onboarding runs stay
-out of the fleet until they pass twice); Places cost (call cap); terms and robots (L32, own site only).
+out of the fleet until 2 consecutive `ok` rescans, L28); Places cost (call cap); terms and robots (L32, own site only).
 
 ## 8. Owner decisions (yes or no)
 

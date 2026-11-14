@@ -13,11 +13,14 @@ section 4.
 1. **The scan list is closed.** The nightly fleet scans only dealers that already have active cars
    (plus a hand-kept revived list). A dealer the scanner has never scanned can never join by itself.
    The dealer registry that discovery fills is not read by the fleet at all.
-2. **The dealers that were let in long ago were picked as brand stores.** The nationwide discovery
-   that built the old 22k-row manifest dropped every dealer whose name had no car brand. The
+2. **The dealers that were let in long ago were likely picked as brand stores.** The nationwide
+   discovery that built the old 22k-row manifest dropped every dealer whose name had no car brand;
+   how much of today's roster came from it is **[DB]**. The
    newer Google Places discovery returns at most 20 places per circle, about one circle per metro.
-3. **Small and used-only lots are scored as failures.** Under 20 cars is `no_rows`; used cars only is
-   `inaccurate` (and fails gate GF5) unless a person adds the dealer to an allow list.
+3. **Small and used-only lots would be scored as failures.** Under 20 cars on a first scan is
+   `no_rows`; used cars only is `inaccurate` (and fails gate GF5) unless a person adds the dealer to
+   an allow list. In the fixtures this hits 1 of the 5 failing independents; the others fail on data
+   quality, a broken recipe or a group feed.
 4. **The live site hides cars with any missing spec field** (19 fields), which hits thin independent
    feeds hardest. How many is **[DB]**.
 5. **In the committed 2026-11-03 fixtures, 6 of 172 dealers (3.5%) are independents**, and only 1
@@ -37,7 +40,7 @@ Autotrader and CarGurus (never scanned; we only ever read a dealer's own site).
 | 3 | `DEALERS_FROM_ACTIVE_INVENTORY=1`: cars with `listing_active` only | `backend/scanner/manifest.py:178-221`, `:437-444` | dealers with live rows | anyone whose rows all went inactive, and every new dealer |
 | 4 | `DEALERS_FROM_DB=1`: the `dealerships` registry with a website | `backend/scanner/manifest.py:74-136`, `:446-450` | every registry row with a site, any kind | nothing by kind; but no Railway job sets this flag (fleet_scan only reads `SCAN_FLEET`/`SCAN_DEALERS`, `fleet_scan.py:5-11`, `:231-252`) |
 | 5 | Explicit list `SCAN_DEALERS` / `--dealers`: never filtered | `fleet_scan.py:231-233`, `manifest.py:418-423` | anyone a person names | nobody, but the loop's request path does not use it (row 6) |
-| 6 | Loop requests (probe, validate, rescan, apply): ids go through the roster rule; "every id must be in the manifest", else `unknown_dealer` | `docs/scan_loop/BUNDLE.md:226` (section 6 rule 2), `docs/scan_loop/TASKS.md:182` | roster dealers | **every dealer not yet on the roster**: the loop cannot onboard a new dealer today |
+| 6 | Loop requests (probe, validate, rescan, apply): ids go through the roster rule; "every id must be in the manifest", else `unknown_dealer` | `docs/scan_loop/BUNDLE.md:226` (section 6 rule 2), `docs/scan_loop/TASKS.md:180-182` (L11) | roster dealers | **every dealer not yet on the roster**: the loop cannot onboard a new dealer today |
 | 7 | Fleet shards: the roster split by active row count | `fleet_scan.py:271-281` | no kind effect | none |
 | 8 | Built-in skip list: CarMax by substring | `manifest.py:475-500` (`carmax.com`, `carmax-com`), `fleet_scan.py:237` | all others | CarMax (national retailer) |
 | 9 | Scan hints `skip_reason`, `requires_browser`, `needs_http_proxy` | `backend/scanner/recipe_store.py:107-122`, `backend/scanner/delta_scan.py:154-166` | | dealers marked out of scope (OEM sites, RV, brokers, aggregators per the July audit **[DB]**) and dealers whose site needs a browser; a browser is never used (`docs/NETWORK_SCAN_PROCESS.md`, Goal) |
@@ -61,12 +64,12 @@ gates below.
 |---|---|---|---|
 | H1 | Discovery sources or Places queries favour franchise brands | **Supported (mechanism); size [DB]** | Places returns 20 per circle (`google_places.py:62-63`, `:265`), so a metro gets its 20 most prominent places; the national sweep spent about one call per metro (`national_scan.py:30-34`, `:53`). `car_dealer` itself includes used lots, so the query is not franchise-only. DMV, the source that lists every licensed lot, covers NC only (`dmv/registry.py:13-15`). |
 | H2 | The manifest came from brand dealer locators | **Supported in effect** (franchise-name filter, not locators) | The old 22k manifest was built from Overture places "filtered down to franchised OEM dealers" (`NATIONWIDE_OVERTURE_DISCOVERY.md:9`, `:36`). No OEM dealer-locator scraper exists in the code (search for `locator` finds only brochure and page-navigation code). |
-| H3 | The recipe-only rule keeps out dealers without a recipe; recipes exist mostly for franchise platforms | **Supported, partly** | The rule keeps out every dealer without active cars, recipe or not (`manifest.py:383-388`). Platform templates: 18 in `backend/scanner/synth/platforms/`; most are franchise website vendors (Dealer.com, DealerOn, Dealer eProcess, Team Velocity, Jazel, oneAudi). Three serve independents with evidence: `html_cards.py:17-24` (Quantum Auto Sales), `overfuel.py` (2 independents in the fixtures), `autowall.py`. How many recipes per kind: **[DB]**. |
+| H3 | The recipe-only rule keeps out dealers without a recipe; recipes exist mostly for franchise platforms | **Supported, partly** | The rule keeps out every dealer without active cars, recipe or not (`manifest.py:383-388`). Platform templates: 18 in `backend/scanner/synth/platforms/`; most are franchise website vendors (Dealer.com, DealerOn, Dealer eProcess, Team Velocity, Jazel, oneAudi). Two serve independents with evidence: `html_cards.py:17-24` (Quantum Auto Sales) and `overfuel.py` (2 independents in the fixtures). `autowall.py` is a generic HTML list template whose only known site is a franchise store (`autowall.py:18`); whether it serves independents is to verify. How many recipes per kind: **[DB]**. |
 | H4 | Independents' sites use platforms with no template, or load stock through widgets, iframes or JavaScript only | **Plausible; only probes and the database can tell** | `requires_browser` is a recorded hint (`recipe_store.py:117`) that ends in `no_recipe` (`delta_scan.py:160-166`). Platforms common among used lots (DealerCenter, Frazer, Carsforsale.com-hosted sites, Dealer Car Search, AutoManager, V12) have **no** fingerprint or template in `backend/scanner` (a search for each name finds none; "carsforsale" appears once, as a VDP text marker in `backend/scanner/vdp/extract.py:228`). Their actual share: **to verify** by probe. |
-| H5 | Quality gates, VIN-less pages or rooftop rules drop or hold their rows | **Supported** | First scan with fewer than 20 rows is `no_rows` (`pipeline/constants.py:24`, `assess.py:138`, `:148-150`); gate GF1 fails under 20 (`loop/gates.py:18`, `:96`). Used-only is `inaccurate` unless listed (`assess.py:170-177`, `deploy/railway/one_condition_ok.txt`: 2 dealers) and fails GF5 at 20 cars or more unless in `deploy/railway/accepted_gaps.json` (2 dealers, `gates.py:26`). A lot without VINs on its pages cannot be stored: rows are keyed by VIN ("cars are one row per VIN", `manifest.py:314-315`). In the fixtures, 5 of 6 independents fail (section 3). |
+| H5 | Quality gates, VIN-less pages or rooftop rules drop or hold their rows | **Mechanism present; not shown as the cause** | First scan with fewer than 20 rows is `no_rows` (`pipeline/constants.py:24`, `assess.py:138`, `:148-150`); gate GF1 fails under 20 (`loop/gates.py:18`, `:96`). Used-only is `inaccurate` unless listed (`assess.py:170-177`, `deploy/railway/one_condition_ok.txt`: 2 dealers) and fails GF5 at 20 cars or more unless in `deploy/railway/accepted_gaps.json` (2 dealers, `gates.py:26`). A lot without VINs on its pages cannot be stored: rows are keyed by VIN ("cars are one row per VIN", `manifest.py:314-315`). In the fixtures, 5 of 6 independents fail, but only one (`lbmboaz-com`, one condition) hits these rules, and it also fails the incomplete-rows check; the rest are the key-field floor (2), a broken recipe (1) and a group-feed rooftop cut (1) (section 3). For a never-scanned small or used-only lot these rules would fail it on its first scan; how many such lots exist is **[DB]**. |
 | H6 | Reconcile floor or retirement removes small inventories | **Refuted for now** | Production scans start with reconcile off (`docs/scan_loop/TASKS.md` rule 8; `BUNDLE.md:227`). When on, a run under 60% of baseline never retires (`pipeline/constants.py:22`), which protects small lots too. |
 | H7 | Production data is old because the 2026-11-03 merge is parked | **Supported for freshness, neutral for kind** | The 11-03 run was a Mac run on a scratch database (`backend/tests/fixtures/ops_publish/README.md`); its 172 fixture dealers include the same 6 independents, so merging it would not add independents. Freshness per kind: **[DB]** (report section "fresh"). |
-| H8 | The live site's read path hides them | **Supported for incomplete cars; refuted for brand, registry or type** | Search filters on `listing_active` and the review flag only (`backend/db/repositories/search/where.py:139-145`); the registry clause applies only when a user filters by dealership (`where.py:361-376`). Nothing requires a brand, a registry match or a dealer type. But production hides any car missing one of 19 spec fields (`backend/utils/listing_completeness.py:49-70`; default off in production, `backend/db/repositories/data_quality_repo.py:113-128`), and the grid cards follow the same flag (`backend/db/repositories/grid_cards_repo.py:213-225`). Thin feeds (trim 0% and colour 0% at `premiumautosinc-com`, fixture) are hit hardest. Count per kind: **[DB]**. |
+| H8 | The live site's read path hides them | **Supported for incomplete cars; refuted for brand, registry or type** | Search filters on `listing_active` and the review flag only (`backend/db/repositories/search/where.py:139-145`); the registry clause applies only when a user filters by dealership (`where.py:361-376`). Nothing requires a brand, a registry match or a dealer type. But production by default hides any car with a missing spec-sheet field (`backend/utils/listing_completeness.py:49-70`, `:176-294`; mileage counts for used and certified cars only, `:134-135`; default off in production unless `LISTINGS_INCLUDE_INCOMPLETE_CARS` is set, which is **[DB/Railway]**, `backend/db/repositories/data_quality_repo.py:113-128`), and the grid cards follow the same flag (`backend/db/repositories/grid_cards_repo.py:213-225`). Thin feeds (trim 0% and colour 0% at `premiumautosinc-com`, fixture) are hit hardest. Count per kind: **[DB]**. |
 | H9 | A dealer-type field exists | **Partly** | `dealerships.oem_brand` (migration `V020`, filled from the name by `google_places.py:54-60`), `google_primary_type` and `platform` exist. No `dealer_type` or franchise flag anywhere in `cars`, `dealer_recipes` or the bundle. `backend/discovery/dealer_kind.py` (this PR) is the first franchise/independent heuristic, report-only. |
 
 ## 3. Composition of the committed fixtures
@@ -130,10 +133,15 @@ Platform mix: independents: Overfuel 2, Dealer.com 2, html cards 1, Dealer eProc
 Dealer.com 116, DealerOn Cosmos 16, Dealer eProcess 10, Team Velocity 6, Typesense 5, Jazel 3,
 Motive 3, Overfuel 1, unknown 2, oneAudi 1, Chapman 1, WP vehicles 1, DealerOn 1.
 
-**What the fixtures say.** Independents are rare (3.5%) and, once in, fail more than four times as
-often by share (83% fail against 40%), for reasons the gates were built for big franchise lots: the
-20-row floor, the both-conditions rule and the key-field floor. The six are too few to estimate the
-fleet share; that is what the report script measures.
+**What the fixtures say.** Independents are rare (3.5%) and, once in, fail about twice as often by
+share (5 of 6, 83%, against 66 of 166, 40%; only 6 dealers). The five failures have different causes:
+two are data quality under the 90% key-field floor, which `PLAN.md` keeps for independents
+(`premiumautosinc-com`, `autoboutiqueohio-com`); one is a broken Dealer.com recipe (`autosavvy-com`);
+one is a group feed cut by the rooftop gate to 14 of 156 rows (`overdrive-usa-com`, a group's used
+store rather than a small lot); one is incomplete rows plus a single condition (`lbmboaz-com`). Only
+`lbmboaz-com` hits a rule built for franchise lots (both conditions), and it also fails the
+incomplete-rows check. The six are too few to estimate the fleet share or to show that the gates are
+the cause; the report script measures the first, and the onboarding batches (L33) the second.
 
 ## 4. The report script: what it tells us and how to run it
 
@@ -169,8 +177,9 @@ it. It holds dealer ids and counts only.
 
 ## 5. What only the database can tell
 
-Each item is a line of the report: the registry size and how much of it was ever scanned (the July
-audit said 418 registry rows, about 198 roster dealers, disjoint; not re-checked here); the real
+Each item is a line of the report: the registry size and how much of it was ever scanned (a July 2026
+audit, not committed to this repository, reported 418 registry rows and about 198 roster dealers,
+disjoint; **[DB]**, not re-checked here); the real
 share of independents among active dealers and cars; how many independents carry `requires_browser`
 or `skip_reason`; how many independents sit in the registry unscanned and in which states; how many
 of their cars production hides as incomplete; and how fresh their cars are.
