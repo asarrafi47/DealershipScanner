@@ -69,9 +69,9 @@ def test_enabled_reads_the_flag(monkeypatch, value, expected):
 
 
 def test_defaults_match_the_design():
-    assert config.daily_send_cap() == 300
-    assert config.daily_spend_cap_cents() == 1500
-    assert config.alert_send_threshold() == 150
+    assert config.daily_send_cap() == 30
+    assert config.daily_spend_cap_cents() == 300
+    assert config.alert_send_threshold() == 15
     assert config.est_cost_cents() == 6
     assert config.code_ttl_s() == 300
     assert config.max_wrong_tries() == 5
@@ -80,6 +80,20 @@ def test_defaults_match_the_design():
     assert config.allowed_countries() == frozenset({"US"})
     assert config.allowed_numbers() == frozenset()
     assert config.provider_name() == "twilio_verify"  # the fake is never the default
+
+
+def test_an_unset_variable_can_never_mean_more_than_the_first_month_cap(monkeypatch):
+    for name in ("SMS_DAILY_SEND_CAP", "SMS_DAILY_SPEND_CAP_CENTS", "SMS_ALERT_SEND_THRESHOLD"):
+        monkeypatch.delenv(name, raising=False)
+    assert config.daily_send_cap() <= 30
+    assert config.daily_spend_cap_cents() <= 300
+
+
+def test_the_alert_follows_half_the_send_cap_unless_set(monkeypatch):
+    monkeypatch.setenv("SMS_DAILY_SEND_CAP", "60")
+    assert config.alert_send_threshold() == 30
+    monkeypatch.setenv("SMS_ALERT_SEND_THRESHOLD", "20")
+    assert config.alert_send_threshold() == 20
 
 
 def test_values_are_read_and_bad_values_fall_back(monkeypatch):
@@ -229,7 +243,7 @@ def test_the_legal_check_names_the_variable_and_never_a_value(prod):
 def test_a_malformed_send_cap_logs_one_warning_without_the_value_and_falls_back(monkeypatch, caplog):
     monkeypatch.setenv("SMS_DAILY_SEND_CAP", "3x1")
     with caplog.at_level("WARNING", logger="auth_phone"):
-        assert [config.daily_send_cap() for _ in range(3)] == [300, 300, 300]
+        assert [config.daily_send_cap() for _ in range(3)] == [30, 30, 30]
     lines = [r.getMessage() for r in caplog.records if "SMS_DAILY_SEND_CAP" in r.getMessage()]
     assert len(lines) == 1 and "3x1" not in lines[0]
 
@@ -252,9 +266,9 @@ def test_a_blank_country_list_means_not_set_and_says_nothing(monkeypatch, caplog
 
 
 def test_a_non_ascii_digit_is_malformed_not_a_number(monkeypatch, caplog):
-    monkeypatch.setenv("SMS_DAILY_SEND_CAP", "\u0663\u0660")  # Arabic-Indic 30
+    monkeypatch.setenv("SMS_DAILY_SEND_CAP", "\u0665\u0660")  # Arabic-Indic 50, not the default 30
     with caplog.at_level("WARNING", logger="auth_phone"):
-        assert config.daily_send_cap() == 300
+        assert config.daily_send_cap() == 30
 
 
 def test_the_webhook_is_inert_unless_the_flag_and_the_token_are_both_set(monkeypatch):
