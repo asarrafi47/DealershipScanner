@@ -65,7 +65,7 @@ def test_max_users_id_reads_the_users_table(tmp_path, monkeypatch):
 
     class _Conn:
         def execute(self, sql):
-            assert "MAX(id)" in sql and "users" in sql
+            assert "MAX(id)" in sql and "sqlite_sequence" in sql
 
             class _R:
                 def fetchone(self):
@@ -78,3 +78,42 @@ def test_max_users_id_reads_the_users_table(tmp_path, monkeypatch):
 
     monkeypatch.setattr(_common, "get_conn", lambda: _Conn())
     assert restore_guard.max_users_id() == 12
+
+
+def _users_db(tmp_path, monkeypatch):
+    """A real users database (the app's own schema, ids AUTOINCREMENT) in a temporary file."""
+    from backend.db.users_db import _common, init_users_db
+
+    from backend.tests.conftest import app_env_defaults
+
+    for name, value in app_env_defaults(tmp_path).items():  # every user database under tmp_path
+        monkeypatch.setenv(name, value)
+    init_users_db()
+    conn = _common.get_conn()
+    conn.execute("DELETE FROM users")
+    for n in (1, 2, 3):
+        conn.execute(
+            "INSERT INTO users (id, username, email, password) "
+            f"VALUES ({n}, 'guard{n}', 'guard{n}@example.invalid', 'unusable')"
+        )
+    conn.commit()
+    return conn
+
+
+def test_deleting_the_newest_account_does_not_trip_the_guard(tmp_path, monkeypatch):
+    conn = _users_db(tmp_path, monkeypatch)
+    conn.execute("DELETE FROM users WHERE id = 3")
+    conn.commit()
+    conn.close()
+    assert restore_guard.max_users_id() == 3  # the highest id ever issued, not MAX(id)
+    assert restore_guard.restore_guard_problem(identity_max=lambda: 3) is None
+
+
+def test_a_restored_older_users_copy_still_trips_the_guard(tmp_path, monkeypatch):
+    conn = _users_db(tmp_path, monkeypatch)
+    conn.execute("DELETE FROM users WHERE id = 3")
+    conn.execute("UPDATE sqlite_sequence SET seq = 2 WHERE name = 'users'")  # as an older copy would have
+    conn.commit()
+    conn.close()
+    assert restore_guard.max_users_id() == 2
+    assert restore_guard.restore_guard_problem(identity_max=lambda: 3)

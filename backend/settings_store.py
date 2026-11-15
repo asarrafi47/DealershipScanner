@@ -145,11 +145,11 @@ def parse(spec: Spec, raw: Any) -> Any:
     if spec.kind == "time":
         try:
             when = datetime.fromisoformat(text)
-        except ValueError:
+            if when.tzinfo is None:  # a time without a zone is ambiguous: refuse it
+                return None
+            return when.astimezone(timezone.utc)
+        except (ValueError, OverflowError):
             return None
-        if when.tzinfo is None:  # a time without a zone is ambiguous: refuse it
-            return None
-        return when.astimezone(timezone.utc)
     if spec.kind == "pcts":
         out: list[int] = []
         for piece in text.split(","):

@@ -4,7 +4,7 @@ Phone identities live in Postgres and point at account ids in the SQLite users d
 users database is ever restored from an older copy while Postgres is not, a new account could be
 given an id an identity already points at, and that stranger would be signed in to someone
 else's number. So in production, with phone sign-in on, the app refuses to start when the
-highest account id any identity names is above the highest id in ``users``. It also refuses when
+highest account id any identity names is above the highest id ``users`` ever issued. It also refuses when
 either side cannot be read: an unchecked start is the one this guard exists to prevent.
 
 Plain values only; nothing here logs a number, an id or a hash.
@@ -18,13 +18,23 @@ from backend.auth.phone import config
 from backend.utils.runtime_env import is_production_env
 
 
+# ``users.id`` is AUTOINCREMENT, so SQLite never hands out an id twice and keeps the highest id it
+# ever issued in its sequence table. Deleting the newest account lowers MAX(id) but not that mark,
+# so a deleted account whose identity row is still waiting for its purge does not stop the boot.
+# A restored older copy carries its own, lower mark: that is the case this guard catches.
+_USERS_HIGH_WATER = (
+    "SELECT MAX(COALESCE((SELECT MAX(id) FROM users), 0), "
+    "COALESCE((SELECT seq FROM sqlite_sequence WHERE name = 'users'), 0))"
+)
+
+
 def max_users_id() -> int:
-    """Highest id in the SQLite ``users`` table (0 when it is empty)."""
+    """Highest account id the users database ever issued (0 when it never issued one)."""
     from backend.db.users_db._common import get_conn
 
     conn = get_conn()
     try:
-        row = conn.execute("SELECT COALESCE(MAX(id), 0) FROM users").fetchone()
+        row = conn.execute(_USERS_HIGH_WATER).fetchone()
     finally:
         conn.close()
     return int(row[0] or 0)
@@ -53,7 +63,7 @@ def restore_guard_problem(
     except Exception as exc:
         return "the users table could not be read (%s)" % type(exc).__name__
     if ident > users:
-        return "a phone identity names an account id above the highest id in users (was users restored?)"
+        return "a phone identity names an account id above the highest id users ever issued (was users restored?)"
     return None
 
 

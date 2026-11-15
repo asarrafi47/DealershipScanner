@@ -15,6 +15,7 @@ decision to send. ``reserve_send`` gives S6 the one transaction those rules run 
 
 from __future__ import annotations
 
+import functools
 import secrets
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
@@ -66,6 +67,53 @@ _SEND_FILTERS = (
 
 class IdentityTaken(Exception):
     """The number or the account already has an identity (the unique index refused the row)."""
+
+
+class AuthPhoneDbError(Exception):
+    """A database error with every value removed (rule 8 of TASKS.md).
+
+    psycopg's own message repeats the failing row ("Failing row contains (...)"), which would put a
+    number and its hash into a log or an error report. This carries only the SQLSTATE code and the
+    constraint name.
+    """
+
+    def __init__(self, sqlstate: str | None, constraint: str | None = None) -> None:
+        super().__init__(sqlstate, constraint)
+        self.sqlstate = sqlstate
+        self.constraint = constraint
+
+    def __str__(self) -> str:
+        return f"auth_phone database error {self.sqlstate} ({self.constraint or 'no constraint'})"
+
+
+def _is_db_error(exc: BaseException) -> bool:
+    return type(exc).__module__.split(".")[0] == "psycopg" and hasattr(exc, "sqlstate")
+
+
+def _clean_errors(*, unique_is_taken: bool = False) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    """Turn a driver error into :class:`AuthPhoneDbError` (or :class:`IdentityTaken` for a unique
+    violation when ``unique_is_taken``). The new error is raised after the handler has ended, so
+    the driver's error is not even chained to it as context."""
+
+    def wrap(fn: Callable[..., Any]) -> Callable[..., Any]:
+        @functools.wraps(fn)
+        def inner(*args: Any, **kwargs: Any) -> Any:
+            clean: Exception | None = None
+            try:
+                return fn(*args, **kwargs)
+            except Exception as exc:
+                if not _is_db_error(exc):
+                    raise
+                if unique_is_taken and exc.sqlstate == "23505":
+                    clean = IdentityTaken()
+                else:
+                    diag = getattr(exc, "diag", None)
+                    clean = AuthPhoneDbError(exc.sqlstate, getattr(diag, "constraint_name", None))
+            raise clean
+
+        return inner
+
+    return wrap
 
 
 # ---------------------------------------------------------------- data types
@@ -187,10 +235,6 @@ def _utc(now: datetime) -> datetime:
     return now.astimezone(timezone.utc)
 
 
-def _is_unique_violation(exc: BaseException) -> bool:
-    return getattr(exc, "sqlstate", None) == "23505"
-
-
 def _check(value: str, allowed: tuple[str, ...], what: str) -> None:
     if value not in allowed:
         raise ValueError(f"unknown {what}: {value!r}")
@@ -203,6 +247,7 @@ def new_public_id() -> str:
     return secrets.token_urlsafe(18)
 
 
+@_clean_errors()
 def create_challenge(
     *,
     phone_e164: str,
@@ -243,6 +288,7 @@ def create_challenge(
     return Challenge(*row)
 
 
+@_clean_errors()
 def fetch_challenge(public_id: str, session_nonce: str, *, conn: Any = None) -> Challenge | None:
     """The challenge when both ``public_id`` and this browser's nonce match; otherwise None."""
     if not public_id or not session_nonce:
@@ -260,6 +306,7 @@ def fetch_challenge(public_id: str, session_nonce: str, *, conn: Any = None) -> 
     return ch
 
 
+@_clean_errors()
 def reserve_attempt(
     public_id: str, session_nonce: str, *, now: datetime, max_attempts: int = 5, conn: Any = None
 ) -> int | None:
@@ -275,6 +322,7 @@ def reserve_attempt(
     return None if row is None else int(row[0])
 
 
+@_clean_errors()
 def refund_attempt(public_id: str, session_nonce: str, *, conn: Any = None) -> bool:
     """Give an attempt back (only for a network error or a throttle; card S6 (c))."""
     with _tx(conn) as c:
@@ -286,6 +334,7 @@ def refund_attempt(public_id: str, session_nonce: str, *, conn: Any = None) -> b
     return row is not None
 
 
+@_clean_errors()
 def close_approved(public_id: str, session_nonce: str, *, now: datetime, conn: Any = None) -> Challenge | None:
     """Close an open, unexpired challenge as approved, exactly once.
 
@@ -307,6 +356,7 @@ def close_approved(public_id: str, session_nonce: str, *, now: datetime, conn: A
     return None if row is None else Challenge(*row)
 
 
+@_clean_errors()
 def finish_challenge(
     public_id: str, status: str, *, now: datetime, session_nonce: str | None = None, conn: Any = None
 ) -> bool:
@@ -325,6 +375,7 @@ def finish_challenge(
     return row is not None
 
 
+@_clean_errors()
 def note_resend(
     public_id: str,
     session_nonce: str,
@@ -396,6 +447,7 @@ def _insert_send(c: Any, row: SendRow, now: datetime) -> int:
     )
 
 
+@_clean_errors()
 def record_send(row: SendRow, *, now: datetime, conn: Any = None) -> int:
     """Insert one send row (a text or a refusal); its id."""
     _validate_send(row)
@@ -403,6 +455,7 @@ def record_send(row: SendRow, *, now: datetime, conn: Any = None) -> int:
         return _insert_send(c, row, now)
 
 
+@_clean_errors()
 def set_send_outcome(
     send_id: int,
     outcome: str,
@@ -442,7 +495,8 @@ def _send_where(
     for col, value in filters.items():
         if col not in _SEND_FILTERS:
             raise ValueError(f"unknown send filter: {col}")
-        if value is None:
+        if value is None:  # None means "no device", never "any device"
+            clauses.append(f"{col} IS NULL")
             continue
         clauses.append(f"{col} = %s")
         params.append(value)
@@ -484,6 +538,7 @@ class SendWindow:
         return Decimal(value)
 
 
+@_clean_errors()
 def count_sends(
     *,
     since: datetime,
@@ -494,19 +549,23 @@ def count_sends(
     **filters: Any,
 ) -> int:
     """Rows in ``[since, until)`` matching the filters (``phone_hash``, ``ip_hash``, ``device_hash``,
-    ``ip_prefix_hash``, ``pool``, ``purpose``, ``channel``, ``has_device_cookie``, ``country``)."""
+    ``ip_prefix_hash``, ``pool``, ``purpose``, ``channel``, ``has_device_cookie``, ``country``).
+    A filter given as None matches rows where that column IS NULL (``device_hash=None`` counts
+    sends without a device); leave a filter out to not filter on it."""
     with _tx(conn) as c:
         return SendWindow(c).count(
             since=since, until=until, outcomes=outcomes, exclude_outcomes=exclude_outcomes, **filters
         )
 
 
+@_clean_errors()
 def sum_cost_cents(*, since: datetime, until: datetime | None = None, conn: Any = None, **filters: Any) -> Decimal:
     """Estimated spend (text plus lookup) in ``[since, until)``."""
     with _tx(conn) as c:
         return SendWindow(c).cost_cents(since=since, until=until, **filters)
 
 
+@_clean_errors()
 def reserve_send(
     row: SendRow,
     *,
@@ -540,6 +599,7 @@ def reserve_send(
 # ---------------------------------------------------------------- wrong tries
 
 
+@_clean_errors()
 def wrong_try_state(key: str, *, now: datetime, conn: Any = None) -> WrongTries:
     """The counter for ``key`` (a phone hash, or a phone-and-browser key chosen by S6)."""
     now = _utc(now)
@@ -554,6 +614,7 @@ def wrong_try_state(key: str, *, now: datetime, conn: Any = None) -> WrongTries:
     return WrongTries(int(tries), window_start, locked_until, locked_until is not None and locked_until > now)
 
 
+@_clean_errors()
 def add_wrong_try(
     key: str,
     *,
@@ -596,6 +657,7 @@ def add_wrong_try(
     return WrongTries(tries, window_start, locked_until, locked_until is not None and locked_until > now)
 
 
+@_clean_errors()
 def clear_wrong_tries(key: str, *, conn: Any = None) -> None:
     """Forget the counter (S6 decides when, for example after a successful sign-in)."""
     with _tx(conn) as c:
@@ -605,6 +667,7 @@ def clear_wrong_tries(key: str, *, conn: Any = None) -> None:
 # ---------------------------------------------------------------- identities
 
 
+@_clean_errors()
 def find_identity_by_phone(phone_e164: str, *, conn: Any = None) -> Identity | None:
     """Identities are found by the number itself, never by its hash (DESIGN.md section 16)."""
     with _tx(conn) as c:
@@ -614,6 +677,7 @@ def find_identity_by_phone(phone_e164: str, *, conn: Any = None) -> Identity | N
     return None if row is None else Identity(*row)
 
 
+@_clean_errors()
 def find_identity_by_user(user_id: int, *, conn: Any = None) -> Identity | None:
     with _tx(conn) as c:
         row = c.execute(
@@ -622,6 +686,7 @@ def find_identity_by_user(user_id: int, *, conn: Any = None) -> Identity | None:
     return None if row is None else Identity(*row)
 
 
+@_clean_errors(unique_is_taken=True)
 def insert_identity(
     *,
     phone_e164: str,
@@ -642,49 +707,41 @@ def insert_identity(
     """
     _check(state, ("reserving", "active"), "state")
     now = _utc(now)
-    try:
-        with _tx(conn) as c:
-            row = c.execute(
-                "INSERT INTO public.auth_phone_identities (user_id, phone_e164, phone_hash, country, line_type, "
-                "verified_at, state, consent_at, consent_text_version, created_at) "
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING " + _IDENTITY_COLS,
-                (
-                    user_id,
-                    phone_e164,
-                    phone_hash,
-                    country,
-                    line_type,
-                    now,
-                    state,
-                    _utc(consent_at),
-                    consent_text_version,
-                    now,
-                ),
-            ).fetchone()
-    except Exception as exc:
-        if _is_unique_violation(exc):
-            raise IdentityTaken() from None
-        raise
+    with _tx(conn) as c:
+        row = c.execute(
+            "INSERT INTO public.auth_phone_identities (user_id, phone_e164, phone_hash, country, line_type, "
+            "verified_at, state, consent_at, consent_text_version, created_at) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING " + _IDENTITY_COLS,
+            (
+                user_id,
+                phone_e164,
+                phone_hash,
+                country,
+                line_type,
+                now,
+                state,
+                _utc(consent_at),
+                consent_text_version,
+                now,
+            ),
+        ).fetchone()
     return Identity(*row)
 
 
+@_clean_errors(unique_is_taken=True)
 def activate_identity(identity_id: int, user_id: int, *, now: datetime, conn: Any = None) -> bool:
     """``reserving`` to ``active`` with its account (creation order step 3). Raises
     :class:`IdentityTaken` if that account already holds another number."""
-    try:
-        with _tx(conn) as c:
-            row = c.execute(
-                "UPDATE public.auth_phone_identities SET user_id = %s, state = 'active', last_login_at = %s "
-                "WHERE id = %s AND state = 'reserving' RETURNING id",
-                (int(user_id), _utc(now), int(identity_id)),
-            ).fetchone()
-    except Exception as exc:
-        if _is_unique_violation(exc):
-            raise IdentityTaken() from None
-        raise
+    with _tx(conn) as c:
+        row = c.execute(
+            "UPDATE public.auth_phone_identities SET user_id = %s, state = 'active', last_login_at = %s "
+            "WHERE id = %s AND state = 'reserving' RETURNING id",
+            (int(user_id), _utc(now), int(identity_id)),
+        ).fetchone()
     return row is not None
 
 
+@_clean_errors()
 def touch_login(identity_id: int, *, now: datetime, conn: Any = None) -> None:
     with _tx(conn) as c:
         c.execute(
@@ -693,6 +750,7 @@ def touch_login(identity_id: int, *, now: datetime, conn: Any = None) -> None:
         )
 
 
+@_clean_errors(unique_is_taken=True)
 def change_number(
     user_id: int,
     *,
@@ -706,21 +764,17 @@ def change_number(
     """Move an account's identity to a new verified number. None if the account has no active
     identity; :class:`IdentityTaken` if another account holds the new number."""
     now = _utc(now)
-    try:
-        with _tx(conn) as c:
-            row = c.execute(
-                "UPDATE public.auth_phone_identities SET phone_e164 = %s, phone_hash = %s, country = %s, "
-                "line_type = %s, verified_at = %s WHERE user_id = %s AND state = 'active' RETURNING "
-                + _IDENTITY_COLS,
-                (phone_e164, phone_hash, country, line_type, now, int(user_id)),
-            ).fetchone()
-    except Exception as exc:
-        if _is_unique_violation(exc):
-            raise IdentityTaken() from None
-        raise
+    with _tx(conn) as c:
+        row = c.execute(
+            "UPDATE public.auth_phone_identities SET phone_e164 = %s, phone_hash = %s, country = %s, "
+            "line_type = %s, verified_at = %s WHERE user_id = %s AND state = 'active' RETURNING "
+            + _IDENTITY_COLS,
+            (phone_e164, phone_hash, country, line_type, now, int(user_id)),
+        ).fetchone()
     return None if row is None else Identity(*row)
 
 
+@_clean_errors()
 def detach_dormant(identity_id: int, *, now: datetime, conn: Any = None) -> bool:
     """Dormant-number rule (card S6 (g)): the old account keeps its data but loses the number.
 
@@ -736,6 +790,7 @@ def detach_dormant(identity_id: int, *, now: datetime, conn: Any = None) -> bool
     return row is not None
 
 
+@_clean_errors()
 def max_identity_user_id(*, conn: Any = None) -> int:
     """Highest account id any identity points at (active or dormant); 0 when there is none."""
     with _tx(conn) as c:
@@ -749,6 +804,7 @@ def max_identity_user_id(*, conn: Any = None) -> int:
 # ---------------------------------------------------------------- session epochs (card S10)
 
 
+@_clean_errors()
 def set_sessions_valid_after(user_id: int, *, now: datetime, reason: str, conn: Any = None) -> datetime:
     """Void every session of ``user_id`` issued before ``now``. Never moves backwards."""
     now = _utc(now)
@@ -763,6 +819,7 @@ def set_sessions_valid_after(user_id: int, *, now: datetime, reason: str, conn: 
     return row[0]
 
 
+@_clean_errors()
 def sessions_valid_after(user_id: int, *, conn: Any = None) -> datetime | None:
     with _tx(conn) as c:
         row = c.execute(
@@ -783,6 +840,7 @@ class PgLookupCache:
     def __init__(self, *, clock: Callable[[], datetime] | None = None) -> None:
         self._clock = clock or (lambda: datetime.now(timezone.utc))
 
+    @_clean_errors()
     def get(self, phone_hash: str) -> LineInfo | None:
         with _tx(None) as c:
             row = c.execute(
@@ -792,6 +850,7 @@ class PgLookupCache:
             ).fetchone()
         return None if row is None else LineInfo(ok=bool(row[0]), line_type=row[1], country=row[2], reason=row[3])
 
+    @_clean_errors()
     def put(self, phone_hash: str, info: LineInfo, ttl_s: int) -> None:
         now = _utc(self._clock())
         with _tx(None) as c:
@@ -815,6 +874,7 @@ class PgLookupCache:
 # ---------------------------------------------------------------- retention
 
 
+@_clean_errors()
 def cleanup(*, now: datetime, conn: Any = None) -> dict[str, int]:
     """Delete by age (DESIGN.md section 16); the nightly job calls it. Counts per table.
 

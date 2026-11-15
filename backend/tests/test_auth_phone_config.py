@@ -78,6 +78,7 @@ def test_defaults_match_the_design():
     assert config.daily_spend_cap_cents() == 300
     assert config.alert_send_threshold() == 15
     assert config.est_cost_cents() == 6
+    assert config.est_lookup_cents() == 1
     assert config.code_ttl_s() == 300
     assert config.max_wrong_tries() == 5
     assert config.lock_minutes() == 15
@@ -306,3 +307,9 @@ def test_phone_libraries_are_pinned_with_upper_bounds_and_the_lite_phone_build()
     src = Path(__file__).resolve().parents[2].joinpath("backend/auth/phone/numbers.py").read_text(encoding="utf-8")
     for heavy in ("phonenumbers.geocoder", "phonenumbers.carrier", "phonenumbers.timezone"):
         assert heavy not in src
+
+
+@pytest.mark.parametrize("value,expected", [("2", 2), ("0", 0), ("-1", 1), ("x", 1)])
+def test_lookup_cost_is_read_and_a_bad_value_falls_back_to_1(monkeypatch, value, expected):
+    monkeypatch.setenv("SMS_EST_LOOKUP_CENTS", value)
+    assert config.est_lookup_cents() == expected

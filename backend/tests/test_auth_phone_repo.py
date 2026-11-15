@@ -21,7 +21,7 @@ import pytest
 
 from backend.auth.phone.provider import LineInfo
 from backend.db.repositories import auth_phone_repo as repo
-from backend.db.repositories.auth_phone_repo import IdentityTaken, SendRow
+from backend.db.repositories.auth_phone_repo import AuthPhoneDbError, IdentityTaken, SendRow
 
 ROOT = Path(__file__).resolve().parents[2]
 V031 = ROOT / "migrations" / "V031__auth_phone.sql"
@@ -173,9 +173,10 @@ def test_migration_is_part_of_the_chain_template(pg_db):
 
 @pg
 def test_e164_check_refuses_a_malformed_number(pg_db):
-    with pytest.raises(Exception) as exc:
+    with pytest.raises(AuthPhoneDbError) as exc:
         _identity(phone_e164="2025550101")
-    assert getattr(exc.value, "sqlstate", "") == "23514"  # check_violation
+    assert exc.value.sqlstate == "23514"  # check_violation
+    assert exc.value.constraint == "auth_phone_e164_shape"
 
 
 # ------------------------------------------------------------ challenges
@@ -296,9 +297,9 @@ def test_identity_found_by_number_or_user_and_activated_once(pg_db):
 
 @pg
 def test_an_active_identity_must_have_a_user(pg_db):
-    with pytest.raises(Exception) as exc:
+    with pytest.raises(AuthPhoneDbError) as exc:
         _identity(state="active")
-    assert getattr(exc.value, "sqlstate", "") == "23514"
+    assert exc.value.sqlstate == "23514"
 
 
 @pg
@@ -569,3 +570,64 @@ def test_the_schema_files_run_v001_to_v031_with_no_gap():
     versions = [m.version for m in migrations]
     assert versions[:31] == list(range(1, 32))
     assert [m.path.name for m in migrations if m.version == 31] == ["V031__auth_phone.sql"]
+
+
+# ------------------------------------------------------------ rule 8: no number, code or hash leaves in an error
+
+
+_DIGIT_RUN = __import__("re").compile(r"\d{7,}")
+_HEX64 = __import__("re").compile(r"[0-9a-f]{64}")
+
+
+def _assert_clean(text: str) -> None:
+    assert PHONE_A not in text and PHONE_A[2:] not in text and "000000" not in text
+    assert not _DIGIT_RUN.search(text), text
+    assert not _HEX64.search(text), text
+
+
+@pg
+def test_database_errors_carry_no_number_or_hash(pg_db, caplog):
+    import traceback
+
+    caplog.set_level("DEBUG")
+    _identity(user_id=7, state="active")
+    triggers = [
+        lambda: _identity(phone_e164="2025550101"),  # e164 check
+        lambda: _identity(phone_e164=PHONE_B, phone_hash=HASH_B, state="active"),  # active needs a user
+        lambda: _identity(user_id=8, state="active"),  # unique number
+        lambda: repo.record_send(_send(country=None), now=T0),  # not-null: the row would be in the message
+        lambda: repo.create_challenge(
+            phone_e164="12025550101", phone_hash=HASH_A, purpose="login", session_nonce=NONCE,
+            provider="fake", now=T0, ttl_s=300,
+        ),  # challenge e164 check
+    ]
+    for trigger in triggers:
+        with pytest.raises(Exception) as info:
+            trigger()
+        exc = info.value
+        assert isinstance(exc, (AuthPhoneDbError, IdentityTaken))
+        _assert_clean(str(exc))
+        _assert_clean(repr(exc))
+        _assert_clean("".join(traceback.format_exception_only(exc)))
+        # the driver's own error (whose message repeats the row) is not chained into the report at all
+        assert exc.__cause__ is None and exc.__context__ is None
+    _assert_clean(caplog.text)
+
+
+@pg
+def test_a_none_filter_counts_rows_without_that_value(pg_db):
+    repo.record_send(_send(), now=T0)
+    repo.record_send(_send(device_hash=None, has_device_cookie=False), now=T0)
+    since = T0 - timedelta(minutes=1)
+    assert repo.count_sends(since=since, device_hash=None) == 1
+    assert repo.count_sends(since=since) == 2
+
+
+@pg
+def test_cleanup_keeps_a_wrong_try_row_that_is_still_locked(pg_db):
+    hash_c = "c7" * 32
+    repo.add_wrong_try(hash_c, now=T0 - timedelta(hours=23, minutes=50))
+    for _ in range(4):
+        repo.add_wrong_try(hash_c, now=T0 - timedelta(minutes=5))
+    repo.cleanup(now=T0)
+    assert repo.wrong_try_state(hash_c, now=T0).locked
