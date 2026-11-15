@@ -1,16 +1,17 @@
 """List the accounts card S19's GRANDFATHER_CUTOFF rule grandfathers (read only).
 
 Run by the owner inside the live web container, where the database address is already in the
-environment (``INVENTORY_DATABASE_URL``, else ``DATABASE_URL``)::
+environment (read through ``backend.db.connect.inventory_dsn``, the repository's one reader)::
 
     railway ssh -s web "python -m backend.scripts.list_grandfathered_sellers"
 
-A grandfathered account had at least one ``dealer_vehicles`` row created before the cut-off. While
+A grandfathered account had at least one ``dealer_vehicles`` row created before the cut-off (seen
+from its saved rows, or from its public ``cars`` rows, which are retired but never deleted). While
 ``MARKETPLACE_POSTING_ENABLED`` is off, only these accounts' cars reach the public site. The report
 also lists accounts made after the cut-off that still have live public cars: their next save takes
 those cars off the public site (or suspend them in /admin/users to do it at once).
 
-Safety: standard library plus psycopg only; the session and the transaction are READ ONLY; every
+Safety: standard library, psycopg and the repository's DSN reader only; the session and the transaction are READ ONLY; every
 statement is a SELECT; it prints account ids and counts only (no names, emails, phone numbers,
 VINs or the database address). It never writes, creates or drops anything.
 """
@@ -22,7 +23,7 @@ import sys
 from datetime import datetime, timezone
 
 # Must equal backend.dealer.portal_sync.GRANDFATHER_CUTOFF (a test checks). Copied, not imported,
-# so this script needs nothing but the standard library and psycopg.
+# so this script loads no app code beyond the DSN reader.
 GRANDFATHER_CUTOFF = datetime(2026, 11, 15, 0, 0, 0, tzinfo=timezone.utc)
 PORTAL_PREFIX = "dealer-portal-"
 
@@ -32,7 +33,11 @@ SQL_LIVE_PUBLIC = (
     "SELECT dealer_id, COUNT(*) FROM cars "
     "WHERE dealer_id LIKE 'dealer-portal-%' AND listing_active = 1 GROUP BY dealer_id"
 )
-STATEMENTS = (SQL_VEHICLE_ROWS, SQL_LIVE_PUBLIC)
+SQL_FIRST_PUBLIC = (
+    "SELECT dealer_id, MIN(COALESCE(NULLIF(first_seen_at, ''), scraped_at)) FROM cars "
+    "WHERE dealer_id LIKE 'dealer-portal-%' GROUP BY dealer_id"
+)
+STATEMENTS = (SQL_VEHICLE_ROWS, SQL_LIVE_PUBLIC, SQL_FIRST_PUBLIC)
 
 
 def _parse_created_at(raw: object) -> datetime | None:
@@ -53,8 +58,18 @@ def _parse_created_at(raw: object) -> datetime | None:
     return dt
 
 
-def summarise(vehicle_rows: list[tuple], live_rows: list[tuple]) -> dict:
-    """Pure: the report from the two query results (tests call this without a database)."""
+def _portal_user_id(dealer_id: object) -> int | None:
+    text = str(dealer_id or "")
+    if not text.startswith(PORTAL_PREFIX):
+        return None
+    tail = text[len(PORTAL_PREFIX):]
+    if not (tail.isascii() and tail.isdigit()):
+        return None
+    return int(tail)
+
+
+def summarise(vehicle_rows: list[tuple], live_rows: list[tuple], first_public_rows: list[tuple] = ()) -> dict:
+    """Pure: the report from the query results (tests call this without a database)."""
     before: dict[int, int] = {}
     total: dict[int, int] = {}
     unreadable = 0
@@ -72,18 +87,20 @@ def summarise(vehicle_rows: list[tuple], live_rows: list[tuple]) -> dict:
             before[uid] = before.get(uid, 0) + 1
     live: dict[int, int] = {}
     for dealer_id, count in live_rows:
-        text = str(dealer_id or "")
-        if not text.startswith(PORTAL_PREFIX):
-            continue
-        tail = text[len(PORTAL_PREFIX):]
-        if not (tail.isascii() and tail.isdigit()):
-            continue
-        live[int(tail)] = int(count or 0)
-    grandfathered = sorted(before)
-    after_with_live = sorted(uid for uid in live if uid not in before)
+        uid = _portal_user_id(dealer_id)
+        if uid is not None:
+            live[uid] = int(count or 0)
+    public_before: set[int] = set()
+    cutoff_day = GRANDFATHER_CUTOFF.date().isoformat()
+    for dealer_id, first_seen in first_public_rows:
+        uid = _portal_user_id(dealer_id)
+        if uid is not None and first_seen is not None and str(first_seen) < cutoff_day:
+            public_before.add(uid)
+    grandfathered = sorted(set(before) | public_before)
+    after_with_live = sorted(uid for uid in live if uid not in grandfathered)
     return {
         "grandfathered": [
-            {"user_id": uid, "rows_before_cutoff": before[uid], "rows_now": total.get(uid, 0),
+            {"user_id": uid, "rows_before_cutoff": before.get(uid, 0), "rows_now": total.get(uid, 0),
              "live_public_cars": live.get(uid, 0)}
             for uid in grandfathered
         ],
@@ -102,7 +119,7 @@ def render(report: dict) -> str:
     lines.append(f"Grandfathered accounts: {len(report['grandfathered'])}")
     for r in report["grandfathered"]:
         lines.append(
-            f"  account {r['user_id']}: {r['rows_before_cutoff']} cars saved before the cut-off, "
+            f"  account {r['user_id']}: {r['rows_before_cutoff']} saved cars from before the cut-off, "
             f"{r['rows_now']} saved now, {r['live_public_cars']} live on the site"
         )
     lines.append(
@@ -115,16 +132,10 @@ def render(report: dict) -> str:
     return "\n".join(lines)
 
 
-def _dsn() -> str:
-    for name in ("INVENTORY_DATABASE_URL", "DATABASE_URL"):
-        value = (os.environ.get(name) or "").strip()
-        if value:
-            return value
-    return ""
-
-
 def main() -> int:
-    dsn = _dsn()
+    from backend.db.connect import inventory_dsn  # noqa: PLC0415
+
+    dsn = inventory_dsn(require=False)
     if not dsn:
         print("No database address in INVENTORY_DATABASE_URL or DATABASE_URL.", file=sys.stderr)
         return 2
@@ -138,8 +149,10 @@ def main() -> int:
             vehicle_rows = list(cur.fetchall())
             cur.execute(SQL_LIVE_PUBLIC)
             live_rows = list(cur.fetchall())
+            cur.execute(SQL_FIRST_PUBLIC)
+            first_public_rows = list(cur.fetchall())
         conn.rollback()
-    print(render(summarise(vehicle_rows, live_rows)))
+    print(render(summarise(vehicle_rows, live_rows, first_public_rows)))
     return 0
 
 

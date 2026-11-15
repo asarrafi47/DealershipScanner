@@ -341,7 +341,7 @@ def inventory_listings():
         "inventory/listings.html",
         vehicles=vehicles,
         username=session.get("username") or "",
-        posting_note="" if account_may_publish(uid) else POSTING_SOON_MSG,
+        posting_note="" if account_may_publish(uid) is not False else POSTING_SOON_MSG,
     )
 
 

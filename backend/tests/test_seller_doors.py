@@ -40,7 +40,7 @@ def portal_db(tmp_path, monkeypatch):
     """dealer_vehicles in this test's own SQLite file (the module reads its path at import)."""
     from backend.db import dealer_portal_db as ddb
 
-    monkeypatch.setattr(ddb, "DB_PATH", str(tmp_path / "dealer_portal_s19.db"))
+    monkeypatch.setattr(ddb, "DB_PATH", str(tmp_path / "portal-store"))
     ddb.init_dealer_portal_db()
     return ddb
 
@@ -89,20 +89,23 @@ def _post(client, url: str, data: dict | None = None, **kw):
     return client.post(url, data={"csrf_token": _CSRF, **(data or {})}, **kw)
 
 
+def _vehicle_saved_at(uid: int, vin: str, when: datetime) -> int:
+    """A dealer_vehicles row whose created_at is *when* (the store stamps its own clock)."""
+    from backend.db import dealer_portal_db as ddb
+
+    real = ddb._utc_now
+    ddb._utc_now = lambda: when.replace(microsecond=0).isoformat()
+    try:
+        return ddb.insert_vehicle(uid, {"vin": vin, "year": 2003, "make": "Honda", "model": "Accord"})
+    finally:
+        ddb._utc_now = real
+
+
 def _old_vehicle(uid: int, vin: str) -> int:
     """A dealer_vehicles row saved before the cut-off (what a grandfathered account has)."""
-    from backend.db import dealer_portal_db as ddb
     from backend.dealer.portal_sync import GRANDFATHER_CUTOFF
 
-    vid = ddb.insert_vehicle(uid, {"vin": vin, "year": 2003, "make": "Honda", "model": "Accord"})
-    before = (GRANDFATHER_CUTOFF - timedelta(days=30)).isoformat()
-    conn = ddb.get_conn()
-    try:
-        conn.execute("UPDATE dealer_vehicles SET created_at = ? WHERE id = ?", (before, vid))
-        conn.commit()
-    finally:
-        conn.close()
-    return vid
+    return _vehicle_saved_at(uid, vin, GRANDFATHER_CUTOFF - timedelta(days=30))
 
 
 def _car(vin: str):
@@ -168,14 +171,12 @@ def test_inventory_refuses_a_general_user(site):
     assert ddb.get_vehicle(shopper, vid) is not None  # nothing was deleted either
 
 
-def test_inventory_refuses_a_legacy_role_without_a_dealership(site):
-    from backend.db.users_db.accounts import get_conn
+@pytest.mark.parametrize("stored_role", [None, "dealer_staff", "something-else"])
+def test_inventory_refuses_a_legacy_role_without_a_dealership(site, monkeypatch, stored_role):
+    from backend.dealer import routes
 
-    uid = _user("legacy1", "general_user")
-    conn = get_conn()
-    conn.execute("UPDATE users SET role = NULL WHERE id = ?", (uid,))
-    conn.commit()
-    conn.close()
+    uid = _user(f"legacy_{stored_role}", "general_user")
+    monkeypatch.setattr(routes, "get_user_profile", lambda _uid: {"id": uid, "role": stored_role, "is_active": True})
     with site.test_client() as c:
         _sign_in(c, uid)
         assert c.get("/inventory").status_code == 403
@@ -209,11 +210,14 @@ def test_posting_flag_off_keeps_new_accounts_private(site, sqlite_inventory):
     dealer = _user("newlot1", "dealership_owner")
     with site.test_client() as c:
         _sign_in(c, dealer)
-        rv = _post(c, "/inventory/add-vin", {"vin": _VIN_A}, follow_redirects=True)
-        page = rv.get_data(as_text=True)
+        _post(c, "/inventory/add-vin", {"vin": _VIN_A})
+        with c.session_transaction() as sess:
+            flashes = list(sess.get("_flashes") or [])
+        page = c.get("/inventory/listings").get_data(as_text=True)
     assert ddb.count_user_vehicles_with_vin(dealer, _VIN_A) == 1  # saved for the seller
     assert _car(_VIN_A) is None  # not public
-    assert POSTING_SOON_MSG in page
+    assert ("info", POSTING_SOON_MSG) in flashes  # told at the save
+    assert POSTING_SOON_MSG in page  # and on the page
 
 
 def test_posting_flag_off_takes_a_new_accounts_public_car_down_on_save(site, sqlite_inventory):
@@ -265,18 +269,30 @@ def test_grandfathered_account_still_syncs(site, sqlite_inventory):
 
 
 def test_rows_at_or_after_the_cutoff_do_not_grandfather(site):
-    from backend.db import dealer_portal_db as ddb
     from backend.dealer.portal_sync import GRANDFATHER_CUTOFF, is_grandfathered_account
 
     dealer = _user("edge1", "dealership_owner")
-    vid = ddb.insert_vehicle(dealer, {"vin": _VIN_A})
-    conn = ddb.get_conn()
-    conn.execute("UPDATE dealer_vehicles SET created_at = ? WHERE id = ?", (GRANDFATHER_CUTOFF.isoformat(), vid))
-    conn.commit()
-    conn.close()
+    _vehicle_saved_at(dealer, _VIN_A, GRANDFATHER_CUTOFF)
     assert not is_grandfathered_account(dealer)
     assert not is_grandfathered_account(0)
-    assert GRANDFATHER_CUTOFF.tzinfo is not None
+    early = _user("edge2", "dealership_owner")
+    _vehicle_saved_at(early, _VIN_A, GRANDFATHER_CUTOFF - timedelta(seconds=1))
+    assert is_grandfathered_account(early)
+
+
+def test_unreadable_grandfather_rule_changes_nothing_public(site, sqlite_inventory, monkeypatch):
+    from backend.dealer import portal_sync as ps
+
+    dealer = _user("unread1", "dealership_owner")
+    sqlite_inventory.add_cars([{"vin": _VIN_A, "dealer_id": f"dealer-portal-{dealer}", "listing_active": 1}])
+
+    def _boom(_uid):
+        raise RuntimeError("store down")
+
+    monkeypatch.setattr(ps, "_vehicle_rows_say_grandfathered", _boom)
+    assert ps.grandfather_status(dealer) is None
+    assert ps.sync_portal_vehicle_to_public_listings(dealer, {"vin": _VIN_A}) == ps.SYNC_FAILED
+    assert _cars_rows(sqlite_inventory)[_VIN_A] == (f"dealer-portal-{dealer}", 1)
 
 
 # ---------------------------------------------------------------------------
@@ -497,7 +513,9 @@ def test_sync_reports_each_outcome(site, sqlite_inventory, monkeypatch):
     def _boom(*_a, **_k):
         raise RuntimeError("read failed")
 
-    monkeypatch.setattr("backend.db.repositories.cars_repo.get_car_by_vin", _boom)
+    from backend.db.repositories import cars_repo
+
+    monkeypatch.setattr(cars_repo, "get_car_by_vin", _boom)
     assert ps.sync_portal_vehicle_to_public_listings(dealer, {"vin": _VIN_C}) == ps.SYNC_FAILED
 
 
@@ -586,15 +604,21 @@ def test_list_script_has_no_write_or_ddl_statements():
     code = re.sub(r'"""[\s\S]*?"""', "", text)  # the docstring explains, it does not run
     code = "\n".join(line.split("#", 1)[0] for line in code.splitlines())
     assert not forbidden.search(code), forbidden.search(code)
+    assert not re.search(r"\.(executemany|copy|callproc)\(", code)
+    for stmt in lg.STATEMENTS:
+        assert ";" not in stmt and not forbidden.search(stmt) and " INTO " not in stmt.upper(), stmt
     executed = re.findall(r"\.execute\(([^)]*)\)", code)
     assert executed and all(
-        e.strip() in ("SQL_VEHICLE_ROWS", "SQL_LIVE_PUBLIC", '"SET TRANSACTION READ ONLY"') for e in executed
+        e.strip() in ("SQL_VEHICLE_ROWS", "SQL_LIVE_PUBLIC", "SQL_FIRST_PUBLIC", '"SET TRANSACTION READ ONLY"')
+        for e in executed
     ), executed
     assert "conn.read_only = True" in code
     assert "commit" not in code
-    # standard library plus psycopg only
-    imports = set(re.findall(r"^\s*(?:from|import)\s+([A-Za-z_][\w]*)", code, flags=re.MULTILINE))
-    assert imports <= {"__future__", "os", "sys", "datetime", "psycopg"}, imports
+    # standard library, psycopg and the repository's DSN reader only
+    imports = set(re.findall(r"^\s*(?:from|import)\s+([A-Za-z_][\w.]*)", code, flags=re.MULTILINE))
+    from backend.db import connect as dsn_reader
+
+    assert imports <= {"__future__", "os", "sys", "datetime", "psycopg", dsn_reader.__name__}, imports
 
 
 def test_list_script_cutoff_matches_the_app():
@@ -611,9 +635,12 @@ def test_list_script_prints_ids_and_counts_only():
     after = (lg.GRANDFATHER_CUTOFF + timedelta(hours=1)).isoformat()
     report = lg.summarise(
         [(7, before), (7, after), (9, after), (11, "not a date"), (12, datetime(2026, 1, 1))],
-        [("dealer-portal-7", 2), ("dealer-portal-9", 1), ("scanned-dealer-com", 50), ("dealer-portal-x", 3)],
+        [("dealer-portal-7", 2), ("dealer-portal-9", 1), ("scanned-dealer-com", 50), ("dealer-portal-x", 3),
+         ("dealer-portal-13", 1)],
+        [("dealer-portal-13", "2026-10-01T10:00:00+00:00"), ("dealer-portal-9", "2026-11-15T00:00:01+00:00")],
     )
-    assert [r["user_id"] for r in report["grandfathered"]] == [7, 12]
+    # 13 deleted its old saved car, but its public row from before the cut-off remembers it
+    assert [r["user_id"] for r in report["grandfathered"]] == [7, 12, 13]
     assert report["grandfathered"][0] == {"user_id": 7, "rows_before_cutoff": 1, "rows_now": 2, "live_public_cars": 2}
     assert report["not_grandfathered_with_live_cars"] == [{"user_id": 9, "rows_now": 1, "live_public_cars": 1}]
     assert report["unreadable_dates"] == 1
@@ -682,3 +709,31 @@ def test_list_script_runs_read_only_on_postgres(pg_db, capsys):
     assert "Accounts after the cut-off with live public cars: 1" in out and "account 42:" in out
     with pg_db.connect() as conn:
         assert conn.execute("SELECT COUNT(*) FROM cars").fetchone()[0] == before
+
+
+@pytest.mark.pg
+def test_deleting_the_old_cars_keeps_a_dealer_grandfathered(pg_db, monkeypatch):
+    """Review blocker: a dealer deletes its only pre-cut-off (sold) car, then edits a newer live car.
+    The newer car must stay public: the retired public row remembers the account's history."""
+    from backend.dealer import portal_sync as ps
+
+    monkeypatch.setenv("MARKETPLACE_POSTING_ENABLED", "")
+    uid = 51
+    new = (ps.GRANDFATHER_CUTOFF + timedelta(days=3)).isoformat()
+    _pg_vehicle(pg_db, uid, _VIN_B, new)  # the only saved car left is from after the cut-off
+    pg_db.add_cars([
+        {"vin": _VIN_A, "dealer_id": f"dealer-portal-{uid}", "listing_active": 0,
+         "first_seen_at": "2026-10-01T09:00:00+00:00", "scraped_at": "2026-10-01T09:00:00+00:00"},
+        {"vin": _VIN_B, "dealer_id": f"dealer-portal-{uid}", "listing_active": 1,
+         "first_seen_at": new, "scraped_at": new},
+    ])
+    assert ps.grandfather_status(uid) is True
+    result = ps.sync_portal_vehicle_to_public_listings(uid, {"vin": _VIN_B, "make": "Honda", "price": 9000})
+    assert result == ps.SYNC_PUBLISHED
+    with pg_db.connect() as conn:
+        live = conn.execute("SELECT listing_active FROM cars WHERE vin = %s", (_VIN_B,)).fetchone()[0]
+    assert int(live) == 1
+    # an account with only after-the-cut-off history is not grandfathered
+    pg_db.add_cars([{"vin": _VIN_C, "dealer_id": "dealer-portal-52", "listing_active": 1,
+                     "first_seen_at": new, "scraped_at": new}])
+    assert ps.grandfather_status(52) is False

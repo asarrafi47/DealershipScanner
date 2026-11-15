@@ -57,6 +57,9 @@ DEALER_PORTAL_DEALER_ID_PREFIX = "dealer-portal-"
 # so accounts made while the old open sign-up was still live are NOT included.
 # backend/scripts/list_grandfathered_sellers.py lists them by id for the owner.
 GRANDFATHER_CUTOFF = datetime(2026, 11, 15, 0, 0, 0, tzinfo=timezone.utc)
+# The same moment as text for the ``cars`` timestamp columns (ISO text; midnight UTC, so any
+# timestamp of an earlier day sorts below it and any of that day or later does not).
+GRANDFATHER_CUTOFF_DAY = GRANDFATHER_CUTOFF.date().isoformat()
 
 # sync_portal_vehicle_to_public_listings results
 SYNC_PUBLISHED = "published"
@@ -91,9 +94,42 @@ def _parse_created_at(raw: Any) -> datetime | None:
     return dt
 
 
-def is_grandfathered_account(user_id: int) -> bool:
-    """True when the account has a ``dealer_vehicles`` row created before
-    :data:`GRANDFATHER_CUTOFF`. Fails closed (False) when the store cannot be read."""
+def _vehicle_rows_say_grandfathered(uid: int) -> bool:
+    from backend.db import dealer_portal_db as ddb
+
+    for row in ddb.list_vehicles_for_user(uid):
+        dt = _parse_created_at(row.get("created_at"))
+        if dt is not None and dt < GRANDFATHER_CUTOFF:
+            return True
+    return False
+
+
+def _public_rows_say_grandfathered(uid: int) -> bool:
+    """A ``cars`` row of this account first seen before the cut-off (live or retired).
+
+    ``dealer_vehicles`` rows can be deleted by the seller (a sold car); the public row is only
+    ever retired, never deleted, so it keeps the account's history. Postgres only (production);
+    the offline SQLite store answers False.
+    """
+    from backend.db import inventory_pg
+    from backend.db.repositories.base_repo import db_conn
+
+    if not inventory_pg.is_inventory_postgres():
+        return False
+    with db_conn() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT 1 FROM cars WHERE dealer_id = %s "
+            "AND COALESCE(NULLIF(first_seen_at, ''), scraped_at) < %s LIMIT 1",
+            (dealer_portal_dealer_id(uid), GRANDFATHER_CUTOFF_DAY),
+        )
+        return cur.fetchone() is not None
+
+
+def grandfather_status(user_id: int) -> bool | None:
+    """True when the account had a ``dealer_vehicles`` row before :data:`GRANDFATHER_CUTOFF`
+    (seen from its saved rows or from its public rows); False when not; None when the stores
+    could not be read (the caller then changes nothing)."""
     try:
         uid = int(user_id)
     except (TypeError, ValueError):
@@ -101,29 +137,23 @@ def is_grandfathered_account(user_id: int) -> bool:
     if uid <= 0:
         return False
     try:
-        from backend.db import dealer_portal_db as ddb
-
-        conn = ddb.get_conn()
-        try:
-            cur = conn.cursor()
-            cur.execute("SELECT created_at FROM dealer_vehicles WHERE user_id = ?", (uid,))
-            rows = cur.fetchall()
-        finally:
-            conn.close()
+        return _vehicle_rows_say_grandfathered(uid) or _public_rows_say_grandfathered(uid)
     except Exception:
         _log.exception("dealer-portal sync: could not read the grandfather rule for user_id=%s", uid)
-        return False
-    for row in rows:
-        raw = next(iter(row.values())) if isinstance(row, dict) else row[0]
-        dt = _parse_created_at(raw)
-        if dt is not None and dt < GRANDFATHER_CUTOFF:
-            return True
-    return False
+        return None
 
 
-def account_may_publish(user_id: int) -> bool:
-    """May this account's cars be copied to the public ``cars`` table right now?"""
-    return marketplace_posting_enabled() or is_grandfathered_account(user_id)
+def is_grandfathered_account(user_id: int) -> bool:
+    """True only when the account is known to be grandfathered (a read failure is False)."""
+    return grandfather_status(user_id) is True
+
+
+def account_may_publish(user_id: int) -> bool | None:
+    """May this account's cars be copied to the public ``cars`` table right now?
+    None when the grandfather rule could not be read."""
+    if marketplace_posting_enabled():
+        return True
+    return grandfather_status(user_id)
 
 
 def dealer_portal_dealer_id(user_id: int) -> str:
@@ -218,7 +248,10 @@ def sync_portal_vehicle_to_public_listings(user_id: int, vehicle: dict[str, Any]
     vin = str(vehicle.get("vin") or "").strip()
     if not vin:
         return SYNC_SKIPPED
-    if not account_may_publish(user_id):
+    may = account_may_publish(user_id)
+    if may is None:
+        return SYNC_FAILED  # could not read the rule: change nothing on the public site
+    if not may:
         # Public posting is off and this account is not grandfathered: the car stays
         # private. A public row this account already has for the VIN is retired so an
         # edit can never leave a stale or newly changed car on the public site.
