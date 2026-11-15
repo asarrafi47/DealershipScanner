@@ -118,6 +118,7 @@ called these levels Trusted and Custom; an environment saved that way opens as L
 | `download.pytorch.org`, `download-r2.pytorch.org` | CPU-only torch, installed first the way CI does. The index lists its wheels on the second host | The setup refuses to install the requirements and says so: pip would take PyPI's default torch, a multi-GB CUDA stack. The Python side is not ready |
 | `apt.postgresql.org` | PostgreSQL 18 and pgvector for the pg tier, from the PGDG repository (its signing key comes with the image's `postgresql-common` package) | The pg tier runs on the image's PostgreSQL 16 with the Ubuntu archive's pgvector instead. That works, but it is not parity with CI and production, and the setup says so |
 | `download.geonames.org` | The US postal table from GeoNames, the source CI uses. `backend/db/geo.py` loads it when any test imports it | The setup falls back to a mirror on `raw.githubusercontent.com` (already allowed) that can lag GeoNames slightly |
+| `nodejs.org` | Node 20 (CI's version), only when the image has no `/opt/node20`: the setup downloads one pinned tarball and refuses it unless its SHA-256 matches the pin in `setup.sh` | `backend/tests/test_js_unit.py` skips, or runs under the image's Node 22. The setup reports "node 20" as optional |
 | `huggingface.co`, `*.hf.co` | The embedding model for the web app's smart search | Leave both out for code work |
 
 The image ships PostgreSQL 16 and Redis 7.0 (installed, not running). The tests need neither as
@@ -450,6 +451,10 @@ were not run on 16.)
 - **"pgeocode table" fails:** allow `download.geonames.org`, or check that the raw GitHub content host
   is reachable. Without the table every test errors at collection, because `backend/db/geo.py`
   loads it at import.
+- **"node 20" is optional and not in place:** allow `nodejs.org` and re-run the setup. A checksum
+  mismatch means the download was changed or cut short and nothing was installed; when a newer 20.x
+  is wanted, change `NODE_VERSION` and `NODE_SHA256_X64` in `scripts/cloud/setup.sh` together (the
+  hash is in `https://nodejs.org/dist/v<version>/SHASUMS256.txt`).
 - **"postgres 18" unavailable:** allow `apt.postgresql.org`, then re-run the setup (or start a new
   session after the cache rebuilds). Until then the "postgres fallback" line says whether the
   image's PostgreSQL 16 stands in for it. Everything else keeps working without Postgres.
