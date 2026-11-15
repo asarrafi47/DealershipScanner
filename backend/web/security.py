@@ -160,20 +160,28 @@ def _csp_enforce_wanted() -> bool:
     return is_production_env()
 
 
-def _csp_header_value_enforced(nonce: str) -> str:
+# Cloudflare Turnstile (card S19): its script and its frame load from this origin, and only on
+# the pages that show the widget (``TURNSTILE_PAGE_ENDPOINTS``); every other page keeps the
+# strict policy.
+TURNSTILE_ORIGIN = "https://challenges.cloudflare.com"
+TURNSTILE_PAGE_ENDPOINTS = frozenset({"dealer_portal.dealer_register"})
+
+
+def _csp_header_value_enforced(nonce: str, *, turnstile: bool = False) -> str:
     # style-src: 'unsafe-inline' for existing inline style="" attributes; script nonces for all script elements.
+    extra = f" {TURNSTILE_ORIGIN}" if turnstile else ""
     return (
         "default-src 'self'; "
         "base-uri 'self'; "
         "form-action 'self'; "
         "frame-ancestors 'none'; "
         "object-src 'none'; "
-        "frame-src 'self'; "
+        f"frame-src 'self'{extra}; "
         "img-src 'self' data: https: http: blob:; "
         "font-src 'self' data:; "
         "style-src 'self' 'unsafe-inline'; "
         "style-src-elem 'self'; "
-        f"script-src 'self' 'nonce-{nonce}'; "
+        f"script-src 'self' 'nonce-{nonce}'{extra}; "
         "connect-src 'self' https://tile.openstreetmap.org; "
         "worker-src 'self'; "
     )
@@ -208,7 +216,9 @@ def _csp_headers(response):
     if _csp_enforce_wanted():
         nonce = (getattr(g, "csp_nonce", None) or "") or ""
         if nonce and not response.headers.get("Content-Security-Policy"):
-            response.headers["Content-Security-Policy"] = _csp_header_value_enforced(nonce)
+            response.headers["Content-Security-Policy"] = _csp_header_value_enforced(
+                nonce, turnstile=(request.endpoint or "") in TURNSTILE_PAGE_ENDPOINTS
+            )
         return response
     if Config.csp_report_only_enabled():
         if not response.headers.get("Content-Security-Policy-Report-Only"):

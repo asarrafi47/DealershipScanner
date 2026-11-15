@@ -25,11 +25,21 @@ portal user's VIN collides with an already-scanned car, upserting would
 silently overwrite that car's real dealer attribution. :func:`_vin_is_safe_to_sync`
 refuses the sync in that case (logged) rather than clobbering scanned data —
 the portal vehicle still saves fine, it just does not surface publicly under
-someone else's VIN.
+someone else's VIN. The sync returns :data:`SYNC_VIN_TAKEN` then, so the route
+tells the seller (card S19 (5)).
+
+Public posting switch (card S19 (1), ``DESIGN.md`` section 23): while
+``MARKETPLACE_POSTING_ENABLED`` is off (the default), only **grandfathered**
+accounts are copied to ``cars``: an account with at least one ``dealer_vehicles``
+row created before :data:`GRANDFATHER_CUTOFF`. Every other account keeps its cars
+private (saved in ``dealer_vehicles`` only) and any public row it already has for
+that VIN is retired on its next save.
 """
 from __future__ import annotations
 
 import logging
+import os
+from datetime import datetime, timezone
 from typing import Any
 from urllib.parse import urljoin
 
@@ -40,6 +50,80 @@ _log = logging.getLogger(__name__)
 # Namespace prefix for cars.dealer_id on portal-sourced rows, so they can
 # never collide with a real scanned rooftop's dealer_id and are easy to spot.
 DEALER_PORTAL_DEALER_ID_PREFIX = "dealer-portal-"
+
+# Card S19: an account that had a dealer_vehicles row before this moment is
+# "grandfathered" (its cars keep reaching the public site while public posting
+# is off). Fixed at the start of the day the card was built, before its release,
+# so accounts made while the old open sign-up was still live are NOT included.
+# backend/scripts/list_grandfathered_sellers.py lists them by id for the owner.
+GRANDFATHER_CUTOFF = datetime(2026, 11, 15, 0, 0, 0, tzinfo=timezone.utc)
+
+# sync_portal_vehicle_to_public_listings results
+SYNC_PUBLISHED = "published"
+SYNC_PRIVATE = "private"  # public posting is off and the account is not grandfathered
+SYNC_VIN_TAKEN = "vin_taken"  # the VIN is already listed by someone else
+SYNC_SKIPPED = "skipped"  # no VIN
+SYNC_FAILED = "failed"  # a read or write failed (logged); nothing was published
+
+_TRUE = ("1", "true", "yes", "on")
+
+
+def marketplace_posting_enabled() -> bool:
+    """``MARKETPLACE_POSTING_ENABLED`` (environment only, default off)."""
+    return (os.environ.get("MARKETPLACE_POSTING_ENABLED") or "").strip().lower() in _TRUE
+
+
+def _parse_created_at(raw: Any) -> datetime | None:
+    if isinstance(raw, datetime):
+        dt = raw
+    else:
+        text = str(raw or "").strip()
+        if not text:
+            return None
+        if text.endswith("Z"):
+            text = text[:-1] + "+00:00"
+        try:
+            dt = datetime.fromisoformat(text)
+        except ValueError:
+            return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
+def is_grandfathered_account(user_id: int) -> bool:
+    """True when the account has a ``dealer_vehicles`` row created before
+    :data:`GRANDFATHER_CUTOFF`. Fails closed (False) when the store cannot be read."""
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return False
+    if uid <= 0:
+        return False
+    try:
+        from backend.db import dealer_portal_db as ddb
+
+        conn = ddb.get_conn()
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT created_at FROM dealer_vehicles WHERE user_id = ?", (uid,))
+            rows = cur.fetchall()
+        finally:
+            conn.close()
+    except Exception:
+        _log.exception("dealer-portal sync: could not read the grandfather rule for user_id=%s", uid)
+        return False
+    for row in rows:
+        raw = next(iter(row.values())) if isinstance(row, dict) else row[0]
+        dt = _parse_created_at(raw)
+        if dt is not None and dt < GRANDFATHER_CUTOFF:
+            return True
+    return False
+
+
+def account_may_publish(user_id: int) -> bool:
+    """May this account's cars be copied to the public ``cars`` table right now?"""
+    return marketplace_posting_enabled() or is_grandfathered_account(user_id)
 
 
 def dealer_portal_dealer_id(user_id: int) -> str:
@@ -96,45 +180,62 @@ def _dealer_display_name(user_id: int) -> str:
     return user.get("username") or f"Dealer portal seller #{user_id}"
 
 
-def _vin_is_safe_to_sync(vin: str, user_id: int) -> bool:
-    """Refuse to sync onto a VIN owned by a scanned listing OR another portal user.
-
-    Matches the row's ``dealer_id`` to THIS caller's own portal dealer_id, not
-    just "any dealer-portal-* id" — otherwise portal user B could silently
-    overwrite portal user A's listing by entering A's VIN.
-    """
+def _vin_owner(vin: str, user_id: int) -> str:
+    """``free`` (no row), ``own`` (this caller's portal row), ``taken`` (a scanned
+    listing or another portal user) or ``error`` (could not read)."""
     try:
         from backend.db.repositories.cars_repo import get_car_by_vin
 
         existing = get_car_by_vin(vin)
     except Exception:
-        # Read failure: fail closed (skip sync) rather than risk overwriting
-        # a row we could not inspect.
         _log.exception("dealer-portal sync: could not check existing row for vin=%s", vin)
-        return False
+        return "error"
     if existing is None:
-        return True
-    return existing.get("dealer_id") == dealer_portal_dealer_id(user_id)
+        return "free"
+    if existing.get("dealer_id") == dealer_portal_dealer_id(user_id):
+        return "own"
+    return "taken"
 
 
-def sync_portal_vehicle_to_public_listings(user_id: int, vehicle: dict[str, Any]) -> None:
+def _vin_is_safe_to_sync(vin: str, user_id: int) -> bool:
+    """Refuse to sync onto a VIN owned by a scanned listing OR another portal user.
+
+    Matches the row's ``dealer_id`` to THIS caller's own portal dealer_id, not
+    just "any dealer-portal-* id" — otherwise portal user B could silently
+    overwrite portal user A's listing by entering A's VIN. A read failure fails
+    closed (skip sync) rather than risk overwriting a row we could not inspect.
+    """
+    return _vin_owner(vin, user_id) in ("free", "own")
+
+
+def sync_portal_vehicle_to_public_listings(user_id: int, vehicle: dict[str, Any]) -> str:
     """Upsert one dealer-portal vehicle into the public ``cars`` table.
 
     Call after create/update/photo-gallery changes so the vehicle appears on
-    ``/listings`` and its car page. Never raises.
+    ``/listings`` and its car page. Never raises. Returns one of the ``SYNC_*``
+    values so the route can tell the seller what happened.
     """
     vin = str(vehicle.get("vin") or "").strip()
     if not vin:
-        return
+        return SYNC_SKIPPED
+    if not account_may_publish(user_id):
+        # Public posting is off and this account is not grandfathered: the car stays
+        # private. A public row this account already has for the VIN is retired so an
+        # edit can never leave a stale or newly changed car on the public site.
+        remove_portal_vehicle_from_public_listings(vin, user_id)
+        return SYNC_PRIVATE
     try:
-        if not _vin_is_safe_to_sync(vin, user_id):
+        owner = _vin_owner(vin, user_id)
+        if owner == "error":
+            return SYNC_FAILED
+        if owner == "taken":
             _log.warning(
                 "dealer-portal sync: vin=%s (user_id=%s) collides with an existing "
                 "listing owned by someone else; skipping public sync to avoid "
                 "overwriting another dealer's data",
                 vin, user_id,
             )
-            return
+            return SYNC_VIN_TAKEN
 
         gallery = vehicle.get("gallery") or []
         if not isinstance(gallery, list):
@@ -174,6 +275,8 @@ def sync_portal_vehicle_to_public_listings(user_id: int, vehicle: dict[str, Any]
             "dealer-portal sync: failed to upsert vin=%s (user_id=%s) into cars",
             vin, user_id,
         )
+        return SYNC_FAILED
+    return SYNC_PUBLISHED
 
 
 def remove_portal_vehicle_from_public_listings(vin: str, user_id: int) -> None:
@@ -212,7 +315,10 @@ def retire_portal_listings_for_user(user_id: int) -> None:
     """Retire every public ``cars`` row stamped with this portal user's dealer_id.
 
     Used when the account is deleted (their ``dealer_vehicles`` rows are gone,
-    so nothing else would ever retire the mirrored listings). Never raises.
+    so nothing else would ever retire the mirrored listings) and when it is
+    suspended (card S19 (4); un-suspending does not republish). Matches the exact
+    ``dealer-portal-<id>`` only, so scanner rows and other sellers are never
+    touched. Never raises.
     """
     try:
         from datetime import datetime, timezone
