@@ -1,8 +1,9 @@
 """The ``INSERT ... ON CONFLICT(vin) DO UPDATE`` that writes one ``cars`` row.
 
 ``UPSERT_CARS_SQL`` is the statement; :func:`upsert_params` binds a prepared
-row (:func:`prepare_row`) in column order. The trailing parameters (guard flag, claim rank, pool lists, cutoff)
-drive the VIN ownership guard's atomic backstop (the ``WHERE`` on the DO UPDATE).
+row (:func:`prepare_row`) in column order. The trailing parameters (user-row cutoff, guard flag,
+claim rank, pool lists, cutoff) drive the VIN ownership guard's atomic backstop (the ``WHERE`` on
+the DO UPDATE).
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ from backend.utils.price_floor import classify_price
 
 from backend.scanner.upsert import rows as _rows
 from backend.scanner.upsert import serialize as _ser
+from backend.utils.user_listings import DEALER_PORTAL_DEALER_ID_PREFIX, user_row_cutoff_iso
 
 # Same logger name as before the split so log routing and captures are unchanged.
 logger = logging.getLogger("backend.scanner.database")
@@ -149,8 +151,10 @@ UPSERT_CARS_SQL = """
                     is_cpo=COALESCE(excluded.is_cpo, cars.is_cpo),
                     model_full_raw=COALESCE(excluded.model_full_raw, cars.model_full_raw),
                     packages=COALESCE(NULLIF(TRIM(excluded.packages), ''), cars.packages),
-                    listing_active=1,
-                    listing_removed_at=NULL,
+                    -- A user listing hidden for review (front-running, card S20) stays
+                    -- hidden when its own seller re-syncs it; an admin clears the flag.
+                    listing_active=CASE WHEN __USER_HELD__ THEN cars.listing_active ELSE 1 END,
+                    listing_removed_at=CASE WHEN __USER_HELD__ THEN cars.listing_removed_at ELSE NULL END,
                     spec_source_json=CASE
                         WHEN excluded.spec_source_json IS NOT NULL AND length(trim(excluded.spec_source_json)) > 0
                         THEN excluded.spec_source_json
@@ -173,7 +177,12 @@ UPSERT_CARS_SQL = """
                         ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
                     END,
                     internal_notes=cars.internal_notes,
-                    marked_for_review=cars.marked_for_review,
+                    -- The review flag of a user listing does not pass to the dealer that
+                    -- takes the VIN once the user row is retired past the grace period.
+                    marked_for_review=CASE
+                        WHEN __IS_USER_ROW__ AND cars.dealer_id != excluded.dealer_id THEN 0
+                        ELSE cars.marked_for_review
+                    END,
                     forced_induction=COALESCE(excluded.forced_induction, cars.forced_induction),
                     price_provenance_json=COALESCE(excluded.price_provenance_json, cars.price_provenance_json),
                     spin_frames=COALESCE(NULLIF(NULLIF(TRIM(excluded.spin_frames), ''), '[]'), cars.spin_frames),
@@ -197,7 +206,16 @@ UPSERT_CARS_SQL = """
                 -- as primary of its pool, every id sharing a pool with the claimant (each
                 -- list as ',a,b,' and passed twice for the replace() membership test).
                 -- Only an evidence-less contest outside every pool falls to the window.
-                WHERE ? = 0
+                -- Card S20: the first group is ANDed around the whole list, so no branch
+                -- (not the guard flag, not an inactive owner) lets anyone but the user take
+                -- a car of a user that is live or was retired at or after the bound cutoff
+                -- (now minus USER_ROW_GRACE_DAYS); a re-sync by that same user still updates it.
+                WHERE (cars.dealer_id = excluded.dealer_id
+                       OR NOT __IS_USER_ROW__
+                       OR (COALESCE(cars.listing_active, 1) != 1
+                           AND cars.listing_removed_at IS NOT NULL
+                           AND REPLACE(cars.listing_removed_at, ' ', 'T') < ?))
+                  AND (? = 0
                    OR COALESCE(cars.dealer_id, '') = ''
                    OR cars.dealer_id = excluded.dealer_id
                    OR COALESCE(cars.listing_active, 1) != 1
@@ -207,10 +225,16 @@ UPSERT_CARS_SQL = """
                        AND replace(?, ',' || cars.dealer_id || ',', '') != ?)
                    OR (__RANK_CARS__ < 2
                        AND replace(?, ',' || cars.dealer_id || ',', '') = ?
-                       AND (cars.scraped_at IS NULL OR cars.scraped_at < ?))
+                       AND (cars.scraped_at IS NULL OR cars.scraped_at < ?)))
                 """
 def _tier_rank_sql(col: str) -> str:
     return f"(CASE {col} WHEN 'strong' THEN 2 WHEN 'weak' THEN 1 ELSE 0 END)"
+
+
+def _is_user_row_sql(col: str) -> str:
+    """SQL twin of ``is_dealer_portal_dealer_id`` (prefix compare; no LIKE, so no ``%``)."""
+    n = len(DEALER_PORTAL_DEALER_ID_PREFIX)
+    return f"(SUBSTR(COALESCE({col}, ''), 1, {n}) = '{DEALER_PORTAL_DEALER_ID_PREFIX}')"
 
 
 UPSERT_CARS_SQL = (
@@ -219,6 +243,12 @@ UPSERT_CARS_SQL = (
     .replace("__TRIM__", _overwritable("trim"))
     .replace("__EXT__", _overwritable("exterior_color", color=True))
     .replace("__INT__", _overwritable("interior_color", color=True))
+    .replace("__IS_USER_ROW__", _is_user_row_sql("cars.dealer_id"))
+    .replace(
+        "__USER_HELD__",
+        "(cars.dealer_id = excluded.dealer_id AND COALESCE(cars.marked_for_review, 0) = 1 AND "
+        + _is_user_row_sql("cars.dealer_id") + ")",
+    )
 )
 
 
@@ -319,8 +349,13 @@ def upsert_params(
     rooftop_tier: str = "none",
     rooftop_evidence: str | None = None,
     pool_lists: tuple[str, str, str] = ("", "", ""),
+    user_cutoff_iso: str | None = None,
 ) -> tuple:
-    """Bind parameters for :data:`UPSERT_CARS_SQL`, in column order."""
+    """Bind parameters for :data:`UPSERT_CARS_SQL`, in column order.
+
+    ``user_cutoff_iso``: a retired user row older than this may be taken (card S20);
+    default now minus ``USER_ROW_GRACE_DAYS``.
+    """
     v = row.v
     alias_csv, takes_csv, covered_csv = pool_lists
     return (
@@ -374,6 +409,7 @@ def upsert_params(
         row.interior_pano,
         rooftop_tier,
         rooftop_evidence,
+        user_cutoff_iso or user_row_cutoff_iso(),
         1 if guard_on else 0,
         alias_csv,
         alias_csv,

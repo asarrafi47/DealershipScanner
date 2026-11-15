@@ -230,7 +230,7 @@ def load_roster() -> list[str]:
     ROSTER_REPORT.clear()
     raw = (os.environ.get("SCAN_DEALERS") or "").strip()
     if raw:
-        return [d.strip() for d in raw.split(",") if d.strip()]
+        return _without_user_ids([d.strip() for d in raw.split(",") if d.strip()])
     if (os.environ.get("SCAN_FLEET") or "").strip().lower() in ("1", "true", "yes"):
         from backend.scanner.manifest import _load_scannable_dealers, apply_scannable_roster_rule
 
@@ -248,8 +248,20 @@ def load_roster() -> list[str]:
             print("fleet   do-not-scan: " + ", ".join(report["excluded_do_not_scan"]), flush=True)
         if report["revived_recipe_only"]:
             print("fleet   revived: " + ", ".join(report["revived_recipe_only"]), flush=True)
-        return sorted({d["dealer_id"] for d in kept})
+        return _without_user_ids(sorted({d["dealer_id"] for d in kept}))
     return []
+
+
+def _without_user_ids(dealer_ids: list[str]) -> list[str]:
+    """Defence in depth (card S20): a ``dealer-portal-<id>`` is a user's posted cars, never
+    a dealer site, so it is dropped even from an explicit SCAN_DEALERS list."""
+    from backend.utils.user_listings import is_dealer_portal_dealer_id
+
+    users = [d for d in dealer_ids if is_dealer_portal_dealer_id(d)]
+    if users:
+        print(f"fleet   roster: left out {len(users)} user listing id(s) (dealer-portal-*); "
+              "the scanner never scans users' cars", flush=True)
+    return [d for d in dealer_ids if not is_dealer_portal_dealer_id(d)]
 
 
 def active_rows(dealer_ids: list[str]) -> dict[str, int]:

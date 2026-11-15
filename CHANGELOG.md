@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- S20 (scanner release): the scanner never deletes, retires, moves or overwrites a user's car (`dealer-portal-*`). The roster (`_load_scannable_dealers`, `_load_active_inventory_dealers`, `fleet_scan.load_roster` including `SCAN_DEALERS`) leaves user ids out; the VIN guard refuses any other claimant for a user's car that is live or was retired 7 days ago or less, whatever the window, rank, pool or alias (`ownership.decide`, reason `user_listing`, applied even with the guard window off), and the SQL backstop of `UPSERT_CARS_SQL` ANDs the same rule around its whole WHERE list while the user's own re-sync still updates the row; when a scanned dealer lists a user's live VIN the user listing is retired and `marked_for_review` (it stays hidden on the seller's next edit until an admin clears the flag) and the pair goes to `vin_owner_conflicts`; the dummy-VIN delete and both attribution scripts skip user rows. One helper `backend/utils/user_listings.py` (standard library only: the scanner image has no Flask), pinned to `portal_sync.py`'s prefix by a test. No migration.
+
 ## [1.5.33] - 2026-11-14
 
 - Owner decisions 2026-11-14. Text-message caps: the code defaults are now the first-month launch values, 30 sends and 300 cents a day, alert at half the send cap (15) unless `SMS_ALERT_SEND_THRESHOLD` is set (`backend/auth/phone/config.py`, `.env.example`, tests). 300 sends and 1500 cents remain only later targets.
