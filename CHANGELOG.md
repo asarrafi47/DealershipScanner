@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.5.34] - 2026-11-15
+
+- Cloud setup: `scripts/cloud/setup.sh` now installs Node 20 (CI's version) into `/opt/node20` when the image has none, from a pinned nodejs.org tarball that is refused unless its SHA-256 matches (Linux x86_64 and root only; the step stays optional, so a failure only reports). Before this the step could only report that Node 22 was the one on the VM, and `test_js_unit.py` ran on the wrong major. `docs/CLOUD.md` lists `nodejs.org` in the allowed hosts and has a troubleshooting line; a new test pins the version, the hash and the host.
+- docs: `RESUME_HERE.md` is rewritten as a short pointer page (P18B.1, D-HY6a): version read from `VERSION`, no status table, links to the release, scan, cloud and plan documents, production on Railway. The 2026-07 snapshot it replaces named a branch, a hosting setup and a test baseline that no longer exist. `master-todo.md` is not retired here.
+
 ## [1.5.33] - 2026-11-14
 
 - Owner decisions 2026-11-14. Text-message caps: the code defaults are now the first-month launch values, 30 sends and 300 cents a day, alert at half the send cap (15) unless `SMS_ALERT_SEND_THRESHOLD` is set (`backend/auth/phone/config.py`, `.env.example`, tests). 300 sends and 1500 cents remain only later targets.

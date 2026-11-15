@@ -210,6 +210,17 @@ def test_node_check_expects_node_20_like_ci():
     assert "v20.*" in _function("node_ok")
 
 
+def test_node_20_install_is_pinned_and_checksummed():
+    # The fix downloads one pinned Node 20 tarball and refuses it unless its SHA-256 matches.
+    assert re.fullmatch(r"20\.\d+\.\d+", _const("NODE_VERSION"))
+    assert re.fullmatch(r"[0-9a-f]{64}", _const("NODE_SHA256_X64"))
+    assert _const("NODE_URL_BASE") == "https://nodejs.org/dist"
+    body = _function("node_install")
+    assert '"$sum" != "$NODE_SHA256_X64"' in body
+    assert "Linux" in body and "x86_64" in body and "-ne 0" in body  # Linux x86_64 and root only
+    assert 'ensure optional "node 20" node_ok node_install' in _function("step_node")
+
+
 def test_pgeocode_is_seeded_from_geonames_then_the_github_mirror():
     urls = _const("PGEOCODE_URLS").split()
     assert urls[0].startswith("https://download.geonames.org/")

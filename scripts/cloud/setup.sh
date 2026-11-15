@@ -11,7 +11,8 @@
 #             requirements.txt + requirements-test.txt (the CI order, D-TC5), pinned ruff
 #   pgeocode  the US postal table; backend/db/geo.py loads it at import, and a cold cache
 #             downloads from hosts the default cloud network policy blocks
-#   node      check only: Node 20 at /opt/node20 (CI's version; the VM puts 22 first on PATH)
+#   node      Node 20 at /opt/node20 (CI's version; the VM puts 22 first on PATH). Missing, it is
+#             installed from nodejs.org against a pinned SHA-256; optional, so a failure only reports
 #   pg        Postgres 18 + pgvector from the PGDG apt repository, for the pg test tier. If
 #             that host is not allowed, the image's own PostgreSQL 16 gets pgvector from the
 #             Ubuntu archive instead: it runs the tier, but it is not CI parity, and the
@@ -45,6 +46,12 @@ PGDG_KEY_FPR="B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
 PGDG_KEY="/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc"
 PGDG_LIST="/etc/apt/sources.list.d/pgdg.list"
 NODE_DIR="/opt/node20/bin"
+# Used only when the image has no Node 20 (the cloud VM image normally ships /opt/node20). The
+# tarball is checked against this pinned SHA-256, so a changed or truncated download is refused.
+# x86_64 only: the cloud VM is x86_64, and no other architecture's checksum is pinned here.
+NODE_VERSION="20.20.2"
+NODE_SHA256_X64="df770b2a6f130ed8627c9782c988fda9669fa23898329a61a871e32f965e007d"
+NODE_URL_BASE="https://nodejs.org/dist"
 # Tried in this order, one at a time: pgeocode itself falls back only on HTTP errors, and a
 # blocked host often fails as a connection error instead.
 PGEOCODE_URLS="https://download.geonames.org/export/zip/{country}.zip https://raw.githubusercontent.com/symerio/postal-codes-data/master/data/geonames/{country}.txt"
@@ -469,8 +476,45 @@ node_ok() {
   return 1
 }
 
-# Check only: this script does not install Node, so there is no fix function.
-step_node() { ensure optional "node 20" node_ok ""; }
+node_install() {
+  # Linux x86_64 and root only (it writes /opt). Any other machine, such as the owner's Mac,
+  # only gets the report from node_ok.
+  local root dir tarball sum
+  root="${NODE_DIR%/bin}"
+  if [ "$(uname -s)" != Linux ] || [ "$(uname -m)" != x86_64 ]; then
+    FIXERR="Node 20 is installed only on Linux x86_64 (this is $(uname -s) $(uname -m))"; return 1
+  fi
+  if [ "$(id -u)" -ne 0 ]; then FIXERR="installing Node 20 into $root needs root"; return 1; fi
+  if ! have curl || ! have tar || ! have xz; then FIXERR="curl, tar and xz are needed to install Node 20"; return 1; fi
+  dir="$(mktemp -d)"
+  tarball="node-v${NODE_VERSION}-linux-x64.tar.xz"
+  if ! curl -fsSL --connect-timeout 15 --max-time 300 --retry 2 -o "$dir/$tarball" "$NODE_URL_BASE/v${NODE_VERSION}/$tarball" >>"$STEP_LOG" 2>&1; then
+    rm -rf "$dir"
+    FIXERR="could not download Node ${NODE_VERSION}: allow nodejs.org in the environment's network policy (docs/CLOUD.md); see $STEP_LOG"
+    return 1
+  fi
+  sum="$(sha256_stdin <"$dir/$tarball")"
+  if [ "$sum" != "$NODE_SHA256_X64" ]; then
+    rm -rf "$dir"
+    FIXERR="the Node ${NODE_VERSION} download has SHA-256 $sum, not the pinned $NODE_SHA256_X64; nothing was installed"
+    return 1
+  fi
+  # Unpack beside the target and rename, so a half-unpacked tree never sits at $root.
+  rm -rf "$root.new"
+  mkdir -p "$root.new"
+  if ! tar -xJf "$dir/$tarball" -C "$root.new" --strip-components=1 >>"$STEP_LOG" 2>&1; then
+    rm -rf "$dir" "$root.new"
+    FIXERR="could not unpack the Node ${NODE_VERSION} tarball; see $STEP_LOG"
+    return 1
+  fi
+  rm -rf "$root"
+  mv "$root.new" "$root"
+  rm -rf "$dir"
+  printf 'node: installed %s into %s\n' "$NODE_VERSION" "$root" >>"$STEP_LOG"
+}
+
+# Optional: a failed install leaves the report line, and the JS unit tests skip without Node 20.
+step_node() { ensure optional "node 20" node_ok node_install; }
 
 # --- step: pg ---------------------------------------------------------------------------
 # Debian and Ubuntu layout. Two routes lead to a usable server, in this order:
