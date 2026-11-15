@@ -1163,6 +1163,7 @@
      "vin_length_not_17": 3
     },
     "stale_key": "reset?",
+    "user_listings_hidden_for_review": 0,
     "vin_owner_conflict_owners": {},
     "vin_owner_conflict_reasons": {},
     "vin_owner_conflict_vins": [],
@@ -1242,6 +1243,7 @@
     },
     "identifier_gate_refused": {},
     "stale_key": "reset?",
+    "user_listings_hidden_for_review": 0,
     "vin_owner_conflict_owners": {
      "owner-com": 1
     },
@@ -1297,6 +1299,7 @@
     "group_feed_unstamped": {},
     "identifier_gate_refused": {},
     "stale_key": "reset?",
+    "user_listings_hidden_for_review": 0,
     "vin_owner_conflict_owners": {
      "owner-com": 1
     },
