@@ -89,16 +89,24 @@ def allowed_numbers() -> frozenset[str]:
     return frozenset(p.strip() for p in raw.split(",") if p.strip())
 
 
+# First-month launch values (owner decision 2026-11-14): 30 texts and 300 cents a day. They are
+# the code defaults on purpose, so an unset variable on release day can never mean a bigger day.
+# 300 sends and 1500 cents are only later targets the owner may choose after a month of real numbers.
+DEFAULT_DAILY_SEND_CAP = 30
+DEFAULT_DAILY_SPEND_CAP_CENTS = 300
+
+
 def daily_send_cap() -> int:
-    return _int("SMS_DAILY_SEND_CAP", 300, minimum=0)
+    return _int("SMS_DAILY_SEND_CAP", DEFAULT_DAILY_SEND_CAP, minimum=0)
 
 
 def daily_spend_cap_cents() -> int:
-    return _int("SMS_DAILY_SPEND_CAP_CENTS", 1500, minimum=0)
+    return _int("SMS_DAILY_SPEND_CAP_CENTS", DEFAULT_DAILY_SPEND_CAP_CENTS, minimum=0)
 
 
 def alert_send_threshold() -> int:
-    return _int("SMS_ALERT_SEND_THRESHOLD", 150, minimum=0)
+    """``SMS_ALERT_SEND_THRESHOLD``; unset means half of the day's send cap (15 at the launch cap of 30)."""
+    return _int("SMS_ALERT_SEND_THRESHOLD", daily_send_cap() // 2, minimum=0)
 
 
 def est_cost_cents() -> int:

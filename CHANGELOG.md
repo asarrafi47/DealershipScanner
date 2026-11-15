@@ -2,9 +2,14 @@
 
 ## [Unreleased]
 
+- Independent dealers (docs only plus one read-only report): `docs/independent_dealers/ANALYSIS.md` (why few independent lots are in the inventory: a closed scan roster, past franchise-only discovery, a 20-row floor and the used-only rule; fixtures 6 of 172 dealers independent, 1 ok), `PLAN.md` and cards L26 to L34 in `docs/scan_loop/TASKS.md`; `backend/discovery/dealer_kind.py` (franchise, independent, national retailer, marketplace, unknown heuristic) and `backend/scripts/dealer_mix_report.py` (READ ONLY, SELECT only, counts and dealer ids) with `backend/tests/test_dealer_mix_report.py`. No scanner, discovery or site behaviour changes. ANALYSIS.md section 5 now holds the owner's read-only production run of 2026-11-14 (28 independents, 13 with active cars, 8,210 cars; every active car last scraped 31 days ago or more).
+
 ## [1.5.33] - 2026-11-14
 
-- Independent dealers (docs only plus one read-only report): `docs/independent_dealers/ANALYSIS.md` (why few independent lots are in the inventory: a closed scan roster, past franchise-only discovery, a 20-row floor and the used-only rule; fixtures 6 of 172 dealers independent, 1 ok), `PLAN.md` and cards L26 to L34 in `docs/scan_loop/TASKS.md`; `backend/discovery/dealer_kind.py` (franchise, independent, national retailer, marketplace, unknown heuristic) and `backend/scripts/dealer_mix_report.py` (READ ONLY, SELECT only, counts and dealer ids) with `backend/tests/test_dealer_mix_report.py`. No scanner, discovery or site behaviour changes.
+- Owner decisions 2026-11-14. Text-message caps: the code defaults are now the first-month launch values, 30 sends and 300 cents a day, alert at half the send cap (15) unless `SMS_ALERT_SEND_THRESHOLD` is set (`backend/auth/phone/config.py`, `.env.example`, tests). 300 sends and 1500 cents remain only later targets.
+- docs/auth_sms: per-phone, device, address and /24 limits lowered so no single source can use more than a fifth of a 30-send day; lock-out risk and how the owner raises the cap written down (DESIGN.md section 5).
+- docs/auth_sms: the site becomes a marketplace (private sellers and verified dealerships) instead of closing `/dealer/register`: DESIGN.md section 23 (what a self-registered dealer can do today, trust ladder, dealership verification, anti-spam layers, where listings live, photos) and cards S19 to S30 in TASKS.md; S5, S6, S9, S10, S12, S14, S16 and S18 updated; Decisions log 2026-11-14.
+- docs/auth_sms: three-lens review (abuse, people, fit) of this change: 9 confirmed blockers fixed (dealership claims proven only on the registry row's own domain, one busy sentence for every number at a cap, new-number and verification pool limits per source, send-row columns for pools, the scanner backstop keeps portal edits working, on-site notices for sellers without email, one grandfather definition, a daily limit on first listings sent to review, the V031 sentence).
 
 ## [1.5.32] - 2026-11-13
 

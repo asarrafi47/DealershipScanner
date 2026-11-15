@@ -6,7 +6,7 @@ committed fixtures. `PLAN.md` beside it says HOW to include them, and cards L26 
 `docs/scan_loop/TASKS.md` are the work. Written in a cloud session with no database, no Railway and
 no dealer-site access: every number below is from code or from the committed fixtures; anything only
 the production database can answer is marked **[DB]** and is measured by the report script of
-section 4.
+section 4. Section 5 gives the numbers the owner measured with it on 2026-11-14.
 
 ## 0. The short answer
 
@@ -21,8 +21,8 @@ section 4.
    `no_rows`; used cars only is `inaccurate` (and fails gate GF5) unless a person adds the dealer to
    an allow list. In the fixtures this hits 1 of the 5 failing independents; the others fail on data
    quality, a broken recipe or a group feed.
-4. **The live site hides cars with any missing spec field** (19 fields), which hits thin independent
-   feeds hardest. How many is **[DB]**.
+4. **The live site hides cars with any missing spec field.** Measured 2026-11-14: 583 of 8,210
+   independent cars (7.1%) are hidden (section 5).
 5. **In the committed 2026-11-03 fixtures, 6 of 172 dealers (3.5%) are independents**, and only 1
    of those 6 scanned `ok` (17%), against 100 of 166 franchise stores (60%).
 
@@ -62,7 +62,7 @@ gates below.
 
 | # | Hypothesis | Verdict | Evidence |
 |---|---|---|---|
-| H1 | Discovery sources or Places queries favour franchise brands | **Supported (mechanism); size [DB]** | Places returns 20 per circle (`google_places.py:62-63`, `:265`), so a metro gets its 20 most prominent places; the national sweep spent about one call per metro (`national_scan.py:30-34`, `:53`). `car_dealer` itself includes used lots, so the query is not franchise-only. DMV, the source that lists every licensed lot, covers NC only (`dmv/registry.py:13-15`). |
+| H1 | Discovery sources or Places queries favour franchise brands | **Supported** (mechanism here; size measured in section 5: independents are 2.3% of dealers with cars) | Places returns 20 per circle (`google_places.py:62-63`, `:265`), so a metro gets its 20 most prominent places; the national sweep spent about one call per metro (`national_scan.py:30-34`, `:53`). `car_dealer` itself includes used lots, so the query is not franchise-only. DMV, the source that lists every licensed lot, covers NC only (`dmv/registry.py:13-15`). |
 | H2 | The manifest came from brand dealer locators | **Supported in effect** (franchise-name filter, not locators) | The old 22k manifest was built from Overture places "filtered down to franchised OEM dealers" (`NATIONWIDE_OVERTURE_DISCOVERY.md:9`, `:36`). No OEM dealer-locator scraper exists in the code (search for `locator` finds only brochure and page-navigation code). |
 | H3 | The recipe-only rule keeps out dealers without a recipe; recipes exist mostly for franchise platforms | **Supported, partly** | The rule keeps out every dealer without active cars, recipe or not (`manifest.py:383-388`). Platform templates: 18 in `backend/scanner/synth/platforms/`; most are franchise website vendors (Dealer.com, DealerOn, Dealer eProcess, Team Velocity, Jazel, oneAudi). Two serve independents with evidence: `html_cards.py:17-24` (Quantum Auto Sales) and `overfuel.py` (2 independents in the fixtures). `autowall.py` is a generic HTML list template whose only known site is a franchise store (`autowall.py:18`); whether it serves independents is to verify. How many recipes per kind: **[DB]**. |
 | H4 | Independents' sites use platforms with no template, or load stock through widgets, iframes or JavaScript only | **Plausible; only probes and the database can tell** | `requires_browser` is a recorded hint (`recipe_store.py:117`) that ends in `no_recipe` (`delta_scan.py:160-166`). Platforms common among used lots (DealerCenter, Frazer, Carsforsale.com-hosted sites, Dealer Car Search, AutoManager, V12) have **no** fingerprint or template in `backend/scanner` (a search for each name finds none; "carsforsale" appears once, as a VDP text marker in `backend/scanner/vdp/extract.py:228`). Their actual share: **to verify** by probe. |
@@ -175,14 +175,54 @@ It sends the two files to `python3` inside the web container (the base64 pattern
 back** everything from `DEALER MIX REPORT` to `END DEALER MIX REPORT`, plus any `skip` lines above
 it. It holds dealer ids and counts only.
 
-## 5. What only the database can tell
+## 5. What only the database can tell, measured
 
-Each item is a line of the report: the registry size and how much of it was ever scanned (a July 2026
-audit, not committed to this repository, reported 418 registry rows and about 198 roster dealers,
-disjoint; **[DB]**, not re-checked here); the real
-share of independents among active dealers and cars; how many independents carry `requires_browser`
-or `skip_reason`; how many independents sit in the registry unscanned and in which states; how many
-of their cars production hides as incomplete; and how fresh their cars are.
+The owner ran the report of section 4 read-only against production on 2026-11-14. The counts below
+are copied from that run; they are not re-checked in this repository. Kinds come from the heuristic
+of section 3.1, so they are estimates.
+
+**Registry against roster.** The registry has 621 rows (543 with a site). 566 dealers have cars
+(561 with active cars), 594 have a recipe and 657 were ever scanned. 86 active dealers are not in
+the registry, so about 475 are. The registry and the roster now overlap; they are not disjoint as
+the July 2026 audit (not committed here) reported.
+
+**By kind.**
+
+| Kind | Dealers | With active cars | Active cars | Notes |
+|---|---|---|---|---|
+| franchise | 651 | 547 | 260,271 | |
+| independent | 28 | 13 | 8,210 (8,207 used) | 583 cars hidden as incomplete |
+| national retailer | 5 | 0 | 0 | kept out by design (section 6) |
+| marketplace | 2 | 0 | 0 | never scanned by design (section 6) |
+| unknown | 46 | 1 | not reported | |
+
+Independents are 13 of 561 dealers with active cars (2.3%) and about 3% of active cars.
+
+**The 28 independents.** 14 have no recipe and 6 carry `requires_browser`. Last scan: 8 were never
+scanned, 4 returned no rows, 1 errored and 15 returned rows. 583 of their 8,210 active cars (7.1%)
+are hidden on the live site as incomplete. The report output given to this session did not include
+the franchise hidden count, so the two kinds cannot be compared on this yet.
+
+**Freshness.** Every active car, of every kind, was last scraped 31 to 60 days ago or longer; none
+is newer. The live inventory is at least a month old.
+
+**Hypotheses these numbers settle (section 2):**
+- **H1, H2: supported.** Independents are 28 of 732 dealers the scanner knows (3.8%) and 2.3% of
+  dealers with cars, close to the 3.5% of the fixtures. The report output given to this session did
+  not include how many unscanned registry rows are independent, so where the gap starts is still
+  open.
+- **H3: supported.** Half of the independents (14 of 28) have no recipe, so the roster rule keeps
+  them out of the fleet.
+- **H4: supported.** 6 of 28 independents (21%) are flagged `requires_browser`, and a browser is
+  never used.
+- **H5: still open.** 4 no-rows results and 1 error fit the mechanism, but the report output given
+  to this session did not include how many independents fall under 20 cars.
+- **H6: refuted, unchanged.** Reconcile is off.
+- **H7: supported, for every kind.** Nothing is newer than 31 days, so the old live data hides new
+  dealers of every kind, not only independents.
+- **H8: supported, modest.** 7.1% of independent cars are hidden; whether that is more than for
+  franchise cars is not measured yet.
+- **H9: confirmed.** There is no dealer-type field; the kinds above come from the heuristic.
 
 ## 6. The three readings of "3rd party dealers"
 
