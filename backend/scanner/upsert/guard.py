@@ -199,6 +199,10 @@ def report_conflicts(
         stats["vin_owner_conflicts"] = len(conflicts)
         stats["vin_owner_conflict_vins"] = sorted(conflicts)
         stats["vin_owner_conflict_owners"] = by_owner
+        # Card S20: VINs refused because a user owns them. The dealer run drops these from
+        # its post-scan VIN list too, so no later stage writes to the user's row.
+        stats["vin_owner_user_listing_vins"] = sorted(
+            vin for vin, (owner, _c) in conflicts.items() if is_dealer_portal_dealer_id(owner))
         # Rule 4 (N8.6): evidence-less contests between stores no pool covers; the pair list
         # is what group_pools.json (D-N3) is extended from.
         pairs: dict[str, int] = {}
@@ -221,6 +225,7 @@ def reset_stats(stats: dict | None) -> None:
         stats["vin_owner_conflicts"] = 0
         stats["vin_owner_conflict_vins"] = []
         stats["vin_owner_conflict_owners"] = {}
+        stats["vin_owner_user_listing_vins"] = []
         stats["group_feed_unstamped"] = {}
         stats["vin_owner_conflict_reasons"] = {}
         stats["car_moves_logged"] = 0

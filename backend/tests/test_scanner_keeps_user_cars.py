@@ -260,7 +260,47 @@ def test_photo_attribution_skips_user_rows():
                   (2, "Scanned Motors", "plate frame", "other-motors-com", "Other", None)]
     planned, *_ = moves_script.plan_moves(candidates, dealers, set(), set(), {})
     assert [m[0] for m in planned] == [2]
-    assert all(not ul.is_dealer_portal_dealer_id(m[4]) for m in planned)
+    # Nothing moves onto a user id, even when the registry row's cars carry one.
+    shared = {"scanned-motors.com"}
+    planned, *_ = moves_script.plan_moves(candidates[1:], dealers, set(), shared, {7: USER})
+    assert planned == []
+
+
+def test_refused_user_vin_never_reaches_the_post_scan_stages(monkeypatch):
+    """Post-scan stages (vPIC heal, gallery vision, gap fill) find rows by VIN alone, so a
+    VIN refused because a user owns it is dropped from ``result["vins"]`` too."""
+    import asyncio
+
+    from backend.scanner.phases.dealer_run_steps import persist as persist_mod
+    from backend.scanner.phases.dealer_run_steps.state import DealerRun, new_result
+
+    other = "2HGCM82633A004352"
+
+    async def fake_upsert(_coord, vehicles, stats):
+        stats.update({"vin_owner_conflict_vins": [VIN, "3" + VIN[1:]],
+                      "vin_owner_conflict_owners": {USER: 1, "owner-com": 1},
+                      "vin_owner_user_listing_vins": [VIN]})
+        return 1
+
+    monkeypatch.setattr(persist_mod, "upsert_vehicles_for_dealer", fake_upsert)
+    monkeypatch.setattr(persist_mod.scan_log, "log_vehicles", lambda *a, **k: None)
+    result = new_result(DEALER, "Scanned Motors", "x")
+    result["vins"] = sorted([VIN, other, "3" + VIN[1:]])
+    run = DealerRun(dealer={}, name="Scanned Motors", url="", provider="x", dealer_id=DEALER,
+                    result=result, t0=0.0,
+                    all_vehicles=[{"vin": VIN}, {"vin": other}, {"vin": "3" + VIN[1:]}])
+    asyncio.run(persist_mod.persist(run))
+    assert VIN not in result["vins"]
+    # A dealer-vs-dealer refusal keeps its pre-S20 handling (unchanged here).
+    assert result["vins"] == sorted([other, "3" + VIN[1:]])
+    assert [v["vin"] for v in run.all_vehicles] == [other]
+
+
+def test_guard_stats_name_the_user_listing_vins():
+    stats: dict = {}
+    _guard.report_conflicts({VIN: (USER, DEALER), "3" + VIN[1:]: ("owner-com", DEALER)},
+                            {}, 48.0, stats, lambda *a: None, {VIN: _own.USER_LISTING})
+    assert stats["vin_owner_user_listing_vins"] == [VIN]
 
 
 # ---------------------------------------------------------------------------
@@ -393,6 +433,33 @@ def test_sql_backstop_holds_with_guard_off(pg_env, monkeypatch):
     assert _row(pg_env)["dealer_id"] == USER and _row(pg_env)["price"] == 21000
     assert stats["vin_owner_conflicts"] == 1
     assert _conflicts(pg_env) == [(VIN, USER, DEALER)]
+
+
+@pytest.mark.pg
+def test_precheck_refuses_user_vin_with_guard_off_on_postgres(pg_env, monkeypatch):
+    from backend.scanner import database as sdb
+
+    assert sdb.upsert_vehicles([_car(USER), _car("owner-com", "2HGCM82633A004352")]) == 2
+    monkeypatch.setenv("SCANNER_VIN_OWNER_GUARD_HOURS", "0")
+    out = sdb.vins_refused_by_owner_guard([_car(DEALER), _car(DEALER, "2HGCM82633A004352")])
+    assert out == {VIN: _own.USER_LISTING}  # scanned owners: guard off means no refusal, as before
+
+
+@pytest.mark.pg
+def test_backstop_treats_unreadable_retire_time_as_recent(pg_env):
+    from backend.scanner.upsert.sql import UPSERT_CARS_SQL
+
+    conn = pg_env.get_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(UPSERT_CARS_SQL, _bind(USER, guard_on=True))
+        for removed in ("", "soon", None):
+            cur.execute("UPDATE cars SET listing_active = 0, listing_removed_at = %s WHERE vin = %s", (removed, VIN))
+            cur.execute(UPSERT_CARS_SQL, _bind(DEALER, guard_on=False, price=1))
+            assert cur.rowcount == 0, removed
+    finally:
+        conn.rollback()
+        conn.close()
 
 
 @pytest.mark.pg

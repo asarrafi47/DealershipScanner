@@ -213,7 +213,7 @@ UPSERT_CARS_SQL = """
                 WHERE (cars.dealer_id = excluded.dealer_id
                        OR NOT __IS_USER_ROW__
                        OR (COALESCE(cars.listing_active, 1) != 1
-                           AND cars.listing_removed_at IS NOT NULL
+                           AND SUBSTR(COALESCE(cars.listing_removed_at, ''), 1, 1) IN ('1', '2')
                            AND REPLACE(cars.listing_removed_at, ' ', 'T') < ?))
                   AND (? = 0
                    OR COALESCE(cars.dealer_id, '') = ''

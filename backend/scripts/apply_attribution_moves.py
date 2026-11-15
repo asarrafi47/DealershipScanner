@@ -343,6 +343,9 @@ def main() -> int:
         )
         rows = cur.fetchall()
         for log_id, car_id, did, dname, rid in rows:
+            if is_dealer_portal_dealer_id(did):
+                # A dealer took a retired user row (card S20): never hand its car back to the user id.
+                continue
             # A car that is now a user's posted car (card S20) is never overwritten.
             cur.execute(
                 "UPDATE cars SET dealer_id = %s, dealer_name = %s, dealership_registry_id = %s "

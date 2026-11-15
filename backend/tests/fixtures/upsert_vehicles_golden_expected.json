@@ -1167,7 +1167,8 @@
     "vin_owner_conflict_owners": {},
     "vin_owner_conflict_reasons": {},
     "vin_owner_conflict_vins": [],
-    "vin_owner_conflicts": 0
+    "vin_owner_conflicts": 0,
+    "vin_owner_user_listing_vins": []
    }
   },
   {
@@ -1253,7 +1254,8 @@
     "vin_owner_conflict_vins": [
      "5YJ3E1EA7KF000001"
     ],
-    "vin_owner_conflicts": 1
+    "vin_owner_conflicts": 1,
+    "vin_owner_user_listing_vins": []
    }
   },
   {
@@ -1307,7 +1309,8 @@
     "vin_owner_conflict_vins": [
      "5YJ3E1EA7KF000003"
     ],
-    "vin_owner_conflicts": 1
+    "vin_owner_conflicts": 1,
+    "vin_owner_user_listing_vins": []
    }
   }
  ],
