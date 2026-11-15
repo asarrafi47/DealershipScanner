@@ -215,3 +215,28 @@ def test_sub_budget_and_give_back_settings_have_the_documented_defaults():
     assert ss.get_int("chat.new_account_budget_pct") == 25
     assert ss.get_int("chat.established_reserve_pct") == 50
     assert ss.get_int("chat.giveback_per_hour") == 3
+
+
+# ------------------------------------------------------------ S5: phone sign-in settings rows
+
+
+def test_phone_settings_defaults():
+    assert ss.get_int("sms.prepaid_cents") == 2000
+    assert ss.get("sms.topup_at") is None
+    assert ss.get_bool("auth_phone.sends_paused") is False
+
+
+def test_topup_time_row_needs_a_zone_and_is_read_as_utc():
+    from datetime import datetime, timezone
+
+    ss.set_loader(lambda: {"sms.topup_at": "2026-11-14T09:30:00-05:00"})
+    assert ss.resolve("sms.topup_at") == (datetime(2026, 11, 14, 14, 30, tzinfo=timezone.utc), "row")
+    ss.set_loader(lambda: {"sms.topup_at": "2026-11-14T09:30:00"})  # no zone: ambiguous, refused
+    assert ss.resolve("sms.topup_at") == (None, "default")
+    ss.set_loader(lambda: {"sms.topup_at": "yesterday"})
+    assert ss.resolve("sms.topup_at") == (None, "default")
+
+
+def test_sends_paused_row_stops_sends_without_a_release():
+    ss.set_loader(lambda: {"auth_phone.sends_paused": "1"})
+    assert ss.get_bool("auth_phone.sends_paused") is True

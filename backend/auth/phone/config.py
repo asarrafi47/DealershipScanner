@@ -113,6 +113,11 @@ def est_cost_cents() -> int:
     return _int("SMS_EST_COST_CENTS", 6, minimum=0)
 
 
+def est_lookup_cents() -> int:
+    """``SMS_EST_LOOKUP_CENTS``: the line-type lookup cost counted at reserve time (default 1)."""
+    return _int("SMS_EST_LOOKUP_CENTS", 1, minimum=0)
+
+
 def code_ttl_s() -> int:
     return _int("AUTH_PHONE_CODE_TTL_S", 300, minimum=1)
 

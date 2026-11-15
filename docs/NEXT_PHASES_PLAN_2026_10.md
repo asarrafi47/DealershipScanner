@@ -512,7 +512,7 @@ Run every command in a plain terminal from `/Users/asarrafi/Projects/DealershipS
   | V028 | attribution evidence (persisted rooftop tier) | N8.6 |
   | V029 | `admin_users` (Postgres admin store, no TOTP columns) | N37.9 |
   | V030 | `chat_usage_buckets`, `app_settings` (chat limits; file `V030__chat_usage.sql`, built in wave 1) | C1 |
-  | V031 | `auth_phone` tables (reserved, not built yet) | S5 |
+  | V031 | `auth_phone_identities`, `auth_phone_challenges`, `auth_phone_sends`, `auth_phone_wrong_tries`, `auth_phone_lookup_cache`, `auth_session_epochs` (phone sign-in; file `V031__auth_phone.sql`, built in wave 1 of the auth cards) | S5 |
   | V032 | TOTP and recovery codes (reserved, not built yet) | S12 |
   | | (V033 to V041 below were V030 to V038 until 2026-11-13: the auth_sms cards claimed V030 to V032 and none of the rows below is built on `dev` yet, so they move up by three, as docs/auth_sms/TASKS.md rule 5 says. Phase prose that names an old number resolves through this table.) | |
   | V033 | `users.auth_epoch` (session revocation) | N30 |

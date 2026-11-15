@@ -55,6 +55,11 @@ def prod(monkeypatch):
 
     monkeypatch.setattr(ps, "assert_credential_db_encryption_config", lambda: None)
     monkeypatch.setattr(inventory_pg, "assert_inventory_backend_configured", lambda: None)
+    import backend.auth.phone.restore_guard as restore_guard
+
+    # S5 restore guard: these tests have no databases; test_auth_phone_restore_guard.py covers it
+    monkeypatch.setattr(restore_guard, "max_identity_user_id", lambda: 0)
+    monkeypatch.setattr(restore_guard, "max_users_id", lambda: 0)
     return monkeypatch
 
 
