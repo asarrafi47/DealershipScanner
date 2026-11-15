@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.34] - 2026-11-15
+
 - Independent dealers (docs only plus one read-only report): `docs/independent_dealers/ANALYSIS.md` (why few independent lots are in the inventory: a closed scan roster, past franchise-only discovery, a 20-row floor and the used-only rule; fixtures 6 of 172 dealers independent, 1 ok), `PLAN.md` and cards L26 to L34 in `docs/scan_loop/TASKS.md`; `backend/discovery/dealer_kind.py` (franchise, independent, national retailer, marketplace, unknown heuristic) and `backend/scripts/dealer_mix_report.py` (READ ONLY, SELECT only, counts and dealer ids) with `backend/tests/test_dealer_mix_report.py`. No scanner, discovery or site behaviour changes. ANALYSIS.md section 5 now holds the owner's read-only production run of 2026-11-14 (28 independents, 13 with active cars, 8,210 cars; every active car last scraped 31 days ago or more).
 
 ## [1.5.33] - 2026-11-14
