@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.34] - 2026-11-15
+
 - Card S19, today's open seller doors closed (no migration). `/inventory` is for `dealership_*` and `admin` accounts only (others get 403 and a plain sentence). `MARKETPLACE_POSTING_ENABLED` (default off): only grandfathered accounts (a `dealer_vehicles` row before `GRANDFATHER_CUTOFF`, 2026-11-15 00:00 UTC) still reach the public site; others are saved privately with "Posting cars publicly opens soon. Your car is saved." `/dealer/register` needs Turnstile (fails closed; in production without `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` it says "Dealer sign-up is not available right now."), 3 sign-ups an hour per address, and the `seller.signup_paused` switch. Suspending an account takes its cars off the site. A VIN already listed by someone else is told to the seller. `/dealer/login` shows one generic error. The Turnstile origin is allowed in the security policy of the sign-up page only. New read-only `backend/scripts/list_grandfathered_sellers.py` lists the grandfathered account ids. Tests: `backend/tests/test_seller_doors.py`.
 
 ## [1.5.33] - 2026-11-14
