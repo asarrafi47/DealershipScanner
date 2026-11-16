@@ -134,7 +134,7 @@ The JSON for the app has `error` (`user_chat_limit_reached`, `listing_chat_limit
 
 ## 9. Alerts without personal data
 
-A nightly job (same style as the existing nightly card job) writes yesterday's totals to the log and exits non-zero if the budget was reached or usage passed an alert percentage, so the owner's scheduled routine can send a notification. Inside the web process the guard logs one `chat_budget` line when a day first passes 50% and 80% (once per level per day). Logs contain counts, percentages and hashes cut to 8 characters, never message text, phone numbers or names.
+A nightly job (`python -m backend.scripts.chat_budget_nightly`, card C6, same style as the existing nightly card job) writes yesterday's totals to the log, deletes rows older than 35 days, and exits 0 when under every alert level, 2 when an alert percentage was passed, 3 when the budget was reached (or the site budget refused a message) and 1 when it could not read the database (then it deletes nothing); on 2 or 3 it emails `OWNER_ALERT_EMAIL` when that is set, so the owner's scheduled routine can send a notification. Inside the web process the guard logs one `chat_budget` line when a day first passes 50% and 80% (once per level per day) and one when the site budget first refuses a message, and deletes old rows at most once an hour as the fallback. Logs contain counts, percentages and dollars with thousands separators (no digit run of 7 or more) and no hashes, never message text, phone numbers or names.
 
 ## 10. Risks
 
