@@ -70,6 +70,10 @@ def assert_production_security_config() -> None:
 
     assert_phone_login_config_for_production()
 
+    from backend.auth.phone.restore_guard import assert_identity_ids_within_users
+
+    assert_identity_ids_within_users()
+
     dev_console = (os.environ.get("DEV_CONSOLE") or "").strip().lower() in (
         "1",
         "true",
