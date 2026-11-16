@@ -220,3 +220,73 @@ def test_r4_keys_are_prefixed_expire_and_hold_no_secret(shared, epochs):  # noqa
     for k in keys:
         value = shared.s[k].decode("ascii")
         assert set(value) <= set("0123456789.|-"), value
+
+
+# ---------------------------------------------------------------- review 2026-11-16: cross-process races
+
+
+def _encoded(value: float | None, at: float) -> bytes:
+    return session_epoch._encode(value, at).encode("ascii")
+
+
+def test_r4_a_read_never_replaces_another_process_write_nx(shared, epochs, monkeypatch):  # noqa: F811
+    from backend.db.repositories import auth_phone_repo
+
+    key = rc.key("sva", "20")
+
+    def read_while_another_process_writes(user_id, **_k):
+        # Another process revokes while this read is in flight: row written, key replaced. This
+        # process's generation does not move (no forget_cached here).
+        epochs.rows[20] = _at(NOW)
+        shared.delete(key)
+        shared.set(key, _encoded(NOW, shared.now), ex=31)
+        return None  # the stale answer this read saw
+
+    monkeypatch.setattr(auth_phone_repo, "sessions_valid_after", read_while_another_process_writes)
+    assert session_epoch.get_valid_after(20, strict=False) is None
+    monkeypatch.setattr(auth_phone_repo, "sessions_valid_after", epochs.read)
+    session_epoch.clear_cache()
+    assert session_epoch.get_valid_after(20, strict=False) == NOW
+
+
+def test_r4_a_write_overwrites_what_a_racing_read_put_back(shared, epochs, monkeypatch):  # noqa: F811
+    from backend.db.repositories import auth_phone_repo
+
+    key = rc.key("sva", "21")
+    real_write = epochs.write
+
+    def write_while_a_stale_read_lands(user_id, **kw):
+        shared.set(key, _encoded(None, shared.now), ex=30)  # another process's stale read, after our delete
+        return real_write(user_id, **kw)
+
+    monkeypatch.setattr(auth_phone_repo, "set_sessions_valid_after", write_while_a_stale_read_lands)
+    assert session_epoch.revoke_user_sessions(21, reason="test", now=_at(NOW)) == NOW
+    assert shared.get(key).decode("ascii").split("|")[0] == repr(NOW)
+    assert shared.ttl[key] == 31  # outlives any read window that began before the write
+
+
+def test_r4_a_slow_read_is_not_shared(shared, epochs, monkeypatch):  # noqa: F811
+    from backend.db.repositories import auth_phone_repo
+
+    def slow(user_id, **_k):
+        shared.now += 6  # the read took longer than the strict window
+        return None
+
+    monkeypatch.setattr(auth_phone_repo, "sessions_valid_after", slow)
+    assert session_epoch.get_valid_after(22, strict=False) is None
+    assert not shared.exists(rc.key("sva", "22"))
+
+
+def test_r4_a_read_stamps_its_entry_with_the_time_before_the_read(shared, epochs, monkeypatch):  # noqa: F811
+    from backend.db.repositories import auth_phone_repo
+
+    start = shared.now
+
+    def slowish(user_id, **_k):
+        shared.now += 2
+        return None
+
+    monkeypatch.setattr(auth_phone_repo, "sessions_valid_after", slowish)
+    session_epoch.get_valid_after(23, strict=False)
+    stored = float(shared.get(rc.key("sva", "23")).decode("ascii").split("|")[1])
+    assert stored == pytest.approx(start)

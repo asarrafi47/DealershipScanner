@@ -24,9 +24,11 @@ from backend.utils import ip_rate_limit, redis_client
 
 WINDOW_S = 60.0
 # (subject, limit per minute). Below the point where Postgres would refuse anyway, these only
-# take a flood off the database (the advisory lock, the counts and the refusal rows).
-START_LIMITS = {"phone": 3, "device": 6, "group": 12}
-CHECK_LIMITS = {"phone": 10, "device": 10, "group": 30}
+# take a flood off the database (the advisory lock, the counts and the refusal rows). Checked in
+# this order, device first and phone last: a request refused by the sender's own device or group
+# window adds nothing to the number's window, so a stranger cannot cheaply fill a victim's.
+START_LIMITS = {"device": 6, "group": 12, "phone": 3}
+CHECK_LIMITS = {"device": 10, "group": 30, "phone": 10}
 
 
 def configured() -> bool:

@@ -577,14 +577,6 @@ class AuthPhoneService:
             self.repo.finish_challenge(public_id, "expired", now=now, session_nonce=session_nonce)
             _event("check_expired", purpose=ch.purpose)
             return CheckOutcome(False, R_EXPIRED, START_AGAIN)
-        if burst.configured() and not burst.check_allowed(
-            phone_hash=ch.phone_hash,
-            device_hash=device_hash,
-            group_hash=numbers.hash_value("ip_prefix", _ip_prefix(ip)) if ip else None,
-        ):
-            # Card R2: no attempt reserved, nothing counted, the same words for every number.
-            _event("blocked_burst", purpose=ch.purpose, step="check", h=_h6(ch.phone_hash))
-            return CheckOutcome(False, R_BUSY, TRY_AGAIN)
         browser_key, phone_key = self._wrong_keys(ch.phone_hash, device_hash, session_nonce)
         if self._locked(ch.phone_hash, device_hash, session_nonce, now):
             _event("check_locked", purpose=ch.purpose, h=_h6(ch.phone_hash))
@@ -592,6 +584,16 @@ class AuthPhoneService:
         clean = "".join(ch_ for ch_ in (code or "") if ch_.isascii() and ch_.isdigit())
         if len(clean) != 6:
             return CheckOutcome(False, R_WRONG, CODE_FAILED)  # not a code: no attempt, no vendor call
+        # Card R2: only a well-formed code about to reserve a real attempt reaches the bump, so empty
+        # or short codes cannot fill anyone's window for free.
+        if burst.configured() and not burst.check_allowed(
+            phone_hash=ch.phone_hash,
+            device_hash=device_hash,
+            group_hash=numbers.hash_value("ip_prefix", _ip_prefix(ip)) if ip else None,
+        ):
+            # No attempt reserved, nothing counted, the same words for every number.
+            _event("blocked_burst", purpose=ch.purpose, step="check", h=_h6(ch.phone_hash))
+            return CheckOutcome(False, R_BUSY, TRY_AGAIN)
         attempt = self.repo.reserve_attempt(public_id, session_nonce, now=now, max_attempts=self.config.max_wrong_tries)
         if attempt is None:
             self.repo.finish_challenge(public_id, "failed", now=now, session_nonce=session_nonce)

@@ -18,7 +18,8 @@ Two doors only, so the shared cache (card R4) has one place to read and one plac
   longest any key can live.
 
 Redis key: ``sc:sva:<user id>`` (no phone number, code or secret), value ``<valid_after or ->|
-<stored at>``, TTL 5 or 30 seconds. Postgres stays the only authority: a flush or an eviction
+<stored at>``, TTL 5 or 30 seconds (31 after a write). A read stamps its entry with the time
+before it asked Postgres and does not share an answer that took 5 seconds or more. Postgres stays the only authority: a flush or an eviction
 only means the next request asks Postgres.
 
 When the lookup fails, :func:`get_valid_after` raises :class:`EpochLookupFailed`; the session hook
@@ -121,21 +122,25 @@ def _redis_read(uid: int, ttl: float, now: float) -> tuple[str, float | None]:
     return _REDIS_HIT, value
 
 
-def _encode(value: float | None) -> str:
-    return "%s|%.3f" % (_NONE_MARK if value is None else repr(float(value)), _wall())
+def _encode(value: float | None, stamped_at: float) -> str:
+    return "%s|%.3f" % (_NONE_MARK if value is None else repr(float(value)), stamped_at)
 
 
-def _redis_store(uid: int, value: float | None, ttl: float, *, overwrite: bool) -> bool:
-    """Put an answer in Redis. ``overwrite=False`` (a read) never replaces a newer write.
+def _redis_store(
+    uid: int, value: float | None, ttl: float, *, overwrite: bool, stamped_at: float | None = None
+) -> bool:
+    """Put an answer in Redis. ``overwrite=False`` (a read) never replaces a newer write, and a
+    read stamps its entry with the time BEFORE it asked Postgres, so its age is never understated.
     Returns False when Redis was configured but failed."""
     client = redis_client.get_client()
     if client is None:
         return not redis_client.configured()  # unset: nothing to do; breaker open: not stored
+    stamp = _wall() if stamped_at is None else stamped_at
     try:
         if overwrite:
-            client.set(_redis_key(uid), _encode(value), ex=max(1, int(ttl)))
+            client.set(_redis_key(uid), _encode(value, stamp), ex=max(1, int(ttl)))
         else:
-            client.set(_redis_key(uid), _encode(value), ex=max(1, int(ttl)), nx=True)
+            client.set(_redis_key(uid), _encode(value, stamp), ex=max(1, int(ttl)), nx=True)
     except Exception as exc:
         redis_client.record_failure(exc)
         return False
@@ -215,6 +220,7 @@ def get_valid_after(user_id: int, *, strict: bool) -> float | None:
         return hit[1]
     if not _store_configured():
         return None
+    read_started = _wall()
     try:
         value = _read_row(uid)
     except Exception as exc:
@@ -227,8 +233,10 @@ def get_valid_after(user_id: int, *, strict: bool) -> float | None:
         fresh = gen == _generation
         if fresh:
             _cache[uid] = (now, value)
-    if fresh and state == _REDIS_MISS:
-        _redis_store(uid, value, ttl, overwrite=False)
+    # A read slower than the strict window is not shared: a revoke may have landed (and its
+    # protective key expired) while it ran, and another process's write is invisible here.
+    if fresh and state == _REDIS_MISS and _wall() - read_started < CACHE_SECONDS_STRICT:
+        _redis_store(uid, value, ttl, overwrite=False, stamped_at=read_started)
     return value
 
 
@@ -287,7 +295,9 @@ def revoke_user_sessions(user_id: int, *, reason: str, now: datetime | None = No
         stored = stored.replace(tzinfo=timezone.utc)
     value = stored.timestamp()
     # Write the new answer over anything a racing read put back (a read only ever adds with NX).
-    if redis_ok and not _redis_store(uid, value, CACHE_SECONDS_STRICT, overwrite=True):
+    # Kept for the longest read window (31 s) so no read that began before the write can add its
+    # older answer with NX; strict readers still ignore it after 5 s by its stored time.
+    if redis_ok and not _redis_store(uid, value, CACHE_SECONDS_SHOPPER + 1, overwrite=True):
         _redis_forget(uid)
         _distrust_redis(uid)
     return value

@@ -96,6 +96,24 @@ def test_r2_redis_down_says_go_on_without_error_or_delay(fake_redis):  # noqa: F
     assert fake_redis.calls <= rc.FAILURES_TO_OPEN  # the breaker skipped every later call
 
 
+def test_r2_cool_down_errors_are_caught_before_the_breaker_opens(fake_redis):  # noqa: F811
+    fake_redis.down = True
+    assert not rc.breaker_open()
+    assert burst.cooldown_active("pub-x") is False
+    assert burst.start_cooldown("pub-x", 60) is None
+    assert fake_redis.calls == 2 and rc._failures == 2
+
+
+def test_r2_a_refusal_by_the_senders_own_device_adds_nothing_to_the_number_window(fake_redis):  # noqa: F811
+    victim = "e" * 64
+    for i in range(burst.START_LIMITS["device"]):
+        assert burst.start_allowed(phone_hash="%064x" % (i + 1), device_hash=DEV_H, group_hash=None)
+    for _ in range(10):  # the attacker's device is spent: refused before the number's window
+        assert not burst.start_allowed(phone_hash=victim, device_hash=DEV_H, group_hash=None)
+    got = [burst.start_allowed(phone_hash=victim, device_hash="%064x" % (900 + i), group_hash=None) for i in range(4)]
+    assert got == [True] * burst.START_LIMITS["phone"] + [False]  # the victim's window is whole
+
+
 def test_r2_resend_cool_down_runs_for_its_seconds(fake_redis):  # noqa: F811
     assert burst.cooldown_active("pub-3") is False
     burst.start_cooldown("pub-3", 60)
@@ -342,3 +360,68 @@ def test_r2_service_reads_redis_only_through_the_burst_module():
     assert "redis_client" not in text and "ip_rate_limit" not in text
     assert text.count("burst.start_allowed(") == 2  # start and resend
     assert text.count("burst.check_allowed(") == 1
+
+
+# ---------------------------------------------------------------- review 2026-11-16 (Postgres tier)
+
+
+@pg
+@pytest.mark.parametrize("subject", ["device", "group"])
+def test_r2_start_passes_device_and_group_to_the_bumps(svc_env, monkeypatch, subject):
+    t = _svc()
+    s, prov, _ = t.make()
+    fr.install(monkeypatch)
+    try:
+        lim = {"phone": 50, "device": 50, "group": 50}
+        lim[subject] = 1
+        monkeypatch.setattr(burst, "START_LIMITS", lim)
+        same_device = numbers.hash_device("shared-dev")
+        # Different numbers; one device (or one /24: 10.9.9.1 and 10.9.9.77, different devices).
+        first = s.start(t.num(30), consent=True, turnstile_token="pass", ip="10.9.9.1",
+                        device_hash=same_device if subject == "device" else numbers.hash_device("d30"))
+        assert first.ok
+        before = t.rows()
+        second = s.start(t.num(31), consent=True, turnstile_token="pass",
+                         ip="10.8.8.8" if subject == "device" else "10.9.9.77",
+                         device_hash=same_device if subject == "device" else numbers.hash_device("d31"))
+        assert (second.ok, second.reason, second.sentence) == (False, svc_mod.R_BUSY, svc_mod.BUSY)
+        assert t.rows() == before and len(prov.outbox) == 1
+    finally:
+        fr.uninstall()
+
+
+@pg
+def test_r2_check_passes_the_group_to_its_bump_only_when_an_address_is_given(svc_env, monkeypatch):
+    t = _svc()
+    s, prov, _ = t.make()
+    fr.install(monkeypatch)
+    try:
+        monkeypatch.setattr(burst, "CHECK_LIMITS", {"device": 50, "group": 1, "phone": 50})
+        a = t.start(s, 32)
+        b = t.start(s, 33)
+        da, db = numbers.hash_device("dev32"), numbers.hash_device("dev33")
+        assert s.check(a.public_id, a.session_nonce, t.WRONG, device_hash=da, ip="10.7.7.1").reason == svc_mod.R_WRONG
+        refused = s.check(b.public_id, b.session_nonce, t.WRONG, device_hash=db, ip="10.7.7.200")
+        assert (refused.reason, refused.sentence) == (svc_mod.R_BUSY, svc_mod.TRY_AGAIN)
+        # Without an address there is no group to count: the check goes on to Postgres.
+        assert s.check(b.public_id, b.session_nonce, t.WRONG, device_hash=db).reason == svc_mod.R_WRONG
+    finally:
+        fr.uninstall()
+
+
+@pg
+def test_r2_empty_or_short_codes_fill_no_check_window(svc_env, monkeypatch):
+    t = _svc()
+    s, prov, _ = t.make()
+    server = fr.install(monkeypatch)
+    try:
+        monkeypatch.setattr(burst, "CHECK_LIMITS", {"device": 2, "group": 2, "phone": 2})
+        out = t.start(s, 34)
+        dev = numbers.hash_device("dev34")
+        before = {k: dict(v) for k, v in server.z.items()}
+        for junk in ("", "12", "abc", None, "1234567"):
+            assert s.check(out.public_id, out.session_nonce, junk, device_hash=dev, ip="10.6.6.1").reason == svc_mod.R_WRONG
+        assert {k: dict(v) for k, v in server.z.items()} == before
+        assert s.check(out.public_id, out.session_nonce, FAKE_CODE, device_hash=dev, ip="10.6.6.1").approved
+    finally:
+        fr.uninstall()
