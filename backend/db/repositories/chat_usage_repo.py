@@ -415,7 +415,9 @@ def day_summary(*, day_start_utc: datetime, next_day_utc: datetime, conn: Any = 
 
     ``messages``, ``tokens_in``, ``tokens_out`` and ``cost_micro`` come from the global day row.
     ``denied`` counts every denial recorded that day, on its day row or on one of its hour rows
-    (a denial is written once, on the row of the limit that was hit), grouped by subject kind.
+    (a denial is written once, on the row of the limit that was hit), grouped by subject kind. Only the
+    site-wide row (``global``/``all``) counts as ``global``; a refusal by the new-account or open share of
+    the budget (``global``/``new`` and ``global``/``open``) counts as ``global_share``.
     """
     own = conn is None
     c = conn or _connect()
@@ -426,11 +428,12 @@ def day_summary(*, day_start_utc: datetime, next_day_utc: datetime, conn: Any = 
             (day_start_utc, GLOBAL_KEY),
         ).fetchone()
         denied = c.execute(
-            "SELECT subject_kind, COALESCE(SUM(denied), 0) FROM public.chat_usage_buckets "
+            "SELECT CASE WHEN subject_kind = 'global' AND subject_key <> %s THEN 'global_share' "
+            "ELSE subject_kind END AS kind, COALESCE(SUM(denied), 0) FROM public.chat_usage_buckets "
             "WHERE denied > 0 AND ((period = 'day' AND bucket_start = %s) "
             "OR (period = 'hour' AND bucket_start >= %s AND bucket_start < %s)) "
-            "GROUP BY subject_kind",
-            (day_start_utc, day_start_utc, next_day_utc),
+            "GROUP BY 1",
+            (GLOBAL_KEY, day_start_utc, day_start_utc, next_day_utc),
         ).fetchall()
         c.rollback()
     finally:

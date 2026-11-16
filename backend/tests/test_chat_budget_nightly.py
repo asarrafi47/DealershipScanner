@@ -106,6 +106,16 @@ def test_exit_code_three_when_the_site_budget_refused_a_message(monkeypatch):
     assert nightly.run(now=NOW) == nightly.EXIT_BUDGET
 
 
+def test_a_budget_share_refusal_is_not_the_budget_reached(monkeypatch, capsys):
+    # New accounts used up their 25% share: the site is at 26%, under every alert level.
+    monkeypatch.setenv("OWNER_ALERT_EMAIL", "owner@example.invalid")
+    fake = _Fake(monkeypatch, _summary(cost=1_300_000, denied={"global_share": 4}))
+    assert nightly.run(now=NOW, send_email=fake.send) == nightly.EXIT_OK
+    out = capsys.readouterr().out
+    assert "denied budget share 4" in out and "result: under every alert level" in out
+    assert fake.mails == []
+
+
 def test_alert_levels_come_from_the_setting(monkeypatch, settings):
     settings["chat.alert_pcts"] = "10,90"
     _Fake(monkeypatch, _summary(cost=1_000_000))  # 20%
@@ -289,6 +299,55 @@ def test_gate_no_budget_line_for_an_account_limit(monkeypatch, caplog):
     assert _lines(caplog) == []
 
 
+def test_gate_runs_the_purge_fallback_once_an_hour(monkeypatch):
+    from backend.chat_budget import guard
+
+    t = [500.0]
+    alerts.set_clock(lambda: t[0])
+    calls = []
+    res = repo.Reservation(weight=1, global_day=(1, 10, 10))
+    monkeypatch.setattr(repo, "reserve", lambda charges, **kw: repo.ReserveResult(ok=True, reservation=res))
+    monkeypatch.setattr(repo, "true_up", lambda r, **kw: None)
+    monkeypatch.setattr(repo, "delete_older_than", lambda **kw: calls.append(kw) or 0)
+
+    def ask():
+        with guard("car", 1, None, None, None, None, 1, now=NOW, account_age_s=10 * 86400) as g:
+            g.no_model_call()
+
+    ask()
+    t[0] += 1800
+    ask()
+    assert calls == [{"now": NOW}]
+    t[0] += 1801
+    ask()
+    assert len(calls) == 2
+
+
+HASH64 = "ab" * 32
+
+
+def test_gate_lines_carry_no_names_numbers_or_hashes(monkeypatch, caplog, settings):
+    from backend.chat_budget import ChatDenied, guard
+
+    caplog.set_level(logging.DEBUG)
+    settings["chat.alert_pcts"] = "1,2"
+    res = repo.Reservation(weight=1, global_day=(1_234_567, 9_999_999, 4_900_000))
+    monkeypatch.setattr(repo, "reserve", lambda charges, **kw: repo.ReserveResult(ok=True, reservation=res))
+    monkeypatch.setattr(repo, "true_up", lambda r, **kw: None)
+    monkeypatch.setattr(repo, "delete_older_than", lambda **kw: 1_234_567)
+    with guard("car", TEST_USER, HASH64, HASH64, HASH64, "2025550123", 1, now=NOW, account_age_s=10 * 86400) as g:
+        g.no_model_call()
+    v = repo.Violation("global", repo.GLOBAL_KEY, "day", "cost", 5_000_000, 5_010_000)
+    monkeypatch.setattr(repo, "reserve", lambda charges, **kw: repo.ReserveResult(ok=False, violations=[v]))
+    monkeypatch.setattr(repo, "add_denied", lambda *a, **k: None)
+    with pytest.raises(ChatDenied):
+        with guard("car", TEST_USER, HASH64, HASH64, HASH64, "2025550123", 1, now=NOW, account_age_s=10 * 86400):
+            pass
+    text = "\n".join(r.getMessage() for r in caplog.records)
+    assert "passed 2%" in text and "reached the budget" in text and "removed 1,234,567 rows" in text
+    _assert_clean(text)
+
+
 def test_an_alert_check_error_never_breaks_a_message(monkeypatch):
     monkeypatch.setattr(ss, "get_int", lambda key: 1 // 0)
     alerts.note_day_total((1, 2, 3), now=NOW, tz=NY)  # must not raise
@@ -349,6 +408,18 @@ def test_pg_day_summary_reads_yesterday_and_its_denials_only(pg_db):
     s = repo.day_summary(day_start_utc=Y_START, next_day_utc=T_START)
     assert (s["messages"], s["tokens_in"], s["tokens_out"], s["cost_micro"]) == (50, 60_000, 9_000, 700_000)
     assert s["denied"] == {"global": 1, "user": 6, "device": 1}
+
+
+@pg
+def test_pg_budget_share_denials_are_kept_apart_from_the_site_budget(pg_db):
+    _put(pg_db, "day", Y_START, "global", "all", messages=50, cost=1_300_000)  # 26%
+    _put(pg_db, "day", Y_START, "global", "new", denied=3)
+    _put(pg_db, "day", Y_START, "global", "open", denied=2)
+    s = repo.day_summary(day_start_utc=Y_START, next_day_utc=T_START)
+    assert s["denied"] == {"global_share": 5}
+    assert nightly.run(now=NOW, purge=False) == nightly.EXIT_OK
+    _put(pg_db, "hour", Y_START + timedelta(hours=20), "global", "all", denied=1)
+    assert nightly.run(now=NOW, purge=False) == nightly.EXIT_BUDGET
 
 
 @pg

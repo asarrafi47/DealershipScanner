@@ -30,8 +30,9 @@ EXIT_ERROR = 1
 EXIT_ALERT = 2
 EXIT_BUDGET = 3
 
-# Subject kinds as the owner reads them (the global rows are the site budget).
-_KIND_NAMES = {"global": "budget", "user": "account", "listing": "car", "phone": "phone", "device": "device", "ip": "address"}
+# Subject kinds as the owner reads them. Only the site-wide row is "budget"; the new-account and open
+# shares of it are "budget share" and never make the day count as budget reached.
+_KIND_NAMES = {"global": "budget", "global_share": "budget share", "user": "account", "listing": "car", "phone": "phone", "device": "device", "ip": "address"}
 
 
 def _out(line: str) -> None:
