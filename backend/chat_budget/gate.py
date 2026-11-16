@@ -32,6 +32,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from backend import settings_store as ss
+from backend.chat_budget import alerts
 from backend.chat_budget import messages as msg
 from backend.db.repositories import chat_usage_repo as repo
 from backend.db.repositories.chat_usage_repo import Charge, Violation
@@ -304,8 +305,12 @@ class Guard:
                 repo.add_denied(worst.kind, worst.key, worst.period, now=now, tz_name=tz)
             except Exception as exc:
                 _log.error("chat_budget: could not record a denial (%s)", type(exc).__name__)
+            if any(v.kind == "global" and v.key == repo.GLOBAL_KEY for v in result.violations):
+                alerts.note_budget_reached(now=now, tz=tz)
             raise ChatDenied(self.denial)
         self._res = result.reservation
+        alerts.note_day_total(getattr(self._res, "global_day", None), now=now, tz=tz)
+        alerts.maybe_purge(now=now)
         from backend.llm import client as llm_client
 
         self._token = llm_client.set_usage_sink(self._on_result)

@@ -125,6 +125,7 @@ Merge rules for parallel sessions: regenerate `app_surface.json` last after reba
 - **Acceptance:** exit codes for under, over-alert and budget-reached days; deletion respects the age; log lines contain no message text or names.
 - **Owner steps:** none here; S18 schedules it.
 - **Review 2026-11-13 (SF9, SF15):** the job runs as a Railway cron command (`python -m backend.scripts.chat_budget_nightly`) deployed through the `deploy/railway` scripts, with an hourly retention purge from the web process as fallback; it emails `OWNER_ALERT_EMAIL` (name only) on an alert level. Log lines carry no digit run of 7 or more and no hash longer than 6 characters.
+- **Status 2026-11-16:** built in the PR from branch `claude/nightly-c6` (exit codes 0 under, 2 alert level, 3 budget reached, 1 could not run). Not done here: the Railway cron service and its deploy script (owner question in the PR; S18 schedules it).
 - **Next-session prompt:** `Do task C6 of docs/auth_sms/TASKS.md`.
 
 ## Sign-in cards
