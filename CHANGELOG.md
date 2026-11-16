@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.35] - 2026-11-16
+
 - C3 (chat limits on the four chat routes): car chat, compare chat, the sidebar assistant and car narration now count every message in Postgres through `chat_budget.guard` (one shared allowance: 10 an hour, 40 a day, 10 per car, plus device, address and the new per-/24 or /48 back-stop `chat.ip_net_per_day`, 150), and the old in-memory daily buckets are gone. The per-minute burst limits stay, behind one function (`chat_budget.web.burst_allowed`) so card R3 can move them to Redis in one place. A refusal is still a 429 with `ok` and `error` (`user_chat_limit_reached`, `listing_chat_limit_reached`, now also `chat_budget_reached`, `chat_paused`) plus the plain `message` and `resets_at`; the compare panel prints that sentence. A 404, an empty message, a local search and a narration cache hit cost nothing; the sidebar's rewrite plus answer is one message; web research weighs 3. Narration now needs sign-in and the `X-CSRF-Token` header. Window-sticker and vision model calls started by `/api/cars/<id>/packages/ensure` are counted (weight 3) only when a call is really made, and a refusal keeps the normal panel with the sentence. Postgres down closes chat (503) and nothing else. Review fixes: the window-sticker GET routes also read stickers under the guard; a caught model error with no answer text gives the message back.
 
 ## [1.5.34] - 2026-11-15
