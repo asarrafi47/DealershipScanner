@@ -179,6 +179,14 @@ def message_weight(message: str, allow_web_research: bool) -> int:
     return 1
 
 
+def give_back_if_unanswered(chat_guard: Any, out: dict) -> None:
+    """The assistant caught its own model error and answered with an error and no text: the shopper
+    got no answer, so the message is given back (CHAT_LIMITS.md rule 9; the gate's hourly cap on
+    give-backs still applies). Tokens really spent stay counted."""
+    if out.get("error") and not str(out.get("reply") or "").strip():
+        chat_guard.fail()
+
+
 def denial_response(denial: Denial):
     """``(json, status)``: the old ``{"ok": false, "error": ...}`` plus ``message`` and ``resets_at``."""
     from flask import jsonify

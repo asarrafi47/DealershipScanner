@@ -202,8 +202,9 @@ def api_ai_chat():
                 chat_web.KIND_SIDEBAR,
                 listing_id=context_car.get("id"),
                 weight=chat_web.message_weight(message, allow_web),
-            ):
+            ) as chat_guard:
                 out = run_car_page_chat(context_car, message, allow_web_research=allow_web)
+                chat_web.give_back_if_unanswered(chat_guard, out)
             reply = (out.get("reply") or "").strip()
             if out.get("error") and not reply:
                 return _degraded(out.get("error_message"), out["error"], context="car",

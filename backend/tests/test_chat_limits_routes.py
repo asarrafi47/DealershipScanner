@@ -18,6 +18,7 @@ from backend import settings_store as ss
 from backend.chat_budget import gate
 from backend.chat_budget import messages as msg
 from backend.chat_budget import web as chat_web
+from backend.db import inventory_db as _inventory_db
 from backend.db.repositories import chat_usage_repo as repo
 from backend.routes import cars_pages as _cars_pages_routes
 from backend.utils.csrf import _SESSION_KEY
@@ -79,7 +80,7 @@ def fakes(monkeypatch):
     monkeypatch.setattr(_cars_pages_routes, "run_car_page_chat", car_chat)
     monkeypatch.setattr(_cars_pages_routes, "run_compare_chat", compare_chat)
     monkeypatch.setattr("backend.intelligence.ai.agent.run_car_page_chat", car_chat)
-    monkeypatch.setattr("backend.db.inventory_db.get_car_by_id", lambda cid, **_k: dict(CAR, id=cid))
+    monkeypatch.setattr(_inventory_db, "get_car_by_id", lambda cid, **_k: dict(CAR, id=cid))
     monkeypatch.setattr("backend.utils.llm_client.complete", general)
     monkeypatch.setattr("backend.utils.query_parser.parse_natural_query", lambda m: {})
     import backend.routes.ai_narrate_bp as narrate_bp
@@ -250,7 +251,9 @@ def test_the_paused_setting_answers_chat_paused_on_every_route(pg_db, settings, 
     settings["chat.enabled"] = "off"
     c = _client(_app(app_factory))
     for name, route in ROUTES.items():
-        body = route(c).get_json()
+        rv = route(c)
+        assert rv.status_code == 429, name
+        body = rv.get_json()
         assert (body["error"], body["message"], body["resets_at"]) == ("chat_paused", msg.PAUSED_TEXT, None), name
 
 
@@ -279,6 +282,21 @@ def test_a_404_or_an_empty_message_costs_no_message(pg_db, settings, clock, fake
     assert car(c, text="  ").status_code == 400
     assert narrate(c, cid=999).status_code == 404
     assert sidebar(c, text="  ").status_code == 400
+    assert _user_day_messages() == 0
+
+
+@pg
+@pytest.mark.parametrize("route", ["car", "compare", "sidebar_car"])
+def test_an_error_with_no_answer_text_gives_the_message_back(pg_db, settings, clock, fakes, app_factory, monkeypatch, route):
+    """Rule 9: the assistant caught a provider error and showed no answer: the message is not counted."""
+    def failed(*_a, **_k):
+        return {"reply": "", "error": "assistant_unavailable"}
+
+    monkeypatch.setattr(_cars_pages_routes, "run_car_page_chat", failed)
+    monkeypatch.setattr(_cars_pages_routes, "run_compare_chat", failed)
+    monkeypatch.setattr("backend.intelligence.ai.agent.run_car_page_chat", failed)
+    c = _client(_app(app_factory))
+    {"car": lambda: car(c), "compare": lambda: compare(c), "sidebar_car": lambda: sidebar(c, car_id=3)}[route]()
     assert _user_day_messages() == 0
 
 
@@ -536,6 +554,23 @@ def test_the_packages_route_returns_its_payload_with_the_sentence_when_refused(m
     assert body["chat_limit_error"] == "chat_budget_reached"
     assert body["chat_limit_message"] == "The assistant has reached its budget."
     assert "window_sticker_status" in body  # the existing payload, not a refusal
+
+
+@pytest.mark.parametrize("url", ["/api/cars/1/window-sticker", "/api/cars/1/window-sticker-preview",
+                                 "/car/1/window-sticker-preview.png"])
+def test_the_window_sticker_get_routes_read_stickers_under_the_guard(monkeypatch, app_factory, url):
+    """These GETs can reach the sticker model too (review 2026-11-16): the work runs with the guard bound."""
+    from backend.enrichment import window_sticker_service as ws
+
+    bound = []
+    monkeypatch.setattr(ws, "ensure_window_sticker_for_car",
+                        lambda *_a, **_k: bound.append(chat_web._sticker_guard_factory.get() is not None) or {})
+    monkeypatch.setattr(ws, "window_sticker_visual_local_path", lambda *_a, **_k: None)
+    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dict(CAR))
+    monkeypatch.setattr(_cars_pages_routes.paid_access, "check_feature", lambda *_a: (True, ""))
+    c = _client(_app(app_factory))
+    c.get(url)
+    assert bound == [True]
 
 
 def test_the_packages_worker_thread_runs_in_the_request_context():

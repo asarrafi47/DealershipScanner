@@ -96,7 +96,8 @@ def _serve_car_window_sticker_preview(car_id: int):
         window_sticker_visual_local_path,
     )
 
-    ensure_window_sticker_for_car(car_id, allow_vision_fallback=False)
+    # A sticker model call made here is counted against the shopper (card C3, kind "sticker").
+    chat_web.bind_sticker_guard().run(ensure_window_sticker_for_car, car_id, allow_vision_fallback=False)
     path = window_sticker_visual_local_path(
         car.get("vin"),
         dealer_id=car.get("dealer_id"),
@@ -245,7 +246,8 @@ def api_car_window_sticker(car_id: int):
         dealership_registry_id=car.get("dealership_registry_id"),
     )
     if not path:
-        ensure_window_sticker_for_car(car_id, allow_vision_fallback=False)
+        # counted against the shopper when it calls the model (card C3, kind "sticker")
+        chat_web.bind_sticker_guard().run(ensure_window_sticker_for_car, car_id, allow_vision_fallback=False)
         path = window_sticker_visual_local_path(
             car.get("vin"),
             dealer_id=car.get("dealer_id"),
@@ -638,8 +640,9 @@ def api_car_chat(car_id: int):
             chat_web.KIND_CAR,
             listing_id=car_id,
             weight=chat_web.message_weight(message, allow_playwright),
-        ):
+        ) as chat_guard:
             out = run_car_page_chat(car_dict, message, allow_web_research=allow_playwright)
+            chat_web.give_back_if_unanswered(chat_guard, out)
     except ChatDenied as denied:
         return chat_web.denial_response(denied.denial)
     err = out.get("error")
@@ -696,8 +699,9 @@ def api_compare_chat():
     try:
         with chat_web.open_guard(
             chat_web.KIND_COMPARE, weight=chat_web.message_weight(message, allow_playwright)
-        ):
+        ) as chat_guard:
             out = run_compare_chat(raw_cars, message, allow_web_research=allow_playwright)
+            chat_web.give_back_if_unanswered(chat_guard, out)
     except ChatDenied as denied:
         return chat_web.denial_response(denied.denial)
     err = out.get("error")
