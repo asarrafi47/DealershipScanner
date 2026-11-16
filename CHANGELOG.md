@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.36] - 2026-11-16
+
 ## [1.5.35] - 2026-11-16
 
 - S6 (phone verification service): `backend/auth/phone/service.py` (`AuthPhoneService` with start, resend, check, cancel and sign-in) and `limits.py`. Reserve first: one transaction under the site-wide advisory lock counts the limits and pools and inserts the `pending` send row with its estimated text and lookup cost before any vendor call. Limits (settings rows): number 2 in 15 minutes and 3 a day, address 3 an hour and 5 a day, device 3 a day, /24 or /48 6 a day, 2 a day per group without a device cookie; pools: reserved dealer and seller share 3 of 30 (1 per number and device), new numbers 15 (2 per group), resends 6; site cap 30 sends and 300 cents a day from midnight Eastern, prepaid guard at 90 percent since the top-up. New settings rows `sms.daily_send_cap` and `sms.daily_spend_cap_cents` under the env-only ceilings `SMS_DAILY_SEND_HARD_MAX` (100) and `SMS_DAILY_SPEND_HARD_MAX_CENTS` (600), and the per-subject limits. Check attempts reserved before the vendor call (5 per challenge, refunded only on a network error or throttle), single-use close in the database, a 15-minute wrong-code lock per number and browser that a new code does not reset, phone-wide only after 15 wrong codes a day. Same busy sentence for every number at a cap or pool, the line-type lookup skipped for known numbers and cached 30 days in Postgres, a 5-minute vendor breaker after 5 `unavailable` answers, `auth_phone.sends_paused`, the dormant-number rule and the account creation order. Nothing is reachable yet (routes are card S8); no migration.
