@@ -106,6 +106,18 @@ def account_profile_page():
 
     if request.method == "POST":
         action = (request.form.get("form_action") or "profile").strip().lower()
+        if action == "sign_out_everywhere":
+            from backend.auth.session import sign_out_everywhere
+
+            if sign_out_everywhere(uid):
+                return render_template(
+                    "account_profile.html",
+                    **_account_profile_context(uid, signout_success=True),
+                )
+            return render_template(
+                "account_profile.html",
+                **_account_profile_context(uid, signout_error=True),
+            )
         if action == "password":
             current_pw = (request.form.get("current_password") or "").strip()
             new_pw = (request.form.get("new_password") or "").strip()
@@ -135,6 +147,11 @@ def account_profile_page():
                     "account_profile.html",
                     **_account_profile_context(uid, password_error=err),
                 )
+            # Card S10: a new password signs out every other browser; this one keeps a fresh session.
+            from backend.auth.phone.session_epoch import REASON_PASSWORD_CHANGE
+            from backend.auth.session import sign_out_everywhere
+
+            sign_out_everywhere(uid, reason=REASON_PASSWORD_CHANGE)
             return render_template(
                 "account_profile.html",
                 **_account_profile_context(uid, password_success=True),

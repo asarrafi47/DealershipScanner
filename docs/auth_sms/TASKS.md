@@ -236,6 +236,7 @@ Merge rules for parallel sessions: regenerate `app_surface.json` last after reba
 - **Pitfalls:** do not log anyone out on deploy except admin, `/dev` and staff sessions without `auth_at`. Rate-limit keys never use `valid_after`. Update `DESIGN.md` sections 5, 9 and 20 and `CHAT_LIMITS.md` when numbers move.
 - **Owner steps:** none.
 - **Next-session prompt:** `Do task S10 of docs/auth_sms/TASKS.md`.
+- **Status (2026-11-16):** built in the PR from branch `claude/sessions-s10` into `dev` (not merged yet). `valid_after` writers built here: sign out everywhere, password change and reset (also the admin's password set), admin suspend and delete. Number change, claim, admin phone actions, seller suspend or ban and dealership revoke call `revoke_user_sessions` in their own cards. `/dev` operators (the separate dev users table) get the 12-hour limit but no `valid_after` row: the table is keyed by site user ids.
 
 ### S11. Claim an old account (M)
 - **Depends on:** S7, S8, S10, S13. **Owner-gated:** no (needs working email).

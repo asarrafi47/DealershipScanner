@@ -1335,3 +1335,22 @@ def chat_gate_open(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, dict[str,
 
     monkeypatch.setattr(chat_web, "open_guard", fake_open_guard)
     return opened
+
+
+@pytest.fixture
+def session_users_exist(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Opt-in for route tests that sign in with a made-up user id (no users row).
+
+    Card S10's session hook signs out a cookie whose user does not exist. Tests about comments,
+    chat or stickers that never created the account use this fixture: a missing row reads as an
+    active plain shopper. Session rules themselves are tested in test_session_lifetime.py.
+    """
+    from backend.auth import session as auth_session
+
+    real = auth_session._load_user
+
+    def load(uid: int):
+        row = real(uid)
+        return row if row is not None else {"id": int(uid), "role": "general_user", "is_active": True}
+
+    monkeypatch.setattr(auth_session, "_load_user", load)

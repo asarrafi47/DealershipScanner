@@ -396,6 +396,7 @@ _FLAG_RESETS: tuple[tuple[str, str, str], ...] = (
     ("backend.billing.entitlements", "_billing_cache", "clear"),
     ("backend.billing.entitlements", "_org_status_cache", "clear"),
     ("backend.routes.car_detail.packages_ensure", "_packages_ensure_panel_cache", "clear"),
+    ("backend.auth.phone.session_epoch", "_cache", "clear"),  # valid_after per user (card S10)
 )
 
 # Module-level state that is database-independent (static files, wall-clock
