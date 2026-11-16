@@ -407,6 +407,19 @@ def note_resend(
     return None if row is None else int(row[0])
 
 
+
+@_clean_errors()
+def set_provider_ref(public_id: str, session_nonce: str, provider_ref: str, *, conn: Any = None) -> bool:
+    """Keep the vendor's id of the latest text on an open challenge (card S6 resend)."""
+    with _tx(conn) as c:
+        row = c.execute(
+            "UPDATE public.auth_phone_challenges SET provider_ref = %s "
+            "WHERE public_id = %s AND session_nonce = %s AND status = 'open' RETURNING id",
+            (provider_ref, public_id, session_nonce),
+        ).fetchone()
+    return row is not None
+
+
 # ---------------------------------------------------------------- sends
 
 
@@ -594,6 +607,20 @@ def reserve_send(
             final = replace(row, outcome=verdict, est_cost_cents=0, lookup_cost_cents=0)
         send_id = _insert_send(c, final, now)
     return SendReservation(send_id=send_id, outcome=final.outcome)
+
+
+VENDOR_OUTCOMES = ("sent", "provider_error", "unavailable")
+
+
+@_clean_errors()
+def recent_vendor_outcomes(*, limit: int = 5, conn: Any = None) -> list[tuple[str, datetime]]:
+    """(outcome, at) of the newest rows where the vendor was asked, newest first (the S6 breaker)."""
+    with _tx(conn) as c:
+        rows = c.execute(
+            "SELECT outcome, at FROM public.auth_phone_sends WHERE outcome = ANY(%s) ORDER BY at DESC, id DESC LIMIT %s",
+            (list(VENDOR_OUTCOMES), int(limit)),
+        ).fetchall()
+    return [(r[0], r[1]) for r in rows]
 
 
 # ---------------------------------------------------------------- wrong tries
