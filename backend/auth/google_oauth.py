@@ -192,7 +192,7 @@ def _complete_login(user_id: int, *, is_new_user: bool = False):
     oauth_post_intent = (session.pop("google_oauth_post_intent", None) or "").strip().lower()
     sync_env_admin_user_row(user_id)
     session.clear()
-    if not _finalize_app_session(user_id):
+    if not _finalize_app_session(user_id, auth_method="google"):
         return _oauth_login_error("Login failed. Try again.")
 
     if is_admin_role(session.get("user_role")) or bool(session.get("user_is_premium")):

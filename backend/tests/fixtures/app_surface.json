@@ -1446,6 +1446,7 @@
     "_dev_console_csrf"
    ],
    "None": [
+    "enforce_session_policy",
     "_per_request_csp_nonce",
     "_csrf_mutating_requests",
     "_billing_gate_paid_routes",

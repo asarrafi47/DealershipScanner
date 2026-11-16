@@ -129,7 +129,7 @@ def test_api_packages_ensure_requires_premium(monkeypatch) -> None:
     assert r.status_code == 403
 
 
-def test_api_packages_ensure_csrf_passes_when_token_matches(monkeypatch) -> None:
+def test_api_packages_ensure_csrf_passes_when_token_matches(monkeypatch, session_users_exist) -> None:
     """Regression: ``if not validate_csrf_header()`` wrongly treated success (None) as failure."""
     from backend import main as main_mod
 

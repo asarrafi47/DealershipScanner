@@ -6,6 +6,9 @@ import pytest
 
 from backend.routes import cars_pages as _cars_pages_routes
 
+# Card S10: these tests sign in with made-up user ids (see conftest.session_users_exist).
+pytestmark = pytest.mark.usefixtures("session_users_exist")
+
 
 def _make_app(app_factory, tmp_path, **env):
     production = env.pop("FLASK_ENV", "development") == "production"
