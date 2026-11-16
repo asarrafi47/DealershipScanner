@@ -59,13 +59,18 @@ def test_username_equal_to_existing_email_counts_as_taken(app_factory) -> None:
 
 def test_dealer_register_rejects_username_with_at(app_factory) -> None:
     app = app_factory().app
+    from backend.auth.phone import turnstile
     from backend.db.users_db import find_users_by_email
+
+    turnstile.set_verifier(turnstile.FakeTurnstileVerifier({"pass"}))  # card S19: sign-up needs Turnstile
 
     with app.test_client() as c:
         r = _post_form(c, "/dealer/register", {
             "username": "victim@example.com", "email": "dealer@example.com",
             "password": "dealer-password-long-1", "org_name": "Squat Motors",
+            "cf-turnstile-response": "pass",
         })
+    turnstile.set_verifier(None)
     assert r.status_code == 200
     assert b"cannot contain @" in r.data
     assert find_users_by_email("dealer@example.com") == []

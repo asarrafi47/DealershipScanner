@@ -75,6 +75,8 @@ SPECS: dict[str, Spec] = {
         Spec("chat.web_research_weight", "CHAT_WEB_RESEARCH_WEIGHT", 3, max_value=100),
         Spec("chat.reset_tz", "CHAT_RESET_TZ", "America/New_York", "tz"),
         Spec("chat.alert_pcts", "CHAT_ALERT_PCTS", (50, 80), "pcts"),
+        # Card S19: stop new dealer sign-ups at once (row "true", or SELLER_SIGNUP_PAUSED).
+        Spec("seller.signup_paused", "SELLER_SIGNUP_PAUSED", False, "bool"),
         # Phone sign-in (card S5 review (e)): the prepaid guard reads spend since ``sms.topup_at``
         # (an ISO 8601 time with its zone, written when the owner tops up the vendor balance)
         # against ``sms.prepaid_cents``; ``auth_phone.sends_paused`` stops every text without a release.
