@@ -32,6 +32,8 @@ MIDNIGHT = datetime(2026, 11, 14, 5, 0, tzinfo=UTC)  # 12:00 AM Eastern
 TOKEN = "c" * 32
 CAR = {"id": 1, "year": 2020, "make": "Test", "model": "Car", "vin": "X", "inactive": 0}
 pg = pytest.mark.pg
+# Card S10: these tests sign in with made-up user ids (see conftest.session_users_exist).
+pytestmark = pytest.mark.usefixtures("session_users_exist")
 
 
 # ---------------------------------------------------------------- shared set-up

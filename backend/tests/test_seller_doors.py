@@ -73,11 +73,16 @@ def _user(username: str, role: str) -> int:
 
 
 def _sign_in(client, uid: int) -> None:
+    import time
+
+    from backend.auth import session as auth_session
     from backend.utils.csrf import _SESSION_KEY
 
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["mfa_ok"] = True
+        # Card S10: a real sign-in stamps its time; an admin session without one is signed out.
+        sess[auth_session.AUTH_AT] = time.time()
         sess[_SESSION_KEY] = _CSRF
 
 
