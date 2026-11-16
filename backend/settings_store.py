@@ -50,6 +50,7 @@ SPECS: dict[str, Spec] = {
         Spec("chat.phone_per_day", "CHAT_PHONE_PER_DAY", 40),
         Spec("chat.device_per_day", "CHAT_DEVICE_PER_DAY", 60),
         Spec("chat.ip_per_day", "CHAT_IP_PER_DAY", 100),
+        Spec("chat.ip_net_per_day", "CHAT_IP_NET_PER_DAY", 150),
         Spec("chat.new_account_factor_pct", "CHAT_NEW_ACCOUNT_FACTOR_PCT", 50, max_value=100),
         Spec("chat.budget_usd_per_day_cents", "CHAT_BUDGET_CENTS_PER_DAY", 500, max_value=100_000_000,
              ceiling_env="CHAT_BUDGET_HARD_MAX_CENTS", ceiling_default=2000),
@@ -83,6 +84,25 @@ SPECS: dict[str, Spec] = {
         Spec("sms.prepaid_cents", "SMS_PREPAID_CENTS", 2000, max_value=10_000_000),
         Spec("sms.topup_at", "SMS_TOPUP_AT", None, "time"),
         Spec("auth_phone.sends_paused", "AUTH_PHONE_SENDS_PAUSED", False, "bool"),
+        # Card S6: the day's text caps (row, then environment, then the config.py first-month default)
+        # under env-only ceilings, so a stolen admin session cannot open the bill past them.
+        Spec("sms.daily_send_cap", "SMS_DAILY_SEND_CAP", 30, max_value=100_000,
+             ceiling_env="SMS_DAILY_SEND_HARD_MAX", ceiling_default=100),
+        Spec("sms.daily_spend_cap_cents", "SMS_DAILY_SPEND_CAP_CENTS", 300, max_value=10_000_000,
+             ceiling_env="SMS_DAILY_SPEND_HARD_MAX_CENTS", ceiling_default=600),
+        # Per-subject send limits and pool shares (DESIGN.md section 5).
+        Spec("sms.phone_per_15min", "SMS_PHONE_PER_15MIN", 2, max_value=1000),
+        Spec("sms.phone_per_day", "SMS_PHONE_PER_DAY", 3, max_value=1000),
+        Spec("sms.ip_per_hour", "SMS_IP_PER_HOUR", 3, max_value=1000),
+        Spec("sms.ip_per_day", "SMS_IP_PER_DAY", 5, max_value=1000),
+        Spec("sms.device_per_day", "SMS_DEVICE_PER_DAY", 3, max_value=1000),
+        Spec("sms.prefix_per_day", "SMS_PREFIX_PER_DAY", 6, max_value=1000),
+        Spec("sms.no_cookie_prefix_per_day", "SMS_NO_COOKIE_PREFIX_PER_DAY", 2, max_value=1000),
+        Spec("sms.new_pool_prefix_per_day", "SMS_NEW_POOL_PREFIX_PER_DAY", 2, max_value=1000),
+        Spec("sms.new_number_share_pct", "SMS_NEW_NUMBER_SHARE_PCT", 50, max_value=100),
+        Spec("sms.resend_share_pct", "SMS_RESEND_SHARE_PCT", 20, max_value=100),
+        Spec("sms.dealer_share_pct", "SMS_DEALER_SIGNUP_SHARE_PCT", 10, max_value=100),
+        Spec("sms.prepaid_stop_pct", "SMS_PREPAID_STOP_PCT", 90, max_value=100),
     )
 }
 

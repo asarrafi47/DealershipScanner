@@ -1290,3 +1290,67 @@ def app_factory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Callable[...
         return main
 
     return _make
+
+
+# ---------------------------------------------------------------------------
+# 5. The chat gate for offline route tests (card C3)
+# ---------------------------------------------------------------------------
+
+
+class _OpenGuard:
+    """Stands in for ``chat_budget.guard`` when a test is about a chat route, not about its limits."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self.args = args
+        self.kwargs = kwargs
+
+    def __enter__(self) -> "_OpenGuard":
+        return self
+
+    def __exit__(self, *exc: Any) -> bool:
+        return False
+
+    def fail(self) -> None: ...
+
+    def no_model_call(self) -> None: ...
+
+    def note_text(self) -> None: ...
+
+
+@pytest.fixture
+def chat_gate_open(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, dict[str, Any]]]:
+    """Every chat route's guard lets the message through without a database (offline tier).
+
+    The chat routes count messages in Postgres (card C3) and fail closed without it, so offline
+    tests of what a route *answers* use this; the limits themselves are tested in the Postgres
+    tier (``test_chat_limits_routes.py``). Returns the ``(kind, kwargs)`` of every guard opened.
+    """
+    from backend.chat_budget import web as chat_web
+
+    opened: list[tuple[str, dict[str, Any]]] = []
+
+    def fake_open_guard(kind: str, **kwargs: Any) -> _OpenGuard:
+        opened.append((kind, kwargs))
+        return _OpenGuard(kind, **kwargs)
+
+    monkeypatch.setattr(chat_web, "open_guard", fake_open_guard)
+    return opened
+
+
+@pytest.fixture
+def session_users_exist(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Opt-in for route tests that sign in with a made-up user id (no users row).
+
+    Card S10's session hook signs out a cookie whose user does not exist. Tests about comments,
+    chat or stickers that never created the account use this fixture: a missing row reads as an
+    active plain shopper. Session rules themselves are tested in test_session_lifetime.py.
+    """
+    from backend.auth import session as auth_session
+
+    real = auth_session._load_user
+
+    def load(uid: int):
+        row = real(uid)
+        return row if row is not None else {"id": int(uid), "role": "general_user", "is_active": True}
+
+    monkeypatch.setattr(auth_session, "_load_user", load)

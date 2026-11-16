@@ -116,6 +116,8 @@ class Reservation:
     est_tokens_in: int = 0
     est_tokens_out: int = 0
     est_cost_micro: int = 0
+    # The site-wide day row after this reserve (messages, tokens, cost_micro), for the alert-level log (C6).
+    global_day: tuple[int, int, int] | None = None
 
 
 @dataclass
@@ -200,6 +202,8 @@ def reserve(
                     ),
                 ).fetchone()
                 reservation.rows.append((period, start, ch.kind, ch.key))
+                if period == "day" and ch.kind == "global" and ch.key == GLOBAL_KEY:
+                    reservation.global_day = (int(msgs), int(tokens), int(cost))
                 limit = ch.hour_limit if period == "hour" else ch.day_limit
                 if limit > 0 and msgs > limit:
                     violations.append(Violation(ch.kind, ch.key, period, "messages", limit, msgs - weight))
@@ -404,6 +408,45 @@ def read_day_totals(**kwargs: Any) -> list[dict]:
 
 def read_hour_totals(**kwargs: Any) -> list[dict]:
     return read_totals("hour", **kwargs)
+
+
+def day_summary(*, day_start_utc: datetime, next_day_utc: datetime, conn: Any = None) -> dict:
+    """Totals of one reset-time-zone day (card C6): the site-wide row and denials by subject kind.
+
+    ``messages``, ``tokens_in``, ``tokens_out`` and ``cost_micro`` come from the global day row.
+    ``denied`` counts every denial recorded that day, on its day row or on one of its hour rows
+    (a denial is written once, on the row of the limit that was hit), grouped by subject kind. Only the
+    site-wide row (``global``/``all``) counts as ``global``; a refusal by the new-account or open share of
+    the budget (``global``/``new`` and ``global``/``open``) counts as ``global_share``.
+    """
+    own = conn is None
+    c = conn or _connect()
+    try:
+        row = c.execute(
+            "SELECT messages, tokens_in, tokens_out, cost_micro FROM public.chat_usage_buckets "
+            "WHERE period = 'day' AND bucket_start = %s AND subject_kind = 'global' AND subject_key = %s",
+            (day_start_utc, GLOBAL_KEY),
+        ).fetchone()
+        denied = c.execute(
+            "SELECT CASE WHEN subject_kind = 'global' AND subject_key <> %s THEN 'global_share' "
+            "ELSE subject_kind END AS kind, COALESCE(SUM(denied), 0) FROM public.chat_usage_buckets "
+            "WHERE denied > 0 AND ((period = 'day' AND bucket_start = %s) "
+            "OR (period = 'hour' AND bucket_start >= %s AND bucket_start < %s)) "
+            "GROUP BY 1",
+            (GLOBAL_KEY, day_start_utc, day_start_utc, next_day_utc),
+        ).fetchall()
+        c.rollback()
+    finally:
+        if own:
+            c.close()
+    m, tin, tout, cost = row or (0, 0, 0, 0)
+    return {
+        "messages": int(m or 0),
+        "tokens_in": int(tin or 0),
+        "tokens_out": int(tout or 0),
+        "cost_micro": int(cost or 0),
+        "denied": {str(k): int(n or 0) for k, n in denied},
+    }
 
 
 def delete_older_than(*, now: datetime, days: int = RETENTION_DAYS, conn: Any = None) -> int:

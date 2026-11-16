@@ -24,29 +24,17 @@ from flask import Blueprint, jsonify
 
 from backend.config import Config
 from backend.routes.site_misc import _app_version, _build_commit
+from backend.utils import ip_rate_limit, redis_client
 
 bp = Blueprint("health_api", __name__, url_prefix="/api")
 
 # Only the inventory DB gates readiness; pgvector and redis are optional.
 REQUIRED_CHECKS = ("db",)
 
-# Lazily-created module-level redis client (created on first /api/ready call
-# that has REDIS_URL configured, reused after). Env is fixed per process, so
-# a stale URL in the cache is acceptable.
+# Kept for older tests that reset it; the client itself lives in backend.utils.redis_client
+# (card R1): one lazily created client with short timeouts and a circuit breaker, shared with
+# the rate limiter.
 _redis = None
-
-
-def _redis_client():
-    global _redis
-    if _redis is None:
-        import redis
-
-        _redis = redis.Redis.from_url(
-            Config.redis_url(),
-            socket_timeout=2,
-            socket_connect_timeout=2,
-        )
-    return _redis
 
 
 def _check_inventory_db() -> str:
@@ -111,10 +99,10 @@ def api_ready():
         checks["redis"] = "skipped"
     else:
         try:
-            _redis_client().ping()
-            checks["redis"] = "ok"
+            checks["redis"] = redis_client.ping()
         except Exception as e:  # noqa: BLE001
             checks["redis"] = f"error: {e.__class__.__name__}"
 
     ok = all(checks.get(k) == "ok" for k in REQUIRED_CHECKS)
-    return jsonify(ready=ok, checks=checks), (200 if ok else 503)
+    # Which rate-limit window is in use (card R1): "redis" or "memory". Never gates readiness.
+    return jsonify(ready=ok, checks=checks, rate_limit_backend=ip_rate_limit.backend_name()), (200 if ok else 503)

@@ -15,6 +15,12 @@ window (a lapsed window must never fall back to scan order):
    window as before; a refusal is reported as ``group_feed_unstamped``;
 5. alias ids of one store never conflict.
 
+Above all five (card S20): a VIN whose owner is a user (``dealer-portal-<id>``, see
+:mod:`backend.utils.user_listings`) is never taken by anyone else while the user's row is
+live or was retired ``USER_ROW_GRACE_DAYS`` ago or less, whatever the window, rank, pool
+or alias. The guard applies it even with the window off, and ``UPSERT_CARS_SQL`` ANDs the
+same rule around its whole backstop.
+
 A non-reverted manual ``car_move_log`` row that put the VIN at its current owner is
 honoured against every claimant.
 """
@@ -30,6 +36,8 @@ from typing import Any, Callable, NamedTuple
 logger = logging.getLogger("backend.scanner.database")
 
 STRONG, WEAK, NONE = "strong", "weak", "none"
+# Refusal reason when the owner is a user's posted car (card S20).
+USER_LISTING = "user_listing"
 # Evidence text of a move the scanner itself made; anything else in car_move_log is a human's.
 SCANNER_MOVE_PREFIX = "scanner_guard:"
 
@@ -108,13 +116,19 @@ def decide(
     claimant: str,
     claimant_tier: Any,
     pools: Pools,
+    *,
+    owner_user_protected: bool = False,
 ) -> Verdict:
     """Rules 1-5 for one VIN whose stored row belongs to a different, non-empty ``owner``.
 
     ``owner_fresh``: the stored row was scraped inside the guard window (only rule 4 reads it).
+    ``owner_user_protected``: the owner is a user whose row still blocks the VIN
+    (:func:`backend.utils.user_listings.user_row_blocks_vin`); it outranks every rule.
     """
     if not owner or owner == claimant:
         return Verdict(True, "same_owner")
+    if owner_user_protected:
+        return Verdict(False, USER_LISTING)
     if not owner_active:
         return Verdict(True, "owner_inactive")
     if are_aliases(pools, owner, claimant):

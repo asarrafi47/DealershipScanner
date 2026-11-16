@@ -118,9 +118,19 @@ _FEATURE_ROUTES = [
 
 
 def _signed_in(app, **session_values):
+    # Card S10: the session hook signs out a cookie whose user has no users row, so the probe
+    # account must exist.
+    from backend.db.users_db import get_user_profile, save_user
+
+    values = dict(session_values or _GENERAL_USER)
+    if get_user_profile(int(values["user_id"])) is None:
+        values["user_id"] = int(
+            save_user(values["username"], f'{values["username"]}@example.com', "long-enough-password-1",
+                      role="general_user", org_id=None)
+        )
     client = app.test_client()
     with client.session_transaction() as sess:
-        sess.update(session_values or _GENERAL_USER)
+        sess.update(values)
     return client
 
 
@@ -268,7 +278,7 @@ def test_a_new_google_or_apple_user_is_not_offered_premium_with_billing_off(free
     from backend.auth import apple_oauth, google_oauth
 
     for mod, fn in ((google_oauth, "_complete_login"), (apple_oauth, "_complete_login")):
-        monkeypatch.setattr("backend.auth.session.finalize_app_session", lambda uid: True)
+        monkeypatch.setattr("backend.auth.session.finalize_app_session", lambda uid, **_kw: True)
         monkeypatch.setattr(mod, "sync_env_admin_user_row", lambda uid: None, raising=False)
         with free_app.test_request_context("/"):
             from flask import session

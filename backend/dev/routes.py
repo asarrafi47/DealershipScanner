@@ -193,6 +193,10 @@ def _finalize_dev_session(*, user_id: int, username: str) -> bool:
     uname = (username or "").strip() or f"user_{uid}"
     session["admin_user_id"] = uid
     session["admin_username"] = uname
+    # Card S10: /dev sessions end SESSION_HOURS_ADMIN hours after this sign-in, never sliding.
+    from backend.auth.session import DEV_AUTH_AT, _now
+
+    session[DEV_AUTH_AT] = _now()
     return True
 
 

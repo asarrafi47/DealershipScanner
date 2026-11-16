@@ -151,4 +151,8 @@ def complete_password_reset(*, token: str, new_password: str) -> tuple[bool, str
     if err:
         return False, err
     clear_user_password_reset_token(uid)
+    # Card S10: a reset signs the account out everywhere.
+    from backend.auth.phone.session_epoch import REASON_PASSWORD_RESET, revoke_user_sessions
+
+    revoke_user_sessions(int(uid), reason=REASON_PASSWORD_RESET)
     return True, "Your password has been updated. You can log in now."

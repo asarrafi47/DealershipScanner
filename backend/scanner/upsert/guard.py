@@ -13,6 +13,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, NamedTuple
 
 from backend.scanner.upsert import ownership as _own
+from backend.utils.user_listings import is_dealer_portal_dealer_id, user_row_blocks_vin
 
 # Same logger name as before the split so log routing and captures are unchanged.
 logger = logging.getLogger("backend.scanner.database")
@@ -43,6 +44,7 @@ def prefetch_existing(
     *,
     moves: list[_own.Move] | None = None,
     reasons: dict[str, str] | None = None,
+    front_run: list[tuple[str, str]] | None = None,
 ) -> tuple[dict[str, str], dict[str, tuple[str, str]]]:
     """Read stored provenance + ownership for every VIN, 500 at a time.
 
@@ -55,6 +57,12 @@ def prefetch_existing(
     pool) plus a hold for VINs a person moved by hand. ``reasons`` receives the
     refusal reason per VIN; ``moves`` receives every allowed owner change, for the
     caller to write to ``car_move_log`` once the rows have landed.
+
+    A VIN whose owner is a user's live or recently retired car (card S20) is refused
+    even with the window off. ``front_run`` receives ``(vin, owner)`` for each such
+    refusal where the owner's row is live and the claimant is a scanned dealer (not
+    another user): the dealer has the VIN on its own site, so the caller hides the
+    user listing for review (:func:`hide_front_run_user_listings`).
     """
     existing_spec_src: dict[str, str] = {}
     conflicts: dict[str, tuple[str, str]] = {}
@@ -65,11 +73,11 @@ def prefetch_existing(
         placeholders = ",".join("?" * len(chunk))
         cursor.execute(
             "SELECT vin, spec_source_json, dealer_id, listing_active, scraped_at, "
-            "rooftop_tier, dealer_name, dealership_registry_id "
+            "rooftop_tier, dealer_name, dealership_registry_id, listing_removed_at "
             f"FROM cars WHERE vin IN ({placeholders})",
             chunk,
         )
-        contested: list[tuple[str, str, str, Any, Any, Any, Any, Any]] = []
+        contested: list[tuple[str, str, str, Any, Any, Any, Any, Any, Any]] = []
         for row in cursor.fetchall():
             if row[1] is not None and str(row[1]).strip():
                 existing_spec_src[str(row[0])] = str(row[1])
@@ -80,9 +88,10 @@ def prefetch_existing(
                 if _owner and _claimant and _owner != _claimant:
                     contested.append((_vin, _owner, _claimant, row[3], row[4],
                                       row[5] if len(row) > 5 else None,
-                                      row[6] if len(row) > 6 else "", row[7] if len(row) > 7 else None))
+                                      row[6] if len(row) > 6 else "", row[7] if len(row) > 7 else None,
+                                      row[8] if len(row) > 8 else None))
         held = _own.manual_holds(cursor, [c[0] for c in contested]) if window.on and contested else set()
-        for _vin, _owner, _claimant, _active, _scraped, _otier, _oname, _oreg in contested:
+        for _vin, _owner, _claimant, _active, _scraped, _otier, _oname, _oreg, _removed in contested:
             _src = by_vin.get(_vin) or {}
             _ctier = _src.get("_rooftop_evidence_tier")
             _is_active = True
@@ -91,13 +100,18 @@ def prefetch_existing(
             except (TypeError, ValueError):
                 pass
             _fresh = bool(window.on and owned_elsewhere(_owner, _active, _scraped, _claimant, window.cutoff))
-            verdict = _own.decide(_owner, _otier, _is_active, _fresh, _claimant, _ctier, pools)
-            if window.on and _vin in held:
+            _user = user_row_blocks_vin(_owner, _active, _removed)
+            verdict = _own.decide(_owner, _otier, _is_active, _fresh, _claimant, _ctier, pools,
+                                  owner_user_protected=_user)
+            if window.on and _vin in held and not _user:
                 verdict = _own.Verdict(False, "manual_move")
-            if window.on and not verdict.allow:
+            if not verdict.allow and (window.on or _user):
                 conflicts[_vin] = (_owner, _claimant)
                 if reasons is not None:
                     reasons[_vin] = verdict.reason
+                if (_user and front_run is not None and _is_active
+                        and not is_dealer_portal_dealer_id(_claimant)):
+                    front_run.append((_vin, _owner))
             elif moves is not None:
                 moves.append(_own.Move(
                     _vin, _owner, str(_oname or ""), _oreg, _claimant, verdict.reason,
@@ -105,6 +119,36 @@ def prefetch_existing(
                                separators=(",", ":")),
                 ))
     return existing_spec_src, conflicts
+
+
+def hide_front_run_user_listings(cursor, pairs: list[tuple[str, str]], now: str) -> int:
+    """Retire and flag each user listing a scanned dealer also lists (front-running, card S20).
+
+    ``pairs`` is ``(vin, user owner)`` from :func:`prefetch_existing`. The user's row is
+    retired (``listing_active = 0``: the car page shows only live rows, and it does not read
+    ``marked_for_review``) and flagged ``marked_for_review = 1`` for an admin; it is not
+    taken: the scanned dealer gets the VIN only after the grace period of
+    :mod:`backend.utils.user_listings`, and the portal's own re-sync keeps a flagged row
+    retired (``UPSERT_CARS_SQL``). Only a live row of exactly that owner changes. Returns
+    the number of rows hidden; the caller commits.
+    """
+    n = 0
+    by_owner: dict[str, list[str]] = {}
+    for vin, owner in pairs:
+        if is_dealer_portal_dealer_id(owner):
+            by_owner.setdefault(owner, []).append(vin)
+    for owner, vins in sorted(by_owner.items()):
+        for i in range(0, len(vins), _PREFETCH_CHUNK):
+            chunk = sorted(vins)[i : i + _PREFETCH_CHUNK]
+            marks = ["?"] * (len(chunk) + 2)  # driver placeholders, as in the prefetch above
+            cursor.execute(
+                f"UPDATE cars SET listing_active = 0, listing_removed_at = {marks[0]}, marked_for_review = 1 "
+                f"WHERE dealer_id = {marks[1]} AND COALESCE(listing_active, 1) = 1 "
+                f"AND vin IN ({','.join(marks[2:])})",
+                (now, owner, *chunk),
+            )
+            n += max(0, int(getattr(cursor, "rowcount", 0) or 0))
+    return n
 
 
 def backstop_owner(cursor, vin: str) -> str:
@@ -155,6 +199,10 @@ def report_conflicts(
         stats["vin_owner_conflicts"] = len(conflicts)
         stats["vin_owner_conflict_vins"] = sorted(conflicts)
         stats["vin_owner_conflict_owners"] = by_owner
+        # Card S20: VINs refused because a user owns them. The dealer run drops these from
+        # its post-scan VIN list too, so no later stage writes to the user's row.
+        stats["vin_owner_user_listing_vins"] = sorted(
+            vin for vin, (owner, _c) in conflicts.items() if is_dealer_portal_dealer_id(owner))
         # Rule 4 (N8.6): evidence-less contests between stores no pool covers; the pair list
         # is what group_pools.json (D-N3) is extended from.
         pairs: dict[str, int] = {}
@@ -177,6 +225,8 @@ def reset_stats(stats: dict | None) -> None:
         stats["vin_owner_conflicts"] = 0
         stats["vin_owner_conflict_vins"] = []
         stats["vin_owner_conflict_owners"] = {}
+        stats["vin_owner_user_listing_vins"] = []
         stats["group_feed_unstamped"] = {}
         stats["vin_owner_conflict_reasons"] = {}
         stats["car_moves_logged"] = 0
+        stats["user_listings_hidden_for_review"] = 0

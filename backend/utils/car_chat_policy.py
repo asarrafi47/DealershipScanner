@@ -41,37 +41,9 @@ def web_research_playwright_allowed(session_user_id: int | None) -> bool:
     return session_user_id is not None
 
 
-def car_chat_user_daily_limit() -> int:
-    """
-    Max chat messages allowed per user per 24h ACROSS ALL listings (0 = disabled).
-
-    Env: ``CAR_CHAT_MAX_PER_USER_DAILY`` (default 40). Deliberately independent of
-    the per-listing constant — a whole-account budget must not be sized by a
-    per-listing knob (audit D #39).
-    """
-    raw = os.environ.get("CAR_CHAT_MAX_PER_USER_DAILY")
-    if raw is None or not str(raw).strip():
-        return 40
-    try:
-        return max(0, int(raw))
-    except (TypeError, ValueError):
-        return 40
-
-
-def car_chat_listing_daily_limit() -> int:
-    """
-    Max chat messages allowed per (user, listing) pair per 24h (0 = disabled).
-
-    Env: ``CAR_CHAT_MAX_PER_LISTING_DAILY`` (default 10). Enforced in addition to
-    :func:`car_chat_user_daily_limit` — both tiers must pass.
-    """
-    raw = os.environ.get("CAR_CHAT_MAX_PER_LISTING_DAILY")
-    if raw is None or not str(raw).strip():
-        return 10
-    try:
-        return max(0, int(raw))
-    except (TypeError, ValueError):
-        return 10
+# The daily chat numbers (CAR_CHAT_MAX_PER_USER_DAILY, CAR_CHAT_MAX_PER_LISTING_DAILY) moved to
+# the chat gate in card C3: backend.settings_store reads them (settings row, then that environment
+# variable, then the default) and backend.chat_budget counts them in Postgres for every chat route.
 
 
 def car_chat_rate_limits() -> tuple[int, int, int]:

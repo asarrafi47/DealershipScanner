@@ -80,7 +80,9 @@ if trust_proxy_headers():
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=14)
+# Card S10: the cookie lives 30 days; the per-role limits (shopper 30 days sliding, admin 12 hours and
+# staff 14 days absolute) are applied by backend.auth.session.enforce_session_policy.
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
 # Static assets: year-long cache, ?v= cache-buster, precompressed siblings.
@@ -218,6 +220,9 @@ _admin_dealer_api_routes.register(app)
 # App-wide hooks, in the original order (pinned by test_app_surface_golden):
 # gzip after_request + context processor + filters + 404, then the CSP nonce,
 # CSRF and billing-gate before_request hooks and the CSP headers after_request.
+from backend.auth.session import register_session_policy  # noqa: E402
+
+register_session_policy(app)  # card S10: first before_request hook (before CSP nonce, CSRF, device cookie)
 register_templating(app)
 register_security(app)
 

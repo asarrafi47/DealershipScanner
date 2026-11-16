@@ -28,7 +28,7 @@ def write_rows(
     """Normalize and upsert each vehicle in the given (sorted-VIN) order.
 
     Commits every ``commit_every`` written rows (the caller commits the tail).
-    A row the SQL backstop refuses (rowcount 0 with the guard on) is added to
+    A row the SQL backstop refuses (rowcount 0) is added to
     ``conflicts`` in place and not counted. Returns the number of rows written.
     """
     count = 0
@@ -61,8 +61,9 @@ def write_rows(
                 pool_lists=_own.backstop_lists(pools, _claimant),
             ),
         )
-        if window.on and getattr(cursor, "rowcount", 1) == 0:
-            # Backstop fired: another writer owns this VIN (fresh, active).
+        if getattr(cursor, "rowcount", 1) == 0:
+            # Backstop fired: another writer owns this VIN (fresh, active), or it is a
+            # user's car (card S20), which the backstop refuses even with the window off.
             conflicts[vin] = (backstop_owner(cursor, vin), _claimant)
             continue
         count += 1

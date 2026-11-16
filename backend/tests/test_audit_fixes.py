@@ -6,6 +6,9 @@ import pytest
 
 from backend.routes import cars_pages as _cars_pages_routes
 
+# Card S10: these tests sign in with made-up user ids (see conftest.session_users_exist).
+pytestmark = pytest.mark.usefixtures("session_users_exist")
+
 
 def _make_app(app_factory, tmp_path, **env):
     production = env.pop("FLASK_ENV", "development") == "production"
@@ -121,136 +124,10 @@ def test_car_chat_requires_login_in_production_when_billing_off(monkeypatch: pyt
         assert body.get("error") == "login_required"
 
 
-def test_car_chat_daily_limit_is_per_user(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
-    main = _make_app(
-        app_factory,
-        tmp_path,
-        BILLING_STRIPE_ENABLED="0",
-        CAR_CHAT_MAX_PER_USER_DAILY="1",
-        RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN="500",
-        RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN="500",
-        RATE_LIMIT_CAR_CHAT_PER_MIN="500",
-    )
-    dummy_car = {"id": 1, "year": 2020, "make": "Test", "model": "Car", "vin": "X", "inactive": 0}
-    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dummy_car)
-    monkeypatch.setattr(
-        _cars_pages_routes,
-        "run_car_page_chat",
-        lambda *_a, **_k: {"reply": "ok", "error": None, "discrepancy_flags": []},
-    )
-    from backend.utils.csrf import _SESSION_KEY
-
-    tok = "t" * 32
-    with main.app.test_client() as c:
-        with c.session_transaction() as sess:
-            sess[_SESSION_KEY] = tok
-            sess["user_id"] = 42
-        hdr = {"X-CSRF-Token": tok, "Content-Type": "application/json"}
-        rv1 = c.post("/api/car/1/chat", json={"message": "a"}, headers=hdr)
-        assert rv1.status_code == 200
-        rv2 = c.post("/api/car/2/chat", json={"message": "b"}, headers=hdr)
-        assert rv2.status_code == 429
-        body = rv2.get_json()
-        assert body is not None
-        assert body.get("error") == "user_chat_limit_reached"
-
-
-def test_car_chat_listing_tier_blocks_one_car_not_another(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
-    """Default per-listing tier (10/day) blocks the 11th message on ONE car; other cars still work."""
-    main = _make_app(
-        app_factory,
-        tmp_path,
-        BILLING_STRIPE_ENABLED="0",
-        CAR_CHAT_MAX_PER_USER_DAILY="100",
-        # setenv("") not delenv: delenv + dotenv reload repopulates from .env.
-        CAR_CHAT_MAX_PER_LISTING_DAILY="",
-        RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN="500",
-        RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN="500",
-        RATE_LIMIT_CAR_CHAT_PER_MIN="500",
-    )
-    from backend.utils.ip_rate_limit import clear_rate_limit_state
-
-    clear_rate_limit_state()
-    dummy_car = {"id": 1, "year": 2020, "make": "Test", "model": "Car", "vin": "X", "inactive": 0}
-    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dummy_car)
-    monkeypatch.setattr(
-        _cars_pages_routes,
-        "run_car_page_chat",
-        lambda *_a, **_k: {"reply": "ok", "error": None, "discrepancy_flags": []},
-    )
-    from backend.utils.csrf import _SESSION_KEY
-
-    tok = "t" * 32
-    with main.app.test_client() as c:
-        with c.session_transaction() as sess:
-            sess[_SESSION_KEY] = tok
-            sess["user_id"] = 42
-        hdr = {"X-CSRF-Token": tok, "Content-Type": "application/json"}
-        for i in range(10):
-            rv = c.post("/api/car/1/chat", json={"message": f"m{i}"}, headers=hdr)
-            assert rv.status_code == 200, f"message {i + 1} on car 1 should pass"
-        rv11 = c.post("/api/car/1/chat", json={"message": "m11"}, headers=hdr)
-        assert rv11.status_code == 429
-        body = rv11.get_json()
-        assert body is not None
-        assert body.get("error") == "listing_chat_limit_reached"
-        # A different car has its own per-listing budget and still works.
-        rv_other = c.post("/api/car/2/chat", json={"message": "other"}, headers=hdr)
-        assert rv_other.status_code == 200
-
-
-def test_compare_chat_has_own_daily_namespace(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:
-    """Compare chat ('cmp:daily:') must not drain the car-chat daily budget."""
-    main = _make_app(
-        app_factory,
-        tmp_path,
-        BILLING_STRIPE_ENABLED="0",
-        CAR_CHAT_MAX_PER_USER_DAILY="1",
-        CAR_CHAT_MAX_PER_LISTING_DAILY="",
-        RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN="500",
-        RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN="500",
-        RATE_LIMIT_CAR_CHAT_PER_MIN="500",
-    )
-    from backend.utils.ip_rate_limit import clear_rate_limit_state
-
-    clear_rate_limit_state()
-    dummy_car = {"id": 1, "year": 2020, "make": "Test", "model": "Car", "vin": "X", "inactive": 0}
-    monkeypatch.setattr(_cars_pages_routes, "get_car_by_id", lambda *_a, **_k: dummy_car)
-    monkeypatch.setattr(
-        _cars_pages_routes,
-        "get_cars_by_ids",
-        lambda *_a, **_k: [dummy_car, {**dummy_car, "id": 2, "vin": "Y"}],
-    )
-    monkeypatch.setattr(
-        _cars_pages_routes,
-        "run_car_page_chat",
-        lambda *_a, **_k: {"reply": "ok", "error": None, "discrepancy_flags": []},
-    )
-    monkeypatch.setattr(
-        _cars_pages_routes,
-        "run_compare_chat",
-        lambda *_a, **_k: {"reply": "ok", "error": None},
-    )
-    from backend.utils.csrf import _SESSION_KEY
-
-    tok = "t" * 32
-    with main.app.test_client() as c:
-        with c.session_transaction() as sess:
-            sess[_SESSION_KEY] = tok
-            sess["user_id"] = 42
-        hdr = {"X-CSRF-Token": tok, "Content-Type": "application/json"}
-        # A compare-chat message must not consume the (limit=1) car-chat budget...
-        rv_cmp = c.post("/api/compare/chat", json={"car_ids": [1, 2], "message": "vs"}, headers=hdr)
-        assert rv_cmp.status_code == 200
-        rv_car = c.post("/api/car/1/chat", json={"message": "a"}, headers=hdr)
-        assert rv_car.status_code == 200
-        # ...but each namespace still enforces its own limit of 1.
-        rv_car2 = c.post("/api/car/2/chat", json={"message": "b"}, headers=hdr)
-        assert rv_car2.status_code == 429
-        assert rv_car2.get_json().get("error") == "user_chat_limit_reached"
-        rv_cmp2 = c.post("/api/compare/chat", json={"car_ids": [1, 2], "message": "vs2"}, headers=hdr)
-        assert rv_cmp2.status_code == 429
-        assert rv_cmp2.get_json().get("error") == "user_chat_limit_reached"
+# The three daily-limit tests that lived here (per user, per car, compare's own namespace) tested
+# the in-memory daily buckets removed by card C3. Their replacements run against Postgres in
+# test_chat_limits_routes.py: the 11th question in an hour, the per-car limit, and ONE shared
+# allowance for the car page, compare chat and the sidebar (compare no longer has its own).
 
 
 def test_car_page_hides_ask_ai_for_guests(monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory) -> None:

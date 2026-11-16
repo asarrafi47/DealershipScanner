@@ -15,6 +15,7 @@ from typing import Any
 
 from backend.db.dealer_geo import normalize_dealer_host
 from backend.scanner.constants import MANIFEST_PATH, OEM_MANUFACTURER_DOMAINS
+from backend.utils.user_listings import is_dealer_portal_dealer_id
 
 logger = logging.getLogger(__name__)
 
@@ -210,7 +211,7 @@ def _load_active_inventory_dealers() -> list[dict]:
     out: list[dict] = []
     for r in rows:
         did = str(r[0] or "").strip()
-        if not did:
+        if not did or is_dealer_portal_dealer_id(did):  # a user's posted cars (card S20)
             continue
         name = str(r[1] or "").strip()
         any_url = str(r[2] or "").strip()
@@ -281,7 +282,9 @@ def _load_scannable_dealers() -> list[dict]:
     out: list[dict] = []
     for r in rows:
         did = str(r[0] or "").strip()
-        if not did:
+        # A user's posted cars (dealer-portal-<id>, card S20) are not a dealer site:
+        # scanning one would reconcile, retire or re-attribute the user's own listings.
+        if not did or is_dealer_portal_dealer_id(did):
             continue
         car_name, any_url, reg_name, provider = (str(x or "").strip() for x in r[1:5])
         # dealer_id is the host with dots swapped for dashes ("davekirk-com").

@@ -20,6 +20,9 @@ import pytest
 
 from backend.routes import cars_pages as _cars_pages_routes
 
+# Card S10: these tests sign in with made-up user ids (see conftest.session_users_exist).
+pytestmark = pytest.mark.usefixtures("session_users_exist")
+
 _FAKE_CAR = {
     "id": 7,
     "vin": "1C6RRFFG4NN401203",

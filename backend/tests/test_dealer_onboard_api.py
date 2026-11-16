@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 
 from backend.dealer.admin.onboard_api import request_dealer_onboard
 from backend.db.users_db import init_users_db, save_user
@@ -83,6 +84,7 @@ def test_api_admin_dealer_onboard_paused(monkeypatch, tmp_path) -> None:
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["user_role"] = "admin"
+        sess["auth_at"] = time.time()  # card S10: an admin session carries its sign-in time
         sess["username"] = "admin1"
         sess["_csrf_token"] = "test-csrf-token-for-onboard-api-32chars"
 
@@ -131,6 +133,7 @@ def test_api_admin_dealer_jobs_ok(monkeypatch, tmp_path) -> None:
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["user_role"] = "admin"
+        sess["auth_at"] = time.time()  # card S10: an admin session carries its sign-in time
 
     rv = client.get("/api/admin/dealer-jobs")
     assert rv.status_code == 200
@@ -167,6 +170,7 @@ def test_api_admin_dealer_job_detail_ok(monkeypatch, tmp_path) -> None:
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["user_role"] = "admin"
+        sess["auth_at"] = time.time()  # card S10: an admin session carries its sign-in time
 
     rv = client.get("/api/admin/dealer-jobs/7")
     assert rv.status_code == 200
@@ -193,6 +197,7 @@ def test_api_admin_dealer_job_retry_paused(monkeypatch, tmp_path) -> None:
     with client.session_transaction() as sess:
         sess["user_id"] = uid
         sess["user_role"] = "admin"
+        sess["auth_at"] = time.time()  # card S10: an admin session carries its sign-in time
         sess["_csrf_token"] = "test-csrf-token-for-onboard-api-32chars"
 
     rv = client.post(

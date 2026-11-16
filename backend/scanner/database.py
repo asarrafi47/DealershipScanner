@@ -107,10 +107,10 @@ def vins_refused_by_owner_guard(vehicles: list[dict]) -> dict[str, str]:
     """Read-only ownership pre-check (N8.7): ``vin -> reason`` for the VINs the
     write-time guard would refuse for these rows. Same decision as
     ``upsert_vehicles`` (it calls ``prefetch_existing``), but writes nothing, so the
-    prefetch can skip VDP fetches for cars that will never be stored. Empty when the
-    guard is off or the database cannot be read."""
+    prefetch can skip VDP fetches for cars that will never be stored. With the guard
+    off only users' cars are refused (card S20); empty when the database cannot be read."""
     window = guard_window(vin_owner_guard_hours())
-    if not window.on or not vehicles:
+    if not vehicles:
         return {}
     by_vin = {str(v.get("vin") or "").strip(): v for v in vehicles if str(v.get("vin") or "").strip()}
     conn = None
@@ -417,6 +417,27 @@ def _log_owner_moves(conn, cursor, moves: list) -> int:
         return 0
 
 
+def _hide_front_run_user_listings(conn, cursor, pairs: list[tuple[str, str]], now: str) -> int:
+    """Hide each user listing a scanned dealer also lists, for review (card S20); never fails a write."""
+    if not pairs:
+        return 0
+    from backend.scanner.upsert.guard import hide_front_run_user_listings
+
+    try:
+        n = hide_front_run_user_listings(cursor, pairs, now)
+        conn.commit()
+    except Exception:
+        logger.warning("user listings: could not hide %d front-run listing(s) for review", len(pairs), exc_info=True)
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        return 0
+    if n:
+        logger.warning("user listings: hid %d listing(s) for review; a scanned dealer lists the same VIN", n)
+    return n
+
+
 def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     """
     Insert or replace vehicles by vin. Strict de-duplication: one row per VIN
@@ -445,6 +466,7 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
     conn = get_conn()
     count = 0
     moves_logged = 0
+    hidden = 0
     try:
         _ensure_schema(conn)
         cursor = conn.cursor()
@@ -452,8 +474,9 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
         window = guard_window(vin_owner_guard_hours())
         moves: list = []
         reasons: dict[str, str] = {}
+        front_run: list[tuple[str, str]] = []
         existing_spec_src, conflicts = prefetch_existing(
-            cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons
+            cursor, by_vin, window, _vin_owned_elsewhere, moves=moves, reasons=reasons, front_run=front_run
         )
         if conflicts:
             vehicles = [v for v in vehicles if (v.get("vin") or "").strip() not in conflicts]
@@ -472,11 +495,13 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
         )
         conn.commit()
         moves_logged = _log_owner_moves(conn, cursor, [m for m in moves if m.vin not in conflicts])
+        hidden = _hide_front_run_user_listings(conn, cursor, front_run, now)
     finally:
         conn.close()
     logger.info("Upserted %d vehicles", count)
     if stats is not None:
         stats["car_moves_logged"] = moves_logged
+        stats["user_listings_hidden_for_review"] = hidden
     if conflicts:
         report_conflicts(conflicts, by_vin, window.hours, stats, record_vin_owner_conflicts, reasons)
     if count > 0:

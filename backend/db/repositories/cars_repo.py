@@ -39,18 +39,22 @@ def delete_cars_with_dummy_placeholder_vins() -> dict[str, Any]:
     """
     Delete ``cars`` rows whose VIN matches :func:`is_dummy_placeholder_vin`, remove matching
     ``incomplete_listings`` and ``saved_cars`` rows, and drop ``nhtsa_vpic_cache`` entries for those VINs.
+
+    A user's posted car (``dealer-portal-<id>``, card S20) is never deleted here, whatever
+    its VIN: it is the seller's own listing, retired only by the seller or an admin.
     """
     from backend.db.incomplete_listings_db import delete_incomplete_record
+    from backend.utils.user_listings import is_dealer_portal_dealer_id
 
     conn = get_conn()
     try:
         ensure_nhtsa_vpic_cache_table(conn)
         cur = conn.cursor()
-        cur.execute("SELECT id, vin FROM cars")
+        cur.execute("SELECT id, vin, dealer_id FROM cars")
         rows: list[tuple[int, str]] = []
         for r in cur.fetchall():
             rid, rv = int(r[0]), str(r[1] or "")
-            if is_dummy_placeholder_vin(rv):
+            if is_dummy_placeholder_vin(rv) and not is_dealer_portal_dealer_id(r[2] if len(r) > 2 else None):
                 rows.append((rid, rv))
         if not rows:
             return {"deleted": 0, "vins": [], "nhtsa_cache_deleted": 0}

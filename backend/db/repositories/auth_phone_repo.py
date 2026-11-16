@@ -407,6 +407,47 @@ def note_resend(
     return None if row is None else int(row[0])
 
 
+
+@_clean_errors()
+def take_resend_gate(
+    public_id: str, session_nonce: str, *, now: datetime, min_wait_s: int, conn: Any = None
+) -> bool:
+    """Card S6 resend: claim the 60-second gate atomically (``last_send_at`` moves to ``now``) without
+    touching the code's life, so a resend that is then refused never stretches the old code's expiry.
+    False when it is too soon, the challenge is closed, or the browser does not match."""
+    now = _utc(now)
+    with _tx(conn) as c:
+        row = c.execute(
+            "UPDATE public.auth_phone_challenges SET last_send_at = %s "
+            "WHERE public_id = %s AND session_nonce = %s AND status = 'open' AND last_send_at <= %s RETURNING id",
+            (now, public_id, session_nonce, now - timedelta(seconds=int(min_wait_s))),
+        ).fetchone()
+    return row is not None
+
+
+@_clean_errors()
+def restart_code_life(
+    public_id: str,
+    session_nonce: str,
+    *,
+    now: datetime,
+    ttl_s: int,
+    provider_ref: str | None = None,
+    conn: Any = None,
+) -> int | None:
+    """After a resent text really went out: one more send, a fresh code life, the vendor's new id.
+    The new send count, or None when the challenge is no longer open."""
+    now = _utc(now)
+    with _tx(conn) as c:
+        row = c.execute(
+            "UPDATE public.auth_phone_challenges SET sends = sends + 1, expires_at = %s, "
+            "provider_ref = COALESCE(%s, provider_ref) "
+            "WHERE public_id = %s AND session_nonce = %s AND status = 'open' RETURNING sends",
+            (now + timedelta(seconds=int(ttl_s)), provider_ref, public_id, session_nonce),
+        ).fetchone()
+    return None if row is None else int(row[0])
+
+
 # ---------------------------------------------------------------- sends
 
 
@@ -528,6 +569,17 @@ class SendWindow:
         where, params = _send_where(since, until, filters, outcomes, exclude_outcomes)
         return int(self._c.execute("SELECT count(*) FROM public.auth_phone_sends WHERE " + where, params).fetchone()[0])
 
+    def seller_challenges(self, *, user_id: int, since: datetime) -> int:
+        """Seller verification codes one account was sent since ``since`` (the reserved pool's
+        one-per-account rule of card S6 (d); send rows carry no account id)."""
+        return int(
+            self._c.execute(
+                "SELECT count(*) FROM public.auth_phone_challenges "
+                "WHERE purpose = 'seller_verify' AND user_id = %s AND created_at >= %s",
+                (int(user_id), _utc(since)),
+            ).fetchone()[0]
+        )
+
     def cost_cents(self, *, since: datetime, until: datetime | None = None, **filters: Any) -> Decimal:
         """Text plus lookup cost of every row in the window (refusals included)."""
         where, params = _send_where(since, until, filters, None, None)
@@ -594,6 +646,20 @@ def reserve_send(
             final = replace(row, outcome=verdict, est_cost_cents=0, lookup_cost_cents=0)
         send_id = _insert_send(c, final, now)
     return SendReservation(send_id=send_id, outcome=final.outcome)
+
+
+VENDOR_OUTCOMES = ("sent", "provider_error", "unavailable")
+
+
+@_clean_errors()
+def recent_vendor_outcomes(*, limit: int = 5, conn: Any = None) -> list[tuple[str, datetime]]:
+    """(outcome, at) of the newest rows where the vendor was asked, newest first (the S6 breaker)."""
+    with _tx(conn) as c:
+        rows = c.execute(
+            "SELECT outcome, at FROM public.auth_phone_sends WHERE outcome = ANY(%s) ORDER BY at DESC, id DESC LIMIT %s",
+            (list(VENDOR_OUTCOMES), int(limit)),
+        ).fetchall()
+    return [(r[0], r[1]) for r in rows]
 
 
 # ---------------------------------------------------------------- wrong tries
