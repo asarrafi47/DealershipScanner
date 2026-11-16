@@ -85,7 +85,11 @@ def admin_users_hub():
                 flash("You cannot suspend your own account.", "error")
             elif set_user_is_active(target_id, active=False):
                 _revoke_sessions(target_id, "suspend")
-                flash(f"Suspended user #{target_id}.", "success")
+                flash(
+                    f"Suspended user #{target_id}. Their cars are off the public site; "
+                    "reactivating does not put them back.",
+                    "success",
+                )
             else:
                 flash("Could not suspend user.", "error")
         elif action == "activate":

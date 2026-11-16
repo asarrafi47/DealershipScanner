@@ -510,4 +510,10 @@ def set_user_is_active(user_id: int, *, active: bool) -> bool:
     conn.close()
     if ok:
         _users_select_columns.cache_clear()
+        if not active:
+            # Card S19 (4): a suspended account's cars leave the public site at once.
+            # Un-suspending does not republish them; the seller saves a car again for that.
+            from backend.dealer.portal_sync import retire_portal_listings_for_user
+
+            retire_portal_listings_for_user(uid)
     return bool(ok)

@@ -65,6 +65,11 @@ def test_register_non_admin_requires_billing(monkeypatch, tmp_path, app_factory)
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     monkeypatch.setenv("APP_ADMIN_EMAILS", "")
     app = app_factory().app
+    # Card S19: dealer sign-up needs a Turnstile pass; tests use the fake verifier.
+    from backend.auth.phone import turnstile
+
+    turnstile.set_verifier(turnstile.FakeTurnstileVerifier({"pass"}))
+    monkeypatch.setattr(turnstile, "_default", turnstile._default)
     client = app.test_client()
     with client:
         r0 = client.get("/dealer/register")
@@ -81,6 +86,7 @@ def test_register_non_admin_requires_billing(monkeypatch, tmp_path, app_factory)
                 "email": "u1@example.com",
                 "password": "long-enough-password",
                 "org_name": "Test Org",
+                "cf-turnstile-response": "pass",
             },
             follow_redirects=False,
         )

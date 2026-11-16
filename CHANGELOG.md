@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
-## [1.5.35] - 2026-11-16
+## [1.5.36] - 2026-11-16
 
 - S10 (sessions by role, sign out everywhere): one `before_request` hook, registered first, reads the role from the users row on every signed-in request and ends a session that is too old: shoppers after 30 days without a visit (`SESSION_DAYS_SHOPPER`, sliding), admins and `/dev` operators 12 hours after sign-in (`SESSION_HOURS_ADMIN`, absolute), dealers and other staff 14 days after sign-in (`SESSION_DAYS_STAFF`). The cookie now lasts 30 days. Sign-in writes `auth_at`, `auth_method` and `auth_role` (password, Google, Apple, `/dev`). Cookies from before this release: admin, `/dev` and staff sign in once more; shoppers and dealers keep theirs. Deleted, suspended and revoked accounts are signed out on their next request. "Sign out everywhere" on the account page, a password change or reset, and an admin suspend or delete write `auth_session_epochs.valid_after` through one function (`revoke_user_sessions`); the lookup is one function (`get_valid_after`) with a 5 second (admin, dealer) or 30 second (shopper) in-process cache, fails closed for admin and dealer and open for shoppers, and reads a missing table (V031 not applied yet) as "nothing revoked". `mfa_ok` is dropped 12 hours after sign-in. No Redis. Review fixes: "sign out everywhere" keeps the original sign-in time (`auth_origin_at`) and the `mfa_ok` value, so it cannot restart the admin 12-hour or staff 14-day limit; the cookie's `user_role` is corrected from the users row on every request (a demoted admin loses `/dev` pass-through at once); a legacy role spelling such as `general` counts as a shopper, only `dealer_staff` (or a role-less row tied to a dealer) as staff; no inventory address reads as nothing revoked. Route tests that sign in with a made-up user id opt in to the `session_users_exist` fixture.
+
+## [1.5.35] - 2026-11-16
+
+- Card S19, today's open seller doors closed (no migration). `/inventory` is for `dealership_*` and `admin` accounts only (others get 403 and a plain sentence). `MARKETPLACE_POSTING_ENABLED` (default off): only grandfathered accounts (a `dealer_vehicles` row before `GRANDFATHER_CUTOFF`, 2026-11-15 00:00 UTC) still reach the public site; others are saved privately with "Posting cars publicly opens soon. Your car is saved." `/dealer/register` needs Turnstile (fails closed; in production without `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` it says "Dealer sign-up is not available right now."), 3 sign-ups an hour per address, and the `seller.signup_paused` switch. Suspending an account takes its cars off the site. A VIN already listed by someone else is told to the seller. `/dealer/login` shows one generic error. The Turnstile origin is allowed in the security policy of the sign-up page only. New read-only `backend/scripts/list_grandfathered_sellers.py` lists the grandfathered account ids. Tests: `backend/tests/test_seller_doors.py`.
 
 ## [1.5.34] - 2026-11-15
 
