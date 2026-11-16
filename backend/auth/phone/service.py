@@ -275,6 +275,18 @@ class AuthPhoneService:
     def _busy(self, purpose: str) -> StartOutcome:
         return StartOutcome(False, R_BUSY, SELLER_BUSY if purpose == "seller_verify" else BUSY)
 
+    def _reserve(self, row: dict[str, Any], ask: lim.SendAsk, limits: lim.Limits, now: datetime) -> tuple[int, str | None]:
+        """Reserve the send under the site-wide lock; (send id, verdict of ``limits.decide``)."""
+        verdicts: list[str | None] = []
+
+        def _decide(window: Any) -> str | None:
+            verdict = lim.decide(window, ask, limits, now)
+            verdicts.append(verdict)
+            return lim.outcome_for(verdict)
+
+        reservation = self.repo.reserve_send(self.repo.SendRow(**row), now=now, decide=_decide)
+        return reservation.send_id, (verdicts[-1] if verdicts else None)
+
     def _record_refusal(self, row_kwargs: dict[str, Any], outcome: str, now: datetime) -> None:
         self.repo.record_send(self.repo.SendRow(**row_kwargs, outcome=outcome), now=now)
 
@@ -378,20 +390,18 @@ class AuthPhoneService:
             device_hash=device_hash,
             pool=row["pool"],
             cost_cents=Decimal(text_cents + lookup_cents),
+            user_id=user_id,
         )
-        reservation = self.repo.reserve_send(
-            self.repo.SendRow(**row), now=now, decide=lambda w: lim.decide(w, ask, limits, now)
-        )
-        if reservation.outcome == lim.BLOCKED_LIMIT:
+        send_id, verdict = self._reserve(row, ask, limits, now)
+        if verdict == lim.BLOCKED_LIMIT:
             _event("blocked_limit", purpose=purpose, h=_h6(phone_hash))
             if device_hash is None:
                 return StartOutcome(False, R_NO_DEVICE, RELOAD)
             return StartOutcome(False, R_LIMIT, COULD_NOT_SEND)
-        if reservation.outcome == lim.BLOCKED_CAP:
-            _event("blocked_cap", purpose=purpose, h=_h6(phone_hash))
+        if verdict in (lim.BLOCKED_CAP, lim.POOL_BUSY):
+            _event(lim.outcome_for(verdict), purpose=purpose, why=verdict, h=_h6(phone_hash))
             _event("cap_hit", purpose=purpose)
             return self._busy(purpose)
-        send_id = reservation.send_id
 
         # Line type: skipped for known numbers; refused lines are cached too (30 days).
         if not known:
@@ -401,7 +411,9 @@ class AuthPhoneService:
                 if info.reason != p.LINE_LOOKUP_FAILED:
                     self.lookup_cache.put(phone_hash, info, LOOKUP_CACHE_TTL_S)
             if info.reason == p.LINE_LOOKUP_FAILED:
-                self.repo.set_send_outcome(send_id, "unavailable", est_cost_cents=0)
+                # blocked_cap, not unavailable: a Lookup outage must not trip the Verify breaker,
+                # so known numbers (which skip Lookup) keep getting codes. Costs nothing to the person.
+                self.repo.set_send_outcome(send_id, "blocked_cap", est_cost_cents=0)
                 _event("provider_error", purpose=purpose, step="lookup")
                 return StartOutcome(False, R_UNAVAILABLE, UNAVAILABLE)
             if not info.ok:
@@ -496,35 +508,32 @@ class AuthPhoneService:
             return StartOutcome(False, R_UNAVAILABLE, UNAVAILABLE)
         # The 60-second gate is taken atomically before anything is spent, so two racing resends
         # cannot both text.
-        if self.repo.note_resend(
-            public_id, session_nonce, now=now, min_wait_s=self.config.resend_wait_s, ttl_s=self.config.code_ttl_s
-        ) is None:
+        # The code life restarts only after the text really went out (restart_code_life below), so a
+        # refused resend never stretches the old code past its 5 minutes.
+        if not self.repo.take_resend_gate(public_id, session_nonce, now=now, min_wait_s=self.config.resend_wait_s):
             return StartOutcome(False, R_TOO_SOON, RESEND_TOO_SOON)
         text_cents = self.config.est_cost_cents
         row["est_cost_cents"] = text_cents
         limits = self.limits_loader()
         ask = lim.SendAsk(
             phone_hash=ch.phone_hash, ip_hash=row["ip_hash"], ip_prefix_hash=row["ip_prefix_hash"],
-            device_hash=device_hash, pool=pool, cost_cents=Decimal(text_cents),
+            device_hash=device_hash, pool=pool, cost_cents=Decimal(text_cents), user_id=ch.user_id,
         )
-        reservation = self.repo.reserve_send(
-            self.repo.SendRow(**row), now=now, decide=lambda w: lim.decide(w, ask, limits, now)
-        )
-        if reservation.outcome == lim.BLOCKED_LIMIT:
+        send_id, verdict = self._reserve(row, ask, limits, now)
+        if verdict == lim.BLOCKED_LIMIT:
             _event("blocked_limit", purpose=ch.purpose, h=_h6(ch.phone_hash))
             return StartOutcome(False, R_LIMIT, COULD_NOT_SEND)
-        if reservation.outcome == lim.BLOCKED_CAP:
-            _event("blocked_cap", purpose=ch.purpose, h=_h6(ch.phone_hash))
+        if verdict in (lim.BLOCKED_CAP, lim.POOL_BUSY):
+            _event(lim.outcome_for(verdict), purpose=ch.purpose, why=verdict, h=_h6(ch.phone_hash))
             _event("cap_hit", purpose=ch.purpose)
             return self._busy(ch.purpose)
         result = self.provider.start(ch.phone_e164, locale=self.config.locale)
         if not result.ok:
-            return self._start_failed(reservation.send_id, result, ch.purpose)
-        self.repo.set_send_outcome(
-            reservation.send_id, "sent", est_cost_cents=text_cents * max(1, int(result.attempts or 1))
+            return self._start_failed(send_id, result, ch.purpose)
+        self.repo.set_send_outcome(send_id, "sent", est_cost_cents=text_cents * max(1, int(result.attempts or 1)))
+        self.repo.restart_code_life(
+            public_id, session_nonce, now=now, ttl_s=self.config.code_ttl_s, provider_ref=result.provider_ref
         )
-        if result.provider_ref:
-            self.repo.set_provider_ref(public_id, session_nonce, result.provider_ref)
         _event("start", provider=self.provider.name, purpose=ch.purpose, resend=1)
         self._alerts(limits, now)
         return self._sent_outcome(numbers.mask(ch.phone_e164), public_id, session_nonce)

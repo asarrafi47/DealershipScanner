@@ -32,6 +32,10 @@ class FakeWindow:
 
     def __init__(self) -> None:
         self.rows: list[dict] = []
+        self.seller_codes: dict[int, int] = {}  # account id -> seller codes sent today
+
+    def seller_challenges(self, *, user_id, since):
+        return self.seller_codes.get(user_id, 0)
 
     def add(self, n: int = 1, *, at: datetime = NOW - timedelta(minutes=1), outcome: str = "sent", **kw) -> None:
         base = dict(
@@ -62,6 +66,10 @@ def ask(**kw) -> lim.SendAsk:
     base = dict(phone_hash=PH, ip_hash=IP, ip_prefix_hash=PFX, device_hash=DEV, pool="known", cost_cents=Decimal(6))
     base.update(kw)
     return lim.SendAsk(**base)
+
+
+def seller(**kw):
+    return ask(pool="seller", user_id=kw.pop("user_id", 1), **kw)
 
 
 def decide(w, a=None, limits=L, now=NOW):
@@ -150,9 +158,9 @@ def test_site_send_cap_blocks_at_thirty():
     w = FakeWindow()
     w.add(27, pool="known")
     w.add(2, pool="seller")
-    assert decide(w, ask(pool="seller")) is None
+    assert decide(w, seller()) is None
     w.add(1, pool="seller")
-    assert decide(w, ask(pool="seller")) == lim.BLOCKED_CAP
+    assert decide(w, seller()) == lim.BLOCKED_CAP
 
 
 def test_shopper_share_is_twenty_seven_and_reserved_pool_is_three():
@@ -162,23 +170,23 @@ def test_shopper_share_is_twenty_seven_and_reserved_pool_is_three():
     assert decide(w) is None
     w.add(1, pool="known")
     assert decide(w) == lim.BLOCKED_CAP
-    assert decide(w, ask(pool="seller")) is None  # the reserved pool is still open
+    assert decide(w, seller()) is None  # the reserved pool is still open
 
 
 def test_reserved_pool_is_never_used_by_shoppers_and_caps_at_three():
     w = FakeWindow()
     w.add(3, pool="seller")
-    assert decide(w, ask(pool="seller")) == lim.BLOCKED_CAP
+    assert decide(w, seller()) == lim.BLOCKED_CAP
     assert decide(w) is None  # shoppers unaffected
 
 
 def test_reserved_pool_one_send_per_phone_and_per_device():
     w = FakeWindow()
     w.add(1, pool="seller", phone_hash=PH)
-    assert decide(w, ask(pool="seller")) == lim.BLOCKED_CAP
+    assert decide(w, seller()) == lim.BLOCKED_CAP
     w = FakeWindow()
     w.add(1, pool="seller", device_hash=DEV)
-    assert decide(w, ask(pool="seller")) == lim.BLOCKED_CAP
+    assert decide(w, seller()) == lim.BLOCKED_CAP
 
 
 def test_new_number_pool_fifteen_and_two_per_address_group():
@@ -186,11 +194,11 @@ def test_new_number_pool_fifteen_and_two_per_address_group():
     w.add(14, pool="new")
     assert decide(w, ask(pool="new")) is None
     w.add(1, pool="new")
-    assert decide(w, ask(pool="new")) == lim.BLOCKED_CAP
+    assert decide(w, ask(pool="new")) == lim.POOL_BUSY
     assert decide(w, ask(pool="known")) is None  # a known number still gets a code
     w = FakeWindow()
     w.add(2, pool="new", ip_prefix_hash=PFX, ip_hash="99" * 32, device_hash="98" * 32)
-    assert decide(w, ask(pool="new")) == lim.BLOCKED_CAP
+    assert decide(w, ask(pool="new")) == lim.POOL_BUSY
 
 
 def test_resend_pool_six():
@@ -289,3 +297,28 @@ def test_per_subject_limits_are_settings_rows(clean_settings):
     ss.set_loader(lambda: {"sms.phone_per_day": "1", "sms.prefix_per_day": "9"})
     got = lim.load_limits()
     assert (got.phone_per_day, got.prefix_per_day) == (1, 9)
+
+
+def test_one_account_cannot_use_two_seller_sends():
+    w = FakeWindow()
+    assert decide(w, seller(user_id=9)) is None
+    w.seller_codes[9] = 1  # a second number and a new device, same account
+    assert decide(w, seller(user_id=9, phone_hash="11" * 32, device_hash="12" * 32)) == lim.BLOCKED_CAP
+    assert decide(w, seller(user_id=10, phone_hash="11" * 32, device_hash="12" * 32)) is None
+
+
+def test_seller_send_without_an_account_is_refused():
+    assert decide(FakeWindow(), ask(pool="seller", user_id=None)) == lim.BLOCKED_CAP
+
+
+def test_new_pool_refusals_count_against_the_source_so_probing_is_not_free():
+    w = FakeWindow()
+    w.add(15, pool="new")
+    verdict = decide(w, ask(pool="new"))
+    assert verdict == lim.POOL_BUSY and lim.outcome_for(verdict) == lim.BLOCKED_LIMIT
+    for k in range(L.ip_per_hour):  # each refusal is recorded as the source's own blocked_limit row
+        w.add(1, outcome=lim.outcome_for(decide(w, ask(pool="new", phone_hash="%064x" % k))),
+              pool="new", ip_hash=IP, phone_hash="%064x" % k, cost=Decimal(0))
+    assert decide(w, ask(pool="new", phone_hash="ab" * 32)) == lim.BLOCKED_LIMIT
+    assert decide(w, ask(pool="known", phone_hash="ac" * 32)) == lim.BLOCKED_LIMIT  # the source is spent
+    assert lim.outcome_for(lim.BLOCKED_CAP) == lim.BLOCKED_CAP and lim.outcome_for(None) is None

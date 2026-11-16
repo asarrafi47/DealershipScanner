@@ -364,20 +364,20 @@ def test_shopper_share_used_up_a_dealer_code_still_goes_out_and_the_reverse(env)
     s, prov, clock = make()
     fill(27, pool="known")
     assert start(s, 73).reason == svc_mod.R_BUSY
-    assert start(s, 74, purpose="seller_verify").ok
+    assert start(s, 74, purpose="seller_verify", user_id=74).ok
 
 
 def test_reserved_pool_used_up_shoppers_still_sign_in(env):
     s, prov, clock = make()
     fill(3, pool="seller")
-    seller = start(s, 75, purpose="seller_verify")
+    seller = start(s, 75, purpose="seller_verify", user_id=75)
     assert seller.reason == svc_mod.R_BUSY and seller.sentence == svc_mod.SELLER_BUSY
     assert start(s, 76).ok
 
 
 def test_one_phone_or_device_uses_at_most_one_send_of_the_reserved_pool(env):
     s, prov, clock = make()
-    first = start(s, 77, purpose="seller_verify")
+    first = start(s, 77, purpose="seller_verify", user_id=77)
     assert first.ok
     clock.tick(seconds=61)
     again = s.resend(first.public_id, first.session_nonce, turnstile_token="pass", ip="10.0.77.1",
@@ -560,3 +560,107 @@ def test_captured_logs_hold_no_number_or_code(env, caplog):
     assert not re.search(r"[0-9a-f]{64}", text)
     for m in re.finditer(r"\bh=(\S+)", caplog.text):
         assert len(m.group(1)) <= 6
+
+
+# ------------------------------------------------------------ review fixes
+
+
+def test_new_pool_refusals_cost_the_source_so_probing_for_accounts_is_not_free(env):
+    s, prov, clock = make()
+    fill(15, pool="new")
+    known(10, 110)
+    got = [start(s, 11 + k, ip="10.120.0.9", device="same").sentence for k in range(3)]
+    assert got == [svc_mod.BUSY] * 3
+    assert [r[0] for r in rows()[-3:]] == ["blocked_limit"] * 3
+    # the address has spent its hour: even a known number gets the neutral refusal now
+    assert start(s, 10, ip="10.120.0.9", device="same").reason == svc_mod.R_LIMIT
+
+
+def test_a_lookup_outage_never_trips_the_breaker_for_known_numbers(env):
+    s, prov, clock = make()
+    for k in range(6):
+        prov.fail_next_lookup()
+        assert start(s, 20 + k).sentence == svc_mod.UNAVAILABLE
+    known(27, 127)
+    assert start(s, 27).ok
+    assert prov.outbox[-1].to == num(27)
+
+
+def test_one_account_cannot_use_two_sends_of_the_reserved_pool(env):
+    s, prov, clock = make()
+    assert start(s, 30, purpose="seller_verify", user_id=9).ok
+    second = start(s, 31, purpose="seller_verify", user_id=9, ip="10.131.0.1", device="other")
+    assert second.sentence == svc_mod.SELLER_BUSY and len(prov.outbox) == 1
+    assert start(s, 32, purpose="seller_verify", user_id=10).ok
+
+
+def test_a_refused_resend_does_not_stretch_the_old_code_past_five_minutes(env):
+    s, prov, clock = make()
+    out = start(s, 33)
+    clock.tick(seconds=61)
+    fill(30)  # site cap reached: the resend is refused
+    refused = s.resend(out.public_id, out.session_nonce, turnstile_token="pass", ip="10.0.33.1",
+                       device_hash=numbers.hash_device("dev33"))
+    assert refused.sentence == svc_mod.BUSY
+    clock.at = T0 + timedelta(seconds=300)
+    late = s.check(out.public_id, out.session_nonce, FAKE_CODE, device_hash=None)
+    assert late.reason == svc_mod.R_EXPIRED
+
+
+def test_phone_wide_lock_after_fifteen_wrong_codes_from_several_browsers(env):
+    s, prov, clock = make(limits=replace(lim.Limits(), phone_per_15min=100, phone_per_day=100, ip_per_hour=100,
+                                         ip_per_day=100, prefix_per_day=100, new_pool_prefix_per_day=100))
+    wrong = 0
+    for b in range(4):  # 4 browsers, 4 wrong codes each: no browser reaches its own 5
+        out = start(s, 40, device="b%d" % b, nonce="n%d" % b)
+        dev = numbers.hash_device("b%d40" % b)
+        for _ in range(4):
+            wrong += 1
+            r = s.check(out.public_id, out.session_nonce, WRONG, device_hash=dev)
+            if wrong < lim.PHONE_WIDE_MAX_WRONG:
+                assert r.reason == svc_mod.R_WRONG, wrong
+            if wrong == lim.PHONE_WIDE_MAX_WRONG:
+                break
+        if wrong == lim.PHONE_WIDE_MAX_WRONG:
+            break
+    fresh = start(s, 40, device="new", nonce="new")
+    assert fresh.reason == svc_mod.R_LIMIT
+    clock.tick(minutes=lim.PHONE_WIDE_LOCK_MINUTES + 1)
+    assert start(s, 40, device="new", nonce="new").ok
+
+
+def test_half_cap_and_prepaid_alerts_log_once(env, caplog):
+    topup = T0 - timedelta(days=1)
+    s, prov, clock = make(limits=replace(lim.Limits(), topup_at=topup, prepaid_cents=1000, daily_spend_cap_cents=100000))
+    fill(14, cost=35, at=T0 - timedelta(hours=1))  # 490 cents since the top-up
+    with caplog.at_level(logging.INFO, logger="auth_phone"):
+        start(s, 50)  # the 15th send of the day, spend 497
+        start(s, 51)  # spend 504: past 50 percent of 1000
+        start(s, 52)
+    assert caplog.text.count("event=cap_50pct") == 1
+    assert caplog.text.count("event=prepaid_50pct") == 1
+    assert "event=prepaid_75pct" not in caplog.text
+
+
+@pytest.mark.parametrize("state,expect", [("active", "signed_in"), ("reserving", "retry")])
+def test_the_tab_that_loses_the_identity_race_signs_in_as_the_winner(env, monkeypatch, state, expect):
+    s, prov, clock = make()
+    ok = _approved(s, 60)
+    ident = repo.insert_identity(
+        phone_e164=num(60), phone_hash=numbers.hash_phone(num(60)), country="US", now=T0,
+        consent_at=T0, consent_text_version="1",
+    )
+    if state == "active":
+        repo.activate_identity(ident.id, 1600, now=T0)
+    real_find = repo.find_identity_by_phone
+    calls = []
+
+    def first_miss(e164, **kw):
+        calls.append(e164)
+        return None if len(calls) == 1 else real_find(e164, **kw)
+
+    monkeypatch.setattr(repo, "find_identity_by_phone", first_miss)
+    out = s.sign_in(ok, FakeAccounts())
+    assert out.reason == expect
+    if state == "active":
+        assert (out.ok, out.user_id) == (True, 1600)

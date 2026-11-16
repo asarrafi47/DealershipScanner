@@ -39,6 +39,16 @@ SOURCE_EXCLUDED_OUTCOMES = ("unavailable", "blocked_cap")
 
 BLOCKED_LIMIT = "blocked_limit"
 BLOCKED_CAP = "blocked_cap"
+# A refusal by the new-number pool (whole day or per address group). The person sees the same busy
+# sentence as at a cap, but the row is recorded as ``blocked_limit`` so it counts against the
+# source's address, device and group limits: otherwise an unknown number's refusal would be free
+# while a known number gets a code, a free way to learn which numbers have accounts.
+POOL_BUSY = "pool_busy"
+
+
+def outcome_for(verdict: str | None) -> str | None:
+    """The send-row outcome of a :func:`decide` verdict."""
+    return BLOCKED_LIMIT if verdict == POOL_BUSY else verdict
 
 # Phone-wide wrong-code lock (card S6 (c)): only after this many wrong codes in 24 hours across all
 # challenges and browsers, so a stranger in another browser cannot lock the real holder out.
@@ -126,6 +136,8 @@ class Window(Protocol):
 
     def cost_cents(self, *, since: datetime, until: datetime | None = None, **filters: Any) -> Decimal: ...
 
+    def seller_challenges(self, *, user_id: int, since: datetime) -> int: ...
+
 
 @dataclass(frozen=True)
 class SendAsk:
@@ -137,10 +149,12 @@ class SendAsk:
     device_hash: str | None  # None: no valid device cookie
     pool: str
     cost_cents: Decimal  # text plus lookup estimate of this send
+    user_id: int | None = None  # the account asking (required for the reserved seller pool)
 
 
 def decide(window: Window, ask: SendAsk, limits: Limits, now: datetime) -> str | None:
-    """None to send, or ``blocked_limit`` / ``blocked_cap``. Pure: counts through ``window`` only."""
+    """None to send, or ``blocked_limit``, ``pool_busy`` or ``blocked_cap`` (record it with
+    :func:`outcome_for`). Pure: counts through ``window`` only."""
     day = day_start(now, limits.reset_tz)
     last_24h = now - timedelta(hours=24)
 
@@ -180,15 +194,18 @@ def decide(window: Window, ask: SendAsk, limits: Limits, now: datetime) -> str |
             return BLOCKED_CAP
         if ask.device_hash is not None and real(pool=POOL_SELLER, device_hash=ask.device_hash) >= 1:
             return BLOCKED_CAP
+        # and one per account
+        if ask.user_id is None or window.seller_challenges(user_id=ask.user_id, since=day) >= 1:
+            return BLOCKED_CAP
     else:
         shopper = sum(real(pool=p) for p in SHOPPER_POOLS)
         if shopper >= limits.shopper_sends:
             return BLOCKED_CAP
         if ask.pool == POOL_NEW:
             if real(pool=POOL_NEW) >= limits.new_pool_sends:
-                return BLOCKED_CAP
+                return POOL_BUSY
             if real(pool=POOL_NEW, ip_prefix_hash=ask.ip_prefix_hash) >= limits.new_pool_prefix_per_day:
-                return BLOCKED_CAP
+                return POOL_BUSY
         if ask.pool == POOL_RESEND and real(pool=POOL_RESEND) >= limits.resend_pool_sends:
             return BLOCKED_CAP
 
