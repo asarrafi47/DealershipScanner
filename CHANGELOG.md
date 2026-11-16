@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.35] - 2026-11-16
+
 - C6 (nightly chat totals and alerts): `python -m backend.scripts.chat_budget_nightly` prints yesterday's totals in the reset time zone (messages, tokens, dollars, percent of the budget, denials by kind), deletes counter rows older than 35 days, and exits 0 (under every alert level), 2 (an alert level of `chat.alert_pcts` was passed), 3 (the budget was reached, or the site-wide budget refused a message; a refusal by the new-account or open share counts as "budget share", not as the budget) or 1 (database unreachable; nothing deleted); on 2 or 3 it emails `OWNER_ALERT_EMAIL` when set. The web process writes one `chat_budget` log line the first time a day passes each alert level and the first time the site budget refuses a message, and deletes old rows at most once an hour as the fallback (`backend/chat_budget/alerts.py`). Lines carry counts, percentages and dollars only, with thousands separators. `chat_usage_repo.day_summary` and the reserve's site-wide day row are new. The Railway cron service is not added here (card S18).
 
 ## [1.5.34] - 2026-11-15
