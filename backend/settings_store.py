@@ -17,6 +17,7 @@ import os
 import threading
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Any, Callable
 from zoneinfo import ZoneInfo
 
@@ -32,7 +33,7 @@ class Spec:
     key: str
     env: str
     default: Any
-    kind: str = "int"  # int | bool | tz | pcts
+    kind: str = "int"  # int | bool | tz | pcts | time (ISO 8601 with a zone, as an aware UTC datetime)
     max_value: int = 1_000_000  # an int above this is absurd and ignored
     min_value: int = 0  # an int below this is ignored (a price of 0 would switch the dollar cap off)
     ceiling_env: str = ""  # env-only hard ceiling: no row and no other setting can raise a value above it
@@ -74,6 +75,12 @@ SPECS: dict[str, Spec] = {
         Spec("chat.web_research_weight", "CHAT_WEB_RESEARCH_WEIGHT", 3, max_value=100),
         Spec("chat.reset_tz", "CHAT_RESET_TZ", "America/New_York", "tz"),
         Spec("chat.alert_pcts", "CHAT_ALERT_PCTS", (50, 80), "pcts"),
+        # Phone sign-in (card S5 review (e)): the prepaid guard reads spend since ``sms.topup_at``
+        # (an ISO 8601 time with its zone, written when the owner tops up the vendor balance)
+        # against ``sms.prepaid_cents``; ``auth_phone.sends_paused`` stops every text without a release.
+        Spec("sms.prepaid_cents", "SMS_PREPAID_CENTS", 2000, max_value=10_000_000),
+        Spec("sms.topup_at", "SMS_TOPUP_AT", None, "time"),
+        Spec("auth_phone.sends_paused", "AUTH_PHONE_SENDS_PAUSED", False, "bool"),
     )
 }
 
@@ -135,6 +142,14 @@ def parse(spec: Spec, raw: Any) -> Any:
         except Exception:
             return None
         return text
+    if spec.kind == "time":
+        try:
+            when = datetime.fromisoformat(text)
+            if when.tzinfo is None:  # a time without a zone is ambiguous: refuse it
+                return None
+            return when.astimezone(timezone.utc)
+        except (ValueError, OverflowError):
+            return None
     if spec.kind == "pcts":
         out: list[int] = []
         for piece in text.split(","):
