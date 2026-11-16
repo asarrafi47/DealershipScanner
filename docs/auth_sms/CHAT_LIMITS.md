@@ -90,6 +90,7 @@ Order of precedence: row in `app_settings` > environment variable > code default
 | `chat.phone_per_day` | `CHAT_PHONE_PER_DAY` | 40 |
 | `chat.device_per_day` | `CHAT_DEVICE_PER_DAY` | 60 |
 | `chat.ip_per_day` | `CHAT_IP_PER_DAY` | 100 |
+| `chat.ip_net_per_day` | `CHAT_IP_NET_PER_DAY` | 150 (per /24 IPv4 or /48 IPv6; stored as an `ip` row whose key is a hash in its own `ipnet` domain, so V030 needs no change) |
 | `chat.new_account_factor_pct` | `CHAT_NEW_ACCOUNT_FACTOR_PCT` | 50 |
 | `chat.budget_usd_per_day_cents` | `CHAT_BUDGET_CENTS_PER_DAY` | 500 |
 | `chat.budget_tokens_per_day` | `CHAT_BUDGET_TOKENS_PER_DAY` | 2000000 |
@@ -139,6 +140,8 @@ A nightly job (same style as the existing nightly card job) writes yesterday's t
 ## 10. Risks
 
 - **Money exposure** (from the numbers above): with both caps working about 5 dollars a day (150 a month); with only the token cap working about 10 dollars a day; with the gate bypassed, spend is bounded only by the provider's own monthly limit, which the owner sets in the provider console before C3 is released (launch blocker, listed in C3 and S18). Prices are non-zero by default so the dollar cap is live from day one.
+- **Worst case, written for the C3 release** (owner precondition: a monthly spend limit and a 50 percent alert set in the model provider's console before C3 is released): both caps working, about 5 dollars a day; the token cap alone, about 10 dollars a day; the gate bypassed, bounded only by the provider's monthly limit.
+- **As built in C3** (2026-11-16): car chat, compare chat, the sidebar and narration share one set of Postgres buckets through `backend/chat_budget/web.py`; the per-minute burst guard is one function there (`burst_allowed`, in memory until card R3 moves its backend); narration needs sign-in and the `X-CSRF-Token` header and is counted only on a cache miss; sticker and vision model calls reached from `/api/cars/<id>/packages/ensure` are counted with weight 3 only when a call is really made (the scanner's own calls are not); account age is not known yet (the users table has no creation time), so every account is in the middle tier until C4.
 - **Other model callers**: narration, window-sticker and vision paths (`packages_ensure.py`, `sticker.py`, `window_sticker_service.py`) run under the gate (C3); scanner enrichment, brochure reading and scripts are batch or operator-only and are checked by the test that lists every `complete()` call site (C2).
 
 - Estimates can be wrong at first; the cap is a safety net, not a bill. Set a spend limit at the model provider's console as the second line of defence (owner step).

@@ -700,16 +700,20 @@ def _analyze_sticker_image_with_claude(image_bytes: bytes, car: dict[str, Any]) 
         "options: paid packages and optional equipment only. Include MSRP add-on price when visible.\n"
     )
     try:
+        from backend.chat_budget.web import sticker_guard
         from backend.llm.client import complete
 
-        res = complete(
-            prompt,
-            model_role="vision",
-            max_tokens=1536,
-            system="You output JSON only. No markdown.",
-            images=[(media_type, b64)],
-            api_key=api_key,
-        )
+        with sticker_guard() as allowed:  # counted only when a shopper's request led here (card C3)
+            if not allowed:
+                return None
+            res = complete(
+                prompt,
+                model_role="vision",
+                max_tokens=1536,
+                system="You output JSON only. No markdown.",
+                images=[(media_type, b64)],
+                api_key=api_key,
+            )
         res.require_complete()  # refusal / max_tokens cut -> no options (as before: unparseable)
         text = res.text.strip()
         if text.startswith("```"):
@@ -932,15 +936,19 @@ def _analyze_sticker_text_with_claude(raw_text: str, car: dict[str, Any]) -> dic
         f"--- STICKER TEXT ---\n{snippet}"
     )
     try:
+        from backend.chat_budget.web import sticker_guard
         from backend.llm.client import complete
 
-        res = complete(
-            prompt,
-            model_role="extract",
-            max_tokens=1024,
-            system="You output JSON only. No markdown.",
-            api_key=api_key,
-        )
+        with sticker_guard() as allowed:  # counted only when a shopper's request led here (card C3)
+            if not allowed:
+                return None
+            res = complete(
+                prompt,
+                model_role="extract",
+                max_tokens=1024,
+                system="You output JSON only. No markdown.",
+                api_key=api_key,
+            )
         res.require_complete()  # refusal / max_tokens cut -> no options (as before: unparseable)
         text = res.text.strip()
         if text.startswith("```"):
@@ -954,7 +962,19 @@ def _analyze_sticker_text_with_claude(raw_text: str, car: dict[str, Any]) -> dic
 
 
 def _vision_fallback_packages(car: dict[str, Any]) -> dict[str, Any] | None:
-    """Analyze listing photos for visible equipment/options (multi-image Claude vision)."""
+    """Analyze listing photos for visible equipment/options (multi-image Claude vision).
+
+    One sticker-weight message under the chat gate when a shopper's request led here (card C3).
+    """
+    from backend.chat_budget.web import sticker_guard
+
+    with sticker_guard() as allowed:
+        if not allowed:
+            return None
+        return _vision_fallback_packages_unguarded(car)
+
+
+def _vision_fallback_packages_unguarded(car: dict[str, Any]) -> dict[str, Any] | None:
     try:
         from backend.enrichment.service import (
             _all_gallery_urls_ordered,

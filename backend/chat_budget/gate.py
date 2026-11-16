@@ -134,6 +134,7 @@ class Guard:
         listing_id: int | str | None,
         weight: int = 1,
         *,
+        net_hash: str | None = None,
         is_admin: bool = False,
         new_account: bool = False,
         account_age_s: float | None = None,
@@ -144,6 +145,7 @@ class Guard:
         self.phone_hash = phone_hash
         self.device_hash = device_hash
         self.ip_hash = ip_hash
+        self.net_hash = net_hash  # the address's /24 (IPv4) or /48 (IPv6), counted as an 'ip' row
         self.listing_id = listing_id
         self.weight = max(1, int(weight or 1))
         self.is_admin = is_admin
@@ -253,6 +255,8 @@ class Guard:
             ("phone", self.phone_hash, "chat.phone_per_day"),
             ("device", self.device_hash, "chat.device_per_day"),
             ("ip", self.ip_hash, "chat.ip_per_day"),
+            # the network back-stop has no kind of its own in the table: its hash (own domain) is an 'ip' key
+            ("ip", self.net_hash, "chat.ip_net_per_day"),
         ):
             if value:
                 charges.append(Charge(kind, str(value), day_limit=0 if free else ss.get_int(setting)))
