@@ -44,6 +44,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect  # noqa: E402
+from backend.utils.user_listings import DEALER_PORTAL_DEALER_ID_PREFIX, is_dealer_portal_dealer_id  # noqa: E402
 
 _log = logging.getLogger("photo_attr")
 
@@ -178,7 +179,11 @@ def build_dealer_index(cur) -> dict[str, str]:
 
 
 def find_candidates(cur, index: dict[str, str]) -> list[dict[str, Any]]:
-    """Cars whose photographs name a dealer domain other than the one they are filed under."""
+    """Cars whose photographs name a dealer domain other than the one they are filed under.
+
+    A user's posted car (``dealer-portal-<id>``, card S20) is never a candidate: its photos
+    may well show the dealer it was bought from, and it is still the user's listing.
+    """
     cur.execute(
         """
         SELECT t.car_id, t.vin, c.dealer_id, t.summary
@@ -190,6 +195,8 @@ def find_candidates(cur, index: dict[str, str]) -> list[dict[str, Any]]:
     )
     out: list[dict[str, Any]] = []
     for car_id, vin, dealer_id, summary in cur.fetchall():
+        if is_dealer_portal_dealer_id(dealer_id):
+            continue
         s = summary if isinstance(summary, dict) else json.loads(summary or "{}")
         domains = [
             d for d in (s.get("dealer_domains") or [])
@@ -251,7 +258,9 @@ def main() -> int:
             UPDATE cars c SET dealer_id = a.original_dealer_id
             FROM car_photo_attribution a
             WHERE a.car_id = c.id AND a.applied_at IS NOT NULL
-            """
+              AND LEFT(COALESCE(c.dealer_id, ''), %s) <> %s
+            """,
+            (len(DEALER_PORTAL_DEALER_ID_PREFIX), DEALER_PORTAL_DEALER_ID_PREFIX),
         )
         moved = cur.rowcount
         cur.execute("UPDATE car_photo_attribution SET applied_at = NULL WHERE applied_at IS NOT NULL")
