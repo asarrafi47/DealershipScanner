@@ -3,11 +3,23 @@
 Every session whose ``auth_at`` is older than the user's ``valid_after`` is void. The row lives in
 ``public.auth_session_epochs`` (migration V031, repository ``auth_phone_repo``).
 
-Two doors only, so a later shared cache (card R4) has one place to read and one place to forget:
+Two doors only, so the shared cache (card R4) has one place to read and one place to forget:
 
-* :func:`get_valid_after` -- the one read. An in-process cache keeps each answer 5 seconds for
-  admin and dealer sessions and 30 seconds for shoppers.
-* :func:`revoke_user_sessions` -- the one write. It drops this process's cached answer for the user.
+* :func:`get_valid_after` -- the one read. Lookup order: Redis (when ``REDIS_URL`` is set), the
+  in-process cache, Postgres. Each answer is kept 5 seconds for admin and dealer sessions and
+  30 seconds for shoppers, in both caches. While Redis answers, a Redis miss goes straight to
+  Postgres (a revoke in another process deletes the shared key, and this process's own copy
+  could still hold the old answer); the in-process cache is used when Redis is unset, skipped by
+  its breaker or failing, exactly as before card R4. A Redis error is only a cache miss.
+* :func:`revoke_user_sessions` -- the one write. It deletes the user's Redis key before and after
+  the write (after a successful write the key is set to the new value, so a read racing the
+  write cannot put the old answer back) and drops this process's cached answer. When Redis
+  fails during a write, this process stops trusting Redis for that user for 30 seconds, the
+  longest any key can live.
+
+Redis key: ``sc:sva:<user id>`` (no phone number, code or secret), value ``<valid_after or ->|
+<stored at>``, TTL 5 or 30 seconds. Postgres stays the only authority: a flush or an eviction
+only means the next request asks Postgres.
 
 When the lookup fails, :func:`get_valid_after` raises :class:`EpochLookupFailed`; the session hook
 refuses admin and dealer sessions (fail closed) and lets shoppers through (fail open). Two cases
@@ -24,6 +36,8 @@ import logging
 import threading
 import time
 from datetime import datetime, timezone
+
+from backend.utils import redis_client
 
 _log = logging.getLogger("auth_session")
 
@@ -43,6 +57,13 @@ _lock = threading.Lock()
 _cache: dict[int, tuple[float, float | None]] = {}
 # Bumped on every forget, so a read that started before a write cannot cache the old answer.
 _generation = 0
+# user_id -> monotonic deadline: a write whose Redis delete failed; skip Redis for that user.
+_redis_skip_until: dict[int, float] = {}
+
+_REDIS_HIT = "hit"
+_REDIS_MISS = "miss"  # Redis answered and has no fresh value: ask Postgres
+_REDIS_OFF = "off"  # unset, breaker open or an error: the pre-R4 path (in-process cache, Postgres)
+_NONE_MARK = "-"
 
 
 class EpochLookupFailed(Exception):
@@ -51,6 +72,96 @@ class EpochLookupFailed(Exception):
 
 def _monotonic() -> float:
     return time.monotonic()
+
+
+def _wall() -> float:
+    return time.time()
+
+
+def _redis_key(uid: int) -> str:
+    return redis_client.key("sva", str(int(uid)))
+
+
+def _redis_skipped(uid: int, now: float) -> bool:
+    with _lock:
+        until = _redis_skip_until.get(uid)
+        if until is None:
+            return False
+        if until <= now:
+            _redis_skip_until.pop(uid, None)
+            return False
+        return True
+
+
+def _redis_read(uid: int, ttl: float, now: float) -> tuple[str, float | None]:
+    """(state, value). Never raises: any Redis trouble is ``_REDIS_OFF``."""
+    if _redis_skipped(uid, now):
+        return _REDIS_OFF, None
+    client = redis_client.get_client()
+    if client is None:
+        return _REDIS_OFF, None
+    try:
+        raw = client.get(_redis_key(uid))
+    except Exception as exc:
+        redis_client.record_failure(exc)
+        return _REDIS_OFF, None
+    redis_client.record_success()
+    if raw is None:
+        return _REDIS_MISS, None
+    try:
+        text = raw.decode("ascii") if isinstance(raw, bytes) else str(raw)
+        value_text, stored_text = text.split("|", 1)
+        stored = float(stored_text)
+        value = None if value_text == _NONE_MARK else float(value_text)
+    except (ValueError, UnicodeDecodeError):
+        return _REDIS_MISS, None  # a value we did not write: ask Postgres
+    age = _wall() - stored
+    if age < 0 or age >= ttl:
+        return _REDIS_MISS, None  # a shopper-length entry read by a strict session, or clock skew
+    return _REDIS_HIT, value
+
+
+def _encode(value: float | None) -> str:
+    return "%s|%.3f" % (_NONE_MARK if value is None else repr(float(value)), _wall())
+
+
+def _redis_store(uid: int, value: float | None, ttl: float, *, overwrite: bool) -> bool:
+    """Put an answer in Redis. ``overwrite=False`` (a read) never replaces a newer write.
+    Returns False when Redis was configured but failed."""
+    client = redis_client.get_client()
+    if client is None:
+        return not redis_client.configured()  # unset: nothing to do; breaker open: not stored
+    try:
+        if overwrite:
+            client.set(_redis_key(uid), _encode(value), ex=max(1, int(ttl)))
+        else:
+            client.set(_redis_key(uid), _encode(value), ex=max(1, int(ttl)), nx=True)
+    except Exception as exc:
+        redis_client.record_failure(exc)
+        return False
+    redis_client.record_success()
+    return True
+
+
+def _redis_forget(uid: int) -> bool:
+    """Delete the shared key. True when deleted or Redis is unset; False when it could not be."""
+    if not redis_client.configured():
+        return True
+    client = redis_client.get_client()
+    if client is None:  # breaker open: the key may still be there
+        return False
+    try:
+        client.delete(_redis_key(uid))
+    except Exception as exc:
+        redis_client.record_failure(exc)
+        return False
+    redis_client.record_success()
+    return True
+
+
+def _distrust_redis(uid: int) -> None:
+    with _lock:
+        _redis_skip_until[uid] = _monotonic() + CACHE_SECONDS_SHOPPER + 1.0
 
 
 def _store_configured() -> bool:
@@ -93,7 +204,14 @@ def get_valid_after(user_id: int, *, strict: bool) -> float | None:
     with _lock:
         hit = _cache.get(uid)
         gen = _generation
-    if hit is not None and now - hit[0] < ttl:
+    state, shared = _REDIS_OFF, None
+    if redis_client.configured():
+        if not _store_configured():
+            return None
+        state, shared = _redis_read(uid, ttl, now)
+        if state == _REDIS_HIT:
+            return shared
+    if state == _REDIS_OFF and hit is not None and now - hit[0] < ttl:
         return hit[1]
     if not _store_configured():
         return None
@@ -106,8 +224,11 @@ def get_valid_after(user_id: int, *, strict: bool) -> float | None:
             _log.warning("event=session_epoch_lookup_failed err=%s", type(exc).__name__)
             raise EpochLookupFailed() from None
     with _lock:
-        if gen == _generation:
+        fresh = gen == _generation
+        if fresh:
             _cache[uid] = (now, value)
+    if fresh and state == _REDIS_MISS:
+        _redis_store(uid, value, ttl, overwrite=False)
     return value
 
 
@@ -123,6 +244,7 @@ def clear_cache() -> None:
     """Tests only: start from an empty cache."""
     with _lock:
         _cache.clear()
+        _redis_skip_until.clear()
 
 
 def revoke_user_sessions(user_id: int, *, reason: str, now: datetime | None = None) -> float | None:
@@ -137,10 +259,14 @@ def revoke_user_sessions(user_id: int, *, reason: str, now: datetime | None = No
     uid = int(user_id)
     when = now or datetime.now(timezone.utc)
     forget_cached(uid)
+    redis_ok = _redis_forget(uid)
     if not _store_configured():
+        if not redis_ok:
+            _distrust_redis(uid)
         return None
     from backend.db.repositories import auth_phone_repo
 
+    stored = None
     try:
         stored = auth_phone_repo.set_sessions_valid_after(uid, now=when, reason=reason)
     except Exception as exc:
@@ -153,6 +279,15 @@ def revoke_user_sessions(user_id: int, *, reason: str, now: datetime | None = No
         return None
     finally:
         forget_cached(uid)
+        if stored is None:
+            redis_ok = _redis_forget(uid) and redis_ok
+        if not redis_ok:
+            _distrust_redis(uid)
     if stored.tzinfo is None:
         stored = stored.replace(tzinfo=timezone.utc)
-    return stored.timestamp()
+    value = stored.timestamp()
+    # Write the new answer over anything a racing read put back (a read only ever adds with NX).
+    if redis_ok and not _redis_store(uid, value, CACHE_SECONDS_STRICT, overwrite=True):
+        _redis_forget(uid)
+        _distrust_redis(uid)
+    return value

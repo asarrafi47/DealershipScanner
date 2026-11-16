@@ -80,6 +80,26 @@ def allow_request(key: str, *, max_events: int, window_seconds: float) -> bool:
     return allowed
 
 
+def redis_window_allows(key: str, *, max_events: int, window_seconds: float) -> bool | None:
+    """Redis-only sliding window, for speed bumps that sit in front of a stronger limit (card R2).
+
+    True or False when Redis answered; None when Redis is unset, skipped by its breaker or failed,
+    so the caller lets its own authority (Postgres) decide alone. No in-process window here: a
+    speed bump that also counted in memory would refuse more than the design asks when Redis is
+    unset, and unset must behave exactly as before.
+    """
+    client = redis_client.get_client()
+    if client is None:
+        return None
+    try:
+        allowed = _allow_request_redis(client, key, max_events=max_events, window_seconds=window_seconds)
+    except Exception as exc:
+        redis_client.record_failure(exc)
+        return None
+    redis_client.record_success()
+    return allowed
+
+
 def _redis_key(key: str) -> str:
     return redis_client.key("rl", hashlib.sha256(key.encode("utf-8")).hexdigest()[:40])
 

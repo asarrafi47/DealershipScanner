@@ -9,7 +9,9 @@ Order of checks for a send (DESIGN.md section 6): consent, Turnstile, number and
 reserve first (one transaction under the site-wide advisory lock: counts, pools, caps and the
 ``pending`` row with its estimated cost), then the line-type lookup, then the vendor call, then
 the row moves to its result. Postgres decides every cap, pool, lock and attempt: in-process
-memory and Redis never do, so a restart or a flush cannot reset a limit.
+memory and Redis never do, so a restart or a flush cannot reset a limit. With ``REDIS_URL`` set,
+short Redis speed bumps (card R2, ``burst.py``) run just before the Postgres counts: a bump
+answers like a cap, writes no row and costs nothing; unset or down, Postgres alone decides.
 
 Logs: logger ``auth_phone``, ``key=value`` lines, never a number, a code or vendor text; a
 6-character hash prefix only on ``blocked_*`` and ``check_locked`` events.
@@ -30,6 +32,7 @@ from typing import Any, Protocol
 
 import phonenumbers
 
+from backend.auth.phone import burst
 from backend.auth.phone import config as phone_config
 from backend.auth.phone import limits as lim
 from backend.auth.phone import numbers
@@ -364,6 +367,10 @@ class AuthPhoneService:
             self._record_refusal(row, "blocked_cap", now)
             _event("sends_paused", purpose=purpose)
             return StartOutcome(False, R_UNAVAILABLE, UNAVAILABLE)
+        if not burst.start_allowed(phone_hash=phone_hash, device_hash=device_hash, group_hash=row["ip_prefix_hash"]):
+            # Card R2: the same reply as a cap for every caller, no send row, nothing counted.
+            _event("blocked_burst", purpose=purpose, step="start", h=_h6(phone_hash))
+            return self._busy(purpose)
         if self._locked(phone_hash, device_hash, nonce, now):
             self._record_refusal(row, "blocked_limit", now)
             _event("blocked_limit", purpose=purpose, why="wrong_code_lock", h=_h6(phone_hash))
@@ -436,6 +443,7 @@ class AuthPhoneService:
             now=now,
             ttl_s=self.config.code_ttl_s,
         )
+        burst.start_cooldown(challenge.public_id, self.config.resend_wait_s)
         _event(
             "start", provider=self.provider.name, purpose=purpose,
             latency_ms=int((_time.monotonic() - started) * 1000),
@@ -474,7 +482,9 @@ class AuthPhoneService:
         ch = self.repo.fetch_challenge(public_id, session_nonce)
         if ch is None or ch.status != "open" or not ch.phone_e164:
             return StartOutcome(False, R_NO_CHALLENGE, START_AGAIN)
-        if ch.last_send_at > now - timedelta(seconds=self.config.resend_wait_s):
+        if ch.last_send_at > now - timedelta(seconds=self.config.resend_wait_s) or burst.cooldown_active(public_id):
+            # Card R2: the Redis cool-down is a second copy of the 60-second gate (it only adds
+            # refusals), with the same reply; the atomic Postgres gate below still decides.
             return StartOutcome(False, R_TOO_SOON, RESEND_TOO_SOON)
         ts = self.turnstile.verify(turnstile_token, ip)
         known = self._is_known(ch.phone_e164)
@@ -499,6 +509,9 @@ class AuthPhoneService:
         if self._sends_paused():
             self._record_refusal(row, "blocked_cap", now)
             return StartOutcome(False, R_UNAVAILABLE, UNAVAILABLE)
+        if not burst.start_allowed(phone_hash=ch.phone_hash, device_hash=device_hash, group_hash=row["ip_prefix_hash"]):
+            _event("blocked_burst", purpose=ch.purpose, step="resend", h=_h6(ch.phone_hash))
+            return self._busy(ch.purpose)
         if self._locked(ch.phone_hash, device_hash, session_nonce, now):
             self._record_refusal(row, "blocked_limit", now)
             _event("blocked_limit", purpose=ch.purpose, why="wrong_code_lock", h=_h6(ch.phone_hash))
@@ -534,15 +547,25 @@ class AuthPhoneService:
         self.repo.restart_code_life(
             public_id, session_nonce, now=now, ttl_s=self.config.code_ttl_s, provider_ref=result.provider_ref
         )
+        burst.start_cooldown(public_id, self.config.resend_wait_s)
         _event("start", provider=self.provider.name, purpose=ch.purpose, resend=1)
         self._alerts(limits, now)
         return self._sent_outcome(numbers.mask(ch.phone_e164), public_id, session_nonce)
 
     # ------------------------------------------------------------ check
 
-    def check(self, public_id: str, session_nonce: str, code: str | None, *, device_hash: str | None) -> CheckOutcome:
+    def check(
+        self,
+        public_id: str,
+        session_nonce: str,
+        code: str | None,
+        *,
+        device_hash: str | None,
+        ip: str | None = None,
+    ) -> CheckOutcome:
         """Check a code: the attempt is reserved before the vendor call; approved closes the
-        challenge exactly once. A code typed in another browser fails (the nonce does not match)."""
+        challenge exactly once. A code typed in another browser fails (the nonce does not match).
+        ``ip`` only feeds the Redis speed bump of card R2 (its /24 or /48 group)."""
         if not self.config.enabled:
             return CheckOutcome(False, R_DISABLED, UNAVAILABLE)
         now = self._now()
@@ -554,6 +577,14 @@ class AuthPhoneService:
             self.repo.finish_challenge(public_id, "expired", now=now, session_nonce=session_nonce)
             _event("check_expired", purpose=ch.purpose)
             return CheckOutcome(False, R_EXPIRED, START_AGAIN)
+        if burst.configured() and not burst.check_allowed(
+            phone_hash=ch.phone_hash,
+            device_hash=device_hash,
+            group_hash=numbers.hash_value("ip_prefix", _ip_prefix(ip)) if ip else None,
+        ):
+            # Card R2: no attempt reserved, nothing counted, the same words for every number.
+            _event("blocked_burst", purpose=ch.purpose, step="check", h=_h6(ch.phone_hash))
+            return CheckOutcome(False, R_BUSY, TRY_AGAIN)
         browser_key, phone_key = self._wrong_keys(ch.phone_hash, device_hash, session_nonce)
         if self._locked(ch.phone_hash, device_hash, session_nonce, now):
             _event("check_locked", purpose=ch.purpose, h=_h6(ch.phone_hash))
