@@ -50,6 +50,7 @@ SPECS: dict[str, Spec] = {
         Spec("chat.phone_per_day", "CHAT_PHONE_PER_DAY", 40),
         Spec("chat.device_per_day", "CHAT_DEVICE_PER_DAY", 60),
         Spec("chat.ip_per_day", "CHAT_IP_PER_DAY", 100),
+        Spec("chat.ip_net_per_day", "CHAT_IP_NET_PER_DAY", 150),
         Spec("chat.new_account_factor_pct", "CHAT_NEW_ACCOUNT_FACTOR_PCT", 50, max_value=100),
         Spec("chat.budget_usd_per_day_cents", "CHAT_BUDGET_CENTS_PER_DAY", 500, max_value=100_000_000,
              ceiling_env="CHAT_BUDGET_HARD_MAX_CENTS", ceiling_default=2000),

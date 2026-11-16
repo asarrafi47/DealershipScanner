@@ -8,11 +8,11 @@ import backend.routes.ai_chat_bp as bp
 
 
 @pytest.fixture
-def client(monkeypatch):
+def client(monkeypatch, chat_gate_open):
     app = flask.Flask(__name__)
     app.register_blueprint(bp.ai_chat_bp)
     # allow_request always passes in tests
-    monkeypatch.setattr(bp, "allow_request", lambda *a, **k: True)
+    monkeypatch.setattr(bp.chat_web, "_allow", lambda *a, **k: True)
     return app.test_client()
 
 
@@ -58,7 +58,7 @@ def test_general_path_without_car(client, monkeypatch):
 
 def test_rate_limited(client, monkeypatch):
     _allow_feature(monkeypatch)
-    monkeypatch.setattr(bp, "allow_request", lambda *a, **k: False)
+    monkeypatch.setattr(bp.chat_web, "_allow", lambda *a, **k: False)
     r = client.post("/api/ai/chat", json={"message": "hi"})
     assert r.status_code == 429
 

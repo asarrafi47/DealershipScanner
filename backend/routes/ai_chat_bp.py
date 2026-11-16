@@ -19,14 +19,10 @@ from flask import Blueprint, jsonify, request, session
 
 from backend.billing.catalog import FEATURE_AI_CAR_CHAT
 from backend.billing import access as paid_access
-from backend.utils.car_chat_policy import (
-    car_chat_rate_limits,
-    car_chat_listing_daily_limit,
-    car_chat_user_daily_limit,
-    web_research_playwright_allowed,
-)
+from backend.chat_budget import ChatDenied
+from backend.chat_budget import web as chat_web
+from backend.utils.car_chat_policy import web_research_playwright_allowed
 from backend.utils.client_ip import client_ip
-from backend.utils.ip_rate_limit import allow_request
 
 logger = logging.getLogger("ai_chat")
 
@@ -153,19 +149,11 @@ def api_ai_chat():
         status = 401 if err == paid_access.LOGIN_REQUIRED else 403
         return jsonify(paid_access.denied_json(FEATURE_AI_CAR_CHAT, err)), status
 
-    # Rate limits mirror the car-page chat: global, per-IP, and per-user/day.
-    ip = _client_ip()
-    rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()
-    if rpm_global > 0 and not allow_request("aichat:global", max_events=rpm_global, window_seconds=60.0):
+    # Per-minute burst guard (in memory, the one function every chat route uses). The daily
+    # allowance and the site budget are counted in Postgres by the chat gate below, shared with
+    # the car page and compare chat, and only once the request is known to need a model.
+    if not chat_web.burst_allowed(chat_web.BURST_SIDEBAR, _client_ip()):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
-    if not allow_request(f"aichat:ip:{ip}", max_events=rpm_ip, window_seconds=60.0):
-        return jsonify({"ok": False, "error": "rate_limited"}), 429
-    daily_limit = car_chat_user_daily_limit()
-    if daily_limit > 0:
-        uid = session.get("user_id")
-        daily_key = f"aichat:daily:user:{int(uid)}" if uid else f"aichat:daily:ip:{ip}"
-        if not allow_request(daily_key, max_events=daily_limit, window_seconds=86400.0):
-            return jsonify({"ok": False, "error": "user_chat_limit_reached"}), 429
 
     body = request.get_json(silent=True) or {}
     message = (body.get("message") or "").strip()
@@ -202,21 +190,6 @@ def api_ai_chat():
             except Exception as e:
                 logger.warning("ai chat car lookup failed (id=%s): %s", cid, str(e)[:150])
 
-    # Second tier for the car branch: per-(user, listing), same buckets as the
-    # car-page chat route (cars_pages) so this sidebar route is not the way
-    # around the per-listing limit — both tiers must pass.
-    if context_car is not None:
-        listing_limit = car_chat_listing_daily_limit()
-        if listing_limit > 0:
-            uid = session.get("user_id")
-            cid_key = context_car.get("id")
-            listing_key = (
-                f"chat:daily:user:{int(uid)}:car:{cid_key}" if uid
-                else f"chat:daily:ip:{ip}:car:{cid_key}"
-            )
-            if not allow_request(listing_key, max_events=listing_limit, window_seconds=86400.0):
-                return jsonify({"ok": False, "error": "listing_chat_limit_reached"}), 429
-
     try:
         if context_car is not None:
             from backend.intelligence.ai.agent import run_car_page_chat
@@ -224,7 +197,14 @@ def api_ai_chat():
             # Honor the same web-research policy as the car-page chat: when the row
             # doesn't answer it, look it up (the "go find out" fallback).
             allow_web = web_research_playwright_allowed(session.get("user_id"))
-            out = run_car_page_chat(context_car, message, allow_web_research=allow_web)
+            # Same per-car allowance as the car page (one shared set of buckets).
+            with chat_web.open_guard(
+                chat_web.KIND_SIDEBAR,
+                listing_id=context_car.get("id"),
+                weight=chat_web.message_weight(message, allow_web),
+            ) as chat_guard:
+                out = run_car_page_chat(context_car, message, allow_web_research=allow_web)
+                chat_web.give_back_if_unanswered(chat_guard, out)
             reply = (out.get("reply") or "").strip()
             if out.get("error") and not reply:
                 return _degraded(out.get("error_message"), out["error"], context="car",
@@ -255,50 +235,61 @@ def api_ai_chat():
         # otherwise answer conversationally, so questions are never mis-routed.
         from backend.utils.llm_client import complete
 
-        rewritten = complete(_REWRITE_PROMPT.format(msg=message[:500]),
-                             temperature=0.0, max_tokens=48)
-        if getattr(rewritten, "truncated", False):
-            # 48 tokens is a deliberately tight budget, so the rewrite is the
-            # likeliest call in the repo to be cut off mid-phrase — and a cut
-            # phrase can silently change the query's meaning ("under $30" for
-            # "under $30,000"). Search on what the user actually typed instead.
-            logger.info("search rewrite truncated (stop_reason=%s); using raw query",
-                        getattr(rewritten, "stop_reason", None))
-            rewrite = message
-        else:
-            rewrite = rewritten.strip().strip('"').strip()
-        if rewrite and not rewrite.upper().startswith("NONE"):
-            try:
-                rf = parse_natural_query(rewrite) or {}
-            except Exception:
-                rf = {}
-            if any(k in rf for k in _SEARCH_SIGNAL_KEYS):
-                from urllib.parse import quote
-
-                summary = _summarize_filters(rf)
-                reply = (f"Here are matching listings — {summary}." if summary
-                         else "Here are matching listings.")
-                return jsonify({
-                    "ok": True, "context": "search", "reply": reply,
-                    "search": {"url": "/listings?q=" + quote(rewrite), "summary": summary,
-                               "filters": rf, "q": rewrite},
-                })
-
-        # Same plain-text treatment as the car-page answer: chat bubbles are text
-        # nodes, so a model that reaches for **bold** or `backticks` would show
-        # the punctuation. Only the car path stripped it before.
-        from backend.intelligence.ai.agent import _guard_prompt_disclosure, _plain_chat_reply
-
-        reply = _guard_prompt_disclosure(
-            _plain_chat_reply(
-                complete(message, system=_GENERAL_SYSTEM, temperature=0.4, max_tokens=300)
-            ),
-            _GENERAL_SYSTEM,
-            context="ai_chat_general",
-        )
-        return jsonify({"ok": True, "reply": reply, "context": "general"})
+        # From here the model is used: the rewrite and the answer are ONE message under one guard.
+        with chat_web.open_guard(chat_web.KIND_SIDEBAR):
+            return _rewrite_or_answer(message, complete)
+    except ChatDenied as denied:
+        return chat_web.denial_response(denied.denial)
     except Exception as e:
         logger.warning("ai chat failed: %s", str(e)[:200], exc_info=True)
         from backend.intelligence.ai.agent import unavailable_message
 
         return _degraded(unavailable_message(e), "assistant_unavailable", context="general")
+
+
+def _rewrite_or_answer(message: str, complete):
+    """No car in view and the local parser found no search: rewrite into a search, else answer."""
+    from backend.utils.query_parser import parse_natural_query
+
+    rewritten = complete(_REWRITE_PROMPT.format(msg=message[:500]),
+                         temperature=0.0, max_tokens=48)
+    if getattr(rewritten, "truncated", False):
+        # 48 tokens is a deliberately tight budget, so the rewrite is the
+        # likeliest call in the repo to be cut off mid-phrase — and a cut
+        # phrase can silently change the query's meaning ("under $30" for
+        # "under $30,000"). Search on what the user actually typed instead.
+        logger.info("search rewrite truncated (stop_reason=%s); using raw query",
+                    getattr(rewritten, "stop_reason", None))
+        rewrite = message
+    else:
+        rewrite = rewritten.strip().strip('"').strip()
+    if rewrite and not rewrite.upper().startswith("NONE"):
+        try:
+            rf = parse_natural_query(rewrite) or {}
+        except Exception:
+            rf = {}
+        if any(k in rf for k in _SEARCH_SIGNAL_KEYS):
+            from urllib.parse import quote
+
+            summary = _summarize_filters(rf)
+            reply = (f"Here are matching listings — {summary}." if summary
+                     else "Here are matching listings.")
+            return jsonify({
+                "ok": True, "context": "search", "reply": reply,
+                "search": {"url": "/listings?q=" + quote(rewrite), "summary": summary,
+                           "filters": rf, "q": rewrite},
+            })
+
+    # Same plain-text treatment as the car-page answer: chat bubbles are text
+    # nodes, so a model that reaches for **bold** or `backticks` would show
+    # the punctuation. Only the car path stripped it before.
+    from backend.intelligence.ai.agent import _guard_prompt_disclosure, _plain_chat_reply
+
+    reply = _guard_prompt_disclosure(
+        _plain_chat_reply(
+            complete(message, system=_GENERAL_SYSTEM, temperature=0.4, max_tokens=300)
+        ),
+        _GENERAL_SYSTEM,
+        context="ai_chat_general",
+    )
+    return jsonify({"ok": True, "reply": reply, "context": "general"})

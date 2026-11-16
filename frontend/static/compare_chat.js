@@ -84,8 +84,9 @@
                         appendBubble("Premium subscription required. Open /premium to unlock compare chat.", "error");
                     } else if (data.error === "login_required") {
                         appendBubble("Sign in to use compare chat.", "error");
-                    } else if (data.error === "user_chat_limit_reached") {
-                        appendBubble("Daily chat limit reached. Try again tomorrow.", "error");
+                    } else if (data.message) {
+                        // Chat limits (card C3): the server sends the plain sentence with the reset time.
+                        appendBubble(data.message, "error");
                     } else {
                         appendBubble(data.error || "Request failed (" + (wrapped.status || "?") + ").", "error");
                     }
