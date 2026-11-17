@@ -4,9 +4,12 @@
 session and turns them into those plain values:
 
 * :func:`burst_allowed` is the ONE per-minute burst guard used by car chat, compare chat,
-  sidebar chat and narration. It is in memory today (``backend.utils.ip_rate_limit``); card R3
-  swaps its backend here, in one place. The daily money buckets never live here: they are in
-  Postgres, through :func:`open_guard`.
+  sidebar chat and narration. Card R3: its one backend call, :func:`_allow`, goes through the
+  R1 limiter (``backend.utils.ip_rate_limit``): the in-process window always runs first, and
+  with ``REDIS_URL`` set a shared Redis window (``sc:rl:<sha256>``, never an address) refuses
+  on top, so every worker sees one count. Redis unset, down or skipped by its breaker: the
+  in-process guard alone, exactly as before. The daily money buckets never live here: they are
+  in Postgres, through :func:`open_guard`, so a Redis flush cannot give anyone more chat.
 * :func:`open_guard` builds ``chat_budget.guard(...)`` for the signed-in account (or none),
   the device cookie hash, the real client address hash and its /24 (IPv4) or /48 (IPv6)
   network hash. The phone hash joins in card C4.
@@ -38,7 +41,7 @@ KIND_NARRATE = "narrate"
 KIND_STICKER = "sticker"
 STICKER_WEIGHT = 3
 
-# burst scopes (per-minute, in memory)
+# burst scopes (per-minute; in memory, plus Redis when REDIS_URL is set)
 BURST_CAR = "car"
 BURST_COMPARE = "compare"
 BURST_SIDEBAR = "sidebar"
@@ -60,7 +63,10 @@ def _narrate_global_rpm() -> int:
 
 
 def _allow(key: str, max_events: int) -> bool:
-    """The single backend call of the burst guard (in memory today; card R3 moves it to Redis)."""
+    """The single backend call of the burst guard (card R3: the R1 backend, memory then Redis).
+
+    Never raises for Redis trouble: ``allow_request`` keeps the in-process answer when Redis fails.
+    """
     from backend.utils.ip_rate_limit import allow_request
 
     return allow_request(key, max_events=max_events, window_seconds=60.0)
