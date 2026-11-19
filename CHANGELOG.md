@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+## [1.5.40] - 2026-11-19
+
+Release 1.5.40 brings dev (1.5.12 to 1.5.39) together with main's speed hotfix 1.5.11. In plain words:
+
+- **Merge of main's hotfix 1.5.11.** Main's own 1.5.11 (the speed hotfix production serves) is merged in. Its code was already on dev, so only CHANGELOG.md and VERSION change; its notes are kept below as `[1.5.11-hotfix]`.
+- **Free site and billing.** With billing off (the default) shoppers see no prices, plans or upgrade links, and sign-in no longer sends anyone to /premium. Stripe success pages need a real active subscription.
+- **Chat limits.** Every chat message (car chat, compare, sidebar assistant, narration) counts against daily limits and a dollar budget kept in Postgres (migration V030). A nightly job prints yesterday's totals and emails the owner on alerts.
+- **Session lifetimes and sign out everywhere.** Sessions end after a set time per role, and an admin can sign an account out everywhere (suspend also takes its cars off the site).
+- **Phone login foundation (flag off).** Phone number login with Twilio Verify codes, Turnstile checks and send caps is built but stays off while `AUTH_PHONE_LOGIN_ENABLED` is unset. Its tables are migration V031.
+- **Seller doors.** `/inventory` is for dealership and admin accounts only; marketplace posting stays off by default. The scanner never deletes, moves or overwrites a user's own car.
+- **Redis rate limits.** With `REDIS_URL` set, rate limits, chat bursts, phone speed bumps and sign-out checks are shared across workers. With it unset nothing changes. Postgres stays the only authority.
+- **Faster signed-in home.** /home loads its lists in a few reads instead of 8 connections; recommendations rebuild in the background; card and aggregate refreshes never block a visitor.
+- **Data quality.** Audit fixes (gearbox, cylinders, colours, trims, prices, VINs), rooftop evidence so sister-lot cars stay with the right store (migration V028), and the new-arrival window (migration V027).
+- **Admin users to Postgres.** Admin accounts can live in Postgres (migration V029, behind `DEV_USERS_DB_BACKEND=pg`); old SQLite stores and `RATE_LIMIT_SQLITE_PATH` are removed.
+- **Scan-loop tooling.** The cloud-first scan loop parts (config, scrubber, bundle, gates, queue), the fleet run window, and cloud session setup scripts.
+- **Image and CI.** Smaller web image (CPU-only torch, baked and pinned embedding model, split requirements), pip-audit in CI, and the `pytest-pg` job replaces `pytest-integration`.
+- **Before deploying (owner):** migrations V027 to V031 are new against production; run the card builder after deploy (`CARD_REV` changed); update any rule that still requires the old `pytest-integration` check.
+
 ## [1.5.39] - 2026-11-16
 
 - R2, R3, R4 (Redis; `REDIS_URL` unset changes nothing). R2: the phone service (`backend/auth/phone/burst.py`) adds one-minute Redis speed bumps in front of the Postgres counts: on start and resend 3 per number, 6 per device, 12 per /24 or /48 group; on code check 10, 10 and 30; plus a 60-second resend cool-down per challenge. A bump answers exactly like a cap (the same busy sentence for every number; "Please try again in a minute." on check, which reserves no attempt; the usual "wait a minute" on resend), writes no send row, costs 0 and counts against no Postgres limit. R3: the chat burst guard's one function (`chat_budget.web._allow`) is documented and tested on the R1 backend (memory first, shared Redis window on top; Redis down means memory alone); the daily chat buckets stay in Postgres. R4: `get_valid_after` reads Redis first (`sc:sva:<user id>`, 5 s for admin and dealer, 30 s for shoppers), then the in-process cache (only while Redis is unset or failing), then Postgres; `revoke_user_sessions` deletes the key before the write and sets the new value after it, so a revoked cookie is refused at once in every process; a Redis error is a cache miss, a Postgres error still fails closed for admin and dealer. Every key starts with `sc:`, has a TTL and holds only hashes or numbers. Postgres stays the only authority for caps, pools, locks, attempts and spend. Review fixes: the check bump counts only well-formed codes about to reserve an attempt, device and group windows are checked before the number's; an R4 read stamps its entry with the time before the Postgres read, a slow read is not shared, and the writer's key lives 31 s. Tests use a fake Redis (`backend/tests/fake_redis.py`). No migration.
