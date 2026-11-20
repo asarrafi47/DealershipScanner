@@ -1,31 +1,24 @@
-{# The stylesheet partials that style.css used to pull in with @import.
+{# The site stylesheet: ONE render-blocking request.
 
-   @import serialises stylesheet discovery: the browser cannot even learn a partial
-   exists until style.css has been fetched AND parsed, and every one of these is
-   render-blocking. Measured on the car page with a warm HTTP cache at 12 Mbit/s /
-   40ms RTT: style.css occupied 469-511ms, then all 14 partials ran 511-697ms
-   (PerformanceResourceTiming initiatorType "css"), and first contentful paint
-   landed at 712ms. The document itself had arrived in 1ms.
+   History. style.css pulled 14 partials in with @import, which serialised discovery
+   (style.css fetched AND parsed before any partial could start; measured on the car
+   page at 12 Mbit/s / 40ms RTT: style.css 469-511ms, partials 511-697ms, FCP 712ms).
+   They then became 15 sibling <link> tags the preload scanner starts with the
+   document -- still 15 render-blocking requests, 6 at a time over HTTP/1.1, each
+   compressed on its own. They are now concatenated into css/site.bundle.css
+   (backend/web/css_bundle.py; built by scripts/build_static_compressed.py in the
+   image, rebuilt on demand in dev), versioned by the same ?v= stamp.
 
-   Emitting them as sibling <link> tags lets the preload scanner start all of them
-   with the document instead of a round trip later.
-
-   ORDER IS THE CASCADE. This matches style.css's @import order exactly, which was
-   itself the order the rules appeared in before the split. Do NOT reorder these.
-   14-vdp-uniform.css stays last on purpose -- it normalises the car detail page's
-   card surfaces and heading scale over the per-section rules above it. #}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/00-base.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/01-nav.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/02-listings.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/03-car-page.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/04-dashboard.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/05-car-tools.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/06-dev.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/07-dealer-admin.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/08-marketing.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/09-components.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/10-pages.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/11-overrides.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/12-viewers.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/13-landing-auth.css') }}?v={{ static_cache_ver }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/14-vdp-uniform.css') }}?v={{ static_cache_ver }}">
+   ORDER IS THE CASCADE. The part order lives in css_bundle.CSS_BUNDLE_PARTS and is
+   the order style.css's @import chain had, which was the order of the rules before
+   the split. Do NOT reorder. 14-vdp-uniform.css stays last on purpose -- it
+   normalises the car detail page's card surfaces and heading scale over the
+   per-section rules above it. The fallback below (the bundle could not be written)
+   links the same parts in the same order. #}
+{% if css_bundle_ready %}
+<link rel="stylesheet" href="{{ url_for('static', filename=css_bundle_path) }}?v={{ static_cache_ver }}">
+{% else %}
+{% for part in css_bundle_parts %}
+<link rel="stylesheet" href="{{ url_for('static', filename=part) }}?v={{ static_cache_ver }}">
+{% endfor %}
+{% endif %}

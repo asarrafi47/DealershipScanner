@@ -290,8 +290,9 @@ def test_every_style_url_goes_through_css_url() -> None:
             for expr in used:
                 if not _CSS_URL_EXPR.search(expr):
                     offenders.append(f"{rel} ({expr.strip()} lacks a final | css_url)")
-    # home x4, landing, compare, inventory/dashboard, inventory/listings x3.
-    assert total >= 10, f"scan found only {total} style url() sites; the regex is broken"
+    # home x4, compare, inventory/dashboard, inventory/listings x3. (The landing's
+    # featured tiles became <img src="{{ img | css_url }}" loading=lazy> on 2026-11-20.)
+    assert total >= 9, f"scan found only {total} style url() sites; the regex is broken"
     assert not offenders, "style url() must use the css_url filter: " + ", ".join(offenders)
 
 
@@ -441,3 +442,11 @@ def test_js_helpers_reject_non_http() -> None:
     bad = ["javascript:alert(1)", "data:image/png;base64,AAAA", "vbscript:msgbox(1)", ""]
     assert _compare_js(bad) == ["", "", "", ""]
     assert _dev_js(bad) == [CSS_URL_PLACEHOLDER] * 4
+
+
+def test_landing_featured_photos_are_lazy_imgs_through_css_url() -> None:
+    html = (TEMPLATES / "landing.html").read_text(encoding="utf-8")
+    tag = re.search(r'<img class="lps-car-img"[^>]*>', html).group(0)
+    assert 'src="{{ img | css_url }}"' in tag
+    for attr in ('loading="lazy"', 'decoding="async"', 'width="400"', 'height="150"', 'alt=""'):
+        assert attr in tag

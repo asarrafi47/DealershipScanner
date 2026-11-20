@@ -10,7 +10,8 @@
 
     <div class="nav-links nav-links--site">
 
-        <a href="{{ url_for('listings') }}" class="nav-mkt-link{% if nav_active == 'listings' %} nav-mkt-link--active{% endif %}"
+        {# data-ds-prerender: speculation-rules.json prerenders this (bare /listings has no side effects). #}
+        <a href="{{ url_for('listings') }}" class="nav-mkt-link{% if nav_active == 'listings' %} nav-mkt-link--active{% endif %}" data-ds-prerender
 
             {% if nav_active == 'listings' %}aria-current="page"{% endif %}>
 

@@ -1,9 +1,14 @@
 {# Shared head hints for faster first paint and navigation. #}
 {# Inter is self-hosted: @font-face in css/00-base.css, file under static/fonts/.
-   Fonts are always fetched CORS-anonymous, so the preload needs `crossorigin` to
-   match the request the stylesheet makes; without it the browser fetches twice. #}
-<link rel="preload" href="{{ url_for('static', filename='fonts/inter-latin-v20.woff2') }}" as="font" type="font/woff2" crossorigin>
+   It is NOT preloaded any more (2026-11-20). The preload made the 48 KB woff2 race
+   the one render-blocking stylesheet (css/site.bundle.css) for the same bandwidth,
+   so first paint waited on bytes it does not need: text paints in "Inter Fallback"
+   (Arial resized to Inter's metrics, 00-base.css) and Inter swaps in without moving
+   anything. Measured on slow 4G + 4x CPU: landing FCP ~1000 -> ~750 ms, car page
+   ~1420 -> ~1130 ms; fetchpriority="low" on the preload did not help (the local
+   HTTP/1.1 throttle has no priorities). If it ever comes back it needs `crossorigin`
+   (fonts are fetched CORS-anonymous; without it the browser fetches twice). #}
 {# style.css is no longer requested: its @import chain was replaced by the sibling
-   <link> tags in _head_css.html, which the preload scanner picks up directly. A
+   <link> tags of _head_css.html, now the single css/site.bundle.css. A
    preload here would fetch a file nothing loads. #}
 <script src="{{ url_for('static', filename='nav_perf.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

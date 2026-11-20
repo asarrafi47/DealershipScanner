@@ -18,7 +18,11 @@ Run it after any static edit you want served compressed:
     .venv/bin/python scripts/build_static_compressed.py            # build
     .venv/bin/python scripts/build_static_compressed.py --check    # exit 1 if stale
 
-Dockerfile.web runs it right after ``COPY . .`` so the image ships the siblings.
+It first (re)writes ``css/site.bundle.css``, the global stylesheets concatenated in
+cascade order (``backend/web/css_bundle.py``), so the bundle gets siblings too.
+
+Dockerfile.web runs it right after ``COPY . .`` so the image ships the bundle and the
+siblings.
 The ``.gz``/``.br`` files are git-ignored (frontend/static/**/*.gz, *.br).
 """
 
@@ -36,6 +40,11 @@ except ImportError:  # pragma: no cover - optional
     brotli = None
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from backend.web.css_bundle import CSS_BUNDLE_PARTS, CSS_BUNDLE_PATH, ensure_bundle  # noqa: E402
+
 STATIC_ROOT = REPO_ROOT / "frontend" / "static"
 SOURCE_SUFFIXES = (".js", ".css")
 SIBLING_SUFFIXES = (".gz", ".br")
@@ -64,6 +73,11 @@ def _write(sibling: Path, data: bytes, source_mtime: float) -> None:
 def build(root: Path = STATIC_ROOT, check: bool = False, quiet: bool = False) -> int:
     """Return the number of siblings that were (or, with ``check``, would be) written."""
     changed = 0
+    # The concatenated site stylesheet is a source like any other: write it first
+    # (backend/web/css_bundle.py) so it gets its siblings below. --check builds it
+    # too: it is derived, and a stale one would only be rebuilt by the web process.
+    if all((root / rel).is_file() for rel in CSS_BUNDLE_PARTS) and not ensure_bundle(root):
+        print(f"could not write {CSS_BUNDLE_PATH}", file=sys.stderr)
     for source in _sources(root):
         raw = None
         mtime = source.stat().st_mtime

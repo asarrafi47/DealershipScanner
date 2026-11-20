@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- **Faster first paint and instant page changes.** The 15 global stylesheets are now one bundled, versioned and precompressed `css/site.bundle.css` built by `scripts/build_static_compressed.py` (Dockerfile.web), rebuilt on demand in dev, with the same cascade order. Inter gets a metric-matched Arial fallback and is no longer preloaded. The landing headline and the dialogue section paint at once (LCP equals FCP), and featured car photos are lazy `<img>`. Speculation rules come from a `Speculation-Rules` header pointing at `/static/speculation-rules.json`, with no inline script and no CSP change. They prefetch only side-effect-free pages (`/`, bare `/listings`, `/car/<id>[?zip_code=]`, `/find-dealers`) and prerender only bare `/listings` from links marked `data-ds-prerender`. They are off on Save-Data or 2g. `nav_perf.js` uses `fetch()` only where rules are unsupported and no longer fetches on click. Car pages treat `Sec-Purpose: prefetch` as not a view. This adds cross-document view transitions (off under reduced motion) and a progress bar on every same-origin navigation, and the listings poll pauses while the page is in the back/forward cache.
+
+## [1.5.41] - 2026-11-20
+
 ## [1.5.40] - 2026-11-19
 
 Release 1.5.40 brings dev (1.5.12 to 1.5.39) together with main's speed hotfix 1.5.11. In plain words:

@@ -1456,6 +1456,7 @@
   "after_request_funcs": {
    "None": [
     "_static_cache_headers",
+    "_speculation_rules_header",
     "_gzip_large_json",
     "_csp_headers",
     "_device_cookie_after"

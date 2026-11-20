@@ -18,6 +18,7 @@ from backend.billing import access as paid_access
 from backend.utils.car_serialize import format_display_value
 from backend.utils.csrf import ensure_csrf_token
 from backend.utils.runtime_env import is_production_env
+from backend.web.css_bundle import CSS_BUNDLE_PARTS, CSS_BUNDLE_PATH, css_bundle_ready
 from backend.web.static import static_cache_ver
 
 
@@ -79,6 +80,9 @@ def inject_csrf_and_flags():
         and is_dealer_portal_role(session.get("user_role")),
         "show_store_ops_nav": store_ops_nav,
         "static_cache_ver": static_ver,
+        "css_bundle_ready": css_bundle_ready(),
+        "css_bundle_path": CSS_BUNDLE_PATH,
+        "css_bundle_parts": CSS_BUNDLE_PARTS,
         "personal_home_url": (
             url_for("app_home") if session.get("user_id") else url_for("home")
         ),
