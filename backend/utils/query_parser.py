@@ -6,8 +6,11 @@ only; no Claude or other LLM calls. Premium chat/compare features use separate m
 """
 from __future__ import annotations
 
+import logging
 import os
 import re
+import threading
+import time
 from functools import lru_cache
 from typing import Any
 
@@ -18,6 +21,8 @@ from backend.utils.interior_color_buckets import (
     parse_stored_buckets,
     sort_paint_family_ids,
 )
+
+_log = logging.getLogger(__name__)
 
 # Spoken / slang -> canonical token before make/model fuzzy match
 MAKE_SYNONYMS: dict[str, str] = {
@@ -95,10 +100,71 @@ def _extract_best_token(tokens: list[str], choices: list[str], threshold: int = 
     return None
 
 
+# Postgres has no file to stat, so the SQLite key below never changed there and the
+# vocabulary (makes, models, colours, trims, packages) was frozen at the first search
+# after a process start until the next deploy. On Postgres the key is a generation
+# number instead: after PARSER_VOCAB_TTL_S (default 6 h; 0 = never refresh) one
+# background thread builds the next generation into the lru caches and only then
+# switches the key, so no request waits for a rebuild (stale-while-revalidate).
+_PARSER_VOCAB_TTL_DEFAULT_S = 6 * 3600.0
+_pg_vocab_lock = threading.Lock()
+_pg_vocab_generation = 0
+_pg_vocab_started_at: float | None = None
+_pg_vocab_refresh_thread: threading.Thread | None = None
+
+
+def _parser_vocab_ttl_s() -> float:
+    raw = (os.environ.get("PARSER_VOCAB_TTL_S") or "").strip()
+    try:
+        return max(0.0, float(raw)) if raw else _PARSER_VOCAB_TTL_DEFAULT_S
+    except ValueError:
+        return _PARSER_VOCAB_TTL_DEFAULT_S
+
+
+def _refresh_pg_vocabulary(next_generation: int) -> None:
+    global _pg_vocab_generation, _pg_vocab_started_at
+    key = f"pg:{next_generation}"
+    try:
+        _load_inventory_keywords(key)
+        _load_package_names(key)
+    except Exception:
+        _log.warning("query parser vocabulary refresh failed; keeping the current one", exc_info=True)
+        with _pg_vocab_lock:
+            _pg_vocab_started_at = time.monotonic()  # retry after another TTL
+        return
+    with _pg_vocab_lock:
+        _pg_vocab_generation = next_generation
+        _pg_vocab_started_at = time.monotonic()
+
+
+def _pg_vocab_cache_key() -> str:
+    global _pg_vocab_started_at, _pg_vocab_refresh_thread
+    now = time.monotonic()
+    with _pg_vocab_lock:
+        gen = _pg_vocab_generation
+        if _pg_vocab_started_at is None:
+            _pg_vocab_started_at = now
+        ttl = _parser_vocab_ttl_s()
+        stale = ttl > 0 and now - _pg_vocab_started_at >= ttl
+        busy = _pg_vocab_refresh_thread is not None and _pg_vocab_refresh_thread.is_alive()
+        if stale and not busy:
+            _pg_vocab_refresh_thread = threading.Thread(
+                target=_refresh_pg_vocabulary,
+                args=(gen + 1,),
+                name="query-parser-vocab-refresh",
+                daemon=True,
+            )
+            _pg_vocab_refresh_thread.start()
+    return f"pg:{gen}"
+
+
 def _inventory_db_cache_key() -> str:
     """Cache token so parser reloads when inventory DB path or file changes."""
     from backend.db import inventory_db as inv_db
+    from backend.db.inventory_pg import is_inventory_postgres
 
+    if is_inventory_postgres():
+        return _pg_vocab_cache_key()
     path = os.environ.get("INVENTORY_DB_PATH") or getattr(inv_db, "DB_PATH", "") or ""
     try:
         st = os.stat(path)
@@ -109,8 +175,42 @@ def _inventory_db_cache_key() -> str:
 
 def clear_query_parser_caches() -> None:
     """Drop cached inventory keywords (tests, DB path changes)."""
+    global _pg_vocab_generation, _pg_vocab_started_at
     _load_inventory_keywords.cache_clear()
     _load_package_names.cache_clear()
+    with _pg_vocab_lock:
+        _pg_vocab_generation = 0
+        _pg_vocab_started_at = None
+
+
+def _paint_family_ids(rows: Any) -> tuple[list[str], list[str]]:
+    """Exterior / interior paint-family ids for ``(exterior, interior, interior_buckets)`` rows.
+
+    Interior prefers the stored buckets and infers from the raw colour only when none
+    are stored. Each raw string is inferred once (the regex inference is the cost).
+    """
+    ext_ids: set[str] = set()
+    int_ids: set[str] = set()
+    memo: dict[Any, list[str]] = {}
+
+    def _buckets(raw: Any) -> list[str]:
+        try:
+            hit = memo.get(raw)
+        except TypeError:
+            return infer_paint_color_buckets(raw, None)
+        if hit is None:
+            hit = memo[raw] = infer_paint_color_buckets(raw, None)
+        return hit
+
+    for ext_raw, int_raw, int_bucks in rows:
+        if not is_effectively_empty(ext_raw):
+            ext_ids.update(_buckets(ext_raw))
+        ib = parse_stored_buckets(int_bucks)
+        if ib:
+            int_ids.update(ib)
+        elif not is_effectively_empty(int_raw):
+            int_ids.update(_buckets(int_raw))
+    return sort_paint_family_ids(ext_ids), sort_paint_family_ids(int_ids)
 
 
 @lru_cache(maxsize=4)
@@ -131,25 +231,17 @@ def _load_inventory_keywords(cache_key: str) -> tuple[tuple[tuple[str, str], ...
         conn.close()
         return (), (), (), (), ()
     pairs = [(r[0], r[1]) for r in cur.fetchall()]
+    # DISTINCT colour triples, not every active row: the result is a set union, so the
+    # ~1k distinct triples give the same ids as the ~200k rows. Inferring per row used
+    # to cost 23-55 s of GIL-bound regex on the first search after a process start.
     cur.execute(
         """
-        SELECT exterior_color, interior_color, interior_color_buckets
+        SELECT DISTINCT exterior_color, interior_color, interior_color_buckets
         FROM cars
         WHERE (COALESCE(listing_active, 1) = 1)
         """
     )
-    ext_ids: set[str] = set()
-    int_ids: set[str] = set()
-    for ext_raw, int_raw, int_bucks in cur.fetchall():
-        if not is_effectively_empty(ext_raw):
-            ext_ids.update(infer_paint_color_buckets(ext_raw, None))
-        ib = parse_stored_buckets(int_bucks)
-        if ib:
-            int_ids.update(ib)
-        elif not is_effectively_empty(int_raw):
-            int_ids.update(infer_paint_color_buckets(int_raw, None))
-    ext_colors = sort_paint_family_ids(ext_ids)
-    int_colors = sort_paint_family_ids(int_ids)
+    ext_colors, int_colors = _paint_family_ids(cur.fetchall())
     cur.execute(
         """
         SELECT DISTINCT body_style FROM cars
@@ -187,7 +279,10 @@ def _load_package_names(cache_key: str) -> tuple[str, ...]:
     )
     seen: set[str] = set()
     names: list[str] = []
-    for (pkg_raw,) in cur.fetchall():
+    # Many rows share one packages JSON (204k active rows, ~7k distinct locally): parse
+    # each distinct string once, in first-occurrence order, so the first-seen spelling
+    # of every name is the one the per-row loop kept.
+    for pkg_raw in dict.fromkeys(r[0] for r in cur.fetchall()):
         try:
             pj = json.loads(pkg_raw)
         except Exception:
@@ -1174,6 +1269,20 @@ def _extract_years(text: str) -> tuple[int | None, int | None]:
     return y, y
 
 
+# Held while a request (or the post_fork background warm-up) loads the vocabulary, so the
+# first search after a start waits for the load already in flight instead of running a
+# second one beside it. The TTL refresh thread does not take it: it builds the next
+# generation under a key no request uses yet.
+_vocab_load_lock = threading.Lock()
+
+
+def parser_vocabulary() -> tuple[tuple, tuple[str, ...]]:
+    """``(_load_inventory_keywords(key), _load_package_names(key))`` for the current key."""
+    key = _inventory_db_cache_key()
+    with _vocab_load_lock:
+        return _load_inventory_keywords(key), _load_package_names(key)
+
+
 def parse_natural_query(query_text: str) -> dict[str, Any]:
     """
     Parse a free-text vehicle query into structured filters.
@@ -1183,8 +1292,7 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
     if not raw:
         return {}
 
-    pairs, ext_colors, int_colors, body_styles, trims = _load_inventory_keywords(_inventory_db_cache_key())
-    package_names = _load_package_names(_inventory_db_cache_key())
+    (pairs, ext_colors, int_colors, body_styles, trims), package_names = parser_vocabulary()
     makes = sorted({p[0] for p in pairs}, key=len, reverse=True)
     models_by_make: dict[str, list[str]] = {}
     for mk, md in pairs:

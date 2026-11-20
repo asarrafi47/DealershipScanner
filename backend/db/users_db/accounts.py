@@ -28,7 +28,8 @@ def get_org(org_id: int) -> dict | None:
     if oid <= 0:
         return None
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
+    # No sqlite3.Row: under SQLCipher the cursor is a sqlcipher3 cursor, which
+    # sqlite3.Row rejects with TypeError (found 2026-11-20). Build the dict by hand.
     cursor = conn.cursor()
     cursor.execute(
         """
@@ -39,8 +40,9 @@ def get_org(org_id: int) -> dict | None:
         (oid,),
     )
     row = cursor.fetchone()
+    names = [d[0] for d in cursor.description or ()]
     conn.close()
-    return dict(row) if row else None
+    return dict(zip(names, row)) if row else None
 
 
 def update_org_stripe_subscription(

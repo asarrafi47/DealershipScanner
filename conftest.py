@@ -262,6 +262,16 @@ def _clear_query_parser_caches() -> None:
     clear_rate_limit_state()
 
 
+@pytest.fixture(autouse=True)
+def _reset_users_conn_pool() -> None:
+    """Pooled SQLCipher users.db handles never outlive the test that opened them (the pool
+    also re-checks path, key and inode on every checkout; this keeps tmp files closable)."""
+    yield
+    from backend.db.users_sqlite import reset_users_conn_pool
+
+    reset_users_conn_pool()
+
+
 # --- Recipe caches: one tmp dir per test --------------------------------------------
 #
 # ``backend.scanner.recipes.RECIPES_DIR`` and ``backend.scanner.vdp.vdp_recipes.
