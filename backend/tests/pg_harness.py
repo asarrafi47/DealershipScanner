@@ -405,6 +405,7 @@ _FLAG_RESETS: tuple[tuple[str, str, str], ...] = (
 # helper functions below. The sweep fails on anything not in _FLAG_RESETS and
 # not here, so a new "table ready" flag cannot slip through.
 _SWEEP_REVIEWED: dict[str, str] = {
+    "backend.web.css_bundle._memo": "whether the static CSS bundle file is current; files on disk, no DB",
     "backend.listings.dealer_locator._GOOGLE_CACHE_MAX": "constant (audit F04, SEC-A-008)",
     "backend.listings.dealer_locator._GOOGLE_CACHE_TTL_SECONDS": "constant",
     "backend.listings.dealer_locator._google_cache": "Google Places responses, no DB",
