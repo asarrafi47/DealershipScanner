@@ -543,6 +543,9 @@ backend/tests/test_listings_indexes.py  import_sqlite3  1
 backend/tests/test_listings_indexes.py  pragma  1
 backend/tests/test_listings_indexes.py  sqlite3_attr  1
 backend/tests/test_listings_indexes.py  sqlite_master  1
+backend/tests/test_listings_payload.py  import_sqlite3  1
+backend/tests/test_listings_payload.py  qmark_placeholder  1
+backend/tests/test_listings_payload.py  sqlite3_attr  1
 backend/tests/test_listings_perf.py  import_sqlite3  1
 backend/tests/test_listings_perf.py  sqlite3_attr  1
 backend/tests/test_listings_scoped_grid.py  import_sqlite3  1

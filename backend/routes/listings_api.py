@@ -15,7 +15,7 @@ import threading
 from collections import OrderedDict
 from typing import Any, NamedTuple
 
-from flask import jsonify, make_response, redirect, render_template, request, session, url_for
+from flask import current_app, jsonify, make_response, redirect, render_template, request, session, url_for
 
 from backend.billing.catalog import FEATURE_MARKET_INTEL, FEATURE_SAVED_SEARCHES
 from backend.db.inventory_db import (
@@ -140,6 +140,46 @@ def api_listings_filter_options():
     )
 
 
+def api_listings_facets():
+    """Cascade table + long facet lists for the listings page (no per-user data).
+
+    ``?v=`` is the payload digest the page links (``backend/listings/facets_payload.py``):
+    a matching request is ``immutable`` for a year in the browser and any shared cache;
+    any other ``v`` (a page rendered before the facets changed) gets the current body
+    with a short shared lifetime. Never touches the session, so no cookie is set."""
+    from backend.listings.facets_payload import get_facets_payload
+
+    payload = get_facets_payload()
+    if (request.args.get("v") or "") == payload.version:
+        cache_control = "public, max-age=31536000, immutable"
+    else:
+        cache_control = "public, max-age=60"
+    inm = (request.headers.get("If-None-Match") or "").strip()
+    if inm and inm in (payload.etag, "W/" + payload.etag):
+        resp = make_response("", 304)
+    elif "gzip" in (request.headers.get("Accept-Encoding") or "").lower():
+        resp = make_response(payload.gz_body)
+        resp.headers["Content-Encoding"] = "gzip"
+        resp.headers["Content-Type"] = "application/json"
+    else:
+        resp = make_response(gzip.decompress(payload.gz_body))
+        resp.headers["Content-Type"] = "application/json"
+    resp.headers["ETag"] = payload.etag
+    # A request that carries the session cookie can get it back refreshed (permanent session,
+    # SESSION_REFRESH_EACH_REQUEST), and a response with Set-Cookie must never be shareable:
+    # keep the same lifetime for this browser only (review 2026-11-20).
+    if current_app.config.get("SESSION_COOKIE_NAME", "session") in request.cookies:
+        cache_control = cache_control.replace("public", "private", 1)
+    resp.headers["Cache-Control"] = cache_control
+    resp.headers["Vary"] = "Accept-Encoding"
+    # The session policy hook reads the session of every request that carries a cookie,
+    # and Flask then adds ``Vary: Cookie`` on save. This body never depends on the cookie,
+    # and a rolling session cookie would make the browser refetch a year-immutable file.
+    if not session.modified:
+        session.accessed = False
+    return resp
+
+
 def api_listings_geo_coords():
     """Lazy ZIP + dealer coordinate maps for listings radius filtering."""
     maps = listings_geo_coords_maps()
@@ -233,6 +273,14 @@ class _CarsScopeEntry(NamedTuple):
     # monotonic time at which this body was first found behind the current token (set by
     # the request that noticed); None while it is current. Bounds how long it is served.
     stale_since: float | None = None
+    # Compact facet index of the body's cards for the server-rendered /listings page
+    # (backend/listings/ssr_grid.py); None when it could not be built.
+    ssr_index: Any = None
+
+
+def _entry_bytes(entry: _CarsScopeEntry) -> int:
+    idx = entry.ssr_index
+    return len(entry.gz_body) + (int(getattr(idx, "nbytes", 0)) if idx is not None else 0)
 
 
 # Gzipped scoped bodies, keyed by (zip, radius, hidden-dealer set). Bounded by entry
@@ -271,15 +319,15 @@ def _cars_scope_put(key: tuple, entry: _CarsScopeEntry) -> None:
     with _cars_scope_lock:
         old = _cars_scope_cache.pop(key, None)
         if old is not None:
-            _cars_scope_bytes -= len(old.gz_body)
+            _cars_scope_bytes -= _entry_bytes(old)
         _cars_scope_cache[key] = entry
-        _cars_scope_bytes += len(entry.gz_body)
+        _cars_scope_bytes += _entry_bytes(entry)
         while _cars_scope_cache and (
             len(_cars_scope_cache) > _CARS_SCOPE_MAX_ENTRIES
             or _cars_scope_bytes > _CARS_SCOPE_MAX_BYTES
         ):
             _, dropped = _cars_scope_cache.popitem(last=False)
-            _cars_scope_bytes -= len(dropped.gz_body)
+            _cars_scope_bytes -= _entry_bytes(dropped)
 
 
 def clear_cars_scope_cache() -> None:
@@ -447,16 +495,68 @@ def _build_cars_scope_entry(
         },
         separators=(",", ":"),
     )
-    gz_body = gzip_stream(_scope_body_parts(head, res.cards_json()), level=6)
+    cards = res.cards_json()
+    gz_body = gzip_stream(_scope_body_parts(head, cards), level=6)
     digest = hashlib.blake2b(gz_body, digest_size=10).hexdigest()
     etag = f'W/"lc-{zip_code}-{int(radius)}-{digest}"'
+    ssr_index = None
+    try:
+        from backend.listings.ssr_grid import build_scope_index
+
+        ssr_index = build_scope_index(cards)
+    except Exception:
+        logging.getLogger(__name__).warning("listings ssr index build failed", exc_info=True)
     return _CarsScopeEntry(
         token=token,
         store_gen=gen_before if res.partial else None,
         etag=etag,
         gz_body=gz_body,
         count=len(res.entries),
+        ssr_index=ssr_index,
     )
+
+
+def cached_scope_for_page(zip_code: str, radius_raw, hidden: tuple) -> _CarsScopeEntry | None:
+    """The area body the /listings document may render its first page from, or None.
+
+    Never builds on the request path (a cold metro is 1-13 s of SQL and gzip): a current
+    or stale-but-servable cached body is returned as is (a stale one kicks its one
+    background rebuild, as the API does); with nothing cached, one rate-limited
+    background build starts, which the client's ``/api/listings/cars`` request joins on
+    the per-scope build lock, and the page renders without server cards."""
+    import time as _time
+
+    from backend.db.geo import zip_to_coords
+    from backend.db.repositories.grid_cards_repo import grid_scope_token
+
+    zip_code = _normalize_zip(zip_code)
+    if not zip_code:
+        return None
+    radius = snap_listings_radius(radius_raw)
+    key = (zip_code, radius, tuple(hidden or ()))
+    token = grid_scope_token()
+    entry = _cars_scope_get(key)
+    if _cars_scope_entry_valid(entry, token):
+        return entry
+    origin = zip_to_coords(zip_code)
+    if origin is None:
+        return None
+    origin_f = (float(origin[0]), float(origin[1]))
+    stale = _stale_entry_to_serve(key, entry, token, _time.monotonic())
+    if stale is not None:
+        _kick_scope_rebuild(key, zip_code, origin_f, radius, key[2])
+        return stale
+    # Off Postgres (dev, tests) an area build is cheap and the client's request builds it
+    # inline; no background thread is started there (same rule as _stale_entry_to_serve).
+    # Its own per-IP budget: the shopper's own /api/listings/cars build is not charged
+    # for the page's head start. Background builds run one at a time (the slot).
+    if is_inventory_postgres() and allow_request(
+        f"listings-page-build:{_client_ip()}",
+        max_events=Config.RATE_LIMIT_LISTINGS_BUILD_PER_MIN,
+        window_seconds=60.0,
+    ):
+        _kick_scope_rebuild(key, zip_code, origin_f, radius, key[2])
+    return None
 
 
 def _cars_json_response(entry: _CarsScopeEntry, *, private: bool):
@@ -1053,6 +1153,7 @@ def register(app) -> None:
         "/api/session/listings-geo", view_func=api_session_listings_geo, methods=["POST"]
     )
     app.add_url_rule("/api/listings/filter-options", view_func=api_listings_filter_options)
+    app.add_url_rule("/api/listings/facets", view_func=api_listings_facets)
     app.add_url_rule("/api/listings/geo-coords", view_func=api_listings_geo_coords)
     app.add_url_rule("/api/listings/cars", view_func=api_listings_cars)
     app.add_url_rule("/api/listings/market-stats", view_func=api_listings_market_stats)

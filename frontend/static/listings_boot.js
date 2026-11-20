@@ -45,6 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 return obj;
             });
         }
+        window.__DS_unpackCarRows = unpackCarRows;
+        // /listings ships an empty table plus the URL of the cacheable facets payload
+        // (GET /api/listings/facets?v=, web speed 2026-11 PR 4); main.js loads it when
+        // the shopper opens the filters or starts a search. The dealership page still
+        // inlines its small dealer-scoped table and has no URL.
+        const rowsEl = document.getElementById("ds-listings-car-rows");
+        window.__DS_FACETS_URL = (rowsEl && rowsEl.getAttribute("data-facets-url")) || "";
         window.CAR_ROWS = unpackCarRows(readJsonScript("ds-listings-car-rows", []));
         // Cars are never embedded (owner decision 2026-09-28): main.js loads the
         // shopper's ZIP + radius from /api/listings/cars once a search begins.

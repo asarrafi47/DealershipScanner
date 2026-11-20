@@ -562,6 +562,13 @@
    ]
   ],
   [
+   "/api/listings/facets",
+   "api_listings_facets",
+   [
+    "GET"
+   ]
+  ],
+  [
    "/api/listings/filter-options",
    "api_listings_filter_options",
    [
