@@ -6,7 +6,6 @@
         "and": [
           {
             "href_matches": [
-              { "pathname": "/", "search": "" },
               { "pathname": "/listings", "search": "" },
               { "pathname": "/car/:id(\\d+)", "search": "" },
               { "pathname": "/car/:id(\\d+)", "search": "zip_code=:zip([^&]*)" },

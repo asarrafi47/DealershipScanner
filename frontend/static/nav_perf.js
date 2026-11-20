@@ -127,7 +127,8 @@
     }
 
     // The documents a speculative request may fetch (mirrors speculation-rules.json).
-    var ALLOWED_DOC = /^(?:\/|\/listings|\/find-dealers|\/car\/\d+(?:\?zip_code=[^&#]*)?)$/;
+    // Not "/": it redirects a signed-in visitor to their per-user /home (review 2026-11-20).
+    var ALLOWED_DOC = /^(?:\/listings|\/find-dealers|\/car\/\d+(?:\?zip_code=[^&#]*)?)$/;
 
     function allowedDocument(url) {
         return ALLOWED_DOC.test(String(url || ""));

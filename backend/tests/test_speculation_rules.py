@@ -23,7 +23,6 @@ NAV_PERF = ROOT / "frontend" / "static" / "nav_perf.js"
 NOSPEC_GUARD = ":root[data-ds-nospec] *"
 # Every side-effect-free document a rule may target, as (pathname, search) patterns.
 ALLOWED = {
-    ("/", ""),
     ("/listings", ""),
     ("/car/:id(\\d+)", ""),
     ("/car/:id(\\d+)", "zip_code=:zip([^&]*)"),
@@ -124,10 +123,10 @@ def test_nav_perf_fallback_list_matches_the_rules():
     m = re.search(r"var ALLOWED_DOC = /(.+)/;", js)
     assert m
     rx = re.compile(m.group(1).replace("\\/", "/"))
-    for ok in ("/", "/listings", "/find-dealers", "/car/150", "/car/150?zip_code=28202"):
+    for ok in ("/listings", "/find-dealers", "/car/150", "/car/150?zip_code=28202"):
         assert rx.match(ok), ok
     for bad in ("/listings?q=bmw", "/car/150?zip_code=1&x=2", "/api/cars/1", "/static/x.css",
-                "/logout", "/compare?ids=1,2", "/premium", "/home", "/dashboard", "/car/abc"):
+                "/logout", "/", "/compare?ids=1,2", "/premium", "/home", "/dashboard", "/car/abc"):
         assert not rx.match(bad), bad
     # Where speculation rules exist, nav_perf.js never fetch()es a document itself.
     assert 'HTMLScriptElement.supports("speculationrules")' in js

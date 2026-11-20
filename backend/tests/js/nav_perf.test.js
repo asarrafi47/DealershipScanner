@@ -121,7 +121,8 @@ test("fallback only prefetches side-effect-free documents", () => {
     assert.deepEqual(env.fetches.map((f) => f.url), []);
     env.hover(makeAnchor("/listings"));
     env.hover(makeAnchor("/"));
-    assert.deepEqual(env.fetches.map((f) => f.url), ["/listings"]); // "/" is the current page
+    // "/" is never speculated: it redirects a signed-in visitor to the per-user /home.
+    assert.deepEqual(env.fetches.map((f) => f.url), ["/listings"]);
 });
 
 test("save-data and 2g: no fetch and the speculation rules are switched off", () => {
