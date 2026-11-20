@@ -6,7 +6,7 @@ Cloudflare ignores ``Vary: Cookie``, so these pin the origin's own guarantees:
   user in the body (no CSRF token, no nonce value, no username, no inline script), a
   nonce-free CSP, ``Cache-Control: public ... s-maxage``, a weak ETag and 304s.
 * The same pages for anyone carrying an app cookie (anonymous with a session, user A,
-  user B): ``private, no-store``, no ETag; a signed-in visitor to ``/`` gets the private
+  user B): ``private, no-cache``, no ETag; a signed-in visitor to ``/`` gets the private
   302 to ``/home``.
 * The CSRF token is lazy: pages that render it (login, register, compare) still mint it,
   set the session cookie and accept their form posts; pages that do not, never write the
@@ -80,7 +80,7 @@ def _assert_public(resp):
 
 def _assert_private(resp):
     cc = resp.headers.get("Cache-Control", "")
-    assert "private" in cc and "no-store" in cc, cc
+    assert "private" in cc and "no-cache" in cc and "no-store" not in cc, cc
     assert "public" not in cc and "s-maxage" not in cc
     assert "ETag" not in resp.headers
     assert "cookie" in resp.headers.get("Vary", "").lower()
@@ -250,8 +250,8 @@ def test_session_guard_downgrades_a_public_response_that_set_a_cookie(app):
 
     r = app.test_client().get("/_edge_guard_probe")
     assert _set_cookies(r)
-    assert r.headers["Cache-Control"] == "private, no-store"
-    assert "ETag" not in r.headers
+    assert r.headers["Cache-Control"] == "private, no-cache"
+    assert r.headers.get("ETag") == 'W/"abc"'  # kept: the cookie holder may revalidate its own copy
 
 
 # ---------------------------------------------------------------- landing data

@@ -8,8 +8,8 @@ Code: `backend/web/edge_cache.py`, used by `home()` (`/`) and `find_dealers_page
 | Request | Response |
 |---|---|
 | `GET`/`HEAD` with no `session` cookie, no `sc_dev` cookie, no `Authorization` | `Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=600, stale-if-error=86400`, weak `ETag`, 304 on a matching `If-None-Match`, `Vary: Accept-Encoding, Cookie`, no `Set-Cookie`, CSP with `script-src 'self'` and no nonce |
-| Same page with an app cookie (anonymous session, any signed-in user) | `Cache-Control: private, no-store`, no `ETag`, `Vary: Cookie` |
-| Signed-in user on `/` | `302` to `/home`, `Cache-Control: private, no-store` |
+| Same page with an app cookie (anonymous session, any signed-in user) | `Cache-Control: private, no-cache`, no `ETag`, `Vary: Cookie` |
+| Signed-in user on `/` | `302` to `/home`, `Cache-Control: private, no-cache` |
 
 Why the origin is safe even though Cloudflare ignores `Vary: Cookie`: the public response
 contains nothing per visitor. The CSRF token is lazy (`backend/utils/csrf.py::LazyCsrfToken`,
@@ -46,7 +46,7 @@ Create rule.
 
 The cookie test in the expression matters: a visitor with a `session` cookie must never be
 answered from the cache (a signed-in user must get the 302 to `/home`). The origin marks
-those responses `private, no-store` too, so Cloudflare would not store them either way.
+those responses `private, no-cache` too, so Cloudflare would not store them either way.
 
 Check after deploying the release and the rule:
 
@@ -57,7 +57,7 @@ curl -sI -H 'Cookie: session=x' https://sarraficars.com/ | grep -iE 'cf-cache-st
 ```
 
 Expected: first `MISS`, then `HIT` (or `REVALIDATED`/`UPDATING` after 5 minutes), no
-`Set-Cookie`; with the cookie, `private, no-store` and no `HIT`.
+`Set-Cookie`; with the cookie, `private, no-cache` and no `HIT`.
 
 Rollback: disable the rule. A cached copy is purged with Caching, Configuration, Custom Purge,
 URL `https://sarraficars.com/` (and `/find-dealers`). After a deploy the edge may serve the

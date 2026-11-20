@@ -40,7 +40,10 @@ PUBLIC_CACHE_CONTROL = (
     f"stale-while-revalidate={EDGE_STALE_WHILE_REVALIDATE_S}, "
     f"stale-if-error={EDGE_STALE_IF_ERROR_S}"
 )
-PRIVATE_CACHE_CONTROL = "private, no-store"
+# ``no-cache``, not ``no-store``: shared caches may not keep a ``private`` response either way,
+# and ``no-store`` would take the page out of the browser's back/forward cache (review
+# 2026-11-20). The browser still revalidates every time.
+PRIVATE_CACHE_CONTROL = "private, no-cache"
 
 
 def app_cookie_names() -> tuple[str, ...]:
@@ -109,7 +112,9 @@ class EdgeSafeSessionInterface(SecureCookieSessionInterface):
 
     ``save_session`` runs after every ``after_request`` hook, so this is the one place that
     sees every Set-Cookie. A response that sets a cookie is never shareable: if it was
-    marked public (a bug upstream), it is downgraded to private and its ETag dropped.
+    marked public, it is downgraded to ``private, no-cache``. Its ETag is kept: the browser
+    that received the cookie may still revalidate its own copy (the listings APIs depend on
+    that for signed-in shoppers), and no shared cache may store a private response.
     """
 
     def save_session(self, app, session, response) -> None:  # type: ignore[override]
@@ -117,9 +122,8 @@ class EdgeSafeSessionInterface(SecureCookieSessionInterface):
         if "Set-Cookie" in response.headers and _is_shared_cacheable(
             response.headers.get("Cache-Control", "")
         ):
-            _log.warning(
+            _log.debug(
                 "edge cache: %s set a cookie on a public response; sent private instead",
                 request.path,
             )
             response.headers["Cache-Control"] = PRIVATE_CACHE_CONTROL
-            response.headers.pop("ETag", None)
