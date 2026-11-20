@@ -123,8 +123,7 @@ backend/db/users_db/accounts.py  import_sqlite3  1
 backend/db/users_db/accounts.py  lastrowid  4
 backend/db/users_db/accounts.py  pragma  10
 backend/db/users_db/accounts.py  qmark_placeholder  20
-backend/db/users_db/accounts.py  row_factory  1
-backend/db/users_db/accounts.py  sqlite3_attr  21
+backend/db/users_db/accounts.py  sqlite3_attr  20
 backend/db/users_db/admin.py  pragma  5
 backend/db/users_db/admin.py  qmark_placeholder  11
 backend/db/users_db/auth.py  datetime_now  1
