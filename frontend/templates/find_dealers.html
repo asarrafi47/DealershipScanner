@@ -134,9 +134,8 @@
 } | tojson }}</script>
 {% endif %}
 
-<script nonce="{{ csp_nonce }}">
-    window.__DS_LEAFLET_ICON_BASE = "{{ url_for('static', filename='vendor/leaflet/images/') }}";
-</script>
+{# No inline script (the page is edge-cacheable, nonce-free CSP): find_dealers.js falls
+   back to /static/vendor/leaflet/images/ for the Leaflet icon base. #}
 <script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='map_tiles.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='ds_core.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>

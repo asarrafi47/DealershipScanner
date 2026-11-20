@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [1.5.13] - 2026-11-20
+
+### Changed
+- Edge-cacheable landing and /find-dealers (issue #37; dev PR #34, ported onto 1.5.11):
+  - The CSRF token is minted lazily, only when a template renders it, so a page with no
+    form no longer writes the session or sends a `session` cookie.
+  - `/` and `/find-dealers` for a request with no app cookie (`session`, `sc_dev`) and no
+    `Authorization` are sent `public, max-age=0, s-maxage=300, stale-while-revalidate=600,
+    stale-if-error=86400` with a weak ETag and 304s, no Set-Cookie and a nonce-free CSP
+    (`script-src 'self'`; the landing's inline script moved to `static/landing.js`).
+    Every other request to them is `private, no-cache`. `EdgeSafeSessionInterface`
+    downgrades any public response that still set a cookie to private.
+  - The landing's inventory count reads the write fingerprint at most once a minute.
+  - **This only speeds anything up once the Cloudflare Cache Rule of issue #37 exists**
+    (`docs/web_speed_search_2026_11/EDGE_CACHE.md`). Purge `/` and `/find-dealers` after a
+    release that changes their markup.
+
 ## [1.5.11] - 2026-11-13
 
 ### Fixed

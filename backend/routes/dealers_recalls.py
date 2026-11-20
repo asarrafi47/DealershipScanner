@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import os
 
-from flask import jsonify, render_template, request, session
+from flask import jsonify, make_response, render_template, request, session
 
 from backend.billing.catalog import FEATURE_NEARBY_DEALERS
 from backend.billing import access as paid_access
@@ -64,11 +64,21 @@ def find_dealers_page():
     # N3.10b: /api/admin/dealer-onboard answers 409 while queue onboarding is
     # paused, so "Request scrape" is not drawn; site admins see the paused line.
     paused = onboarding_paused.QUEUE_ONBOARDING_PAUSED
-    return render_template(
-        "find_dealers.html",
-        site_admin_onboard=paid_access.is_site_admin(),
-        dealer_onboard_enabled=not paused and is_inventory_postgres(),
-        onboarding_paused_message=onboarding_paused.ONBOARDING_PAUSED_MESSAGE if paused else "",
+    # Edge-cacheable for a request with no app cookie (backend/web/edge_cache.py): the
+    # anonymous page renders no CSRF token (only the site-admin variant has the meta tag)
+    # and no inline script.
+    from backend.web.edge_cache import begin_edge_page, finish_edge_page
+
+    begin_edge_page()
+    return finish_edge_page(
+        make_response(
+            render_template(
+                "find_dealers.html",
+                site_admin_onboard=paid_access.is_site_admin(),
+                dealer_onboard_enabled=not paused and is_inventory_postgres(),
+                onboarding_paused_message=onboarding_paused.ONBOARDING_PAUSED_MESSAGE if paused else "",
+            )
+        )
     )
 
 
