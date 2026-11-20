@@ -40,6 +40,19 @@ def server_timing_enabled() -> bool:
     return raw not in ("0", "false", "no", "off")
 
 
+def _shared_cacheable(headers: list[tuple[str, str]]) -> bool:
+    """True for a response a CDN may store (``public`` / ``s-maxage``).
+
+    Such a response gets no ``Server-Timing``: an edge cache would replay one request's
+    timings to every visitor (wrong numbers, and a cleaner timing oracle). Review 2026-11-20.
+    """
+    for k, v in headers:
+        if k.lower() == "cache-control":
+            cc = v.lower()
+            return "public" in cc or "s-maxage" in cc
+    return False
+
+
 def _content_type(headers: list[tuple[str, str]]) -> str:
     for k, v in headers:
         if k.lower() == "content-type":
@@ -116,7 +129,7 @@ class RequestScopeMiddleware:
         def _start_response(status: str, headers: list, exc_info: Any = None):
             if timing:
                 try:
-                    if _content_type(headers) in _TIMED_TYPES and not any(
+                    if _content_type(headers) in _TIMED_TYPES and not _shared_cacheable(headers) and not any(
                         k.lower() == "server-timing" for k, _ in headers
                     ):
                         value = request_timing.header_value()

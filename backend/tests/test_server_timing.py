@@ -36,6 +36,10 @@ def _app(monkeypatch, *, enabled: bool = True) -> Flask:
         request_timing.add("users_db", 130.0)
         return jsonify(ok=True)
 
+    @app.get("/public")
+    def public_route():
+        return "<p>x</p>", 200, {"Content-Type": "text/html", "Cache-Control": "public, max-age=0, s-maxage=300"}
+
     @app.get("/text")
     def text():
         return "plain", 200, {"Content-Type": "text/plain"}
@@ -69,6 +73,12 @@ def test_json_response_carries_the_header(monkeypatch):
 
 def test_other_content_types_do_not(monkeypatch):
     r = _app(monkeypatch).test_client().get("/text")
+    assert "Server-Timing" not in r.headers
+
+
+def test_shared_cacheable_responses_do_not(monkeypatch):
+    # An edge cache would replay one request's timings to every visitor.
+    r = _app(monkeypatch).test_client().get("/public")
     assert "Server-Timing" not in r.headers
 
 
