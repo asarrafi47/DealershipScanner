@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- **Landing and /find-dealers cacheable at Cloudflare's edge.** The CSRF token is minted only when a page renders it, so anonymous pages without a form no longer set a `session` cookie. For a request with no app cookie, `/` and `/find-dealers` send `Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=600, stale-if-error=86400`, a weak ETag with 304s and a nonce-free CSP (`script-src 'self'`; the landing's inline script moved to `static/landing.js`); with any app cookie they are `private, no-store`, and a signed-in visitor gets a private 302 to `/home`. A session guard downgrades any public response that sets a cookie. The landing no longer reads `pg_stat_user_tables` on every request (10.7 to 2.9 ms locally). Owner step: the Cache Rule in `docs/web_speed_search_2026_11/EDGE_CACHE.md`.
+
 ## [1.5.40] - 2026-11-19
 
 Release 1.5.40 brings dev (1.5.12 to 1.5.39) together with main's speed hotfix 1.5.11. In plain words:

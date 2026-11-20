@@ -84,6 +84,11 @@ app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
 # staff 14 days absolute) are applied by backend.auth.session.enforce_session_policy.
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
+# Same signed-cookie session; after saving it, a response that set a cookie is never left
+# publicly cacheable (backend/web/edge_cache.py, perf 2026-11-20).
+from backend.web.edge_cache import EdgeSafeSessionInterface  # noqa: E402
+
+app.session_interface = EdgeSafeSessionInterface()
 
 # Static assets: year-long cache, ?v= cache-buster, precompressed siblings.
 register_static(app)
