@@ -200,7 +200,14 @@ def register_request_scope(app: Any) -> None:
         except Exception:  # noqa: BLE001
             _log.warning("Server-Timing render hook unavailable", exc_info=True)
         _hook_users_db_timing()
-    app.wsgi_app = RequestScopeMiddleware(app.wsgi_app, timing=timing)
+    # Sit just inside ProxyFix when it is installed, so ``app.wsgi_app`` stays the ProxyFix
+    # (test_proxy_fix_keeps_https_behind_trusted_proxy) and the scope sees the fixed environ.
+    from werkzeug.middleware.proxy_fix import ProxyFix
+
+    if isinstance(app.wsgi_app, ProxyFix):
+        app.wsgi_app.app = RequestScopeMiddleware(app.wsgi_app.app, timing=timing)
+    else:
+        app.wsgi_app = RequestScopeMiddleware(app.wsgi_app, timing=timing)
 
     # Registered last, so it runs first among the teardown functions. All of a normal
     # response's DB work is done by then, and the scope must not outlive the request when
