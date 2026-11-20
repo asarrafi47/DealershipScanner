@@ -132,7 +132,10 @@ def connect(
         kwargs["autocommit"] = True
     if timeout is not None:
         kwargs["connect_timeout"] = timeout
-    conn = psycopg.connect(url, **kwargs)
+    from backend.utils import request_timing
+
+    with request_timing.timed("db_connect"):
+        conn = psycopg.connect(url, **kwargs)
     if read_only:
         with conn.cursor() as cur:
             cur.execute("SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY")

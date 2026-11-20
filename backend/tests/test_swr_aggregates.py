@@ -526,7 +526,9 @@ def test_warm_cap_stays_under_the_worker_timeout(monkeypatch):
     entrypoint = (REPO / "scripts" / "docker-entrypoint-web.sh").read_text(encoding="utf-8")
     import re
 
-    timeout = int(re.search(r"--timeout (\d+)", entrypoint).group(1))
+    # The worker timeout is env-configurable; its default is what Railway runs unless set.
+    assert '--timeout "${GUNICORN_TIMEOUT}"' in entrypoint
+    timeout = int(re.search(r'GUNICORN_TIMEOUT="\$\{GUNICORN_TIMEOUT:-(\d+)\}"', entrypoint).group(1))
     assert warmup.MAX_CAP_S < timeout and warmup.DEFAULT_CAP_S < warmup.MAX_CAP_S
     monkeypatch.setenv("AGGREGATE_WARM_CAP_S", "100000")
     assert warmup.warm_cap_seconds() == warmup.MAX_CAP_S
@@ -547,8 +549,10 @@ def test_gunicorn_post_fork_warms_before_the_worker_serves(monkeypatch):
 
     monkeypatch.setattr(main, "_prewarm_listings_inventory_cache", lambda: calls.append("prewarm"))
     monkeypatch.setattr(warmup, "warm_blocking", lambda *a, **k: calls.append("warm"))
+    monkeypatch.setattr(warmup, "warm_background", lambda *a, **k: calls.append("background"))
     conf.post_fork(None, None)
-    assert calls == ["prewarm", "warm"]
+    # The background warm (facets, parser vocabulary) starts only after the blocking one.
+    assert calls == ["prewarm", "warm", "background"]
 
 
 def test_gunicorn_post_fork_survives_a_warm_up_crash(monkeypatch):
@@ -565,6 +569,7 @@ def test_gunicorn_post_fork_survives_a_warm_up_crash(monkeypatch):
         raise RuntimeError("warm-up bug")
 
     monkeypatch.setattr(warmup, "warm_blocking", boom)
+    monkeypatch.setattr(warmup, "warm_background", boom)
     conf.post_fork(None, None)  # must not raise: a boot is never failed by the warm-up
 
 

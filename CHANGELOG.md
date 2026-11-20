@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- **Server timing, cold starts and car pages (web speed, PR 2).** Every HTML and JSON response carries a `Server-Timing` header (`app`, `db`, `db_connect`, `users_db`, `render`: durations and counts only; `SERVER_TIMING=0` turns it off). A web request reuses one inventory connection for its sequential reads instead of one per call (`INVENTORY_REQUEST_CONN_REUSE=0` restores connect-per-call), and `WEB_PG_STATEMENT_TIMEOUT_MS` (off by default) bounds the web's own statements only. The first search after a start no longer runs colour inference on every row (18 s to 0.6 s locally; the vocabulary now also refreshes every `PARSER_VOCAB_TTL_S` on Postgres), and the parser vocabulary, the /listings facets and the search model warm on a background thread after fork. The car page's trim-ladder query uses the existing facet index (120 ms to 4 ms) behind a TTL cache, and the search's pgvector DDL runs once per process instead of per search (it took a ShareLock on the embeddings tables every time). Gunicorn threads, timeout and graceful timeout are env-configurable (`GUNICORN_THREADS`, `GUNICORN_TIMEOUT`, `GUNICORN_GRACEFUL_TIMEOUT`; defaults unchanged).
+
 ## [1.5.40] - 2026-11-19
 
 Release 1.5.40 brings dev (1.5.12 to 1.5.39) together with main's speed hotfix 1.5.11. In plain words:

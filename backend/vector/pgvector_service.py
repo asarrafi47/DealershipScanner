@@ -15,6 +15,7 @@ import logging
 import os
 import re
 import sqlite3
+import threading
 from typing import Any
 
 from backend.db.inventory_db import get_conn as inventory_get_conn
@@ -31,6 +32,14 @@ T_CAR_KNOWLEDGE = "car_knowledge_embeddings"
 T_MASTER_SPEC = "master_spec_embeddings"
 
 _st_model: Any | None = None
+# DSN whose schema query_cars() already ensured in this process (see query_cars).
+_query_schema_dsn: str | None = None
+
+
+def reset_query_schema_check() -> None:
+    """Tests / tooling: the next query_cars() runs ensure_schema() again."""
+    global _query_schema_dsn
+    _query_schema_dsn = None
 
 _KNOWLEDGE_THRESHOLD = 0.40
 
@@ -48,12 +57,19 @@ def pgvector_configured() -> bool:
     return bool(_pg_url())
 
 
+_st_model_lock = threading.Lock()
+
+
 def _encode_model():
     global _st_model
     if _st_model is None:
-        from backend.vector.embedding_model import load_sentence_transformer
+        # One load per process: the post_fork background warm-up and the first search
+        # may ask at once, and two concurrent loads would hold two models in memory.
+        with _st_model_lock:
+            if _st_model is None:
+                from backend.vector.embedding_model import load_sentence_transformer
 
-        _st_model = load_sentence_transformer()
+                _st_model = load_sentence_transformer()
     return _st_model
 
 
@@ -182,10 +198,18 @@ def query_cars(query_text: str, n_results: int = 100) -> list[int]:
     q = (query_text or "").strip()
     if not q:
         return []
+    global _query_schema_dsn
     n = max(1, min(int(n_results), 300))
     conn = _connect()
     try:
-        ensure_schema(conn)
+        # Once per process (per DSN), not per search: ensure_schema is nine DDL
+        # statements, and CREATE INDEX IF NOT EXISTS takes a ShareLock on each
+        # embeddings table even when the index exists, so every /listings?q= used to
+        # wait behind any open write transaction on them (a reindex) and block it.
+        url = _pg_url()
+        if _query_schema_dsn != url:
+            ensure_schema(conn)
+            _query_schema_dsn = url
         qv = _embed_texts([q])[0]
         with conn.cursor() as cur:
             cur.execute(

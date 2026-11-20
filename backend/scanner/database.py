@@ -208,9 +208,10 @@ def _apply_idle_in_txn_guard(conn) -> None:
     ms = _scanner_idle_in_txn_timeout_ms()
     if ms <= 0:
         return
-    # Never touch a borrowed shared read connection: the SET would outlive this
-    # call and change the web app's session behaviour.
-    if getattr(conn, "_shared", False):
+    # Never touch a borrowed shared read connection, nor a web request's reused one
+    # (inventory_pg request scope): the SET would outlive this call and change the
+    # session for every later borrower.
+    if getattr(conn, "_shared", False) or getattr(conn, "_request_slot", None) is not None:
         return
     if getattr(conn, "_backend", None) != "postgres":
         return
