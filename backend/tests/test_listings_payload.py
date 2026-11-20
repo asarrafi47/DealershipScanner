@@ -152,6 +152,7 @@ def test_listings_document_under_200_kb(fleet, client):
 def test_facets_payload_is_versioned_immutable_and_cookie_free(fleet, client):
     url = _facets_url(client.get("/listings").get_data(as_text=True))
     assert url.startswith("/api/listings/facets?v=")
+    client.delete_cookie("session")  # /listings minted one; a cookieless visitor gets "public"
     r = client.get(url, headers={"Accept-Encoding": "gzip"})
     assert r.status_code == 200
     assert r.headers["Cache-Control"] == "public, max-age=31536000, immutable"
@@ -191,6 +192,9 @@ def test_facets_payload_carries_no_per_user_data(fleet, client, monkeypatch):
         sess["username"] = "someone"
     signed_in = client.get("/api/listings/facets")
     assert signed_in.get_data() == anon
+    # A cookie-bearing request is never told "public": its response may carry a refreshed cookie.
+    assert signed_in.headers["Cache-Control"].startswith("private")
+    assert "public" not in signed_in.headers["Cache-Control"]
     assert "Set-Cookie" not in signed_in.headers
     assert "Cookie" not in signed_in.headers.get("Vary", "")
     assert b"4242" not in signed_in.get_data()

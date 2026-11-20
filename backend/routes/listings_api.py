@@ -15,7 +15,7 @@ import threading
 from collections import OrderedDict
 from typing import Any, NamedTuple
 
-from flask import jsonify, make_response, redirect, render_template, request, session, url_for
+from flask import current_app, jsonify, make_response, redirect, render_template, request, session, url_for
 
 from backend.billing.catalog import FEATURE_MARKET_INTEL, FEATURE_SAVED_SEARCHES
 from backend.db.inventory_db import (
@@ -165,6 +165,11 @@ def api_listings_facets():
         resp = make_response(gzip.decompress(payload.gz_body))
         resp.headers["Content-Type"] = "application/json"
     resp.headers["ETag"] = payload.etag
+    # A request that carries the session cookie can get it back refreshed (permanent session,
+    # SESSION_REFRESH_EACH_REQUEST), and a response with Set-Cookie must never be shareable:
+    # keep the same lifetime for this browser only (review 2026-11-20).
+    if current_app.config.get("SESSION_COOKIE_NAME", "session") in request.cookies:
+        cache_control = cache_control.replace("public", "private", 1)
     resp.headers["Cache-Control"] = cache_control
     resp.headers["Vary"] = "Accept-Encoding"
     # The session policy hook reads the session of every request that carries a cookie,
