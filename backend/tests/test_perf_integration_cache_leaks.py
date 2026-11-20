@@ -14,60 +14,42 @@ Each PR tests its own layer; these pin the seams between them on the real app:
   ``/find-dealers`` without app cookies), and its ``?part=reco`` stays ``private, no-store``.
 """
 
+# ruff: noqa: F811  (fixture import reused as test parameters, see edge_app below)
+
 from __future__ import annotations
 
 import pytest
 
 from backend.tests.test_edge_cache import (
-    PASSWORD,
     _assert_nothing_per_user,
     _assert_private,
     _assert_public,
     _login,
 )
-from backend.tests.test_home_dashboard_routes import _insert_test_car
+
+# test_edge_cache.py's ``app`` fixture (SQLite inventory with one car, users alice_edge and
+# bob_edge), reused here as the fixture ``edge_app``. Pytest injects a fixture through a
+# parameter of the same name, which ruff reads as a redefinition (F811) of this import.
+from backend.tests.test_edge_cache import app as edge_app  # noqa: F401
 
 CACHEABLE = ("/", "/find-dealers")
 
 
-@pytest.fixture
-def app(app_factory, monkeypatch, tmp_path):
-    """Same app as test_edge_cache.py: SQLite inventory with one car, two shoppers."""
-    inv = str(tmp_path / "inventory.db")
-    monkeypatch.setattr("backend.db.inventory_pg.is_inventory_postgres", lambda: False)
-    from backend.db import inventory_db
-    from backend.db.inventory_db import init_inventory_db
-    from backend.db.users_db import init_users_db, save_user
-
-    monkeypatch.setattr(inventory_db, "DB_PATH", inv)
-    monkeypatch.setenv("SERVER_TIMING", "1")
-    a = app_factory(
-        INVENTORY_DB_PATH=inv, BILLING_STRIPE_ENABLED="0", CSP_ENFORCE="1", CSP_REPORT_ONLY=""
-    ).app
-    init_users_db()
-    init_inventory_db()
-    a.config["TESTING"] = True
-    _insert_test_car()
-    from backend.db.repositories import listings_repo
+@pytest.fixture(autouse=True)
+def _fresh_facets_payload(monkeypatch):
+    """Server-Timing is on by default; the facets body is process-cached, so reset it."""
+    monkeypatch.delenv("SERVER_TIMING", raising=False)
     from backend.listings.facets_payload import reset_facets_payload
 
-    listings_repo.clear_inventory_listings_cache()
     reset_facets_payload()
-    save_user("alice_edge", "alice@example.com", PASSWORD, role="general", org_id=None)
-    save_user("bob_edge", "bob@example.com", PASSWORD, role="general", org_id=None)
-    yield a
+    yield
     reset_facets_payload()
-
-
-@pytest.fixture(autouse=True)
-def _timing_on(monkeypatch):
-    monkeypatch.setenv("SERVER_TIMING", "1")
 
 
 @pytest.mark.parametrize("path", CACHEABLE)
-def test_anonymous_edge_pages_are_identical_cookieless_and_untimed(app, path):
-    one = app.test_client().get(path)
-    two = app.test_client().get(path)
+def test_anonymous_edge_pages_are_identical_cookieless_and_untimed(edge_app, path):
+    one = edge_app.test_client().get(path)
+    two = edge_app.test_client().get(path)
     for r in (one, two):
         assert r.status_code == 200
         _assert_public(r)
@@ -78,11 +60,11 @@ def test_anonymous_edge_pages_are_identical_cookieless_and_untimed(app, path):
     assert one.headers["ETag"] == two.headers["ETag"]
 
 
-def test_two_sessions_never_get_a_shareable_copy(app):
-    anon = app.test_client().get("/find-dealers")
+def test_two_sessions_never_get_a_shareable_copy(edge_app):
+    anon = edge_app.test_client().get("/find-dealers")
     bodies = {}
     for name in ("alice_edge", "bob_edge"):
-        c = _login(app, name)
+        c = _login(edge_app, name)
         r = c.get("/find-dealers")
         assert r.status_code == 200
         _assert_private(r)
@@ -93,16 +75,16 @@ def test_two_sessions_never_get_a_shareable_copy(app):
     assert anon.get_data() not in bodies.values()
 
 
-def test_signed_in_redirect_off_the_landing_carries_no_speculation_rules(app):
-    c = _login(app, "alice_edge")
+def test_signed_in_redirect_off_the_landing_carries_no_speculation_rules(edge_app):
+    c = _login(edge_app, "alice_edge")
     r = c.get("/")
     assert r.status_code == 302 and r.headers["Location"].endswith("/home")
     _assert_private(r)
     assert "Speculation-Rules" not in r.headers
 
 
-def test_signed_in_home_is_never_shareable(app):
-    c = _login(app, "bob_edge")
+def test_signed_in_home_is_never_shareable(edge_app):
+    c = _login(edge_app, "bob_edge")
     for url in ("/home", "/home?part=reco"):
         r = c.get(url)
         assert r.status_code in (200, 204), (url, r.status_code)
@@ -112,15 +94,15 @@ def test_signed_in_home_is_never_shareable(app):
             assert "private" in cc and "no-store" in cc, cc
 
 
-def test_anonymous_facets_payload_is_cookieless_and_untimed(app):
-    r = app.test_client().get("/api/listings/facets")
+def test_anonymous_facets_payload_is_cookieless_and_untimed(edge_app):
+    r = edge_app.test_client().get("/api/listings/facets")
     assert r.status_code == 200
     assert "Set-Cookie" not in r.headers
     assert r.headers["Cache-Control"].startswith("public")
     assert "Server-Timing" not in r.headers
     # A signed-in caller gets the same bytes and is never told "public" (its session
     # refresh may set a cookie, which is fine on a private response).
-    c = _login(app, "alice_edge")
+    c = _login(edge_app, "alice_edge")
     s = c.get("/api/listings/facets")
     assert s.status_code == 200
     assert s.get_data() == r.get_data()
