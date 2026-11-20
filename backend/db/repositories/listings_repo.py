@@ -698,6 +698,14 @@ def _spawn_facet_options_rebuild(token: Any) -> None:
             _facet_options_cache_token = token
             _facet_options_cache_value = facets
             _facet_options_built_at = _facet_clock()
+            try:
+                # Serialize + gzip the /api/listings/facets body here, off the request
+                # path, so the next /listings render only reads its version.
+                from backend.listings.facets_payload import get_facets_payload
+
+                get_facets_payload()
+            except Exception:
+                pass
 
         t = threading.Thread(target=_run, name="facet-options-refresh", daemon=True)
         _facet_options_rebuild_thread = t
@@ -739,6 +747,15 @@ def get_filter_options() -> dict[str, Any]:
             _spawn_facet_options_rebuild(token)
 
     return dict(_facet_options_cache_value or {})
+
+
+def filter_options_snapshot() -> dict[str, Any]:
+    """The cached facet dict itself (not a copy), refreshed like :func:`get_filter_options`.
+
+    Read-only for callers. Its identity changes exactly when the facets are rebuilt, so
+    ``backend/listings/facets_payload.py`` keys its serialized body on it."""
+    get_filter_options()
+    return _facet_options_cache_value or {}
 
 
 def _build_filter_options_uncached() -> dict[str, Any]:

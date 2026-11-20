@@ -9,6 +9,11 @@ from backend.db.inventory_db import (
     record_search_history,
     serialize_cars_for_listings_grid,
 )
+from backend.listings.facets_payload import (
+    _CAR_ROW_COLUMNS,
+    _CAR_ROW_RAW_COLUMNS,
+    pack_car_rows,
+)
 from backend.listings.geo_session import (
     listings_geo_kwargs_from_session,
     persist_listings_geo_from_request,
@@ -22,59 +27,14 @@ from backend.utils.query_parser import parse_natural_query
 
 _logger = logging.getLogger(__name__)
 
-# Column order for the packed cascade table. Every column except ``cyl`` is
-# dictionary-encoded: the values repeat across ~12,700 rows, so shipping integer
-# codes plus one vocabulary per column is far smaller than a list of dicts.
 # Most cars a free-text search (``?q=``) embeds in the page. Before the cap a search
 # with pgvector unconfigured embedded the whole fleet (214k cars, 237 MB, 37 s --
 # efficiency review 2026-09-28, D1).
 LISTINGS_SEARCH_GRID_MAX = 200
 
-_CAR_ROW_COLUMNS = ("make", "model", "trim", "fuel", "cyl", "drive", "body_style", "induction")
-_CAR_ROW_RAW_COLUMNS = frozenset({"cyl"})
-
-
-def pack_car_rows(car_rows: list[dict]) -> dict:
-    """Dictionary-encode the cascade table for the listings HTML payload.
-
-    The uncompressed document is what gates first paint on /listings (it is too
-    large for the response compressor), and the repeated JSON keys plus repeated
-    make/model/trim strings dominated it. ``main.js`` unpacks this back into the
-    same row objects, so the cascade sees exactly what it did before.
-    """
-    vocabs: list[dict | None] = []
-    orders: list[list | None] = []
-    for col in _CAR_ROW_COLUMNS:
-        if col in _CAR_ROW_RAW_COLUMNS:
-            vocabs.append(None)
-            orders.append(None)
-        else:
-            vocabs.append({})
-            orders.append([])
-
-    packed_rows: list[list] = []
-    for row in car_rows or []:
-        out: list = []
-        for idx, col in enumerate(_CAR_ROW_COLUMNS):
-            val = row.get(col)
-            vocab = vocabs[idx]
-            if vocab is None:
-                out.append(val)
-                continue
-            if val is None:
-                out.append(-1)
-                continue
-            code = vocab.get(val)
-            if code is None:
-                order = orders[idx]
-                assert order is not None
-                code = len(order)
-                order.append(val)
-                vocab[val] = code
-            out.append(code)
-        packed_rows.append(out)
-
-    return {"c": list(_CAR_ROW_COLUMNS), "v": orders, "r": packed_rows}
+# The cascade table codec (pack_car_rows) moved with the table itself to the cacheable
+# facets payload (GET /api/listings/facets); re-exported above for its callers and tests.
+__all__ = ["_CAR_ROW_COLUMNS", "_CAR_ROW_RAW_COLUMNS", "pack_car_rows", "listings_page"]
 
 
 def history_filters_from_active(active: dict) -> dict:
@@ -268,6 +228,23 @@ def listings_page(*, listings_poll_ms: int = 0):
         except (TypeError, ValueError):
             saved_car_ids = []
 
+    search_started = listings_search_started(request.args)
+    geo_default = _listings_geo_default(zip_code, radius, geo_kwargs)
+    ssr_page = None
+    if search_started and not search_ran and sql_kwargs.get("zip_code"):
+        ssr_page = _server_page_of_cards(
+            str(sql_kwargs.get("zip_code") or ""),
+            sql_kwargs.get("radius_miles"),
+            tuple(hidden_dealer_ids),
+            active,
+            options,
+            geo_default,
+        )
+
+    from backend.listings.facets_payload import get_facets_payload
+
+    facets_url = get_facets_payload().url
+
     listings_zip_coords_boot: dict[str, list[float]] = {}
     geo_zip = (zip_code or "").strip()
     if not geo_zip:
@@ -284,13 +261,43 @@ def listings_page(*, listings_poll_ms: int = 0):
     return render_template(
         "listings.html",
         options=options,
-        car_rows_packed=pack_car_rows(options.get("car_rows") or []),
+        facets_url=facets_url,
+        ssr_page=ssr_page,
         listings_zip_coords_boot=listings_zip_coords_boot,
         active=active,
         initial_grid_cars=initial_grid_cars,
-        search_started=listings_search_started(request.args),
-        listings_geo_default=_listings_geo_default(zip_code, radius, geo_kwargs),
+        search_started=search_started,
+        listings_geo_default=geo_default,
         listings_poll_ms=int(listings_poll_ms),
         saved_car_ids=saved_car_ids,
         hidden_dealer_ids=hidden_dealer_ids,
     )
+
+
+def _server_page_of_cards(
+    zip_code: str, radius, hidden: tuple, active: dict, options: dict, geo_default: dict
+):
+    """The requested page of cards for the document itself, or None (client renders).
+
+    Only from an area body that is already cached (see
+    ``listings_api.cached_scope_for_page``): the document never waits for an area build,
+    so its TTFB stays independent of how many cars the area or the fleet holds."""
+    from backend.listings.ssr_grid import active_chips, build_page, effective_filters
+
+    try:
+        eff = effective_filters(active, options, request.args)
+        if eff is None:
+            return None
+        from backend.routes.listings_api import cached_scope_for_page
+
+        entry = cached_scope_for_page(zip_code, radius, hidden)
+        if entry is None or entry.ssr_index is None:
+            return None
+        page = build_page(entry.ssr_index, eff, request.args, request.path, zip_code)
+        page["chips"] = active_chips(
+            active, options, str(geo_default.get("zip") or ""), geo_default.get("radius")
+        )
+        return page
+    except Exception:
+        _logger.warning("server-rendered listings page failed; client renders", exc_info=True)
+        return None

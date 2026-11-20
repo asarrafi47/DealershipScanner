@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- **Lighter /listings, real pages (web speed 2026-11, PR 4).** The listings document no longer inlines the fleet cascade table and the package rows (87% of its bytes: 653 KB to 85 KB locally, about 1.55 MB in production); they move with the model, trim and package lists to `GET /api/listings/facets?v=<digest>` (public, immutable for a year, gzip, no per-user data, no cookie), fetched when the shopper touches the filters or starts a search, never on a bare visit. Model, trim and package options are built into the page only when their section opens. A search URL whose area is already cached now carries its page of cards (same order as the client, from the cached area body and a compact per-area index, never an inline area build) with plain prev/next links, so `?page=2` differs from page 1 and crawlers and no-JS visitors see cars.
+
 ## [1.5.40] - 2026-11-19
 
 Release 1.5.40 brings dev (1.5.12 to 1.5.39) together with main's speed hotfix 1.5.11. In plain words:
