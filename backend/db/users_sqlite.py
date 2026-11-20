@@ -14,6 +14,7 @@ import os
 import sqlite3
 from typing import Any
 
+from backend.db.keyed_conn_pool import KeyedConnPool
 from backend.utils.credential_db_encryption import (
     require_encrypted_users_db_in_production,
     sqlcipher_available,
@@ -41,10 +42,31 @@ def users_db_path() -> str:
     return _resolve_db_path(raw) if raw else DB_PATH
 
 
+# Already-keyed SQLCipher handles are reused (PBKDF2 on every open cost ~130 ms, 2-5 times per
+# signed-in page). USERS_DB_POOL_SIZE=0 turns reuse off (one fresh keyed open per call, as
+# before); USERS_DB_POOL_MAX_IDLE_S bounds how long an idle handle is kept. See
+# backend/db/keyed_conn_pool.py for the contract (rollback + reset on return, path/key/inode
+# and pid checks, discard on error).
+_POOL = KeyedConnPool(
+    "users",
+    size_env="USERS_DB_POOL_SIZE",
+    idle_env="USERS_DB_POOL_MAX_IDLE_S",
+    default_size=8,
+    default_max_idle_s=300,
+)
+
+
+def reset_users_conn_pool() -> None:
+    """Close every idle pooled users.db handle (tests; after replacing the file in place)."""
+    _POOL.reset()
+
+
 def _connect_sqlcipher(key: str) -> Any:
     import sqlcipher3 as sc  # type: ignore[import-not-found]
 
-    conn = sc.connect(users_db_path())
+    # check_same_thread=False: a pooled handle is borrowed by one thread at a time, but
+    # not always the thread that opened it.
+    conn = sc.connect(users_db_path(), check_same_thread=False)
     esc = key.replace("'", "''")
     conn.execute(f"PRAGMA key = '{esc}'")
     try:
@@ -59,6 +81,11 @@ def _connect_sqlcipher(key: str) -> Any:
     except Exception:
         pass
     return conn
+
+
+def _pooled_sqlcipher(key: str) -> Any:
+    # Late lookup of _connect_sqlcipher so a patched opener (profilers, tests) is honoured.
+    return _POOL.checkout(users_db_path(), key, lambda: _connect_sqlcipher(key))
 
 
 def _plain_sqlite_conn() -> sqlite3.Connection:
@@ -93,11 +120,11 @@ def get_users_conn() -> sqlite3.Connection:
             raise RuntimeError(
                 "sqlcipher3 is required in production to encrypt users.db (SEC-088)."
             )
-        return _connect_sqlcipher(key)
+        return _pooled_sqlcipher(key)
 
     if key and sqlcipher_available():
         try:
-            return _connect_sqlcipher(key)
+            return _pooled_sqlcipher(key)
         except RuntimeError:
             logger.warning(
                 "USERS_DB_ENCRYPTION_KEY set but users.db is not SQLCipher (or wrong key); "
