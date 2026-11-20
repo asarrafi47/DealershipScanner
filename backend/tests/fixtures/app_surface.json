@@ -1461,7 +1461,11 @@
     "_device_cookie_after"
    ]
   },
-  "teardown_request_funcs": {},
+  "teardown_request_funcs": {
+   "None": [
+    "_leave_request_scope"
+   ]
+  },
   "template_context_processors": {
    "None": [
     "_default_template_ctx_processor",

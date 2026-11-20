@@ -2,6 +2,10 @@
 from __future__ import annotations
 
 import logging
+import os
+import threading
+import time
+from collections import OrderedDict
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -44,21 +48,104 @@ from .plausibility import (
 # ---------------------------------------------------------------------------
 
 
-def _inventory_trim_rows(
-    make_norm: str,
-    model_label: str,
-    year_lo: int,
-    year_hi: int,
-) -> list[Any]:
+# ---------------------------------------------------------------------------
+# Car-page cost (2026-11-20): ``LOWER(TRIM(make)) = LOWER(?)`` cannot use any index,
+# so this query read every active row (~44k heap pages, 120-175 ms locally) on every
+# car page, up to three times (one per year window). Two in-process measures:
+#
+# 1. Spelling narrowing: the literal ``(make, model)`` spellings that reduce to the
+#    requested pair (from one ``DISTINCT make, model`` read, refreshed every TTL) are
+#    added as ``make IN (...) AND model IN (...)``, which ``idx_cars_active_facet_combo``
+#    serves (~4 ms). The ``LOWER(TRIM())`` predicates stay, so the rows are the same;
+#    a pair the map does not know runs the original query.
+# 2. A small TTL cache of the result rows, keyed on the normalised arguments.
+#
+# Both are Postgres-only (pytest's SQLite inventories change under the same arguments),
+# bounded, and turned off with ``TRIM_LADDER_INVENTORY_CACHE_TTL_S=0``.
+# ---------------------------------------------------------------------------
+_TRIM_ROWS_CACHE_MAX = 512
+_TRIM_ROWS_TTL_DEFAULT_S = 600.0
+_trim_rows_lock = threading.Lock()
+_trim_rows_cache: OrderedDict[tuple, tuple[float, tuple]] = OrderedDict()
+_pair_spellings_state: dict[str, Any] = {"expires": 0.0, "map": None}
+
+
+def _trim_rows_ttl_s() -> float:
+    raw = (os.environ.get("TRIM_LADDER_INVENTORY_CACHE_TTL_S") or "").strip()
+    try:
+        return max(0.0, float(raw)) if raw else _TRIM_ROWS_TTL_DEFAULT_S
+    except ValueError:
+        return _TRIM_ROWS_TTL_DEFAULT_S
+
+
+def clear_inventory_trim_rows_cache() -> None:
+    """Forget cached trim rows and the spelling map (tests, the pg harness)."""
+    with _trim_rows_lock:
+        _trim_rows_cache.clear()
+        _pair_spellings_state["expires"] = 0.0
+        _pair_spellings_state["map"] = None
+
+
+def _pair_key(make: str, model: str) -> tuple[str, str]:
+    # Postgres TRIM() strips spaces only; Python's lower() may differ from LOWER() on
+    # exotic characters, which can only cost a narrowing (the original query runs).
+    return (make or "").strip(" ").lower(), (model or "").strip(" ").lower()
+
+
+def _active_pair_spellings(ttl: float) -> dict[tuple[str, str], tuple[tuple[str, ...], tuple[str, ...]]]:
+    now = time.monotonic()
+    with _trim_rows_lock:
+        cached = _pair_spellings_state["map"]
+        if cached is not None and now < _pair_spellings_state["expires"]:
+            return cached
     from backend.db.inventory_db import db_conn
 
     with db_conn() as conn:
         cur = conn.cursor()
         cur.execute(
-            """
+            "SELECT DISTINCT make, model FROM cars "
+            "WHERE (COALESCE(listing_active, 1) = 1) AND make IS NOT NULL AND model IS NOT NULL"
+        )
+        rows = cur.fetchall()
+    makes: dict[tuple[str, str], set[str]] = {}
+    models: dict[tuple[str, str], set[str]] = {}
+    for row in rows:
+        mk, md = (row.get("make"), row.get("model")) if isinstance(row, dict) else (row[0], row[1])
+        key = _pair_key(str(mk), str(md))
+        makes.setdefault(key, set()).add(mk)
+        models.setdefault(key, set()).add(md)
+    out = {k: (tuple(sorted(makes[k])), tuple(sorted(models[k]))) for k in makes}
+    with _trim_rows_lock:
+        _pair_spellings_state["map"] = out
+        _pair_spellings_state["expires"] = now + ttl
+    return out
+
+
+def _query_inventory_trim_rows(
+    make_norm: str,
+    model_label: str,
+    year_lo: int,
+    year_hi: int,
+    spellings: tuple[tuple[str, ...], tuple[str, ...]] | None = None,
+) -> list[Any]:
+    from backend.db.inventory_db import db_conn
+
+    narrow = ""
+    params: tuple = (make_norm, model_label, year_lo, year_hi)
+    if spellings and spellings[0] and spellings[1]:
+        make_sp, model_sp = spellings
+        narrow = (
+            f"\n              AND make IN ({', '.join('?' for _ in make_sp)})"
+            f"\n              AND model IN ({', '.join('?' for _ in model_sp)})"
+        )
+        params = (*make_sp, *model_sp, *params)
+    with db_conn() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            f"""
             SELECT MIN(trim) AS trim, AVG(price) AS avg_price, COUNT(*) AS n
             FROM cars
-            WHERE (COALESCE(listing_active, 1) = 1)
+            WHERE (COALESCE(listing_active, 1) = 1){narrow}
               AND LOWER(TRIM(make)) = LOWER(?)
               AND LOWER(TRIM(model)) = LOWER(?)
               AND year BETWEEN ? AND ?
@@ -70,9 +157,43 @@ def _inventory_trim_rows(
             ORDER BY avg_price ASC
             LIMIT 24
             """,
-            (make_norm, model_label, year_lo, year_hi),
+            params,
         )
         return cur.fetchall()
+
+
+def _inventory_trim_rows(
+    make_norm: str,
+    model_label: str,
+    year_lo: int,
+    year_hi: int,
+) -> list[Any]:
+    from backend.db.inventory_pg import is_inventory_postgres
+
+    ttl = _trim_rows_ttl_s()
+    if ttl <= 0 or not is_inventory_postgres():
+        return _query_inventory_trim_rows(make_norm, model_label, year_lo, year_hi)
+
+    key = (*_pair_key(make_norm, model_label), int(year_lo), int(year_hi))
+    now = time.monotonic()
+    with _trim_rows_lock:
+        hit = _trim_rows_cache.get(key)
+        if hit is not None and now < hit[0]:
+            _trim_rows_cache.move_to_end(key)
+            return list(hit[1])
+
+    try:
+        spellings = _active_pair_spellings(ttl).get(_pair_key(make_norm, model_label))
+    except Exception as e:  # noqa: BLE001 - the unnarrowed query still answers
+        logger.debug("trim ladder spelling map failed: %s", e)
+        spellings = None
+    rows = _query_inventory_trim_rows(make_norm, model_label, year_lo, year_hi, spellings)
+    with _trim_rows_lock:
+        _trim_rows_cache[key] = (now + ttl, tuple(rows))
+        _trim_rows_cache.move_to_end(key)
+        while len(_trim_rows_cache) > _TRIM_ROWS_CACHE_MAX:
+            _trim_rows_cache.popitem(last=False)
+    return rows
 
 
 def _ladder_from_inventory(make: str, model: str, year: Any) -> dict[str, Any] | None:

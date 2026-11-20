@@ -47,9 +47,19 @@ def post_fork(server, worker) -> None:  # runs in each worker, after fork
     # cars, fallback URLs) BEFORE this worker accepts a connection, so /health passes
     # only once the first car page will not pay for them. Capped (AGGREGATE_WARM_CAP_S,
     # default 45 s, well under the 120 s worker timeout) and never fatal.
-    from backend.utils.aggregate_warmup import warm_blocking
+    from backend.utils.aggregate_warmup import warm_background, warm_blocking
 
     try:
         warm_blocking()
+    except Exception:
+        pass
+
+    # Then, without waiting: the /listings facets and the search parser vocabulary on a
+    # daemon thread (BACKGROUND_WARM=0 turns it off). Not part of the blocking warm, so
+    # boot and /health never wait for it; it builds what the first /listings and the
+    # first /listings?q= would otherwise build inline, so it adds no resident memory
+    # beyond what one visitor would have caused.
+    try:
+        warm_background()
     except Exception:
         pass

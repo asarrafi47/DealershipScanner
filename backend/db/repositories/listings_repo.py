@@ -677,6 +677,10 @@ def listings_geo_coords_maps() -> dict[str, Any]:
 
 _facet_options_rebuild_thread: threading.Thread | None = None
 _facet_options_rebuild_lock = threading.Lock()
+# Serialises the COLD build only: the post_fork background warm-up and the first
+# /listings visitor used to build the facets side by side (twice the GIL-bound work);
+# now the visitor waits for the build already in flight. Never held on the warm path.
+_facet_options_cold_lock = threading.Lock()
 
 
 def _spawn_facet_options_rebuild(token: Any) -> None:
@@ -727,10 +731,12 @@ def get_filter_options() -> dict[str, Any]:
 
     token = grid_scope_token()
     if _facet_options_cache_value is None:
-        facets = _build_filter_options_uncached()
-        _facet_options_cache_token = token
-        _facet_options_cache_value = facets
-        _facet_options_built_at = _facet_clock()
+        with _facet_options_cold_lock:
+            if _facet_options_cache_value is None:
+                facets = _build_filter_options_uncached()
+                _facet_options_cache_token = token
+                _facet_options_cache_value = facets
+                _facet_options_built_at = _facet_clock()
     elif _facet_options_cache_token != token:
         # Facets are filter choices, not live data: during a scan the token moves on
         # every write, so rebuild at most once per interval (the cold start above and

@@ -468,6 +468,8 @@ _SWEEP_REVIEWED: dict[str, str] = {
     "backend.scripts.heal_matcher_trims._CACHE_ROW_COLS": "constant",
     "backend.utils.car_serialize.serialize._PHOTO_COUNT_MEMO": "keyed by photo bytes",
     "backend.utils.car_serialize.serialize._PHOTO_COUNT_MEMO_MAX": "constant",
+    "backend.enrichment.trim_ladder.inventory._trim_rows_cache": "reset by clear_inventory_trim_rows_cache",
+    "backend.enrichment.trim_ladder.inventory._TRIM_ROWS_CACHE_MAX": "constant",
     "backend.utils.query_parser._load_inventory_keywords": "reset by clear_query_parser_caches",
     "backend.utils.query_parser._load_package_names": "reset by clear_query_parser_caches",
     "backend.utils.rarity_score._CACHE_TTL_S": "constant",
@@ -550,6 +552,8 @@ _RESET_FUNCTIONS: tuple[tuple[str, str], ...] = (
     ("backend.db.repositories.data_quality_repo", "clear_incomplete_snapshot_cache"),
     ("backend.db.repositories.listings_repo", "_clear_grid_serialize_memo"),
     ("backend.utils.query_parser", "clear_query_parser_caches"),
+    ("backend.enrichment.trim_ladder.inventory", "clear_inventory_trim_rows_cache"),
+    ("backend.vector.pgvector_service", "reset_query_schema_check"),
     ("backend.enrichment.knowledge_engine", "clear_vpic_lookup_cache"),
     ("backend.attribution.place", "reset_host_owner_index"),  # registry host index (N8)
     ("backend.settings_store", "reset_cache"),  # app_settings rows (chat limits, C1)
