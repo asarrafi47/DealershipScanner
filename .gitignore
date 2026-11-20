@@ -185,3 +185,5 @@ comment_uploads/
 # Precompressed static siblings (scripts/build_static_compressed.py); rebuilt at image build.
 frontend/static/**/*.gz
 frontend/static/**/*.br
+# Concatenated site stylesheet (backend/web/css_bundle.py); rebuilt by build_static_compressed.py and on demand.
+frontend/static/css/site.bundle.css

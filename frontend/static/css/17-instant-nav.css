@@ -1,0 +1,67 @@
+/* Instant navigation: cross-document view transitions and click feedback
+   (2026-11-20). Last in the bundle; every rule here targets its own
+   selectors, so its position changes no earlier cascade. Browsers without these
+   features (Safari < 18, Firefox) ignore the at-rules and properties they do not
+   know, and the page navigates exactly as before. */
+
+/* ---- cross-document view transitions ---------------------------------------
+   Same-origin navigations cross-fade instead of flashing white (Chromium 126+,
+   Safari 18.2+). Subtle on purpose (design rules C1): a short root cross-fade, no
+   slides or zooms, and the persistent chrome -- the navy sidebar and the marketing
+   topbar -- is named so it holds still while the page under it changes. Each name
+   exists at most once per page (both are fixed/stacking elements already).
+   Off entirely under prefers-reduced-motion: reduce. */
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+        navigation: auto;
+    }
+
+    #app-sidebar {
+        view-transition-name: ds-sidebar;
+    }
+
+    .topbar--marketing {
+        view-transition-name: ds-topbar;
+    }
+
+    ::view-transition-group(root),
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation-duration: 160ms;
+        animation-timing-function: ease-out;
+    }
+
+    /* The chrome is the same on both pages: swap it, never morph or fade it. */
+    ::view-transition-group(ds-sidebar),
+    ::view-transition-group(ds-topbar) {
+        animation: none;
+    }
+
+    ::view-transition-old(ds-sidebar),
+    ::view-transition-old(ds-topbar) {
+        display: none;
+    }
+
+    ::view-transition-new(ds-sidebar),
+    ::view-transition-new(ds-topbar) {
+        animation: none;
+    }
+}
+
+/* ---- click feedback ----------------------------------------------------------
+   nav_perf.js grows #ds-car-nav-bar (04-dashboard.css) on every same-origin
+   document navigation, not only car links. Under reduced motion it still shows,
+   it just does not animate its width. */
+@media (prefers-reduced-motion: reduce) {
+    #ds-car-nav-bar {
+        transition: none;
+    }
+}
+
+/* ---- listings loading state ----------------------------------------------------
+   main.js paints skeleton cards (SC.skeletonCardsHtml, 09-components.css) the moment
+   a search starts. A CSS-only placeholder for the gap BEFORE main.js runs was tried
+   (two :empty::before/::after cards in #results-grid) and dropped: main.js then
+   inserts the toolbar/chips above the grid, and a grid with height moves with them,
+   so listings CLS rose from 0.136 to 0.255 (an empty grid moving is not a shift).
+   It belongs back here once the toolbar reserves its space server-side. */

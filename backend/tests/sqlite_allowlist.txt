@@ -413,6 +413,8 @@ backend/tests/test_compare_and_stats.py  db_path_literal  1
 backend/tests/test_compare_and_stats.py  env_db_path  1
 backend/tests/test_compare_specs.py  db_path_literal  3
 backend/tests/test_compare_specs.py  env_db_path  2
+backend/tests/test_css_bundle.py  db_path_literal  2
+backend/tests/test_css_bundle.py  env_db_path  2
 backend/tests/test_db_admin_security.py  db_path_literal  1
 backend/tests/test_db_admin_security.py  env_db_path  1
 backend/tests/test_db_admin_security.py  import_sqlite3  1
@@ -687,6 +689,8 @@ backend/tests/test_smart_search.py  db_path_literal  1
 backend/tests/test_smart_search.py  env_db_path  1
 backend/tests/test_smart_search.py  import_sqlite3  1
 backend/tests/test_smart_search.py  sqlite3_attr  1
+backend/tests/test_speculation_rules.py  db_path_literal  2
+backend/tests/test_speculation_rules.py  env_db_path  2
 backend/tests/test_spin_assets_roundtrip.py  db_path_literal  1
 backend/tests/test_spin_assets_roundtrip.py  env_db_path  1
 backend/tests/test_spin_assets_roundtrip.py  import_sqlite3  1

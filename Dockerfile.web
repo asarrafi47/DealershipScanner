@@ -65,7 +65,8 @@ ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 # Copy application code
 COPY . .
 
-# Precompressed .gz/.br siblings for /static (served by backend/web/static.py::_static_view).
+# css/site.bundle.css (the 15 global stylesheets in cascade order, backend/web/css_bundle.py),
+# then precompressed .gz/.br siblings for /static (served by backend/web/static.py::_static_view).
 RUN python scripts/build_static_compressed.py --quiet
 
 EXPOSE 8000

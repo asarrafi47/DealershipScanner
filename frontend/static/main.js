@@ -2865,7 +2865,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const pollAttr = document.body && document.body.getAttribute("data-listings-poll-ms");
     const pollMs = pollAttr != null ? parseInt(pollAttr, 10) : 0;
     if (Number.isFinite(pollMs) && pollMs > 0) {
-        setInterval(() => {
+        // Stopped on pagehide and restarted on a bfcache restore (pageshow persisted):
+        // a poll in flight when the shopper leaves would keep the page out of the
+        // back/forward cache, and a hidden page has nothing to refresh.
+        let pollTimer = 0;
+        const pollOnce = () => {
             // Only refresh an area already loaded; polling never starts a search.
             if (!listingsCarsReady()) return;
             fetchListingsCarsJson(false)
@@ -2880,7 +2884,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 })
                 .catch(() => {});
-        }, pollMs);
+        };
+        const startPoll = () => {
+            if (!pollTimer) pollTimer = setInterval(pollOnce, pollMs);
+        };
+        startPoll();
+        window.addEventListener("pagehide", () => {
+            clearInterval(pollTimer);
+            pollTimer = 0;
+        });
+        window.addEventListener("pageshow", (e) => {
+            if (e.persisted) startPoll();
+        });
     }
 
     document.querySelectorAll("form.nav-search").forEach((navForm) => {

@@ -264,6 +264,27 @@ def test_prefetch_request_is_not_a_view(home, monkeypatch):
     assert hd._reco_cache[key][0] <= time.monotonic()  # marked stale
 
 
+@pytest.mark.parametrize(
+    "headers",
+    [
+        {"Sec-Purpose": "prefetch"},  # speculation-rules prefetch
+        {"Sec-Purpose": "prefetch;prerender"},  # speculation-rules prerender
+        {"Sec-Purpose": "prefetch;anonymous-client-ip"},
+        {"Purpose": "prefetch"},  # legacy <link rel=prefetch>
+    ],
+)
+def test_speculative_request_is_not_a_view(home, monkeypatch, headers):
+    from backend.routes.car_detail import viewer
+
+    c, _uid, car_id, _hd = home
+    views = []
+    monkeypatch.setattr(viewer, "record_car_view", lambda u, cid: views.append(cid))
+    assert c.get(f"/car/{car_id}", headers=headers).status_code == 200
+    assert views == []
+    assert c.get(f"/car/{car_id}", headers={"Sec-Purpose": "nonsense"}).status_code == 200
+    assert views == [car_id]
+
+
 def test_nav_perf_prefetch_sends_the_prefetch_header():
     js = (ROOT / "frontend" / "static" / "nav_perf.js").read_text()
     assert '"X-DS-Prefetch": "1"' in js
