@@ -64,6 +64,7 @@ backend/db/incomplete_listings_db.py  sqlite3_attr  4
 backend/db/inventory_compat.py  row_factory  4
 backend/db/inventory_pg.py  env_db_path  1
 backend/db/inventory_pg.py  insert_or  3
+backend/db/keyed_conn_pool.py  pragma  4
 backend/db/repositories/base_repo.py  db_path_literal  3
 backend/db/repositories/base_repo.py  env_db_path  1
 backend/db/repositories/base_repo.py  import_sqlite3  2
@@ -123,8 +124,7 @@ backend/db/users_db/accounts.py  import_sqlite3  1
 backend/db/users_db/accounts.py  lastrowid  4
 backend/db/users_db/accounts.py  pragma  10
 backend/db/users_db/accounts.py  qmark_placeholder  20
-backend/db/users_db/accounts.py  row_factory  1
-backend/db/users_db/accounts.py  sqlite3_attr  21
+backend/db/users_db/accounts.py  sqlite3_attr  20
 backend/db/users_db/admin.py  pragma  5
 backend/db/users_db/admin.py  qmark_placeholder  11
 backend/db/users_db/auth.py  datetime_now  1
@@ -737,6 +737,12 @@ backend/tests/test_upsert_vin_owner_guard.py  import_sqlite3  1
 backend/tests/test_upsert_vin_owner_guard.py  qmark_placeholder  14
 backend/tests/test_upsert_vin_owner_guard.py  row_factory  1
 backend/tests/test_upsert_vin_owner_guard.py  sqlite3_attr  8
+backend/tests/test_users_db_conn_reuse.py  db_path_literal  2
+backend/tests/test_users_db_conn_reuse.py  env_db_path  2
+backend/tests/test_users_db_conn_reuse.py  pragma  5
+backend/tests/test_users_db_conn_reuse.py  qmark_placeholder  2
+backend/tests/test_users_db_conn_reuse.py  row_factory  3
+backend/tests/test_users_db_conn_reuse.py  sqlite_master  1
 backend/tests/test_ux_premium_gates.py  db_path_literal  3
 backend/tests/test_v028_rooftop_evidence_tier.py  db_path_literal  1
 backend/tests/test_v028_rooftop_evidence_tier.py  import_sqlite3  1
