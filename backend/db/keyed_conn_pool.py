@@ -66,14 +66,48 @@ def _env_int(name: str, default: int) -> int:
         return default
 
 
+_RESET_PRAGMAS = ("busy_timeout", "foreign_keys")
+
+
+def _read_pragmas(conn: Any) -> dict[str, int]:
+    out: dict[str, int] = {}
+    for name in _RESET_PRAGMAS:
+        try:
+            row = conn.execute(f"PRAGMA {name}").fetchone()
+            if row is not None:
+                out[name] = int(row[0])
+        except Exception:
+            pass
+    return out
+
+
+def _scrub(conn: Any, pragmas: dict[str, int]) -> None:
+    """Make a returned handle look freshly opened, or raise so it is closed instead.
+
+    Restores the PRAGMAs read at open. A handle that holds TEMP objects or an ATTACHed
+    database is never pooled: those would be visible to the next borrower.
+    """
+    for name, value in pragmas.items():
+        cur = conn.execute(f"PRAGMA {name}").fetchone()
+        if cur is None or int(cur[0]) != value:
+            conn.execute(f"PRAGMA {name}={int(value)}")
+    if conn.execute("SELECT count(*) FROM sqlite_temp_master").fetchone()[0]:
+        raise RuntimeError("temp objects on a returned handle")
+    if len(conn.execute("PRAGMA database_list").fetchall()) > 2:
+        raise RuntimeError("attached database on a returned handle")
+
+
 class _Entry:
-    __slots__ = ("conn", "ident", "idle_since", "defaults", "cursor_type", "closed_exc")
+    __slots__ = ("conn", "ident", "idle_since", "defaults", "pragmas", "cursor_type", "closed_exc")
 
     def __init__(self, conn: Any, ident: tuple[int, int] | None, defaults: dict) -> None:
         self.conn = conn
         self.ident = ident
         self.idle_since = time.monotonic()
         self.defaults = defaults
+        # Connection-level PRAGMAs a borrower may change; restored on every return so one
+        # request's settings never reach the next borrower (review 2026-11-20).
+        self.pragmas = _read_pragmas(conn)
         # The driver's own ProgrammingError (sqlcipher3.dbapi2 / sqlite3) for use after close.
         drv = sys.modules.get(type(conn).__module__)
         self.closed_exc: type[BaseException] = getattr(drv, "ProgrammingError", RuntimeError)
@@ -192,6 +226,7 @@ class KeyedConnPool:
                     setattr(conn, a, v)
             if getattr(conn, "in_transaction", False):
                 raise RuntimeError("transaction still open after rollback")
+            _scrub(conn, entry.pragmas)
         except Exception:
             _close_quietly(conn)
             return

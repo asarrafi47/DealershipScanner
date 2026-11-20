@@ -81,6 +81,37 @@ def test_returned_connection_is_clean(enc_db):
     again.close()
 
 
+def test_pragmas_are_restored_for_the_next_borrower(enc_db):
+    conn = users_sqlite.get_users_conn()
+    raw = conn.raw_connection
+    before = raw.execute("PRAGMA busy_timeout").fetchone()[0]
+    conn.execute("PRAGMA busy_timeout=10000")
+    conn.execute("PRAGMA foreign_keys=ON")
+    conn.close()
+
+    again = users_sqlite.get_users_conn()
+    assert again.raw_connection is raw
+    assert again.execute("PRAGMA busy_timeout").fetchone()[0] == before
+    assert again.execute("PRAGMA foreign_keys").fetchone()[0] == 0
+    again.close()
+
+
+def test_handle_with_temp_objects_is_never_pooled(enc_db):
+    _, opens = enc_db
+    conn = users_sqlite.get_users_conn()
+    raw = conn.raw_connection
+    conn.execute("CREATE TEMP TABLE leak (v TEXT)")
+    conn.execute("INSERT INTO leak VALUES ('user A secret')")
+    conn.commit()
+    conn.close()
+
+    again = users_sqlite.get_users_conn()
+    assert again.raw_connection is not raw
+    assert again.execute("SELECT count(*) FROM sqlite_temp_master").fetchone()[0] == 0
+    again.close()
+    assert len(opens) == 2
+
+
 def test_use_after_close_raises(enc_db):
     conn = users_sqlite.get_users_conn()
     cur = conn.cursor()
