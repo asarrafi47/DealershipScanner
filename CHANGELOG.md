@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- **Signed-in pages no longer re-key users.db on every read.** `get_users_conn()` opened a new SQLCipher connection each call and paid PBKDF2 key derivation (~130 ms here) 2-5 times per signed-in page. Already-keyed handles are now reused from a small per-process pool (`backend/db/keyed_conn_pool.py`; same file, same key format, same PRAGMAs): rolled back and reset on return, dropped on any error, on a path/key change, on a replaced file (inode) and after a fork; `USERS_DB_POOL_SIZE` (default 8, 0 = off) and `USERS_DB_POOL_MAX_IDLE_S` (default 300). Local: dashboard 817 -> 23 ms, dealer admin 805 -> 15 ms, car (user) 740 -> 302 ms, home 312 -> 6 ms. Also fixes `get_org()` raising TypeError under SQLCipher (`sqlite3.Row` rejects a sqlcipher3 cursor).
+
 ## [1.5.40] - 2026-11-19
 
 Release 1.5.40 brings dev (1.5.12 to 1.5.39) together with main's speed hotfix 1.5.11. In plain words:
