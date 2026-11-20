@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [1.5.12] - 2026-11-20
+
+### Fixed
+- Speed hotfix onto 1.5.11 (issue #37; dev PRs #32 and #33, parser part only):
+  - Signed-in pages no longer re-derive the SQLCipher key on every users-DB open
+    (130 to 700 ms per signed-in page). Keyed handles are reused from a small pool
+    (`backend/db/keyed_conn_pool.py`): rolled back and PRAGMA-restored on return, never
+    pooled with TEMP or ATTACH state, re-checked for path, key, inode and pid on checkout.
+    Defaults `USERS_DB_POOL_SIZE=8`, `USERS_DB_POOL_MAX_IDLE_S=300`;
+    **`USERS_DB_POOL_SIZE=0` turns reuse off** (one fresh keyed open per call, as before).
+    Before restoring users.db in place, restart web or set `USERS_DB_POOL_SIZE=0`.
+  - The first search after a deploy no longer freezes the site for 23 to 55 s: the
+    parser vocabulary infers colours over DISTINCT colour triples instead of every active
+    row, parses each distinct packages string once, and on Postgres refreshes in the
+    background after `PARSER_VOCAB_TTL_S` (default 6 h; 0 = never).
+  - `get_org` no longer uses `sqlite3.Row` on a SQLCipher cursor.
+
 ## [1.5.11] - 2026-11-13
 
 ### Fixed
