@@ -21,6 +21,12 @@ that no longer existed). Current state lives in the files linked below.
 `master-todo.md` is a 2026-07 snapshot and is being folded into the execution plan; do not
 start from it.
 
+## Where things run
+
+Railway scans; Claude Code cloud sessions fix (`docs/scan_loop/README.md`). Work on a
+`claude/<topic>` branch cut from `dev`, PR into `dev`, environment `dealership-code`. In a project
+thread run `bash scripts/cloud/setup.sh` first (`docs/CLOUD.md` section 12).
+
 ## Production
 
 Production runs on Railway. Code reaches it only through `deploy/railway/deploy_web.sh` and
