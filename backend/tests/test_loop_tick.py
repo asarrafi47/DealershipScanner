@@ -10,6 +10,7 @@ from pathlib import Path
 from backend.scanner.loop import bundle
 from backend.scanner.loop import requests as rq
 from backend.scanner.loop.config import DEFAULTS
+from backend.scanner.loop import store as loop_store
 from backend.scripts import ops_tick as tick
 
 NOW = datetime(2026, 11, 21, 12, 0, 0, tzinfo=timezone.utc)
@@ -214,6 +215,29 @@ def test_torn_ledger_line_is_ignored(tmp_path):
 
 
 def test_template_config_leaves_apply_off():
-    raw = (Path(__file__).resolve().parents[2] / "docs/scan_loop/data_repo_template/config/loop.json").read_bytes()
+    raw = (Path(__file__).resolve().parents[2] / "docs/scan_loop/data_template/config/loop.json").read_bytes()
     from backend.scanner.loop.config import load_loop_config
     assert "apply" not in load_loop_config(raw).kinds
+
+
+def test_store_round_trip_seeds_config_runs_the_tick_and_stores_statuses(tmp_path):
+    mem = loop_store.MemStore()
+    mem.put(f"requests/{NAME}.json", json.dumps(_request()).encode(), "cloud")
+    tick.seed_config(mem)
+    assert b"apply" not in mem.get("config/loop.json")
+    clone = tmp_path / "tree"
+    tick.sync_down(mem, clone)
+    from backend.scanner.loop.config import load_loop_config
+
+    config = load_loop_config((clone / "config" / "loop.json").read_bytes())
+    ex = tick.build_executors(config, FakeIO(), lambda kind, dealers: (True, kind + " ok"), tmp_path / "rb")
+    counts = tick.process(clone, tmp_path / "ledger.jsonl", config, CTX, ex, NOW, tmp_path / "rb")
+    assert counts["ran"] == 1
+    assert tick.sync_up(mem, clone) == 2  # the status and the fix_cycles file
+    assert json.loads(mem.get(f"requests/{NAME}.status.json"))["state"] == "done"
+    assert mem.get("fix_cycles/abc-com.json")
+    assert tick.sync_up(mem, clone) == 0
+    tick.seed_config(mem)  # an owner-edited config is never overwritten
+    mem.put("config/loop.json", b'{"enabled":false}', "railway")
+    tick.seed_config(mem)
+    assert mem.get("config/loop.json") == b'{"enabled":false}'

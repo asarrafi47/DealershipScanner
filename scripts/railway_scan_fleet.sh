@@ -25,15 +25,6 @@ fi
 # recipes stay live, scan_hints.recipe_status = blocked:railway:... (recipes.egress_tag).
 export SCANNER_EGRESS_TAG="${SCANNER_EGRESS_TAG:-railway}"
 cd /app
-# Scan loop (docs/scan_loop/BUNDLE.md section 10): when the private data repository is configured, the per-dealer
-# logs of this run are written inside its clone on the volume, and fleet_scan publishes them afterwards. A failed
-# sync only leaves the logs where they were (workspace/dealer_logs on the volume); it never blocks the scan.
-if [ -n "${LOOP_DATA_REPO:-}" ] && [ -n "${LOOP_DATA_TOKEN:-}" ]; then
-  export LOOP_DATA_DIR="${LOOP_DATA_DIR:-$DATA/loop-data}"
-  if python3 -m backend.scripts.ops_publish sync; then
-    export DEALER_LOGS_ROOT="$LOOP_DATA_DIR/workspace/dealer_logs"
-  else
-    echo "WARN: data repository sync failed; dealer logs stay on the volume" >&2
-  fi
-fi
+# Scan loop: with LOOP_STORE=db, fleet_scan publishes the run's dealer logs, bundle and recipe mirror into the
+# Railway database afterwards (backend/scripts/ops_publisher.py). A failed publish never changes the scan's exit code.
 exec python3 -m backend.scripts.fleet_scan

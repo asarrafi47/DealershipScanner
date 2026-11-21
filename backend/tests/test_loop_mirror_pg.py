@@ -43,3 +43,26 @@ def test_export_is_stable_read_only_and_keeps_headers_and_stale_flags(pg_db, tmp
     assert first == {p.name: p.read_bytes() for p in (out / "mirror").rglob("*") if p.is_file()}
     assert b"x-api-key" in first["a-com.json"] and b'"stale": true' in first["b-com.json"]
     assert json.loads(first["scan_hints.json"]) == {"a-com": {"price_source": "list"}}
+
+
+def test_pg_store_round_trip_caps_and_retention(pg_db):
+    from backend.scanner.loop import store as ls
+
+    s = ls.PgStore(connect=pg_db.connect)
+    assert s.put("findings/a.md", b"one", "cloud") is True
+    assert s.put("findings/a.md", b"one", "cloud") is False
+    assert s.put("findings/a.md", b"two", "cloud") is True
+    assert s.get("findings/a.md") == b"two" and s.exists("findings/a.md")
+    for day in range(1, 5):
+        s.put(f"runs/fleet_2026110{day}T090000Z/MANIFEST.json", b"{}")
+    assert ls.prune_runs(s, 2) == 2
+    assert [e.path for e in s.list("runs/")] == ["runs/fleet_20261103T090000Z/MANIFEST.json",
+                                                 "runs/fleet_20261104T090000Z/MANIFEST.json"]
+    assert s.list("findings/")[0].size == 3 and s.total_bytes() >= 3
+    small = ls.PgStore(connect=pg_db.connect, max_total=s.total_bytes())
+    with pytest.raises(ls.StoreError, match="full"):
+        small.put("findings/b.md", b"x")
+    assert s.delete_prefix("findings/") == 1
+    with pytest.raises(Exception):  # the table's own check: a path the application would never write
+        with pg_db.connect() as conn:
+            conn.execute("INSERT INTO public.loop_files (path, body, sha256, size) VALUES ('', ''::bytea, 'x', 0)")

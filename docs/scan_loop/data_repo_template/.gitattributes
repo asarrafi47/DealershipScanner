@@ -1,4 +1,0 @@
-# Concurrent appends from Railway and a cloud session merge instead of conflicting.
-workspace/dealer_logs/*/scan_runs.md             merge=union
-workspace/dealer_logs/*/discovery.md             merge=union
-workspace/dealer_logs/_learning/errors_index.md  merge=union

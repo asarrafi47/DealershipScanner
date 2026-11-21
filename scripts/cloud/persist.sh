@@ -1,87 +1,55 @@
 #!/usr/bin/env bash
-# Persist a cloud session's loop output into the private data repository (docs/scan_loop/BUNDLE.md
-# section 10). A reclaimed VM loses everything that is not pushed, so run this after each dealer or
-# agent finishes. It stages only what a session may write, validates new requests first, commits,
-# rebases onto the remote and pushes, five attempts with backoff.
+# Persist a cloud session's loop output through the scan loop API (docs/scan_loop/README.md). A reclaimed VM
+# loses everything that is not sent, so run this after each dealer or agent finishes. It validates new requests
+# locally first, then sends the session's new requests, proposals, findings and its summary.md / location.md notes
+# (scripts/cloud/loop_client.py push), five attempts with backoff. The server checks every file again.
 #
-#   scripts/cloud/persist.sh [-m MESSAGE]
+#   scripts/cloud/persist.sh
 #
-# Environment: LOOP_DATA_DIR  the data repository's clone (default /opt/ds-data)
-#              PERSIST_SLEEP  seconds before the first retry, doubled each time (default 2)
-# Exit: 0 pushed or nothing to push, 1 not pushed (work stays committed locally), 2 usage or setup error.
-# Written for bash 3.2 and up. It never reads or writes a credential: git uses the clone's own remote.
+# Environment: LOOP_DATA_DIR      the hydrated data folder (default /opt/ds-data)
+#              LOOP_API_URL       the web service's https base URL
+#              LOOP_SUBMIT_TOKEN  the submit token (set in the environment; never printed, never written to a file)
+#              PERSIST_SLEEP      seconds before the first retry, doubled each time (default 2)
+# Exit: 0 sent or nothing to send, 1 not sent (the files stay in place), 2 usage or setup error.
+# Written for bash 3.2 and up.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 DATA="${LOOP_DATA_DIR:-/opt/ds-data}"
-MSG="session: dealer logs, proposals, findings, requests"
 ATTEMPTS=5
 SLEEP="${PERSIST_SLEEP:-2}"
 
 die() { printf 'persist.sh: %s\n' "$1" >&2; exit "${2:-2}"; }
 
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    -m) shift; MSG="${1:-}" ;;
-    -h|--help) sed -n '2,12p' "${BASH_SOURCE[0]}"; exit 0 ;;
-    *) die "unknown option: $1" ;;
-  esac
-  shift
+case "${1:-}" in -h|--help) sed -n '2,13p' "${BASH_SOURCE[0]}"; exit 0 ;; "") ;; *) die "unknown option: $1" ;; esac
+[ -d "$DATA" ] || die "$DATA is not a folder (run scripts/cloud/ops_hydrate.sh, or set LOOP_DATA_DIR)"
+[ -n "${LOOP_SUBMIT_TOKEN:-}" ] || die "LOOP_SUBMIT_TOKEN is not set"
+[ -n "${LOOP_API_URL:-}" ] || die "LOOP_API_URL is not set"
+
+validator="$ROOT/backend/scripts/ops_requests.py"
+files=()
+for f in "$DATA"/requests/rq-*.json; do
+  [ -e "$f" ] || continue
+  case "$f" in *.status.json) continue ;; esac
+  [ -e "${f%.json}.status.json" ] || files+=("$f")
 done
-[ -n "$MSG" ] || die "empty commit message"
-git -C "$DATA" rev-parse --git-dir >/dev/null 2>&1 || die "$DATA is not a git clone (set LOOP_DATA_DIR)"
-
-# Only these paths are ever staged. Never *.status.json, fix_cycles/, mirror/, runs/ or evidence/.
-STAGE_PATHS="workspace/dealer_logs proposals findings"
-
-new_requests() {  # untracked request files (created once, never edited)
-  git -C "$DATA" ls-files --others --exclude-standard -- 'requests/rq-*.json' | grep -v '\.status\.json$' || true
-}
-
-reqs="$(new_requests)"
-if [ -n "$reqs" ]; then
-  validator="$ROOT/backend/scripts/ops_requests.py"
-  [ -f "$validator" ] || die "new request files exist but $validator is missing: refusing to push unvalidated requests" 1
-  files=()
-  while IFS= read -r f; do files+=("$DATA/$f"); done <<<"$reqs"
+if [ "${#files[@]}" -gt 0 ]; then
+  [ -f "$validator" ] || die "request files exist but $validator is missing: refusing to send unvalidated requests" 1
   if ! (cd "$ROOT" && python "$validator" validate "${files[@]}"); then
-    printf 'persist.sh: a request was rejected; nothing was staged\n' >&2
+    printf 'persist.sh: a request was rejected; nothing was sent\n' >&2
     exit 1
   fi
-fi
-
-for p in $STAGE_PATHS; do
-  [ -e "$DATA/$p" ] && git -C "$DATA" add -A -- "$p"
-done
-if [ -n "$reqs" ]; then
-  while IFS= read -r f; do git -C "$DATA" add -- "$f"; done <<<"$reqs"
-fi
-
-if git -C "$DATA" diff --cached --quiet; then
-  # Nothing new, but an earlier attempt may have left an unpushed commit.
-  if [ -z "$(git -C "$DATA" log '@{u}..HEAD' --oneline 2>/dev/null || true)" ]; then
-    echo "persist.sh: nothing to persist"
-    exit 0
-  fi
-else
-  git -C "$DATA" commit -q -m "$MSG"
 fi
 
 i=1
 delay="$SLEEP"
 while [ "$i" -le "$ATTEMPTS" ]; do
-  if git -C "$DATA" pull -q --rebase 2>/dev/null; then
-    if git -C "$DATA" push -q 2>/dev/null; then
-      echo "persist.sh: pushed (attempt $i)"
-      exit 0
-    fi
-  else
-    # A conflict: abort the rebase, keep the local commit, and try again after a fresh fetch.
-    git -C "$DATA" rebase --abort >/dev/null 2>&1 || true
+  if python3 "$ROOT/scripts/cloud/loop_client.py" push --root "$DATA"; then
+    echo "persist.sh: sent (attempt $i)"
+    exit 0
   fi
-  git -C "$DATA" fetch -q 2>/dev/null || true
   i=$((i + 1))
   [ "$i" -le "$ATTEMPTS" ] && { sleep "$delay"; delay=$((delay * 2)); }
 done
-printf 'persist.sh: could not push after %s attempts; the work is committed in %s\n' "$ATTEMPTS" "$DATA" >&2
+printf 'persist.sh: could not send after %s attempts; the files are still in %s\n' "$ATTEMPTS" "$DATA" >&2
 exit 1

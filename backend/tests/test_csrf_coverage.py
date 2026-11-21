@@ -59,11 +59,13 @@ EXEMPT = {
     ("billing.stripe_webhook", "POST"),
     ("billing.premium_webhook", "POST"),
     ("twilio_webhook.twilio_verify_webhook", "POST"),
+    ("loop_api.submit", "POST"),  # bearer token (LOOP_SUBMIT_TOKEN), a server API for cloud sessions
 }
 EXEMPT_SIGNATURE_MARKERS = {
     "billing.stripe_webhook": ("Stripe-Signature", "invalid_signature"),
     "billing.premium_webhook": ("Stripe-Signature", "invalid_signature"),
     "twilio_webhook.twilio_verify_webhook": ("X-Twilio-Signature", "signature_is_valid"),
+    "loop_api.submit": ("LOOP_SUBMIT_TOKEN", "_guard"),
 }
 
 # 2FA removed: redirect-only handlers (auth/pages.py:280-292, dev/routes.py dev_mfa_gone;

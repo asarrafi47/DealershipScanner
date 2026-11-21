@@ -359,7 +359,7 @@ command that Claude polls), make it resumable in chunks, and commit results as i
 
 | Not possible | Why | Instead |
 |---|---|---|
-| Live dealer scans (`dealer_pipeline`, `scanner.py`, `fleet_scan`) | Owner decision 2026-11-21: Railway scans. Recipes live in the `dealer_recipes` table, dealer logs on the Railway volume and in the private data repository; a VM loses anything in `workspace/` when reclaimed, and dealer sites may refuse the cloud's addresses | Railway runs the fleet; a session reads the published bundle, proposes fixes as request files and changes scanner code through a PR into `dev` (`docs/scan_loop/README.md`) |
+| Live dealer scans (`dealer_pipeline`, `scanner.py`, `fleet_scan`) | Owner decision 2026-11-21: Railway scans. Recipes live in the `dealer_recipes` table, dealer logs on the Railway volume and in the loop store (`loop_files`, Railway database); a VM loses anything in `workspace/` when reclaimed, and dealer sites may refuse the cloud's addresses | Railway runs the fleet; a session reads the published bundle, proposes fixes as request files and changes scanner code through a PR into `dev` (`docs/scan_loop/README.md`) |
 | Railway deploys and `railway` commands | No Railway CLI or token (do not add one), Railway hosts are not allowed, tags cannot be pushed | `docs/RELEASING.md`, on the Mac |
 | The real databases, the scan databases, the production database | Unreachable, refused by `pg_test_up.sh` and the pg harness by name, and they must stay that way | A session has its own empty throwaway cluster |
 | Local data: `.env`, `workspace/`, the dev inventory, brochure PDFs, the dictionary catalog build | Gitignored, so not in the clone | Asset-gated tests skip, as in CI |

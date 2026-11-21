@@ -1,5 +1,12 @@
 # Results bundle and request protocol
 
+> **Storage update (2026-11-21).** The loop's data no longer lives in a private git repository. It lives in the
+> Railway database (table `loop_files`, migration V032) and cloud sessions reach it through the token-guarded
+> `/api/loop` endpoints (`backend/routes/loop_api.py`, `scripts/cloud/loop_client.py`). Read "data repository" in
+> this document as "the store": `main` and `runs` become the path prefixes in section 3 of `BUNDLE.md`, and the
+> git mechanics (commits, rebase, union merge, orphan branch, token in `GIT_CONFIG_*`) do not apply. Retention is
+> the newest 30 runs plus size caps in `backend/scanner/loop/store.py`. Owner steps: `OWNER_SETUP.md`.
+
 This document specifies how scan results leave Railway and how requests and recipe proposals come back, for the Claude Code cloud sessions that implement and operate the scan loop described in `README.md`. It is detailed enough to implement `backend/scanner/loop/bundle.py`, `requests.py`, `scrub.py` and `config.py`, the wrappers `backend/scripts/ops_publish.py` and `ops_requests.py`, and their tests. Read it if you build or review those modules, change the Railway publisher or the hourly tick, write an analysis routine that reads run bundles, or file requests and proposals from a session. The gates and the improvement queue are specified in `GATES.md`; the files they produce travel in the bundle as optional artifacts (section 4.6).
 
 ## 1. Problem and design

@@ -503,12 +503,12 @@ def main(clock: Callable[[], datetime] | None = None) -> int:
 
 
 def publish_run(run_dir: Path) -> None:
-    """Hand the finished run to the private data repository (card L18). Never changes the fleet's exit code.
+    """Hand the finished run to the scan loop store in the Railway database (card L18). Never changes the exit code.
 
-    Skipped unless ``LOOP_DATA_REPO`` and ``LOOP_DATA_TOKEN`` are both set; a failure, a timeout or a missing git is
-    logged and left in ``publisher.rc`` beside the summary, and the next run's catch-up publishes what is missing.
+    Skipped unless ``LOOP_STORE=db``; a failure or a timeout is logged and left in ``publisher.rc`` beside the
+    summary, and the next run's catch-up publishes what is missing.
     """
-    if not (os.environ.get("LOOP_DATA_REPO") and os.environ.get("LOOP_DATA_TOKEN")):
+    if (os.environ.get("LOOP_STORE") or "").strip().lower() != "db":
         return
     try:
         proc = subprocess.run([sys.executable, "-m", "backend.scripts.ops_publish", "publish", "--run-dir", str(run_dir)],
