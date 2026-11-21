@@ -502,6 +502,23 @@ def main(clock: Callable[[], datetime] | None = None) -> int:
         release_fleet_lease(lease)
 
 
+def publish_run(run_dir: Path) -> None:
+    """Hand the finished run to the private data repository (card L18). Never changes the fleet's exit code.
+
+    Skipped unless ``LOOP_DATA_REPO`` and ``LOOP_DATA_TOKEN`` are both set; a failure, a timeout or a missing git is
+    logged and left in ``publisher.rc`` beside the summary, and the next run's catch-up publishes what is missing.
+    """
+    if not (os.environ.get("LOOP_DATA_REPO") and os.environ.get("LOOP_DATA_TOKEN")):
+        return
+    try:
+        proc = subprocess.run([sys.executable, "-m", "backend.scripts.ops_publish", "publish", "--run-dir", str(run_dir)],
+                              capture_output=True, text=True, timeout=_env_int("LOOP_PUBLISH_TIMEOUT", 900))
+        tail = (proc.stdout or proc.stderr or "").strip().splitlines()[-1:] or [""]
+        print(f"fleet   publish rc={proc.returncode}: {tail[0][:300]}", flush=True)
+    except Exception as exc:  # noqa: BLE001 - publishing must never fail the scan
+        print(f"fleet   publish skipped: {type(exc).__name__}", flush=True)
+
+
 def _scan(roster: list[str], window_spec: str | None, started: datetime, t_start: float) -> int:
     out_root = Path(os.environ.get("SCAN_OUT_ROOT") or (ROOT / "workspace" / "pipeline"))
     keep_days = _env_int("SCAN_KEEP_DAYS", 14)
@@ -609,6 +626,7 @@ def _scan(roster: list[str], window_spec: str | None, started: datetime, t_start
     summary["exit"] = EXIT_OK if ok else EXIT_INFRA
     (run_dir / "fleet_summary.json").write_text(json.dumps(summary, indent=1, default=str))
     print("FLEET SUMMARY " + json.dumps(summary, default=str), flush=True)
+    publish_run(run_dir)
     h = summary["http_403_429"]["by_status"]
     print(f"fleet   done: {len(roster)} dealers, verdicts {dict(verdicts)}, 403={h.get('403', 0)} 429={h.get('429', 0)}, "
           f"{summary['total_seconds'] / 60:.1f} min, peak {summary['resources_total'].get('peak_mem_mb')} MB, "

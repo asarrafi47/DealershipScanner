@@ -12,7 +12,15 @@ It reads no clock: without ``--now`` the publication time is left out ("unknown"
 ``LATEST.json``). The target comes from ``LOOP_TARGET`` (default ``prod``) and the egress tag from
 ``SCANNER_EGRESS_TAG``; the scrubber takes its secret values from the environment and never prints them.
 
-Exit status: 0 done, 2 a usage, input or scrub error (nothing is written then).
+  python backend/scripts/ops_publish.py sync
+  python backend/scripts/ops_publish.py publish --run-dir DIR [--now ISO] [--no-catch-up]
+
+``sync`` clones or updates the data repository's ``main`` clone (``LOOP_DATA_DIR``), so the dealer logs of the next
+run land inside it. ``publish`` (card L18, ``ops_publisher.py``) commits the run's dealer-log blocks to ``main`` and
+the bundle to the ``runs`` branch of the private data repository, and records the outcome in ``publisher.rc`` of the
+run directory. Both need ``LOOP_DATA_REPO`` and ``LOOP_DATA_TOKEN``; they exit 1 on any failure (the fleet ignores it).
+
+Exit status: 0 done, 2 a usage, input or scrub error (nothing is written then); sync and publish: 1 a failure.
 """
 
 from __future__ import annotations
@@ -100,6 +108,36 @@ def build_command(args, env) -> int:
     return 0
 
 
+def sync_command(args, env) -> int:
+    from backend.scripts import ops_publisher as pub
+
+    if not pub.configured(env):
+        print("ops_publish: LOOP_DATA_REPO and LOOP_DATA_TOKEN are not both set; nothing to sync", file=sys.stderr)
+        return 1
+    try:
+        print("ops_publish: data clone at " + str(pub.sync_main(env)))
+    except pub.PublishError as exc:
+        print("ops_publish: " + scrub.clean_line(str(exc), 300), file=sys.stderr)
+        return 1
+    return 0
+
+
+def publish_command(args, env) -> int:
+    from backend.scripts import ops_publisher as pub
+
+    run_dir = Path(args.run_dir)
+    try:
+        result = pub.publish(run_dir, env, args.now, catch_up=not args.no_catch_up)
+    except (pub.PublishError, ValueError, OSError) as exc:
+        detail = scrub.clean_line(str(exc), 300)
+        pub.record_rc(run_dir, 1, detail)
+        print("ops_publish: publish failed: " + detail, file=sys.stderr)
+        return 1
+    pub.record_rc(run_dir, 0, json.dumps(result))
+    print("ops_publish: published " + json.dumps(result))
+    return 0
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ops_publish.py", description=__doc__.split("\n\n")[0])
     sub = parser.add_subparsers(dest="command", required=True)
@@ -111,6 +149,11 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--now", help="publication time, ISO 8601 UTC (no clock is read without it)")
     build.add_argument("--out", metavar="DIR", help="write <DIR>/runs/<run_id>/ and <DIR>/runs/LATEST.json")
     build.add_argument("--dry-run", action="store_true", help="print path, bytes and sha256; write nothing")
+    sub.add_parser("sync", help="clone or update the data repository's main clone")
+    publish = sub.add_parser("publish", help="publish a finished fleet run to the private data repository")
+    publish.add_argument("--run-dir", required=True, metavar="DIR", help="the fleet run directory (fleet_<UTC stamp>)")
+    publish.add_argument("--now", help="publication time, ISO 8601 UTC")
+    publish.add_argument("--no-catch-up", action="store_true", help="publish only this run")
     return parser
 
 
@@ -118,6 +161,12 @@ def main(argv=None, env=None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
     env = os.environ if env is None else env
+    if args.command == "sync":
+        return sync_command(args, env)
+    if args.command == "publish":
+        if args.now is not None:
+            args.now = bundle._iso(args.now)
+        return publish_command(args, env)
     try:
         if not args.dry_run and not args.out:
             raise CliError("--out is required unless --dry-run is given")
