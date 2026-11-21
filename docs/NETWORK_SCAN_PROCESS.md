@@ -3,6 +3,17 @@
 **Read this before scanning any dealership.** It states the goal of this effort and the
 loop every dealership goes through. Written from the owner's instructions, 2026-09-24.
 
+## Where this runs
+
+The per-dealership loop below is the process; **Railway executes it** (`scanner-nightly`, the
+fleet job in `docs/RAILWAY_SCANNING.md`), and its output reaches Claude Code cloud sessions as run
+bundles, dealer-log blocks and a recipe mirror in the private data repository
+(`docs/scan_loop/README.md`, owner decision 2026-11-21). A cloud session does not fetch dealer
+sites: it reads those artifacts, proposes recipe fixes as request files and changes code through
+PRs into `dev`. Where a step below says "run" a command, that is Railway's job (or the owner's Mac
+for a one-off); the `workspace/dealer_logs/` paths are the layout on the volume and in the data
+repository, not a place a cloud VM may keep state.
+
 ## Goal
 
 We are shifting the scanning process from using headless browsers to collect data from
