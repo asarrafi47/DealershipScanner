@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Edit",
+      "Write",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(bash scripts/cloud/persist.sh:*)",
+      "Bash(python -m backend.scripts.ops_gates:*)",
+      "Bash(python -m backend.scripts.ops_requests:*)"
+    ],
+    "deny": ["WebFetch", "WebSearch"]
+  }
+}
