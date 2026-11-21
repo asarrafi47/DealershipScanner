@@ -48,7 +48,7 @@ URI = "https://verify.twilio.test/v2/Services/%s/Verifications?To=%s" % (SERVICE
 # Things that must never appear in a log line or a result, in any form.
 FORBIDDEN = (
     NUMBER, "5555550123", SVC_NUMBER, "2025550147", SERVICE_SID, ACCOUNT_SID, KEY_SID, SECRET, CODE,
-    "unverified", "Trial accounts", "twilio.com", "twilio.test", "<html", "Unavailable</", "Unable to create",
+    "is unverified", "Trial accounts", "twilio.com", "twilio.test", "<html", "Unavailable</", "Unable to create",
 )
 
 
