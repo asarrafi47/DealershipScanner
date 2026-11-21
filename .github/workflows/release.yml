@@ -1,0 +1,245 @@
+name: Release and deploy
+
+# Cloud release path (decided 2026-11-21: no Mac steps). Manual only: run it from
+# Actions > "Release and deploy" > Run workflow. It never runs on a push.
+#
+# Needs two repository secrets (docs/scan_loop/OWNER_SETUP.md, section 1):
+#   RAILWAY_TOKEN       a Railway PROJECT token for the production environment
+#   BACKUP_PASSPHRASE   any long random string; encrypts the pre-migration dump
+#
+# action:
+#   check     read-only: release guard, migrate dry run against prod, deploy dry runs
+#   backup    pg_dump of prod, encrypted, kept as a workflow artifact (90 days)
+#   migrate   migrate --apply --target <target> against prod (run backup first)
+#   release   fast-forward main to <ref>, push the annotated tag v<VERSION>
+#   deploy    deploy web, then scanner-nightly, from the tag at main
+#   scan      supervised scan: SCAN_DEALERS=<scan_dealers>, SCAN_FLEET=0, no cron
+#   full      backup, migrate, release, deploy, in that order (not scan)
+#
+# The artifact is encrypted because this repository is public: anyone can
+# download a public repo's artifacts. Web boot also applies pending migrations
+# (MIGRATE_ON_BOOT=1), so the explicit migrate step exists to run AFTER the
+# backup and BEFORE the new web code boots.
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "What to run"
+        type: choice
+        required: true
+        default: check
+        options: [check, backup, migrate, release, deploy, scan, full]
+      ref:
+        description: "release: branch to fast-forward main to (it must contain main)"
+        type: string
+        default: dev
+      target:
+        description: "migrate: highest migration number to apply (N in VN)"
+        type: string
+        default: "32"
+      scan_dealers:
+        description: "scan: comma-separated dealer ids (two for the first run)"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-and-deploy
+  cancel-in-progress: false
+
+env:
+  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+  HEALTH_URL: https://sarraficars.com/api/health
+  LOOP_URL: https://sarraficars.com/api/loop/list
+
+jobs:
+  check:
+    if: ${{ inputs.action == 'check' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tools
+        run: |
+          npm install -g @railway/cli
+          pip install "psycopg[binary]>=3.2"
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+      - name: Release guard against main
+        run: python3 scripts/release_guard.py --base origin/main
+      - name: Railway reachable and target is remote
+        run: railway status
+      - name: Migrate dry run against prod
+        run: |
+          railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; case "$INVENTORY_DATABASE_URL" in ""|*@localhost*|*@127.0.0.1*) echo "target: LOCAL, stopping"; exit 1 ;; *) echo "target: remote" ;; esac; python -m backend.scripts.migrate --dry-run'
+
+  backup:
+    if: ${{ inputs.action == 'backup' || inputs.action == 'full' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: PostgreSQL 18 client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-18
+          npm install -g @railway/cli
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          test -n "$BACKUP_PASSPHRASE" || { echo "BACKUP_PASSPHRASE secret is not set"; exit 1; }
+        env:
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+      - name: Dump prod, check it, encrypt it
+        env:
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          PGBIN=/usr/lib/postgresql/18/bin
+          railway run -s Postgres -- sh -c "$PGBIN/pg_dump -Fc \"\$DATABASE_PUBLIC_URL\"" > prod.dump
+          test -s prod.dump
+          $PGBIN/pg_restore -l prod.dump | head -5
+          ls -l prod.dump
+          openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BACKUP_PASSPHRASE -in prod.dump -out prod_pre_migrate.dump.enc
+          rm prod.dump
+          ls -l prod_pre_migrate.dump.enc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prod-pre-migrate-${{ github.run_id }}
+          path: prod_pre_migrate.dump.enc
+          retention-days: 90
+          if-no-files-found: error
+
+  migrate:
+    needs: [backup]
+    if: ${{ !cancelled() && !failure() && (inputs.action == 'migrate' || inputs.action == 'full') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tools
+        run: |
+          npm install -g @railway/cli
+          pip install "psycopg[binary]>=3.2"
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+      - name: Apply migrations to prod
+        run: |
+          railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; case "$INVENTORY_DATABASE_URL" in ""|*@localhost*|*@127.0.0.1*) echo "target: LOCAL, stopping"; exit 1 ;; *) echo "target: remote" ;; esac; python -m backend.scripts.migrate --apply --target ${{ inputs.target }}'
+      - name: Dry run after apply
+        run: |
+          railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; python -m backend.scripts.migrate --dry-run --target ${{ inputs.target }}'
+
+  release:
+    needs: [migrate]
+    if: ${{ !cancelled() && !failure() && (inputs.action == 'release' || inputs.action == 'full') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+      - name: Release guard, fast-forward main, annotated tag
+        run: |
+          set -euo pipefail
+          git fetch origin main:refs/remotes/origin/main
+          python3 scripts/release_guard.py --base origin/main
+          git merge-base --is-ancestor origin/main HEAD || { echo "main is not an ancestor of ${{ inputs.ref }}: not a fast-forward"; exit 1; }
+          V=$(tr -d '[:space:]' < VERSION)
+          if git ls-remote --exit-code --tags origin "refs/tags/v$V" >/dev/null 2>&1; then
+            echo "tag v$V already exists on origin"; exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git push origin HEAD:refs/heads/main
+          git tag -a "v$V" -m "Release $V"
+          git push origin "v$V"
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)" && echo main-released
+          echo "released v$V" >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    needs: [release]
+    if: ${{ !cancelled() && !failure() && (inputs.action == 'deploy' || inputs.action == 'full') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tools and checkout the release tag
+        run: |
+          npm install -g @railway/cli
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          git fetch --tags origin
+          V=$(tr -d '[:space:]' < VERSION)
+          git checkout --detach "v$V"
+          git status --short --untracked-files=no
+      - name: Link the Railway project
+        run: railway status
+      - name: Deploy web (dry run, deploy)
+        run: |
+          deploy/railway/deploy_web.sh --dry-run
+          deploy/railway/deploy_web.sh
+      - name: Wait for web and verify
+        run: |
+          V=$(tr -d '[:space:]' < VERSION)
+          for i in $(seq 1 40); do
+            out=$(curl -fsS "$HEALTH_URL" || true)
+            echo "$out" | head -c 300; echo
+            echo "$out" | grep -q "\"$V\"\|$V" && { echo "web is on $V"; break; }
+            sleep 15
+          done
+          echo "$out" | grep -q "$V"
+          code=$(curl -s -o /dev/null -w '%{http_code}' "$LOOP_URL")
+          echo "/api/loop/list without a token: $code"
+          test "$code" = 401
+      - name: Deploy scanner-nightly (idles unless SCAN_FLEET or SCAN_DEALERS is set)
+        run: |
+          deploy/railway/deploy_scanner_nightly.sh --dry-run
+          deploy/railway/deploy_scanner_nightly.sh
+
+  scan:
+    if: ${{ inputs.action == 'scan' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Tools and checkout the release tag
+        run: |
+          npm install -g @railway/cli
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          test -n "${{ inputs.scan_dealers }}" || { echo "scan_dealers is empty"; exit 1; }
+          git fetch --tags origin
+          V=$(tr -d '[:space:]' < VERSION)
+          git checkout --detach "v$V"
+      - name: Set the scan variables (fleet off, no cron) without redeploying
+        run: |
+          railway variables -s scanner-nightly --skip-deploys \
+            --set "SCAN_DEALERS=${{ inputs.scan_dealers }}" --set "SCAN_FLEET=0"
+      - name: Start one deployment of scanner-nightly
+        run: deploy/railway/deploy_scanner_nightly.sh
+      - name: Recent logs
+        run: |
+          sleep 60
+          railway logs -s scanner-nightly 2>&1 | tail -40 || true

@@ -10,17 +10,39 @@ read it and submit requests, proposals and their own notes through the token-gua
 web service. The store has per-file and total size caps (256 MB) and keeps the newest 30 runs. Where the older
 docs say "data repository", read "the store"; `main`/`runs` branches become path prefixes (`runs/`, `mirror/`...).
 
-## 1. Release and deploy
+## 1. Release and deploy (all in GitHub Actions, no Mac)
 
-The change rides in one release (`docs/RELEASING.md`): cut the tag from `dev`, apply migration V032 on the
-production database (`backend/scripts/migrate.py`, as for every migration), deploy the **web** service and then the
-**scanner** from that tag with the deploy scripts (`--dry-run` first). Do not redeploy the 2026-09-29 scanner
-deployment: it carries its own `SCAN_FLEET=1`.
+One-time setup, in the browser:
 
-## 2. Create two random tokens (any password manager or `openssl rand -hex 32`)
+1. Railway, project `dealership-scanner`, **Settings > Tokens**: create a **project token** for the
+   `production` environment. Copy it once.
+2. GitHub, `asarrafi47/DealershipScanner`, **Settings > Secrets and variables > Actions > New repository
+   secret**: name `RAILWAY_TOKEN`, value the token.
+3. Same page, a second secret `BACKUP_PASSPHRASE`: any long random string (it encrypts the pre-migration dump,
+   because artifacts of a public repository are downloadable by anyone). Keep a copy in your password manager;
+   without it the dump cannot be opened.
 
-One **read** token and one **submit** token, each at least 24 characters, different from each other. Keep them out
-of chat, files and screenshots; they go only into Railway (step 3) and the claude.ai environment (step 6).
+Then run **Actions > Release and deploy > Run workflow** (`.github/workflows/release.yml`):
+
+| action | what it does |
+|---|---|
+| `check` | read-only: release guard, migrate dry run against prod |
+| `backup` | encrypted `pg_dump` of prod, kept 90 days as a workflow artifact |
+| `migrate` | `migrate --apply --target <N>` against prod (run `backup` first) |
+| `release` | fast-forward `main` to `<ref>` and push the annotated tag `v<VERSION>` |
+| `deploy` | deploy web, check `/api/health` and that `/api/loop/list` is 401, then scanner-nightly |
+| `scan` | supervised scan: `SCAN_DEALERS=<ids>`, `SCAN_FLEET=0`, no cron |
+| `full` | `backup`, `migrate`, `release`, `deploy` in order |
+
+Web boot also applies pending migrations (`MIGRATE_ON_BOOT=1`); the explicit `migrate` step runs after the backup
+and before the new web code boots. Do not redeploy the 2026-09-29 scanner deployment: it carries its own
+`SCAN_FLEET=1`.
+
+## 2. The two loop tokens
+
+One **read** token and one **submit** token, each at least 24 characters, different from each other. Easiest: in
+Railway set both web variables to `${{ secret(32) }}` so Railway generates them; reveal them later only to paste
+into the claude.ai environment (step 6). Keep them out of chat, files and screenshots.
 
 ## 3. Railway variables
 
@@ -40,7 +62,8 @@ Check: `curl -s -o /dev/null -w '%{http_code}\n' https://<web host>/api/loop/lis
 
 ## 4. The first supervised run
 
-With `SCAN_DEALERS=<2 dealer ids>` set and `SCAN_FLEET` unset, start one deployment of `scanner-nightly` by hand.
+Run the `scan` action of the workflow with two dealer ids (it sets `SCAN_DEALERS`, `SCAN_FLEET=0`, and starts one
+deployment of `scanner-nightly`).
 Check: `curl -s -H "Authorization: Bearer $READ" "https://<web host>/api/loop/list?prefix=runs/"` lists a
 `runs/fleet_...` folder, and `workspace/dealer_logs/` has the two dealers' logs.
 

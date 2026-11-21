@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.5.53] - 2026-11-21
+
+- release, migrations and deploys no longer need a Mac: `.github/workflows/release.yml` (manual) runs the release guard, an encrypted pre-migration `pg_dump`, `migrate --apply`, the main fast-forward plus annotated tag, the guarded web and scanner-nightly deploys, and the supervised scan, with a Railway project token held as a repository secret. `OWNER_SETUP.md` and `CLOUD.md` updated.
+
 ## [1.5.52] - 2026-11-21
 
 - scan loop: `test_loop_e2e_pg.py` (pg tier) runs the whole loop on a real Postgres: publisher, `loop_files` store, `/api/loop` on a live local port, cloud client pull and push, the Railway tick, and the status coming back through the API.
