@@ -234,6 +234,11 @@ def _ceiling(spec: Spec) -> int | None:
     return spec.ceiling_default
 
 
+def hard_ceiling(key: str) -> int | None:
+    """The env-only hard ceiling of setting ``key`` (the admin form refuses values above it), or None."""
+    return _ceiling(SPECS[key])
+
+
 def resolve(key: str) -> tuple[Any, str]:
     """(value, source) where source is ``row``, ``env``, ``default`` or ``ceiling`` (clamped)."""
     value, source = _resolve(key)

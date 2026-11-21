@@ -52,6 +52,14 @@
    ]
   ],
   [
+   "/admin/chat-usage",
+   "store_admin.admin_chat_usage_hub",
+   [
+    "GET",
+    "POST"
+   ]
+  ],
+  [
    "/admin/data-quality",
    "store_admin.admin_data_quality_hub",
    [
