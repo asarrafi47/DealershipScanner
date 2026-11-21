@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+## [1.5.52] - 2026-11-21
+
+- scan loop: `test_loop_e2e_pg.py` (pg tier) runs the whole loop on a real Postgres: publisher, `loop_files` store, `/api/loop` on a live local port, cloud client pull and push, the Railway tick, and the status coming back through the API.
 ## [1.5.51] - 2026-11-21
 
 ## [1.5.50] - 2026-11-21
