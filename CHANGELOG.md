@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.48] - 2026-11-21
+
 ## [1.5.47] - 2026-11-21
 
 - scan loop, cards L19 and L20: `backend/scripts/ops_tick.py` (Railway request tick: strict parse, budgets, statuses, `ledger.jsonl`, `fix_cycles/`) and its real effects in `ops_tick_wiring.py`. `apply` is off in the template config; it checks the base hash, validates, writes a rollback file, saves, canary-rescans and rolls back on failure. `ops_publisher.publish_statuses` pushes the results. Tests: `test_loop_tick.py`.
