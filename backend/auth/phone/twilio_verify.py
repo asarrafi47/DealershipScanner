@@ -7,7 +7,8 @@
   keyed by phone hash for 30 days.
 
 Vendor error text never leaves this file: every failure becomes one of our short reason codes, and
-the only things logged are an event name, the operation, the reason and an integer status. The
+the only things logged are an event name, the operation, the reason, the integer status and vendor
+code, and (when one applies) a fixed owner hint such as ``hint=twilio_key_permission``. The
 Twilio HTTP client logs request URLs (which hold the number) and bodies at INFO level, so it is
 given a disabled logger.
 """
@@ -95,13 +96,41 @@ def _vendor_error(exc: BaseException) -> tuple[int | None, int | None] | None:
     return status, code
 
 
+# Owner-facing hints: what to fix in the Twilio console. They name a cause, never the number or the
+# vendor's text, and they change nothing the shopper sees.
+HINT_TRIAL_UNVERIFIED = "twilio_trial_unverified_recipient"  # trial account: verify the recipient or upgrade
+HINT_KEY_PERMISSION = "twilio_key_permission"  # restricted API key lacks this API (Verify or Lookup)
+HINT_AUTH_FAILED = "twilio_auth_failed"  # wrong SID, key or secret
+HINT_ACCOUNT_INACTIVE = "twilio_account_inactive"  # account suspended or balance empty
+_HINT_BY_CODE = {
+    21608: HINT_TRIAL_UNVERIFIED,
+    8021: HINT_KEY_PERMISSION,
+    20003: HINT_AUTH_FAILED,
+    20005: HINT_ACCOUNT_INACTIVE,
+}
+_HINT_BY_STATUS = {401: HINT_AUTH_FAILED, 402: HINT_ACCOUNT_INACTIVE, 403: HINT_KEY_PERMISSION}
+
+
+def owner_hint(status: int | None, code: int | None) -> str | None:
+    """A fixed hint for the owner, or None. A known vendor code wins; a bare 401, 402 or 403 (no code,
+    or the code Twilio's client fills in from the status when the body is not JSON) falls back to the
+    status. A 403 with any other code (60410 fraud block, for one) gets no hint."""
+    if code is not None and code in _HINT_BY_CODE:
+        return _HINT_BY_CODE[code]
+    if code is None or code == status:
+        return _HINT_BY_STATUS.get(status) if status is not None else None
+    return None
+
+
 def _log_failure(op: str, reason: str, exc: BaseException) -> None:
-    """One line: event, operation, reason and the integer numbers. Never the exception text."""
+    """One line: event, operation, reason and the integer numbers, plus an owner hint when one applies.
+    Never the exception text."""
     vendor = _vendor_error(exc)
     status, code = vendor if vendor else (None, None)
+    hint = owner_hint(status, code) if vendor else None
     _log.warning(
-        "event=provider_error provider=twilio_verify op=%s reason=%s http_status=%s vendor_code=%s",
-        op, reason, status, code,
+        "event=provider_error provider=twilio_verify op=%s reason=%s http_status=%s vendor_code=%s%s",
+        op, reason, status, code, " hint=%s" % hint if hint else "",
     )
 
 
