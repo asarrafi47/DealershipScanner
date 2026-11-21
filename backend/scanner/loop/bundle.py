@@ -828,3 +828,49 @@ def build_bundle(shards, summary, context, prev, gates, now) -> dict:
     del checked["triage.json.gz"]
     scrub.assert_clean(checked, ctx.get("env") or {})
     return {path: files[path] for path in sorted(files)}
+
+
+# --- recipe mirror (card L12, BUNDLE.md section 4.9) -----------------------------------------------------------
+
+CANONICAL_RECIPE_KEYS = ("dealer_id", "url", "method", "content_type", "post_template", "auth_headers", "pagination",
+                         "vehicle_rows", "total_count", "provider_hint", "stale", "stale_reason")
+SCAN_HINT_KEYS = ("needs_http_proxy", "price_source", "requires_browser", "skip_reason", "notes", "hint_source")
+MIRROR_INDEX_HEADER = "dealer_id\tcanonical_sha256\trecipe_count\tstale_count\n"
+
+
+def canonical_recipe_bytes(rows) -> bytes:
+    """The canonical file of one dealer's recipe set: the twelve keys of each row in stored order, ``saved_at``,
+    ``last_ok_at`` and ``field_coverage`` dropped, ``json.dumps(indent=1, sort_keys=True)`` plus LF.
+
+    A missing key reads as ``None`` and an unknown key is dropped, so the bytes depend only on the twelve fields.
+    """
+    clean = [{key: (row.get(key) if isinstance(row, dict) else None) for key in CANONICAL_RECIPE_KEYS} for row in rows]
+    return (json.dumps(clean, indent=1, sort_keys=True) + "\n").encode("utf-8")
+
+
+def canonical_sha256(rows) -> str:
+    """SHA-256 of ``canonical_recipe_bytes``: the one hash the exporter and the apply step share."""
+    return _sha256(canonical_recipe_bytes(rows))
+
+
+def mirror_index(sets: dict) -> bytes:
+    """``mirror/index.tsv`` for ``{dealer_id: rows}``: header plus one row per dealer with at least one recipe."""
+    lines = [MIRROR_INDEX_HEADER]
+    for dealer_id in sorted(sets):
+        rows = sets[dealer_id]
+        if not rows:
+            continue
+        stale = sum(1 for row in rows if isinstance(row, dict) and row.get("stale"))
+        lines.append(dealer_id + "\t" + canonical_sha256(rows) + "\t" + str(len(rows)) + "\t" + str(stale) + "\n")
+    return "".join(lines).encode("utf-8")
+
+
+def mirror_scan_hints(hints: dict) -> bytes:
+    """``mirror/scan_hints.json``: each dealer's hints restricted to the six hint keys; dealers without any are omitted."""
+    out = {}
+    for dealer_id in sorted(hints):
+        value = hints[dealer_id]
+        kept = {k: value[k] for k in SCAN_HINT_KEYS if isinstance(value, dict) and k in value}
+        if kept:
+            out[dealer_id] = kept
+    return (json.dumps(out, indent=1, sort_keys=True) + "\n").encode("utf-8")

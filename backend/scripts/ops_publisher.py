@@ -151,6 +151,35 @@ def publish_logs(clone: Path, run_id: str, env) -> int:
     return len(files)
 
 
+def publish_mirror(clone: Path, run_id: str, env, store=None) -> str:
+    """Refresh ``mirror/`` in the data clone from ``dealer_recipes`` and commit it; best effort.
+
+    ``store`` returns ``(sets, hints)`` (tests inject it; the default is a read-only read of the inventory database).
+    Returns ``unchanged``, ``published`` or ``skipped: <reason>``; a failure never stops the logs and bundle.
+    """
+    try:
+        if store is None:
+            from backend.db.inventory_db import get_conn
+
+            conn = get_conn()
+            try:
+                sets, hints = read_store(conn)
+            finally:
+                conn.rollback()
+                conn.close()
+        else:
+            sets, hints = store()
+        write_mirror(clone, sets, hints)
+        _git(clone, env, "add", "-A", "--", "mirror")
+        if not _git(clone, env, "status", "--porcelain", "--", "mirror").strip():
+            return "unchanged"
+        _git(clone, env, "commit", "-q", "-m", "mirror: " + run_id)
+        _push_with_retry(clone, env, "origin", "HEAD:main")
+        return "published"
+    except Exception as exc:  # noqa: BLE001 - the mirror must never stop the logs and the bundle
+        return "skipped: " + scrub.clean_line(type(exc).__name__ + " " + str(exc), 160)
+
+
 def _shard_dirs(run_dir: Path) -> list:
     return sorted(p for p in run_dir.glob("s*") if p.is_dir() and ((p / "triage.json").is_file() or (p / "triage.json.gz").is_file()))
 
@@ -256,6 +285,7 @@ def publish(run_dir: Path, env, now=None, catch_up=True) -> dict:
     if not configured(env):
         raise PublishError("LOOP_DATA_REPO and LOOP_DATA_TOKEN are not both set")
     clone = sync_main(env)
+    result["mirror"] = publish_mirror(clone, run_dir.name, env)
     result["logs"] = publish_logs(clone, run_dir.name, env)
     targets = [run_dir]
     if catch_up:
@@ -279,3 +309,76 @@ def record_rc(run_dir: Path, rc: int, detail: str) -> None:
                                               encoding="utf-8")
     except OSError:
         pass
+
+
+# --- recipe mirror (card L12) -----------------------------------------------------------------------------------
+
+
+def read_store(conn):
+    """``(sets, hints)`` from ``dealer_recipes`` in one read-only transaction.
+
+    ``sets`` maps dealer id to its rows as stored (a list), ``hints`` maps dealer id to its parsed ``scan_hints``.
+    A row whose JSON cannot be read is skipped rather than guessed at.
+    """
+    sets, hints = {}, {}
+    with conn.cursor() as cur:
+        cur.execute("SET TRANSACTION READ ONLY")
+        cur.execute("SELECT dealer_id, recipes_json, scan_hints FROM dealer_recipes ORDER BY dealer_id")
+        for dealer_id, recipes_json, scan_hints in cur.fetchall():
+            try:
+                rows = json.loads(recipes_json)
+            except (TypeError, ValueError):
+                continue
+            if isinstance(rows, list) and rows:
+                sets[str(dealer_id)] = rows
+            try:
+                parsed = json.loads(scan_hints) if scan_hints else None
+            except ValueError:
+                parsed = None
+            if isinstance(parsed, dict):
+                hints[str(dealer_id)] = parsed
+    return sets, hints
+
+
+def inside_repository(out: Path) -> bool:
+    """True when ``out`` is inside this repository's work tree (the mirror can hold third-party API keys)."""
+    try:
+        out.resolve().relative_to(ROOT.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def write_mirror(out: Path, sets: dict, hints: dict, full: bool = False) -> dict:
+    """Write ``mirror/recipes/<id>.json``, ``mirror/index.tsv`` and ``mirror/scan_hints.json`` under ``out``.
+
+    Only files whose bytes changed are rewritten, and files of dealers that lost their recipes are deleted.
+    Returns the counts. ``full`` also writes ``recipes_full.json.gz`` (rows as stored, with their stamps).
+    """
+    import gzip
+
+    recipes_dir = out / "mirror" / "recipes"
+    recipes_dir.mkdir(parents=True, exist_ok=True)
+    counts = {"written": 0, "unchanged": 0, "deleted": 0}
+
+    def put(path: Path, data: bytes) -> None:
+        if path.is_file() and path.read_bytes() == data:
+            counts["unchanged"] += 1
+            return
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        counts["written"] += 1
+
+    live = {d: rows for d, rows in sets.items() if rows}
+    for dealer_id, rows in live.items():
+        put(recipes_dir / (dealer_id + ".json"), bundle.canonical_recipe_bytes(rows))
+    for stale in recipes_dir.glob("*.json"):
+        if stale.stem not in live:
+            stale.unlink()
+            counts["deleted"] += 1
+    put(out / "mirror" / "index.tsv", bundle.mirror_index(live))
+    put(out / "mirror" / "scan_hints.json", bundle.mirror_scan_hints(hints))
+    if full:
+        raw = json.dumps({d: live[d] for d in sorted(live)}, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        put(out / "recipes_full.json.gz", gzip.compress(raw, mtime=0))
+    return counts
