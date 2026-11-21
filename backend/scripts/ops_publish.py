@@ -13,17 +13,16 @@ It reads no clock: without ``--now`` the publication time is left out ("unknown"
 ``SCANNER_EGRESS_TAG``; the scrubber takes its secret values from the environment and never prints them.
 
   python backend/scripts/ops_publish.py mirror --out DIR [--full]
-  python backend/scripts/ops_publish.py sync
   python backend/scripts/ops_publish.py publish --run-dir DIR [--now ISO] [--no-catch-up]
 
 ``mirror`` (card L12) writes the canonical recipe mirror (``mirror/recipes/<id>.json``, ``index.tsv``,
 ``scan_hints.json``) from ``dealer_recipes`` in a read-only transaction; it refuses an ``--out`` inside this
-repository (mirror files can hold third-party API keys) with exit 2. ``sync`` clones or updates the data repository's ``main`` clone (``LOOP_DATA_DIR``), so the dealer logs of the next
-run land inside it. ``publish`` (card L18, ``ops_publisher.py``) commits the run's dealer-log blocks to ``main`` and
-the bundle to the ``runs`` branch of the private data repository, and records the outcome in ``publisher.rc`` of the
-run directory. Both need ``LOOP_DATA_REPO`` and ``LOOP_DATA_TOKEN``; they exit 1 on any failure (the fleet ignores it).
+repository (mirror files can hold third-party API keys) with exit 2. ``publish`` (card L18, ``ops_publisher.py``) stores the run's
+dealer-log files, the recipe mirror and the bundle in the scan loop store (table ``loop_files`` in the Railway
+database) and records the outcome in ``publisher.rc`` of the run directory. It needs ``LOOP_STORE=db``; it exits 1 on
+any failure (the fleet ignores it).
 
-Exit status: 0 done, 2 a usage, input or scrub error (nothing is written then); sync and publish: 1 a failure.
+Exit status: 0 done, 2 a usage, input or scrub error (nothing is written then); publish: 1 a failure.
 """
 
 from __future__ import annotations
@@ -132,27 +131,13 @@ def mirror_command(args, env) -> int:
     return 0
 
 
-def sync_command(args, env) -> int:
-    from backend.scripts import ops_publisher as pub
-
-    if not pub.configured(env):
-        print("ops_publish: LOOP_DATA_REPO and LOOP_DATA_TOKEN are not both set; nothing to sync", file=sys.stderr)
-        return 1
-    try:
-        print("ops_publish: data clone at " + str(pub.sync_main(env)))
-    except pub.PublishError as exc:
-        print("ops_publish: " + scrub.clean_line(str(exc), 300), file=sys.stderr)
-        return 1
-    return 0
-
-
 def publish_command(args, env) -> int:
     from backend.scripts import ops_publisher as pub
 
     run_dir = Path(args.run_dir)
     try:
         result = pub.publish(run_dir, env, args.now, catch_up=not args.no_catch_up)
-    except (pub.PublishError, ValueError, OSError) as exc:
+    except (pub.PublishError, ValueError, OSError, pub.loop_store.StoreError) as exc:
         detail = scrub.clean_line(str(exc), 300)
         pub.record_rc(run_dir, 1, detail)
         print("ops_publish: publish failed: " + detail, file=sys.stderr)
@@ -176,8 +161,7 @@ def _parser() -> argparse.ArgumentParser:
     mirror = sub.add_parser("mirror", help="export the canonical recipe mirror (read-only SELECT on dealer_recipes)")
     mirror.add_argument("--out", required=True, metavar="DIR", help="a directory outside this repository")
     mirror.add_argument("--full", action="store_true", help="also write recipes_full.json.gz with the stamps")
-    sub.add_parser("sync", help="clone or update the data repository's main clone")
-    publish = sub.add_parser("publish", help="publish a finished fleet run to the private data repository")
+    publish = sub.add_parser("publish", help="publish a finished fleet run into the scan loop store (Railway database)")
     publish.add_argument("--run-dir", required=True, metavar="DIR", help="the fleet run directory (fleet_<UTC stamp>)")
     publish.add_argument("--now", help="publication time, ISO 8601 UTC")
     publish.add_argument("--no-catch-up", action="store_true", help="publish only this run")
@@ -190,8 +174,6 @@ def main(argv=None, env=None) -> int:
     env = os.environ if env is None else env
     if args.command == "mirror":
         return mirror_command(args, env)
-    if args.command == "sync":
-        return sync_command(args, env)
     if args.command == "publish":
         if args.now is not None:
             args.now = bundle._iso(args.now)

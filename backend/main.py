@@ -32,6 +32,7 @@ import backend.dealer.admin.scanner_ops_hub  # noqa: F401
 from backend.dealer.routes import bp as dealer_portal_bp
 from backend.dev.console import register_dev_console
 from backend.routes.ai_narrate_bp import ai_narrate_bp
+from backend.routes.loop_api import bp as loop_api_bp
 from backend.routes.ai_chat_bp import ai_chat_bp
 from backend.routes.health import bp as health_api_bp
 from backend.dev.routes import dev_bp
@@ -192,6 +193,7 @@ app.register_blueprint(twilio_webhook_bp)  # POST /webhooks/twilio/verify; 404 w
 app.register_blueprint(google_oauth_bp)
 app.register_blueprint(apple_oauth_bp)
 app.register_blueprint(ai_narrate_bp)
+app.register_blueprint(loop_api_bp)  # /api/loop: 404 until LOOP_READ_TOKEN or LOOP_SUBMIT_TOKEN is set
 app.register_blueprint(ai_chat_bp)
 app.register_blueprint(health_api_bp)
 register_dev_console(app)

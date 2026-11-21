@@ -27,7 +27,7 @@
   probes and fleet runs run on Railway only (`docs/scan_loop/README.md`, `docs/RAILWAY_SCANNING.md`).
   A Claude Code cloud session or project thread works on code, recipes-as-proposals, fixtures and
   docs on a `claude/<topic>` branch cut from `dev`, with a PR into `dev`; it never fetches a dealer
-  site, holds database or Railway credentials, or pushes `main`, `dev`, tags or deletions. Use the
+  site, holds database or Railway credentials (the analysis environment gets only the scoped loop API tokens), or pushes `main`, `dev`, tags or deletions. Use the
   `dealership-code` environment. Project threads do not run the repo's SessionStart hook: run
   `bash scripts/cloud/setup.sh` first (`docs/CLOUD.md`, section 12). Dealer logs and recipes are
-  durable on Railway and in the private data repository, never in a VM's `workspace/`.
+  durable on Railway (the `loop_files` store in its database, reached through `/api/loop`), never in a VM's `workspace/`.

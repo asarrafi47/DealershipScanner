@@ -1,178 +1,93 @@
 """Railway publisher (scan-loop card L18, docs/scan_loop/BUNDLE.md sections 3, 10, 11 and 13).
 
-After a fleet run the scanner publishes to the private data repository: the dealer-log blocks written during the
-run go to ``main`` (commit ``logs: <run_id>``), the run bundle (digest, per-dealer table, triage, gate report,
-queue) goes to the orphan branch ``runs``. Everything is best effort: a failed publish is logged and recorded in
+After a fleet run the scanner publishes into the scan loop's file store, a table in the Railway database
+(``backend/scanner/loop/store.py``, migration V032): the dealer-log files of the run (``workspace/dealer_logs/...``),
+the run bundle (``runs/<run_id>/...``: digest, per-dealer table, triage, gate report, queue) and the recipe mirror
+(``mirror/...``). Nothing goes to git. Everything is best effort: a failed publish is logged and recorded in
 ``publisher.rc`` next to ``fleet_summary.json`` and never changes the fleet's exit code; the next run publishes
 whatever is missing (catch-up by ``run_id``).
 
-Environment: ``LOOP_DATA_REPO`` (https URL, no credentials in it), ``LOOP_DATA_TOKEN`` (repository-scoped token),
-``LOOP_DATA_DIR`` (clone of ``main``; default ``$SCAN_DATA_DIR/loop-data`` else ``/data/loop-data``),
-``LOOP_TARGET`` (``prod``|``dev``), ``SCANNER_EGRESS_TAG``. The token reaches git only through ``GIT_CONFIG_*``
-environment variables (an ``Authorization`` header), never argv, ``.git/config`` or a log line.
+Environment: ``LOOP_STORE=db`` turns publishing on (the inventory database URL is the scanner's own),
+``LOOP_TARGET`` (``prod``|``dev``), ``SCANNER_EGRESS_TAG``, ``DEALER_LOGS_ROOT`` (the live log tree, default
+``workspace/dealer_logs``). Retention: the newest 30 fleet runs; per-file and total size caps live in the store.
 """
 
 from __future__ import annotations
 
-import base64
 import json
 import os
 import re
-import subprocess
 import tempfile
-import time
 from pathlib import Path
 
-from backend.scanner.loop import bundle, scrub
-from backend.scanner.loop.config import ENV_DATA_DIR, ENV_DATA_REPO, ENV_DATA_TOKEN, ENV_TARGET
+from backend.scanner.loop import bundle, scrub, store as loop_store
+from backend.scanner.loop.config import ENV_STORE, ENV_TARGET
 
 ROOT = Path(__file__).resolve().parents[2]
 RUN_DIR_RE = re.compile(r"^fleet_[0-9]{8}T[0-9]{6}Z$")
-RETAIN_FLEET_RUNS = 30
-GIT_TIMEOUT = 120
-PUSH_ATTEMPTS = 4
+RETAIN_FLEET_RUNS = loop_store.RETAIN_FLEET_RUNS
 LOG_SUFFIXES = (".md", ".json", ".txt", ".tsv")
-BOT = ("claude-scan-loop", "scan-loop@users.noreply.github.com")
+LOG_PREFIX = "workspace/dealer_logs/"
 
 
 class PublishError(Exception):
-    """A publish step failed; the message never carries the token."""
-
-
-def data_dir(env) -> Path:
-    given = env.get(ENV_DATA_DIR)
-    if given:
-        return Path(given)
-    return Path(env.get("SCAN_DATA_DIR") or "/data") / "loop-data"
-
-
-def runs_dir(env) -> Path:
-    base = data_dir(env)
-    return base.with_name(base.name + "-runs")
+    """A publish step failed; the message never carries a secret."""
 
 
 def configured(env) -> bool:
-    return bool(env.get(ENV_DATA_REPO)) and bool(env.get(ENV_DATA_TOKEN))
+    return (env.get(ENV_STORE) or "").strip().lower() == "db"
 
 
-def _git_env(env) -> dict:
-    out = dict(env)
-    out.update({
-        "GIT_TERMINAL_PROMPT": "0", "GIT_AUTHOR_NAME": BOT[0], "GIT_AUTHOR_EMAIL": BOT[1],
-        "GIT_COMMITTER_NAME": BOT[0], "GIT_COMMITTER_EMAIL": BOT[1],
-    })
-    token = env.get(ENV_DATA_TOKEN)
-    if token:
-        header = "Authorization: Basic " + base64.b64encode(("x-access-token:" + token).encode()).decode()
-        out.update({"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "http.extraHeader", "GIT_CONFIG_VALUE_0": header})
-    return out
+def open_store(env):
+    return loop_store.PgStore()
 
 
-def _git(cwd, env, *args, check=True, timeout=GIT_TIMEOUT) -> str:
-    try:
-        proc = subprocess.run(["git", *args], cwd=str(cwd), env=_git_env(env), capture_output=True, text=True,
-                              timeout=timeout)
-    except subprocess.TimeoutExpired:
-        raise PublishError("git " + args[0] + " timed out") from None
-    except OSError as exc:
-        raise PublishError("git is not available: " + type(exc).__name__) from None
-    if check and proc.returncode != 0:
-        # git's own message can echo the remote URL; the URL has no credentials, but scrub anyway.
-        detail = scrub.clean_line(scrub.scrub_text(proc.stderr.strip(), env)[0], 200)
-        raise PublishError("git " + args[0] + " failed: " + detail)
-    return proc.stdout
+def logs_root(env) -> Path:
+    given = env.get("DEALER_LOGS_ROOT")
+    return Path(given) if given else ROOT / "workspace" / "dealer_logs"
 
 
-def _remote_has(cwd, env, ref) -> bool:
-    return bool(_git(cwd, env, "ls-remote", "--heads", "origin", ref).strip())
+def publish_logs(root: Path, store, env) -> int:
+    """Scrub and store every dealer-log file under ``root``; returns the number of files that changed.
 
-
-def sync_main(env) -> Path:
-    """Clone or update the ``main`` clone that holds the dealer logs; returns its path."""
-    target = data_dir(env)
-    url = env[ENV_DATA_REPO]
-    if not (target / ".git").is_dir():
-        target.parent.mkdir(parents=True, exist_ok=True)
-        _git(target.parent, env, "clone", "-q", "--depth", "50", "--branch", "main", url, str(target))
-    else:
-        _git(target, env, "fetch", "-q", "origin", "main")
-        _git(target, env, "pull", "-q", "--rebase", "--autostash", "origin", "main")
-    (target / "workspace" / "dealer_logs").mkdir(parents=True, exist_ok=True)
-    return target
-
-
-def _push_with_retry(cwd, env, *push_args) -> None:
-    last = ""
-    for attempt in range(PUSH_ATTEMPTS):
-        try:
-            _git(cwd, env, "push", "-q", *push_args)
-            return
-        except PublishError as exc:
-            last = str(exc)
-        # a race with a session's push: rebase on the fresh remote (not for a forced orphan push)
-        if "--force" not in push_args:
-            try:
-                _git(cwd, env, "pull", "-q", "--rebase", "origin", push_args[-1].split(":")[-1])
-            except PublishError as exc:
-                last = str(exc)
-                _git(cwd, env, "rebase", "--abort", check=False)
-        time.sleep(min(2 ** attempt, 8) if os.environ.get("PUBLISH_SLEEP", "1") != "0" else 0)
-    raise PublishError("push rejected after " + str(PUSH_ATTEMPTS) + " attempts: " + last)
-
-
-def _changed_log_files(clone: Path, env) -> list:
-    out = _git(clone, env, "status", "--porcelain", "--untracked-files=all", "--", "workspace/dealer_logs")
-    files = []
-    for line in out.splitlines():
-        path = line[3:].strip().strip('"')
-        if path.endswith(LOG_SUFFIXES):
-            files.append(path)
-    return files
-
-
-def publish_logs(clone: Path, run_id: str, env) -> int:
-    """Scrub and commit the dealer-log changes of the run to ``main``; returns the number of files committed."""
-    files = _changed_log_files(clone, env)
-    if not files:
+    ``summary.md`` and ``location.md`` belong to cloud sessions: Railway only fills them when the store has none.
+    """
+    if not root.is_dir():
         return 0
-    for rel in files:
-        path = clone / rel
+    have = {e.path: e.sha256 for e in store.list(LOG_PREFIX)}
+    changed = 0
+    for path in sorted(root.rglob("*")):
+        if not path.is_file() or path.is_symlink() or not path.name.endswith(LOG_SUFFIXES):
+            continue
+        rel = LOG_PREFIX + path.relative_to(root).as_posix()
+        if not loop_store.path_ok(rel):
+            continue
+        if path.name in loop_store.SESSION_LOG_FILES and rel in have:
+            continue
         try:
             text = path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             raise PublishError("unreadable log file " + rel) from None
         clean, _counts = scrub.scrub_text(text, env)
-        if clean != text:
-            path.write_text(clean, encoding="utf-8")
         scrub.assert_clean({rel: clean}, env)
-    _git(clone, env, "add", "-A", "--", "workspace/dealer_logs")
-    _git(clone, env, "commit", "-q", "-m", "logs: " + run_id)
-    _push_with_retry(clone, env, "origin", "HEAD:main")
-    return len(files)
+        data = clean.encode("utf-8")
+        if len(data) > loop_store.file_limit(rel):
+            data = data[-loop_store.file_limit(rel):]  # keep the newest part of an oversize append-only log
+        if have.get(rel) == loop_store.sha(data):
+            continue
+        if store.put(rel, data, "railway"):
+            changed += 1
+    return changed
 
 
+def publish_mirror(store, run_id: str, env, source=None) -> str:
+    """Refresh ``mirror/`` in the store from ``dealer_recipes``; best effort.
 
-def publish_statuses(clone: Path, env, message: str) -> int:
-    """Commit the tick's ``requests/*.status.json`` and ``fix_cycles/*.json`` to ``main``; returns the files changed."""
-    out = _git(clone, env, "status", "--porcelain", "--untracked-files=all", "--", "requests", "fix_cycles")
-    paths = [line[3:].strip().strip('"') for line in out.splitlines()]
-    paths = [p for p in paths if p.endswith(".status.json") or p.startswith("fix_cycles/")]
-    if not paths:
-        return 0
-    _git(clone, env, "add", "--", *paths)
-    _git(clone, env, "commit", "-q", "-m", message)
-    _push_with_retry(clone, env, "origin", "HEAD:main")
-    return len(paths)
-
-
-def publish_mirror(clone: Path, run_id: str, env, store=None) -> str:
-    """Refresh ``mirror/`` in the data clone from ``dealer_recipes`` and commit it; best effort.
-
-    ``store`` returns ``(sets, hints)`` (tests inject it; the default is a read-only read of the inventory database).
+    ``source`` returns ``(sets, hints)`` (tests inject it; the default is a read-only read of the inventory database).
     Returns ``unchanged``, ``published`` or ``skipped: <reason>``; a failure never stops the logs and bundle.
     """
     try:
-        if store is None:
+        if source is None:
             from backend.db.inventory_db import get_conn
 
             conn = get_conn()
@@ -182,14 +97,22 @@ def publish_mirror(clone: Path, run_id: str, env, store=None) -> str:
                 conn.rollback()
                 conn.close()
         else:
-            sets, hints = store()
-        write_mirror(clone, sets, hints)
-        _git(clone, env, "add", "-A", "--", "mirror")
-        if not _git(clone, env, "status", "--porcelain", "--", "mirror").strip():
-            return "unchanged"
-        _git(clone, env, "commit", "-q", "-m", "mirror: " + run_id)
-        _push_with_retry(clone, env, "origin", "HEAD:main")
-        return "published"
+            sets, hints = source()
+        with tempfile.TemporaryDirectory() as tmp:
+            write_mirror(Path(tmp), sets, hints)
+            wanted = {}
+            for file in sorted((Path(tmp) / "mirror").rglob("*")):
+                if file.is_file():
+                    wanted[file.relative_to(tmp).as_posix()] = file.read_bytes()
+        changed = 0
+        for path, data in wanted.items():
+            if store.put(path, data, "railway"):
+                changed += 1
+        for entry in store.list("mirror/"):
+            if entry.path not in wanted:
+                store.delete_prefix(entry.path)
+                changed += 1
+        return "published" if changed else "unchanged"
     except Exception as exc:  # noqa: BLE001 - the mirror must never stop the logs and the bundle
         return "skipped: " + scrub.clean_line(type(exc).__name__ + " " + str(exc), 160)
 
@@ -198,26 +121,20 @@ def _shard_dirs(run_dir: Path) -> list:
     return sorted(p for p in run_dir.glob("s*") if p.is_dir() and ((p / "triage.json").is_file() or (p / "triage.json.gz").is_file()))
 
 
-def _ensure_runs(env) -> Path:
-    """The ``runs`` branch checked out in its own clone; an empty orphan when the remote has none yet."""
-    clone = runs_dir(env)
-    url = env[ENV_DATA_REPO]
-    if not (clone / ".git").is_dir():
-        clone.mkdir(parents=True, exist_ok=True)
-        _git(clone, env, "init", "-q", "-b", "runs")
-        _git(clone, env, "remote", "add", "origin", url)
-    if _remote_has(clone, env, "runs"):
-        _git(clone, env, "fetch", "-q", "--depth", "1", "origin", "+runs:refs/remotes/origin/runs")
-        _git(clone, env, "checkout", "-q", "-f", "-B", "runs", "origin/runs")
-        _git(clone, env, "clean", "-q", "-fd")
-    return clone
-
-
-def _previous_run(clone: Path, run_id: str):
-    runs = clone / "runs"
-    older = sorted(p.name for p in runs.glob("fleet_*") if p.is_dir() and p.name < run_id and (p / "MANIFEST.json").is_file()) \
-        if runs.is_dir() else []
-    return runs / older[-1] if older else None
+def _previous_run(store, run_id: str, into: Path):
+    """The newest older fleet run in the store, written out under ``into`` (MANIFEST.json and dealers.tsv)."""
+    names = sorted({e.path.split("/")[1] for e in store.list("runs/fleet_")
+                    if e.path.count("/") >= 2 and e.path.split("/")[1] < run_id})
+    for name in reversed(names):
+        manifest = store.get("runs/" + name + "/MANIFEST.json")
+        table = store.get("runs/" + name + "/dealers.tsv")
+        if manifest is not None:
+            into.mkdir(parents=True, exist_ok=True)
+            (into / "MANIFEST.json").write_bytes(manifest)
+            if table is not None:
+                (into / "dealers.tsv").write_bytes(table)
+            return into
+    return None
 
 
 def build_files(run_dir: Path, run_id: str, prev_dir, env, now=None) -> dict:
@@ -253,54 +170,38 @@ def build_files(run_dir: Path, run_id: str, prev_dir, env, now=None) -> dict:
     return plan
 
 
-def publish_bundle(run_dir: Path, env, now=None) -> str:
-    """Publish one run directory to the ``runs`` branch; returns ``published``, ``unchanged``."""
+def publish_bundle(run_dir: Path, store, env, now=None) -> str:
+    """Publish one run directory into ``runs/``; returns ``published`` or ``unchanged``."""
     run_id = run_dir.name
     if not RUN_DIR_RE.match(run_id):
         raise PublishError("not a fleet run directory: " + run_id)
-    clone = _ensure_runs(env)
-    existing = clone / "runs" / run_id / "MANIFEST.json"
-    plan = build_files(run_dir, run_id, _previous_run(clone, run_id), env, now)
-    same = existing.is_file() and all(
-        (clone / p).is_file() and (clone / p).read_bytes() == d for p, d in plan.items() if p != "runs/LATEST.json")
-    if same:
+    with tempfile.TemporaryDirectory() as tmp:
+        plan = build_files(run_dir, run_id, _previous_run(store, run_id, Path(tmp) / "prev"), env, now)
+    have = {e.path: e.sha256 for e in store.list("runs/" + run_id + "/")}
+    same = all(have.get(p) == loop_store.sha(d) for p, d in plan.items() if p != "runs/LATEST.json")
+    if same and have:
         return "unchanged"
     for path, data in plan.items():
-        target = clone / path
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(data)
-    fleet_dirs = sorted(p.name for p in (clone / "runs").glob("fleet_*") if p.is_dir())
-    newest = max(fleet_dirs + [run_id])
-    if newest != run_id:  # catch-up of an older run: keep LATEST pointing at the newest one
-        latest = clone / "runs" / newest / "MANIFEST.json"
-        (clone / "runs" / "LATEST.json").write_bytes(bundle.latest_json(latest.read_bytes(), now))
-    excess = fleet_dirs[:-RETAIN_FLEET_RUNS] if len(fleet_dirs) > RETAIN_FLEET_RUNS else []
-    if excess:
-        import shutil
-        for name in excess:
-            shutil.rmtree(clone / "runs" / name, ignore_errors=True)
-    _git(clone, env, "add", "-A")
-    if excess:
-        # bounded size: rebuild the branch as an orphan holding only the retained runs, then force it
-        _git(clone, env, "checkout", "-q", "--orphan", "runs-new")
-        _git(clone, env, "add", "-A")
-        _git(clone, env, "commit", "-q", "-m", "runs: " + run_id + " (retention)")
-        _git(clone, env, "branch", "-q", "-M", "runs")
-        _push_with_retry(clone, env, "--force", "origin", "runs")
-    else:
-        _git(clone, env, "commit", "-q", "-m", "run " + run_id)
-        _push_with_retry(clone, env, "origin", "HEAD:runs")
+        if path != "runs/LATEST.json":
+            store.put(path, data, "railway")
+    names = sorted({e.path.split("/")[1] for e in store.list("runs/fleet_") if e.path.count("/") >= 2})
+    newest = max(names + [run_id])
+    manifest = store.get("runs/" + newest + "/MANIFEST.json")
+    if manifest is not None:
+        store.put("runs/LATEST.json", bundle.latest_json(manifest, now), "railway")
+    loop_store.prune_runs(store, RETAIN_FLEET_RUNS)
     return "published"
 
 
-def publish(run_dir: Path, env, now=None, catch_up=True) -> dict:
-    """Publish ``run_dir``; with ``catch_up`` also any sibling fleet directory the ``runs`` branch lacks."""
+def publish(run_dir: Path, env, now=None, catch_up=True, store=None) -> dict:
+    """Publish ``run_dir``; with ``catch_up`` also any sibling fleet directory the store lacks."""
     result = {"run_id": run_dir.name, "logs": 0, "bundles": []}
-    if not configured(env):
-        raise PublishError("LOOP_DATA_REPO and LOOP_DATA_TOKEN are not both set")
-    clone = sync_main(env)
-    result["mirror"] = publish_mirror(clone, run_dir.name, env)
-    result["logs"] = publish_logs(clone, run_dir.name, env)
+    if store is None:
+        if not configured(env):
+            raise PublishError("LOOP_STORE is not set to db")
+        store = open_store(env)
+    result["mirror"] = publish_mirror(store, run_dir.name, env)
+    result["logs"] = publish_logs(logs_root(env), store, env)
     targets = [run_dir]
     if catch_up:
         siblings = sorted((p for p in run_dir.parent.glob("fleet_*") if p.is_dir() and p != run_dir and RUN_DIR_RE.match(p.name)),
@@ -308,8 +209,8 @@ def publish(run_dir: Path, env, now=None, catch_up=True) -> dict:
         targets = [p for p in siblings if _shard_dirs(p)][-RETAIN_FLEET_RUNS:] + targets
     for directory in targets:
         try:
-            state = publish_bundle(directory, env, now)
-        except (PublishError, ValueError, OSError) as exc:
+            state = publish_bundle(directory, store, env, now)
+        except (PublishError, ValueError, OSError, loop_store.StoreError) as exc:
             if directory == run_dir:
                 raise
             state = "skipped: " + scrub.clean_line(str(exc), 120)

@@ -3,9 +3,9 @@
 
   python -m backend.scripts.ops_tick [--now ISO]
 
-One tick: sync the data clone, read ``config/loop.json``, find the requests that have no status yet, reject or accept each
+One tick: load requests, proposals and config from the store, read ``config/loop.json``, find the requests that have no status yet, reject or accept each
 (``backend.scanner.loop.requests``), run the accepted ones within the budgets, write one ``*.status.json`` per request,
-append every event to ``ledger.jsonl`` on the volume, and push the statuses and ``fix_cycles/`` to ``main``.
+append every event to ``ledger.jsonl`` on the volume, and store the statuses and ``fix_cycles/`` in the scan loop store.
 
 The orchestration (``process``) and the apply step (``apply_proposal``) take their effects as arguments, so the tests
 run them with fakes and no network or database. ``apply`` is off unless ``config/loop.json`` lists it in ``kinds``;
@@ -315,6 +315,44 @@ def build_executors(config, io, probe_rescan, rollback_dir: Path) -> dict:
     return out
 
 
+TEMPLATE_CONFIG = Path(__file__).resolve().parents[2] / "docs" / "scan_loop" / "data_template" / "config" / "loop.json"
+
+
+def work_dir(env) -> Path:
+    return Path(env.get("LOOP_WORK_DIR") or (Path(env.get("SCAN_DATA_DIR") or "/data") / "loop"))
+
+
+def seed_config(store) -> None:
+    """Put the template ``config/loop.json`` (``apply`` off) into the store when it has none."""
+    if store.get("config/loop.json") is None and TEMPLATE_CONFIG.is_file():
+        store.put("config/loop.json", TEMPLATE_CONFIG.read_bytes(), "railway")
+
+
+def sync_down(store, clone: Path) -> None:
+    """Write the requests, proposals and config of the store under ``clone`` (replacing what was there)."""
+    import shutil
+
+    for folder in ("requests", "proposals", "config"):
+        shutil.rmtree(clone / folder, ignore_errors=True)
+    for prefix in ("requests/", "proposals/", "config/"):
+        for entry in store.list(prefix):
+            data = store.get(entry.path)
+            if data is not None:
+                target = clone / entry.path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+
+
+def sync_up(store, clone: Path) -> int:
+    """Store the tick's statuses and ``fix_cycles/`` files; returns how many changed."""
+    changed = 0
+    paths = sorted((clone / "requests").glob("*" + STATUS_SUFFIX)) + sorted((clone / "fix_cycles").glob("*.json"))
+    for file in paths:
+        if file.is_file() and not file.is_symlink() and store.put(file.relative_to(clone).as_posix(), file.read_bytes(), "railway"):
+            changed += 1
+    return changed
+
+
 def main(argv=None, env=None) -> int:
     env = os.environ if env is None else env
     parser = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
@@ -323,22 +361,25 @@ def main(argv=None, env=None) -> int:
     from backend.scripts import ops_publisher as pub
 
     if not pub.configured(env):
-        print("ops_tick: LOOP_DATA_REPO and LOOP_DATA_TOKEN are not both set", file=sys.stderr)
+        print("ops_tick: LOOP_STORE is not set to db", file=sys.stderr)
         return 2
     now = datetime.fromisoformat(args.now) if args.now else datetime.now(timezone.utc)
-    clone = pub.sync_main(env)
+    store = pub.open_store(env)
+    seed_config(store)
+    base = work_dir(env)
+    clone = base / "tree"
+    sync_down(store, clone)
     config_path = clone / "config" / "loop.json"
     config = load_loop_config(config_path.read_bytes() if config_path.is_file() else None)
     if config.idle:
         print("ops_tick: loop is idle (config/loop.json missing, invalid or disabled)")
         return 0
-    base = clone.parent
     from backend.scripts import ops_tick_wiring as wiring  # real effects: store, gate, pipeline
 
     io, probe_rescan, ctx = wiring.build(env, config, clone)
     executors = build_executors(config, io, probe_rescan, base / "rollback")
     counts = process(clone, base / "ledger.jsonl", config, ctx, executors, now, base / "rollback")
-    pub.publish_statuses(clone, env, "tick " + _stamp(now))
+    counts["stored"] = sync_up(store, clone)
     print("ops_tick: " + json.dumps(counts, sort_keys=True))
     return 0
 

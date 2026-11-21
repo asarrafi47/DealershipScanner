@@ -1,9 +1,8 @@
-"""Card L18: the Railway publisher (``ops_publisher.py``, ``ops_publish.py publish|sync``, the fleet hook)."""
+"""Card L18: the Railway publisher (``ops_publisher.py``, ``ops_publish.py publish``, the fleet hook) on the store."""
 
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -11,45 +10,23 @@ from pathlib import Path
 
 import pytest
 
+from backend.scanner.loop import store as loop_store
 from backend.scripts import fleet_scan, ops_publish, ops_publisher
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures" / "ops_publish"
 SHARDS = {"s0": "scan_2026_11_03_s0", "s1": "scan_2026_11_03_s3", "s2": "scan_2026_11_03_s6"}
-TOKEN = "tok_" + "Zk3Qm9xV2LpR7wYd8NaB5cEh"
-GIT_ENV = {
-    "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull,
-    "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid",
-    "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@example.invalid",
-}
-
-
-def _git(cwd, *args) -> str:
-    r = subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True, env={**os.environ, **GIT_ENV})
-    assert r.returncode == 0, r.stderr
-    return r.stdout
+SECRET = "tok_" + "Zk3Qm9xV2LpR7wYd8NaB5cEh"
+NOW = "2026-11-03T12:00:00Z"
 
 
 @pytest.fixture()
-def remote(tmp_path):
-    seed = tmp_path / "seed"
-    seed.mkdir()
-    _git(seed, "init", "-q", "-b", "main")
-    (seed / "README.md").write_text("data repo\n", encoding="utf-8")
-    _git(seed, "add", "-A")
-    _git(seed, "commit", "-q", "-m", "init")
-    bare = tmp_path / "data.git"
-    _git(tmp_path, "clone", "-q", "--bare", str(seed), str(bare))
-    return bare
+def store():
+    return loop_store.MemStore()
 
 
 @pytest.fixture()
-def env(tmp_path, remote, monkeypatch):
-    monkeypatch.setenv("PUBLISH_SLEEP", "0")
-    values = {
-        **os.environ, **GIT_ENV, "LOOP_DATA_REPO": str(remote), "LOOP_DATA_TOKEN": TOKEN,
-        "LOOP_DATA_DIR": str(tmp_path / "loop-data"), "LOOP_TARGET": "prod", "PUBLISH_SLEEP": "0",
-    }
-    return values
+def env(tmp_path):
+    return {"LOOP_STORE": "db", "LOOP_TARGET": "prod", "DEALER_LOGS_ROOT": str(tmp_path / "logs"), "PATH": "/usr/bin"}
 
 
 def _run_dir(tmp_path: Path, stamp: str) -> Path:
@@ -60,121 +37,106 @@ def _run_dir(tmp_path: Path, stamp: str) -> Path:
     return run
 
 
-def _branch_files(bare: Path, branch: str) -> list:
-    return _git(bare, "ls-tree", "-r", "--name-only", branch).split()
+def _paths(store, prefix="") -> list:
+    return [e.path for e in store.list(prefix)]
 
 
-def test_publish_puts_the_bundle_gates_and_queue_on_the_runs_branch(tmp_path, remote, env):
+def test_publish_puts_the_bundle_gates_and_queue_in_the_store(tmp_path, store, env):
     run = _run_dir(tmp_path, "20261103T090000Z")
-    result = ops_publisher.publish(run, env, "2026-11-03T12:00:00Z", catch_up=False)
+    result = ops_publisher.publish(run, env, NOW, catch_up=False, store=store)
     assert result["bundles"] == [{"run_id": run.name, "state": "published"}]
-    files = _branch_files(remote, "runs")
+    files = _paths(store)
     base = f"runs/{run.name}/"
     for name in ("MANIFEST.json", "digest.md", "dealers.tsv", "triage.json.gz", "gate_report.json", "queue.json"):
         assert base + name in files, name
     assert "runs/LATEST.json" in files
 
 
-def test_publishing_twice_adds_no_commit(tmp_path, remote, env):
+def test_publishing_twice_changes_nothing(tmp_path, store, env):
     run = _run_dir(tmp_path, "20261103T090000Z")
-    ops_publisher.publish(run, env, "2026-11-03T12:00:00Z", catch_up=False)
-    before = _git(remote, "rev-parse", "runs")
-    again = ops_publisher.publish(run, env, "2026-11-03T12:00:00Z", catch_up=False)
+    ops_publisher.publish(run, env, NOW, catch_up=False, store=store)
+    before = {e.path: e.sha256 for e in store.list()}
+    again = ops_publisher.publish(run, env, NOW, catch_up=False, store=store)
     assert again["bundles"][0]["state"] == "unchanged"
-    assert _git(remote, "rev-parse", "runs") == before
+    assert {e.path: e.sha256 for e in store.list()} == before
 
 
-def test_catch_up_publishes_a_run_directory_the_branch_lacks(tmp_path, remote, env):
+def test_catch_up_publishes_a_run_directory_the_store_lacks(tmp_path, store, env):
     older = _run_dir(tmp_path, "20261102T090000Z")
     newer = _run_dir(tmp_path, "20261103T090000Z")
-    result = ops_publisher.publish(newer, env, "2026-11-03T12:00:00Z")
+    result = ops_publisher.publish(newer, env, NOW, store=store)
     assert {b["run_id"] for b in result["bundles"]} == {older.name, newer.name}
-    files = _branch_files(remote, "runs")
-    assert f"runs/{older.name}/MANIFEST.json" in files and f"runs/{newer.name}/MANIFEST.json" in files
-    latest = json.loads(_git(remote, "show", "runs:runs/LATEST.json"))
-    assert newer.name in json.dumps(latest)
+    assert f"runs/{older.name}/MANIFEST.json" in _paths(store) and f"runs/{newer.name}/MANIFEST.json" in _paths(store)
+    assert newer.name in store.get("runs/LATEST.json").decode()
 
 
-def test_retention_rebuilds_the_branch_as_an_orphan_with_only_the_newest_runs(tmp_path, remote, env, monkeypatch):
+def test_retention_deletes_the_oldest_runs_and_keeps_latest_on_the_newest(tmp_path, store, env, monkeypatch):
     monkeypatch.setattr(ops_publisher, "RETAIN_FLEET_RUNS", 2)
     for stamp in ("20261101T090000Z", "20261102T090000Z", "20261103T090000Z"):
-        ops_publisher.publish(_run_dir(tmp_path, stamp), env, "2026-11-03T12:00:00Z", catch_up=False)
-    dirs = {f.split("/")[1] for f in _branch_files(remote, "runs") if f.startswith("runs/fleet_")}
+        ops_publisher.publish(_run_dir(tmp_path, stamp), env, NOW, catch_up=False, store=store)
+    dirs = {p.split("/")[1] for p in _paths(store, "runs/fleet_")}
     assert dirs == {"fleet_20261102T090000Z", "fleet_20261103T090000Z"}
-    assert _git(remote, "rev-list", "--count", "runs").strip() == "1"  # an orphan: one commit
+    assert "fleet_20261103T090000Z" in store.get("runs/LATEST.json").decode()
 
 
-def test_dealer_logs_go_to_main_scrubbed(tmp_path, remote, env):
+def test_dealer_logs_are_stored_scrubbed_and_session_notes_are_never_overwritten(tmp_path, store, env):
     run = _run_dir(tmp_path, "20261103T090000Z")
-    clone = ops_publisher.sync_main(env)
-    log = clone / "workspace" / "dealer_logs" / "abc-com" / "scan_runs.md"
+    log = tmp_path / "logs" / "abc-com" / "scan_runs.md"
     log.parent.mkdir(parents=True)
-    log.write_text(f"## run\nfetched https://feed.example/api?api_key=abcdef123456&page=2 with {TOKEN}\n", encoding="utf-8")
-    result = ops_publisher.publish(run, env, "2026-11-03T12:00:00Z", catch_up=False)
+    log.write_text(f"## run\nfetched https://feed.example/api?api_key=abcdef123456&page=2\n", encoding="utf-8")
+    (log.parent / "summary.md").write_text("railway summary\n", encoding="utf-8")
+    store.put("workspace/dealer_logs/abc-com/summary.md", b"session summary\n", "cloud")
+    result = ops_publisher.publish(run, env, NOW, catch_up=False, store=store)
     assert result["logs"] == 1
-    text = _git(remote, "show", "main:workspace/dealer_logs/abc-com/scan_runs.md")
-    assert "abcdef123456" not in text and TOKEN not in text and "## run" in text
-    assert _git(remote, "log", "-1", "--format=%s", "main").strip() == "logs: " + run.name
+    text = store.get("workspace/dealer_logs/abc-com/scan_runs.md").decode()
+    assert "abcdef123456" not in text and "## run" in text
+    assert store.get("workspace/dealer_logs/abc-com/summary.md") == b"session summary\n"
 
 
-def test_the_token_is_in_no_commit_no_git_config_and_no_argv(tmp_path, remote, env, monkeypatch):
-    seen = []
-    real = subprocess.run
-
-    def spy(cmd, *a, **kw):
-        seen.append(list(cmd))
-        return real(cmd, *a, **kw)
-
-    monkeypatch.setattr(ops_publisher.subprocess, "run", spy)
-    ops_publisher.publish(_run_dir(tmp_path, "20261103T090000Z"), env, "2026-11-03T12:00:00Z", catch_up=False)
-    assert seen and not any(TOKEN in part for cmd in seen for part in cmd)
-    for clone in (Path(env["LOOP_DATA_DIR"]), ops_publisher.runs_dir(env)):
-        assert TOKEN not in (clone / ".git" / "config").read_text(encoding="utf-8")
-    for branch in ("main", "runs"):
-        for name in _branch_files(remote, branch):
-            assert TOKEN not in _git(remote, "show", f"{branch}:{name}") if name.endswith((".md", ".json", ".tsv", ".txt")) else True
+def test_an_oversize_log_keeps_its_newest_part(tmp_path, store, env):
+    log = tmp_path / "logs" / "abc-com" / "scan_runs.md"
+    log.parent.mkdir(parents=True)
+    limit = loop_store.file_limit("workspace/dealer_logs/abc-com/scan_runs.md")
+    log.write_text("old\n" * limit + "NEWEST\n", encoding="utf-8")
+    ops_publisher.publish_logs(tmp_path / "logs", store, env)
+    data = store.get("workspace/dealer_logs/abc-com/scan_runs.md")
+    assert len(data) <= limit and data.endswith(b"NEWEST\n")
 
 
-def test_a_rejecting_remote_a_missing_token_and_a_bad_run_each_fail_without_raising_out_of_the_cli(tmp_path, remote, env, capsys):
+def test_a_full_store_a_missing_flag_and_a_bad_run_each_fail_without_raising_out_of_the_cli(tmp_path, env, monkeypatch, capsys):
     run = _run_dir(tmp_path, "20261103T090000Z")
-    hook = remote / "hooks" / "pre-receive"
-    hook.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
-    hook.chmod(0o755)
+    tiny = loop_store.MemStore(max_total=10)
+    monkeypatch.setattr(ops_publisher, "open_store", lambda e: tiny)
     args = ops_publish._parser().parse_args(["publish", "--run-dir", str(run), "--no-catch-up"])
     assert ops_publish.publish_command(args, env) == 1
     rc = json.loads((run / "publisher.rc").read_text(encoding="utf-8"))
-    assert rc["rc"] == 1 and TOKEN not in json.dumps(rc)
-    no_token = {k: v for k, v in env.items() if k != "LOOP_DATA_TOKEN"}
-    assert ops_publish.publish_command(args, no_token) == 1
+    assert rc["rc"] == 1
+    assert ops_publish.publish_command(args, {k: v for k, v in env.items() if k != "LOOP_STORE"}) == 1
     bad = ops_publish._parser().parse_args(["publish", "--run-dir", str(tmp_path / "nope")])
     assert ops_publish.publish_command(bad, env) == 1
-    assert TOKEN not in capsys.readouterr().err
 
 
-def test_the_fleet_hook_is_skipped_without_config_and_never_raises(tmp_path, monkeypatch, capsys):
+def test_the_fleet_hook_is_skipped_without_the_flag_and_never_raises(tmp_path, monkeypatch, capsys):
     calls = []
-    monkeypatch.delenv("LOOP_DATA_REPO", raising=False)
-    monkeypatch.delenv("LOOP_DATA_TOKEN", raising=False)
+    monkeypatch.delenv("LOOP_STORE", raising=False)
     monkeypatch.setattr(fleet_scan.subprocess, "run", lambda *a, **k: calls.append(a))
     fleet_scan.publish_run(tmp_path)
     assert calls == []
-    monkeypatch.setenv("LOOP_DATA_REPO", "x")
-    monkeypatch.setenv("LOOP_DATA_TOKEN", "y")
+    monkeypatch.setenv("LOOP_STORE", "db")
 
     def boom(*a, **k):
-        raise subprocess.TimeoutExpired("git", 1)
+        raise subprocess.TimeoutExpired("python", 1)
 
     monkeypatch.setattr(fleet_scan.subprocess, "run", boom)
     fleet_scan.publish_run(tmp_path)  # does not raise
     assert "publish skipped" in capsys.readouterr().out
 
 
-def test_the_scanner_image_has_git_and_the_job_syncs_before_the_fleet():
+def test_the_job_script_no_longer_syncs_a_git_clone():
     root = Path(__file__).resolve().parents[2]
-    assert " git " in (root / "Dockerfile.scanner").read_text(encoding="utf-8")
     script = (root / "scripts" / "railway_scan_fleet.sh").read_text(encoding="utf-8")
-    assert script.index("ops_publish sync") < script.index("exec python3 -m backend.scripts.fleet_scan")
-    assert "DEALER_LOGS_ROOT" in script
+    assert "ops_publish sync" not in script and "LOOP_DATA_TOKEN" not in script
+    assert "exec python3 -m backend.scripts.fleet_scan" in script
 
 
 def test_ops_publish_cli_runs_as_a_script(tmp_path):
@@ -242,14 +204,15 @@ def test_the_mirror_cli_refuses_an_output_inside_this_repository(tmp_path):
     assert not (root / "workspace" / "mirror_out").exists()
 
 
-def test_publish_commits_the_mirror_to_main_and_a_store_failure_only_skips_it(tmp_path, remote, env):
-    clone = ops_publisher.sync_main(env)
-    state = ops_publisher.publish_mirror(clone, "fleet_20261103T090000Z", env, store=lambda: ({"abc-com": [_rows()]}, {}))
+def test_publish_stores_the_mirror_and_a_source_failure_only_skips_it(store, env):
+    state = ops_publisher.publish_mirror(store, "fleet_20261103T090000Z", env, source=lambda: ({"abc-com": [_rows()]}, {}))
     assert state == "published"
-    assert "mirror/recipes/abc-com.json" in _branch_files(remote, "main")
-    assert ops_publisher.publish_mirror(clone, "fleet_20261103T090000Z", env, store=lambda: ({"abc-com": [_rows()]}, {})) == "unchanged"
+    assert "mirror/recipes/abc-com.json" in _paths(store)
+    assert ops_publisher.publish_mirror(store, "x", env, source=lambda: ({"abc-com": [_rows()]}, {})) == "unchanged"
+    assert ops_publisher.publish_mirror(store, "x", env, source=lambda: ({}, {})) == "published"  # recipes gone: files go
+    assert "mirror/recipes/abc-com.json" not in _paths(store)
 
     def boom():
         raise RuntimeError("db down")
 
-    assert ops_publisher.publish_mirror(clone, "x", env, store=boom).startswith("skipped:")
+    assert ops_publisher.publish_mirror(store, "x", env, source=boom).startswith("skipped:")

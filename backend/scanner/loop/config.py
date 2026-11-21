@@ -29,6 +29,7 @@ DEALER_ID_RE = re.compile(DEALER_ID_PATTERN)
 
 # Environment variable names (values are read by the wrappers, never here).
 ENV_SCAN_MODE = "SCAN_MODE"
+ENV_STORE = "LOOP_STORE"
 ENV_DATA_REPO = "LOOP_DATA_REPO"
 ENV_DATA_TOKEN = "LOOP_DATA_TOKEN"
 ENV_DATA_DIR = "LOOP_DATA_DIR"

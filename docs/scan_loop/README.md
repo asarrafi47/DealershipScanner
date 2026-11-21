@@ -1,5 +1,12 @@
 # The scan loop: Railway scans, cloud sessions improve
 
+> **Storage update (2026-11-21).** The loop's data no longer lives in a private git repository. It lives in the
+> Railway database (table `loop_files`, migration V032) and cloud sessions reach it through the token-guarded
+> `/api/loop` endpoints (`backend/routes/loop_api.py`, `scripts/cloud/loop_client.py`). Read "data repository" in
+> this document as "the store": `main` and `runs` become the path prefixes in section 3 of `BUNDLE.md`, and the
+> git mechanics (commits, rebase, union merge, orphan branch, token in `GIT_CONFIG_*`) do not apply. Retention is
+> the newest 30 runs plus size caps in `backend/scanner/loop/store.py`. Owner steps: `OWNER_SETUP.md`.
+
 ## Purpose
 
 DealershipScanner collects car-dealer inventory over plain HTTP and serves it on sarraficars.com. The
