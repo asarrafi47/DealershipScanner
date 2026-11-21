@@ -118,6 +118,7 @@ called these levels Trusted and Custom; an environment saved that way opens as L
 | `download.pytorch.org`, `download-r2.pytorch.org` | CPU-only torch, installed first the way CI does. The index lists its wheels on the second host | The setup refuses to install the requirements and says so: pip would take PyPI's default torch, a multi-GB CUDA stack. The Python side is not ready |
 | `apt.postgresql.org` | PostgreSQL 18 and pgvector for the pg tier, from the PGDG repository (its signing key comes with the image's `postgresql-common` package) | The pg tier runs on the image's PostgreSQL 16 with the Ubuntu archive's pgvector instead. That works, but it is not parity with CI and production, and the setup says so |
 | `download.geonames.org` | The US postal table from GeoNames, the source CI uses. `backend/db/geo.py` loads it when any test imports it | The setup falls back to a mirror on `raw.githubusercontent.com` (already allowed) that can lag GeoNames slightly |
+| `nodejs.org` | Node 20 (CI's version), only when the image has no `/opt/node20`: the setup downloads one pinned tarball and refuses it unless its SHA-256 matches the pin in `setup.sh` | `backend/tests/test_js_unit.py` skips, or runs under the image's Node 22. The setup reports "node 20" as optional |
 | `huggingface.co`, `*.hf.co` | The embedding model for the web app's smart search | Leave both out for code work |
 
 The image ships PostgreSQL 16 and Redis 7.0 (installed, not running). The tests need neither as
@@ -238,8 +239,7 @@ with several repositories, so the setup would not run there.
 
 | Start from | When |
 |---|---|
-| `chore/cloud-setup` | Until it is merged. It is `phase/N37a` plus the cloud setup, and the hook only exists on branches that contain it |
-| `phase/N37a`, or the newest tip of the release line | After `chore/cloud-setup` is merged into it |
+| `dev` (cut `claude/<topic>` from it) | The default since 2026-11-21. The hook and `scripts/cloud/` are on `dev`. `chore/cloud-setup` and `claude/cloud-ready-1` are old and 290+ commits behind: do not start from them |
 | never `main` | `main` is release 1.5.10, behind the staged 1.5.11 to 1.5.16, and moves only by fast-forward to a tagged release (docs/RELEASING.md) |
 
 Each task gets its own session and its own branch. Permission modes in the cloud are Auto, Accept
@@ -359,7 +359,7 @@ command that Claude polls), make it resumable in chunks, and commit results as i
 
 | Not possible | Why | Instead |
 |---|---|---|
-| Live dealer scans (`dealer_pipeline`, `scanner.py`, `fleet_scan`) | The recipes live in the gitignored `workspace/` and in the local database, dealer sites need Full network access and may refuse the cloud's addresses, and CLAUDE.md requires `workspace/dealer_logs/<id>/` for every dealer touched, which a reclaimed VM loses | Run scans on the Mac. A cloud session can change scanner code and run its tests |
+| Live dealer scans (`dealer_pipeline`, `scanner.py`, `fleet_scan`) | Owner decision 2026-11-21: Railway scans. Recipes live in the `dealer_recipes` table, dealer logs on the Railway volume and in the private data repository; a VM loses anything in `workspace/` when reclaimed, and dealer sites may refuse the cloud's addresses | Railway runs the fleet; a session reads the published bundle, proposes fixes as request files and changes scanner code through a PR into `dev` (`docs/scan_loop/README.md`) |
 | Railway deploys and `railway` commands | No Railway CLI or token (do not add one), Railway hosts are not allowed, tags cannot be pushed | `docs/RELEASING.md`, on the Mac |
 | The real databases, the scan databases, the production database | Unreachable, refused by `pg_test_up.sh` and the pg harness by name, and they must stay that way | A session has its own empty throwaway cluster |
 | Local data: `.env`, `workspace/`, the dev inventory, brochure PDFs, the dictionary catalog build | Gitignored, so not in the clone | Asset-gated tests skip, as in CI |
@@ -450,6 +450,10 @@ were not run on 16.)
 - **"pgeocode table" fails:** allow `download.geonames.org`, or check that the raw GitHub content host
   is reachable. Without the table every test errors at collection, because `backend/db/geo.py`
   loads it at import.
+- **"node 20" is optional and not in place:** allow `nodejs.org` and re-run the setup. A checksum
+  mismatch means the download was changed or cut short and nothing was installed; when a newer 20.x
+  is wanted, change `NODE_VERSION` and `NODE_SHA256_X64` in `scripts/cloud/setup.sh` together (the
+  hash is in `https://nodejs.org/dist/v<version>/SHASUMS256.txt`).
 - **"postgres 18" unavailable:** allow `apt.postgresql.org`, then re-run the setup (or start a new
   session after the cache rebuilds). Until then the "postgres fallback" line says whether the
   image's PostgreSQL 16 stands in for it. Everything else keeps working without Postgres.
@@ -461,3 +465,22 @@ were not run on 16.)
   the ruff pin and the Postgres major against `.github/workflows/ci.yml`, the hook's remote-only
   guard, and that this guide names nothing private. When CI moves one of them, move the script and
   this guide with it.
+
+## 12. Project threads (Claude projects)
+
+A cloud thread inside a Claude project does not run the repo's SessionStart hook (section 3), and
+the checkout is `/home/claude/DealershipScanner`. Reviewed 2026-11-21:
+
+- Pick the environment `dealership-code` in the project's settings. The built-in environment has
+  no extra hosts: the PyTorch index, `apt.postgresql.org`, GeoNames and NHTSA all answer 403, so
+  setup fails at CPU torch. `dealership-discovery` is for looking at a dealer site by hand and is
+  not for code work.
+- First command of every thread: `bash scripts/cloud/setup.sh`, then `export PATH=/opt/ds-venv/bin:$PATH`.
+  Add `--check` to see what is missing.
+- If torch cannot be installed, install `requirements-web.txt` without `sentence-transformers`
+  (torch is imported lazily) plus `requirements-browser.txt`, `requirements-test.txt` and
+  `ruff==0.15.22`; run `bash scripts/cloud/setup.sh --only pgeocode`. On the built-in environment
+  that gave 8,374 passed, 0 failed, 39 skipped for the offline tier, and 66 passed for
+  `test_pg_harness.py` on Postgres 16 (not CI parity).
+- Lowercase proxy variables are set in the VM: use the `env -u` form of section 5.
+
