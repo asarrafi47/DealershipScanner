@@ -151,6 +151,20 @@ def publish_logs(clone: Path, run_id: str, env) -> int:
     return len(files)
 
 
+
+def publish_statuses(clone: Path, env, message: str) -> int:
+    """Commit the tick's ``requests/*.status.json`` and ``fix_cycles/*.json`` to ``main``; returns the files changed."""
+    out = _git(clone, env, "status", "--porcelain", "--untracked-files=all", "--", "requests", "fix_cycles")
+    paths = [line[3:].strip().strip('"') for line in out.splitlines()]
+    paths = [p for p in paths if p.endswith(".status.json") or p.startswith("fix_cycles/")]
+    if not paths:
+        return 0
+    _git(clone, env, "add", "--", *paths)
+    _git(clone, env, "commit", "-q", "-m", message)
+    _push_with_retry(clone, env, "origin", "HEAD:main")
+    return len(paths)
+
+
 def publish_mirror(clone: Path, run_id: str, env, store=None) -> str:
     """Refresh ``mirror/`` in the data clone from ``dealer_recipes`` and commit it; best effort.
 

@@ -56,6 +56,17 @@ restart, roll back or redeploy the 2026-09-29 deployment: it carries its own `SC
 3. Production scans start with reconcile (retirement of vanished listings) off; leave it off until the gates
    pass twice (`README.md` section 5).
 
+## 5b. The request tick and recipe apply
+
+`python -m backend.scripts.ops_tick` reads new `requests/rq-*.json` from the data repository, rejects or runs each within
+the budgets, writes `*.status.json` and `fix_cycles/`, and pushes them to `main`. Run it as its own Railway cron
+(for example every 30 minutes) on the same image and variables as `scanner-nightly`, but with `LOOP_DATA_DIR` on the volume.
+
+`apply` writes the production recipe store, so the template `config/loop.json` leaves it out of `kinds`. Add `"apply"`
+there only after `probe`, `validate` and `rescan` have run cleanly for a few days. Every apply checks the base hash,
+validates, writes a rollback file under `<volume>/loop/rollback/`, saves, runs a canary rescan and restores the old set
+if the canary fails or fewer than 90% of rows are stamped. One apply per dealer per UTC day.
+
 ## 6. The analysis environment (claude.ai)
 
 At claude.ai/code, New environment: name `dealership-analysis`, network **Limited** with package managers
