@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-11-21
+
+- Release 1.6.0 ships everything on `dev` since v1.5.11 to `main`, the first release since then. Headline: the scan loop's data store in the Railway database (migration V032 `loop_files`, token-guarded `/api/loop`, publisher and tick on the store, `LOOP_STORE=db`; no scan data in git). It also carries migrations V027 to V031 (incomplete-listings window, rooftop evidence tier, admin users, chat usage and settings, phone auth), the admin chat usage page and the per-release entries below. All migrations are additive. Deploy: web from the tag, then scanner-nightly with `SCAN_FLEET` off.
+
 ## [1.5.52] - 2026-11-21
 
 - scan loop: `test_loop_e2e_pg.py` (pg tier) runs the whole loop on a real Postgres: publisher, `loop_files` store, `/api/loop` on a live local port, cloud client pull and push, the Railway tick, and the status coming back through the API.
