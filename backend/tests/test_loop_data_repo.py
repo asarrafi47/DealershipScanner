@@ -168,3 +168,24 @@ def test_hydrate_links_workspace_without_dirtying_the_code_checkout_and_exports(
     assert "export RECIPES_DB_DISABLED=1" in text and "RECIPES_CACHE_DIR" in text
     again = _sh(HYDRATE, str(data), str(code), LOOP_CODE_URL=str(code_src), CLAUDE_ENV_FILE=str(env_file))
     assert again.returncode == 0 and env_file.read_text(encoding="utf-8") == text  # idempotent, no repeated lines
+
+
+def test_persist_validates_new_requests_before_staging_anything(tmp_path):
+    if not (ROOT / "backend" / "scripts" / "ops_requests.py").exists():
+        pytest.skip("validator not on this branch")
+    bare = _seed_remote(tmp_path)
+    clone = _clone(tmp_path, bare, "c")
+    (clone / "requests").mkdir()
+    (clone / "findings").mkdir()
+    (clone / "findings" / "f.md").write_text("x\n", encoding="utf-8")
+    bad = clone / "requests" / "rq-20261121T100000Z-01.json"
+    bad.write_text('{"schema":1,"kind":"rescan"}', encoding="utf-8")
+    r = _sh(PERSIST, LOOP_DATA_DIR=str(clone))
+    assert r.returncode == 1 and "rejected" in r.stderr
+    assert "findings/f.md" not in _git(bare, "ls-tree", "-r", "--name-only", "main")  # nothing was pushed
+    bad.write_text(json.dumps({"schema": 1, "kind": "probe", "dealers": ["abc-com"], "proposal": None, "fix_cycle": 1,
+                               "executor": "railway", "note": ""}), encoding="utf-8")
+    ok = _sh(PERSIST, LOOP_DATA_DIR=str(clone))
+    assert ok.returncode == 0, ok.stderr
+    files = _git(bare, "ls-tree", "-r", "--name-only", "main").split()
+    assert "requests/rq-20261121T100000Z-01.json" in files and "findings/f.md" in files

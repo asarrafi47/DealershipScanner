@@ -12,10 +12,13 @@ It reads no clock: without ``--now`` the publication time is left out ("unknown"
 ``LATEST.json``). The target comes from ``LOOP_TARGET`` (default ``prod``) and the egress tag from
 ``SCANNER_EGRESS_TAG``; the scrubber takes its secret values from the environment and never prints them.
 
+  python backend/scripts/ops_publish.py mirror --out DIR [--full]
   python backend/scripts/ops_publish.py sync
   python backend/scripts/ops_publish.py publish --run-dir DIR [--now ISO] [--no-catch-up]
 
-``sync`` clones or updates the data repository's ``main`` clone (``LOOP_DATA_DIR``), so the dealer logs of the next
+``mirror`` (card L12) writes the canonical recipe mirror (``mirror/recipes/<id>.json``, ``index.tsv``,
+``scan_hints.json``) from ``dealer_recipes`` in a read-only transaction; it refuses an ``--out`` inside this
+repository (mirror files can hold third-party API keys) with exit 2. ``sync`` clones or updates the data repository's ``main`` clone (``LOOP_DATA_DIR``), so the dealer logs of the next
 run land inside it. ``publish`` (card L18, ``ops_publisher.py``) commits the run's dealer-log blocks to ``main`` and
 the bundle to the ``runs`` branch of the private data repository, and records the outcome in ``publisher.rc`` of the
 run directory. Both need ``LOOP_DATA_REPO`` and ``LOOP_DATA_TOKEN``; they exit 1 on any failure (the fleet ignores it).
@@ -108,6 +111,27 @@ def build_command(args, env) -> int:
     return 0
 
 
+def mirror_command(args, env) -> int:
+    from backend.scripts import ops_publisher as pub
+
+    out = Path(args.out)
+    if pub.inside_repository(out):
+        print("ops_publish: --out is inside this repository; the mirror belongs in the private data repository",
+              file=sys.stderr)
+        return 2
+    from backend.db.inventory_db import get_conn
+
+    conn = get_conn()
+    try:
+        sets, hints = pub.read_store(conn)
+    finally:
+        conn.rollback()
+        conn.close()
+    counts = pub.write_mirror(out, sets, hints, full=args.full)
+    print("ops_publish: mirror " + json.dumps(counts) + " dealers=" + str(len(sets)))
+    return 0
+
+
 def sync_command(args, env) -> int:
     from backend.scripts import ops_publisher as pub
 
@@ -149,6 +173,9 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--now", help="publication time, ISO 8601 UTC (no clock is read without it)")
     build.add_argument("--out", metavar="DIR", help="write <DIR>/runs/<run_id>/ and <DIR>/runs/LATEST.json")
     build.add_argument("--dry-run", action="store_true", help="print path, bytes and sha256; write nothing")
+    mirror = sub.add_parser("mirror", help="export the canonical recipe mirror (read-only SELECT on dealer_recipes)")
+    mirror.add_argument("--out", required=True, metavar="DIR", help="a directory outside this repository")
+    mirror.add_argument("--full", action="store_true", help="also write recipes_full.json.gz with the stamps")
     sub.add_parser("sync", help="clone or update the data repository's main clone")
     publish = sub.add_parser("publish", help="publish a finished fleet run to the private data repository")
     publish.add_argument("--run-dir", required=True, metavar="DIR", help="the fleet run directory (fleet_<UTC stamp>)")
@@ -161,6 +188,8 @@ def main(argv=None, env=None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
     env = os.environ if env is None else env
+    if args.command == "mirror":
+        return mirror_command(args, env)
     if args.command == "sync":
         return sync_command(args, env)
     if args.command == "publish":

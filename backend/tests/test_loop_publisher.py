@@ -182,3 +182,74 @@ def test_ops_publish_cli_runs_as_a_script(tmp_path):
     r = subprocess.run([sys.executable, str(root / "backend" / "scripts" / "ops_publish.py"), "publish", "--help"],
                        capture_output=True, text=True, cwd=root)
     assert r.returncode == 0 and "--run-dir" in r.stdout
+
+
+# --- card L12: the recipe mirror -----------------------------------------------------------------------------------
+
+
+def _rows(url="https://feed.abc.example/api", **extra):
+    row = {"dealer_id": "abc-com", "url": url, "method": "GET", "content_type": "application/json", "post_template": None,
+           "auth_headers": {"x-api-key": "k1"}, "pagination": "page_query", "vehicle_rows": 3, "total_count": 3,
+           "provider_hint": "p", "stale": False, "stale_reason": "", "saved_at": 1.0, "last_ok_at": 2.0,
+           "field_coverage": {"price": 1.0}}
+    row.update(extra)
+    return row
+
+
+def test_canonical_hash_ignores_stamps_and_key_order_but_not_a_url():
+    from backend.scanner.loop import bundle
+
+    base = [_rows()]
+    sha = bundle.canonical_sha256(base)
+    assert bundle.canonical_sha256([_rows(saved_at=99.0, last_ok_at=98.0, field_coverage={})]) == sha
+    assert bundle.canonical_sha256([dict(reversed(list(_rows().items())))]) == sha
+    assert bundle.canonical_sha256([_rows(url="https://feed.abc.example/other")]) != sha
+    assert bundle.canonical_recipe_bytes(base).endswith(b"]\n") and b"saved_at" not in bundle.canonical_recipe_bytes(base)
+
+
+def test_mirror_files_are_identical_across_runs_and_dealers_without_recipes_get_none(tmp_path):
+    from backend.scanner.loop import bundle
+
+    sets = {"abc-com": [_rows(), _rows(url="https://feed.abc.example/2", stale=True, stale_reason="401")],
+            "def-com": [_rows(dealer_id="def-com")], "empty-com": []}
+    hints = {"abc-com": {"price_source": "list", "secret": "no"}, "def-com": {}}
+    out = tmp_path / "m"
+    first = ops_publisher.write_mirror(out, sets, hints)
+    snapshot = {p.name: p.read_bytes() for p in (out / "mirror").rglob("*") if p.is_file()}
+    second = ops_publisher.write_mirror(out, sets, hints)
+    assert first["written"] == 4 and second["written"] == 0 and second["unchanged"] == 4
+    assert snapshot == {p.name: p.read_bytes() for p in (out / "mirror").rglob("*") if p.is_file()}
+    assert not (out / "mirror" / "recipes" / "empty-com.json").exists()
+    index = (out / "mirror" / "index.tsv").read_text(encoding="utf-8").splitlines()
+    assert index[0] == "dealer_id\tcanonical_sha256\trecipe_count\tstale_count"
+    assert index[1].split("\t")[0] == "abc-com" and index[1].split("\t")[2:] == ["2", "1"]
+    assert json.loads((out / "mirror" / "scan_hints.json").read_text(encoding="utf-8")) == {"abc-com": {"price_source": "list"}}
+    assert bundle.canonical_sha256(sets["abc-com"]) == index[1].split("\t")[1]
+    # a dealer that lost its recipes loses its file
+    del sets["def-com"]
+    assert ops_publisher.write_mirror(out, sets, hints)["deleted"] == 1
+    assert not (out / "mirror" / "recipes" / "def-com.json").exists()
+    # the optional full backup keeps the stamps
+    ops_publisher.write_mirror(out, sets, hints, full=True)
+    import gzip
+    assert json.loads(gzip.decompress((out / "recipes_full.json.gz").read_bytes()))["abc-com"][0]["saved_at"] == 1.0
+
+
+def test_the_mirror_cli_refuses_an_output_inside_this_repository(tmp_path):
+    root = Path(__file__).resolve().parents[2]
+    args = ops_publish._parser().parse_args(["mirror", "--out", str(root / "workspace" / "mirror_out")])
+    assert ops_publish.mirror_command(args, {}) == 2
+    assert not (root / "workspace" / "mirror_out").exists()
+
+
+def test_publish_commits_the_mirror_to_main_and_a_store_failure_only_skips_it(tmp_path, remote, env):
+    clone = ops_publisher.sync_main(env)
+    state = ops_publisher.publish_mirror(clone, "fleet_20261103T090000Z", env, store=lambda: ({"abc-com": [_rows()]}, {}))
+    assert state == "published"
+    assert "mirror/recipes/abc-com.json" in _branch_files(remote, "main")
+    assert ops_publisher.publish_mirror(clone, "fleet_20261103T090000Z", env, store=lambda: ({"abc-com": [_rows()]}, {})) == "unchanged"
+
+    def boom():
+        raise RuntimeError("db down")
+
+    assert ops_publisher.publish_mirror(clone, "x", env, store=boom).startswith("skipped:")
