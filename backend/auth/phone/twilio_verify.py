@@ -84,15 +84,23 @@ def _is_connect_failure(exc: BaseException) -> bool:
     return False
 
 
-def _vendor_error(exc: BaseException) -> tuple[int | None, int | None] | None:
-    """(http status, vendor error number) when ``exc`` is a Twilio API error, else None."""
-    from twilio.base.exceptions import TwilioRestException
+def _int_or_none(value: Any) -> int | None:
+    """An int as given, else None. ``bool`` is an int subclass and is refused: ``True`` is not a status."""
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
 
-    if not isinstance(exc, TwilioRestException):
+
+def _vendor_error(exc: BaseException) -> tuple[int | None, int | None] | None:
+    """(http status, vendor error number) when ``exc`` is a Twilio API error, else None.
+
+    The client raises ``TwilioRestException`` for the legacy error body and ``TwilioServiceException``
+    (twilio 9.x, not a subclass of it) for an RFC 9457 problem body; both carry ``status`` and ``code``.
+    """
+    from twilio.base import exceptions as tx
+
+    vendor_types = tuple(t for t in (tx.TwilioRestException, getattr(tx, "TwilioServiceException", None)) if t)
+    if not isinstance(exc, vendor_types):
         return None
-    status = exc.status if isinstance(exc.status, int) else None
-    code = exc.code if isinstance(exc.code, int) else None
-    return status, code
+    return _int_or_none(getattr(exc, "status", None)), _int_or_none(getattr(exc, "code", None))
 
 
 def _log_failure(op: str, reason: str, exc: BaseException) -> None:
