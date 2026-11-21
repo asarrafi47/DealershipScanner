@@ -44,6 +44,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect  # noqa: E402
+from backend.utils.portal_ids import is_dealer_portal_dealer_id  # noqa: E402
 
 _log = logging.getLogger("photo_attr")
 
@@ -190,6 +191,9 @@ def find_candidates(cur, index: dict[str, str]) -> list[dict[str, Any]]:
     )
     out: list[dict[str, Any]] = []
     for car_id, vin, dealer_id, summary in cur.fetchall():
+        # A person's own listing (dealer-portal-<user id>) is never re-attributed (S20).
+        if is_dealer_portal_dealer_id(dealer_id):
+            continue
         s = summary if isinstance(summary, dict) else json.loads(summary or "{}")
         domains = [
             d for d in (s.get("dealer_domains") or [])

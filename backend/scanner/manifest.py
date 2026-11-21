@@ -15,6 +15,7 @@ from typing import Any
 
 from backend.db.dealer_geo import normalize_dealer_host
 from backend.scanner.constants import MANIFEST_PATH, OEM_MANUFACTURER_DOMAINS
+from backend.utils.portal_ids import is_dealer_portal_dealer_id
 
 logger = logging.getLogger(__name__)
 
@@ -282,6 +283,10 @@ def _load_scannable_dealers() -> list[dict]:
     for r in rows:
         did = str(r[0] or "").strip()
         if not did:
+            continue
+        # A person's own listing (dealer-portal-<user id>) is not a site to scan, and a scan
+        # must never get the chance to touch it (S20).
+        if is_dealer_portal_dealer_id(did):
             continue
         car_name, any_url, reg_name, provider = (str(x or "").strip() for x in r[1:5])
         # dealer_id is the host with dots swapped for dashes ("davekirk-com").

@@ -39,7 +39,7 @@ def split_refusals(refused: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
     return evidenced, len(refused) - len(evidenced)
 
 
-def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
+def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str], *, mark_for_review: bool = False) -> int:
     """Unlist cars stamped onto *dealer_id* that this run's feed assigns elsewhere.
 
     Refusing the rows at parse time stops NEW mis-attributions, but a group feed
@@ -53,10 +53,14 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
     if the true rooftop is also scanned its own upsert re-lists the VIN there.
 
     Callers must pass ONLY VINs whose refusal reason is in
-    :data:`EVIDENCE_BACKED_REJECTS`.
+    :data:`EVIDENCE_BACKED_REJECTS`, or, with ``mark_for_review``, VINs a scanned rooftop
+    positively lists while *dealer_id* is a person's own listing (S20,
+    :func:`backend.scanner.upsert.guard.hide_front_run_user_listings`). ``mark_for_review`` also
+    sets ``marked_for_review = 1`` so a person looks at the row.
     """
     if not dealer_id or not vins:
         return 0
+    set_clause = "listing_active = 0, listing_removed_at = ?" + (", marked_for_review = 1" if mark_for_review else "")
     from datetime import datetime, timezone
 
     from backend.db.inventory_db import db_conn
@@ -72,7 +76,7 @@ def disown_foreign_rooftop_vins(dealer_id: str, vins: set[str]) -> int:
             cur.execute(
                 f"""
                 UPDATE cars
-                   SET listing_active = 0, listing_removed_at = ?
+                   SET {set_clause}
                  WHERE TRIM(IFNULL(dealer_id, '')) = ?
                    AND COALESCE(listing_active, 1) = 1
                    AND UPPER(TRIM(vin)) IN ({placeholders})

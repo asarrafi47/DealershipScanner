@@ -14,8 +14,10 @@ from typing import Any
 from backend.utils.field_clean import compute_data_quality_score
 from backend.utils.forced_induction import classify_forced_induction_from_car_row
 from backend.utils.interior_color_buckets import interior_color_buckets_json
+from backend.utils.portal_ids import DEALER_PORTAL_DEALER_ID_PREFIX
 from backend.utils.price_floor import classify_price
 
+from backend.scanner.upsert import ownership as _own
 from backend.scanner.upsert import rows as _rows
 from backend.scanner.upsert import serialize as _ser
 
@@ -197,7 +199,7 @@ UPSERT_CARS_SQL = """
                 -- as primary of its pool, every id sharing a pool with the claimant (each
                 -- list as ',a,b,' and passed twice for the replace() membership test).
                 -- Only an evidence-less contest outside every pool falls to the window.
-                WHERE ? = 0
+                WHERE (? = 0
                    OR COALESCE(cars.dealer_id, '') = ''
                    OR cars.dealer_id = excluded.dealer_id
                    OR COALESCE(cars.listing_active, 1) != 1
@@ -207,14 +209,26 @@ UPSERT_CARS_SQL = """
                        AND replace(?, ',' || cars.dealer_id || ',', '') != ?)
                    OR (__RANK_CARS__ < 2
                        AND replace(?, ',' || cars.dealer_id || ',', '') = ?
-                       AND (cars.scraped_at IS NULL OR cars.scraped_at < ?))
+                       AND (cars.scraped_at IS NULL OR cars.scraped_at < ?)))
+                -- Rule 0 (S20), ANDed around everything above so the guard being off (the
+                -- first term) or an inactive owner (the fourth) cannot get past it: a row
+                -- owned by a user listing (dealer-portal-<id>) only changes hands
+                -- when the same owner writes it, or it was retired before the cutoff bound last
+                -- (7 days back, ISO text). A NULL or missing retirement stamp stays protected.
+                   AND (cars.dealer_id = excluded.dealer_id
+                        OR substr(COALESCE(cars.dealer_id, ''), 1, __PORTAL_LEN__) != '__PORTAL_PREFIX__'
+                        OR (cars.listing_active = 0
+                            AND cars.listing_removed_at IS NOT NULL
+                            AND cars.listing_removed_at < ?))
                 """
 def _tier_rank_sql(col: str) -> str:
     return f"(CASE {col} WHEN 'strong' THEN 2 WHEN 'weak' THEN 1 ELSE 0 END)"
 
 
 UPSERT_CARS_SQL = (
-    UPSERT_CARS_SQL.replace("__RANK_CARS__", _tier_rank_sql("cars.rooftop_tier"))
+    UPSERT_CARS_SQL.replace("__PORTAL_LEN__", str(len(DEALER_PORTAL_DEALER_ID_PREFIX)))
+    .replace("__PORTAL_PREFIX__", DEALER_PORTAL_DEALER_ID_PREFIX)
+    .replace("__RANK_CARS__", _tier_rank_sql("cars.rooftop_tier"))
     .replace("__RANK_EXC__", _tier_rank_sql("excluded.rooftop_tier"))
     .replace("__TRIM__", _overwritable("trim"))
     .replace("__EXT__", _overwritable("exterior_color", color=True))
@@ -319,9 +333,16 @@ def upsert_params(
     rooftop_tier: str = "none",
     rooftop_evidence: str | None = None,
     pool_lists: tuple[str, str, str] = ("", "", ""),
+    user_listing_cutoff_iso: str | None = None,
 ) -> tuple:
-    """Bind parameters for :data:`UPSERT_CARS_SQL`, in column order."""
+    """Bind parameters for :data:`UPSERT_CARS_SQL`, in column order.
+
+    ``user_listing_cutoff_iso`` (S20): a retired user listing older than this may change owner;
+    default is seven days before now.
+    """
     v = row.v
+    if user_listing_cutoff_iso is None:
+        user_listing_cutoff_iso = _own.user_listing_cutoff_iso()
     alias_csv, takes_csv, covered_csv = pool_lists
     return (
         row.vin,
@@ -383,6 +404,7 @@ def upsert_params(
         covered_csv,
         covered_csv,
         guard_cutoff_iso,
+        user_listing_cutoff_iso,
     )
 
 

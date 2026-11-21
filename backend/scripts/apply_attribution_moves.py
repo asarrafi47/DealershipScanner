@@ -43,6 +43,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect, inventory_dsn  # noqa: E402
+from backend.utils.portal_ids import is_dealer_portal_dealer_id  # noqa: E402
 
 _log = logging.getLogger("attribution_moves")
 
@@ -364,6 +365,9 @@ def main() -> int:
     moves: list[tuple] = []
     ambiguous = ungeocoded = unmapped = 0
     for car_id, rooftop, evidence, from_did, from_name, from_rid in candidates:
+        # A person's own listing (dealer-portal-<user id>) is never moved to a rooftop (S20).
+        if is_dealer_portal_dealer_id(from_did):
+            continue
         best, why = choose_destination(rooftop, dealers, group_tokens)
         if best is None:
             if why == "ambiguous":

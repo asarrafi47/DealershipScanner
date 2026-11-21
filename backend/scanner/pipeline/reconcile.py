@@ -12,6 +12,7 @@ from typing import Any
 from backend.scanner.inventory_reconcile import BUCKET_UNKNOWN, CONDITION_BUCKETS, condition_bucket
 from backend.scanner.pipeline.constants import MIN_ROWS_UNKNOWN, RECONCILE_MIN_SHARE
 from backend.scanner.pipeline.db import _rows
+from backend.utils.portal_ids import is_dealer_portal_dealer_id
 
 _UPDATE_CHUNK = 400
 
@@ -63,6 +64,10 @@ def reconcile_dealer(conn, dealer_id: str, since_iso: str, baseline: int, rows_t
     behaviour of 2026-09-26 for callers that predate condition buckets.
     """
     out = {"eligible": False, "stale": 0, "retired": 0, "reason": ""}
+    if is_dealer_portal_dealer_id(dealer_id):
+        # A person's own listing is retired by its owner or an admin, never by a scan (S20).
+        out["reason"] = "user listing"
+        return out
     if verdict not in ("ok", "thin", "inaccurate"):
         out["reason"] = f"verdict {verdict}"
         return out

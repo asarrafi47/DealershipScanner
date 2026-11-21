@@ -35,19 +35,15 @@ from urllib.parse import urljoin
 
 from backend.config import Config
 
+# The prefix and the helpers live in a stdlib-only module so the scanner (no Flask in its
+# image) can use them too (S20); these names are re-exported, so imports from here still work.
+from backend.utils.portal_ids import (  # noqa: F401
+    DEALER_PORTAL_DEALER_ID_PREFIX,
+    dealer_portal_dealer_id,
+    is_dealer_portal_dealer_id,
+)
+
 _log = logging.getLogger(__name__)
-
-# Namespace prefix for cars.dealer_id on portal-sourced rows, so they can
-# never collide with a real scanned rooftop's dealer_id and are easy to spot.
-DEALER_PORTAL_DEALER_ID_PREFIX = "dealer-portal-"
-
-
-def dealer_portal_dealer_id(user_id: int) -> str:
-    return f"{DEALER_PORTAL_DEALER_ID_PREFIX}{int(user_id)}"
-
-
-def is_dealer_portal_dealer_id(dealer_id: Any) -> bool:
-    return isinstance(dealer_id, str) and dealer_id.startswith(DEALER_PORTAL_DEALER_ID_PREFIX)
 
 
 def _absolute_gallery_urls(gallery: list[str]) -> list[str]:

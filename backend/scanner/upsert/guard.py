@@ -13,6 +13,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, NamedTuple
 
 from backend.scanner.upsert import ownership as _own
+from backend.utils.portal_ids import is_dealer_portal_dealer_id
 
 # Same logger name as before the split so log routing and captures are unchanged.
 logger = logging.getLogger("backend.scanner.database")
@@ -59,17 +60,18 @@ def prefetch_existing(
     existing_spec_src: dict[str, str] = {}
     conflicts: dict[str, tuple[str, str]] = {}
     pools = _own.load_pools()
+    user_cutoff = _own.user_listing_cutoff()
     vin_keys = list(by_vin.keys())
     for i in range(0, len(vin_keys), _PREFETCH_CHUNK):
         chunk = vin_keys[i : i + _PREFETCH_CHUNK]
         placeholders = ",".join("?" * len(chunk))
         cursor.execute(
             "SELECT vin, spec_source_json, dealer_id, listing_active, scraped_at, "
-            "rooftop_tier, dealer_name, dealership_registry_id "
+            "rooftop_tier, dealer_name, dealership_registry_id, listing_removed_at "
             f"FROM cars WHERE vin IN ({placeholders})",
             chunk,
         )
-        contested: list[tuple[str, str, str, Any, Any, Any, Any, Any]] = []
+        contested: list[tuple[str, str, str, Any, Any, Any, Any, Any, Any]] = []
         for row in cursor.fetchall():
             if row[1] is not None and str(row[1]).strip():
                 existing_spec_src[str(row[0])] = str(row[1])
@@ -80,9 +82,10 @@ def prefetch_existing(
                 if _owner and _claimant and _owner != _claimant:
                     contested.append((_vin, _owner, _claimant, row[3], row[4],
                                       row[5] if len(row) > 5 else None,
-                                      row[6] if len(row) > 6 else "", row[7] if len(row) > 7 else None))
+                                      row[6] if len(row) > 6 else "", row[7] if len(row) > 7 else None,
+                                      row[8] if len(row) > 8 else None))
         held = _own.manual_holds(cursor, [c[0] for c in contested]) if window.on and contested else set()
-        for _vin, _owner, _claimant, _active, _scraped, _otier, _oname, _oreg in contested:
+        for _vin, _owner, _claimant, _active, _scraped, _otier, _oname, _oreg, _oremoved in contested:
             _src = by_vin.get(_vin) or {}
             _ctier = _src.get("_rooftop_evidence_tier")
             _is_active = True
@@ -91,10 +94,15 @@ def prefetch_existing(
             except (TypeError, ValueError):
                 pass
             _fresh = bool(window.on and owned_elsewhere(_owner, _active, _scraped, _claimant, window.cutoff))
-            verdict = _own.decide(_owner, _otier, _is_active, _fresh, _claimant, _ctier, pools)
-            if window.on and _vin in held:
+            verdict = _own.decide(
+                _owner, _otier, _is_active, _fresh, _claimant, _ctier, pools,
+                owner_removed_at=_oremoved, user_cutoff=user_cutoff,
+            )
+            if window.on and _vin in held and verdict.reason not in _own.USER_LISTING_REFUSALS:
                 verdict = _own.Verdict(False, "manual_move")
-            if window.on and not verdict.allow:
+            # Rule 0 (S20) refuses whatever the window: a person's listing is never taken
+            # because the guard window is off or has lapsed.
+            if verdict.reason in _own.USER_LISTING_REFUSALS or (window.on and not verdict.allow):
                 conflicts[_vin] = (_owner, _claimant)
                 if reasons is not None:
                     reasons[_vin] = verdict.reason
@@ -169,6 +177,36 @@ def report_conflicts(
                 r = reasons.get(vin, "backstop")
                 by_reason[r] = by_reason.get(r, 0) + 1
             stats["vin_owner_conflict_reasons"] = by_reason
+
+
+def hide_front_run_user_listings(conflicts: dict[str, tuple[str, str]], reasons: dict[str, str]) -> int:
+    """Retire and flag the live user listings a scanned dealer also has on its own site (S20).
+
+    A refusal of reason ``user_listing`` means a real rooftop lists a VIN that a person's own
+    listing holds: the person front-ran the dealer, or posted a car the dealer still has. The
+    scanner does not take the row (rule 0). It does stop showing it: ``listing_active`` goes to 0
+    (the car page checks that, not ``marked_for_review``), ``listing_removed_at`` starts the
+    7-day grace after which the dealer can claim the VIN, and ``marked_for_review`` puts the row
+    in front of a person. Only a row that is still live and still owned by that user is touched.
+    Returns the number of rows hidden. Never raises: a failure here must not undo the upsert.
+    """
+    from backend.attribution.disown import disown_foreign_rooftop_vins
+
+    by_owner: dict[str, set[str]] = {}
+    for vin, (owner, claimant) in conflicts.items():
+        if reasons.get(vin) != "user_listing" or is_dealer_portal_dealer_id(claimant):
+            continue
+        if is_dealer_portal_dealer_id(owner):
+            by_owner.setdefault(owner, set()).add(vin.strip().upper())
+    hidden = 0
+    for owner, vins in sorted(by_owner.items()):
+        try:
+            hidden += disown_foreign_rooftop_vins(owner, vins, mark_for_review=True)
+        except Exception:
+            logger.warning("hide_front_run_user_listings failed for one listing", exc_info=True)
+    if hidden:
+        logger.warning("vin_owner_guard hid %d user listing(s) a dealer also lists", hidden)
+    return hidden
 
 
 def reset_stats(stats: dict | None) -> None:

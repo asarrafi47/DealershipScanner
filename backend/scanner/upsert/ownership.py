@@ -17,15 +17,22 @@ window (a lapsed window must never fall back to scan order):
 
 A non-reverted manual ``car_move_log`` row that put the VIN at its current owner is
 honoured against every claimant.
+
+Rule 0 (S20) comes before all five and ignores the window and every tier: a VIN whose owner
+is a person's own listing (``dealer-portal-<user id>``) is never taken by another claimant
+while that row is live, or for 7 days after it was retired. After that it can be taken.
 """
 from __future__ import annotations
 
 import json
 import logging
 import os
+from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, NamedTuple
+
+from backend.utils.portal_ids import is_dealer_portal_dealer_id
 
 logger = logging.getLogger("backend.scanner.database")
 
@@ -100,6 +107,43 @@ class Verdict(NamedTuple):
     reason: str
 
 
+# Rule 0 (S20): how long a retired user listing stays out of every scanner's reach.
+USER_LISTING_GRACE = timedelta(days=7)
+# Verdict reasons of rule 0 that refuse a claim. The guard applies these even when the guard
+# window is off (``vin_owner_guard_hours=0``).
+USER_LISTING_REFUSALS = frozenset({"user_listing", "user_listing_recent"})
+
+
+def user_listing_cutoff(now: datetime | None = None) -> datetime:
+    """Naive UTC instant before which a retired user listing may be taken (now minus 7 days)."""
+    base = now or datetime.now(timezone.utc)
+    if base.tzinfo is not None:
+        base = base.astimezone(timezone.utc).replace(tzinfo=None)
+    return base - USER_LISTING_GRACE
+
+
+def user_listing_cutoff_iso(now: datetime | None = None) -> str:
+    """:func:`user_listing_cutoff` as text the SQL backstop compares with ``listing_removed_at``
+    (second precision, no zone; that column is ISO text)."""
+    return user_listing_cutoff(now).replace(microsecond=0).isoformat()
+
+
+def removed_within_grace(removed_at: Any, cutoff: datetime) -> bool:
+    """True when a retired row's ``listing_removed_at`` is newer than ``cutoff``.
+
+    A missing or unreadable stamp counts as recent: the row stays protected, because the cost of
+    wrongly protecting a person's listing is a conflict row to review, not a lost car.
+    """
+    text = str(removed_at or "").strip()
+    if not text:
+        return True
+    try:
+        stamp = datetime.strptime(text[:19].replace(" ", "T"), "%Y-%m-%dT%H:%M:%S")
+    except ValueError:
+        return True
+    return stamp >= cutoff
+
+
 def decide(
     owner: str,
     owner_tier: Any,
@@ -108,13 +152,25 @@ def decide(
     claimant: str,
     claimant_tier: Any,
     pools: Pools,
+    *,
+    owner_removed_at: Any = None,
+    user_cutoff: datetime | None = None,
 ) -> Verdict:
-    """Rules 1-5 for one VIN whose stored row belongs to a different, non-empty ``owner``.
+    """Rules 0-5 for one VIN whose stored row belongs to a different, non-empty ``owner``.
 
     ``owner_fresh``: the stored row was scraped inside the guard window (only rule 4 reads it).
+    ``owner_removed_at`` and ``user_cutoff`` matter only for rule 0 (an owner that is a person's
+    own listing): the row's retirement stamp, and the instant 7 days back (default: now).
     """
     if not owner or owner == claimant:
         return Verdict(True, "same_owner")
+    if is_dealer_portal_dealer_id(owner):
+        # Rule 0: a person's own listing. Not the window, not the tiers, not the pools.
+        if owner_active:
+            return Verdict(False, "user_listing")
+        if removed_within_grace(owner_removed_at, user_cutoff or user_listing_cutoff()):
+            return Verdict(False, "user_listing_recent")
+        return Verdict(True, "user_listing_lapsed")
     if not owner_active:
         return Verdict(True, "owner_inactive")
     if are_aliases(pools, owner, claimant):

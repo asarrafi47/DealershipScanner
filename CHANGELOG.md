@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- S20: the scanner never deletes or overwrites a user's car. A VIN owned by a `dealer-portal-<id>` listing is now refused to every scanner claimant while the row is live and for 7 days after it was retired, whatever the guard window (`SCANNER_VIN_OWNER_GUARD_HOURS=0` included), the evidence tiers and the group pools say (`ownership.decide` rule 0, plus a clause ANDed around the whole `WHERE` of `UPSERT_CARS_SQL`, which now has 60 placeholders). A refusal is recorded in `vin_owner_conflicts`; when a scanned rooftop lists a VIN a live user listing holds, that listing is retired (`listing_active` 0, `listing_removed_at` set, `marked_for_review` 1) so the car page stops showing it, and the rooftop can claim the VIN after the 7 days. `dealer-portal-*` ids are left out of the scan roster (`manifest._load_scannable_dealers`, `fleet_scan.load_roster`, also when named in `SCAN_DEALERS`, with a printed line), reconcile refuses them, and the dummy-VIN delete and the two attribution scripts skip them. The prefix and `is_dealer_portal_dealer_id` moved to the stdlib-only `backend/utils/portal_ids.py` (`portal_sync` re-exports them) so the Flask-free scanner image can use them. No migration. This is a scanner release too (`docs/RELEASING.md`). Tests: `backend/tests/test_scanner_keeps_user_cars.py`.
+
 ## [1.5.33] - 2026-11-14
 
 - Owner decisions 2026-11-14. Text-message caps: the code defaults are now the first-month launch values, 30 sends and 300 cents a day, alert at half the send cap (15) unless `SMS_ALERT_SEND_THRESHOLD` is set (`backend/auth/phone/config.py`, `.env.example`, tests). 300 sends and 1500 cents remain only later targets.

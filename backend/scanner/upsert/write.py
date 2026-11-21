@@ -33,6 +33,7 @@ def write_rows(
     """
     count = 0
     pools = _own.load_pools()
+    user_cutoff_iso = _own.user_listing_cutoff_iso()
     for raw in vehicles:
         v = normalize_vehicle_row(raw)
         row = prepare_row(v, existing_spec_src.get((v.get("vin") or "").strip()))
@@ -59,10 +60,12 @@ def write_rows(
                 rooftop_tier=_own.norm_tier(raw.get("_rooftop_evidence_tier")),
                 rooftop_evidence=_evidence if isinstance(_evidence, str) and _evidence else None,
                 pool_lists=_own.backstop_lists(pools, _claimant),
+                user_listing_cutoff_iso=user_cutoff_iso,
             ),
         )
-        if window.on and getattr(cursor, "rowcount", 1) == 0:
-            # Backstop fired: another writer owns this VIN (fresh, active).
+        if getattr(cursor, "rowcount", 1) == 0:
+            # Backstop fired: another writer owns this VIN (fresh, active), or it is a
+            # person's own listing (rule 0 holds with the guard window off too).
             conflicts[vin] = (backstop_owner(cursor, vin), _claimant)
             continue
         count += 1

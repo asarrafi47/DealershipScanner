@@ -7,6 +7,7 @@ from typing import Any, Iterable
 
 from backend.db.repositories.base_repo import _placeholders, db_conn, get_conn
 from backend.db.repositories.schema_repo import ensure_nhtsa_vpic_cache_table
+from backend.utils.portal_ids import is_dealer_portal_dealer_id
 
 _log = logging.getLogger(__name__)
 
@@ -46,10 +47,13 @@ def delete_cars_with_dummy_placeholder_vins() -> dict[str, Any]:
     try:
         ensure_nhtsa_vpic_cache_table(conn)
         cur = conn.cursor()
-        cur.execute("SELECT id, vin FROM cars")
+        cur.execute("SELECT id, vin, dealer_id FROM cars")
         rows: list[tuple[int, str]] = []
         for r in cur.fetchall():
             rid, rv = int(r[0]), str(r[1] or "")
+            # A person's own listing is never deleted here, whatever its VIN looks like (S20).
+            if is_dealer_portal_dealer_id(r[2]):
+                continue
             if is_dummy_placeholder_vin(rv):
                 rows.append((rid, rv))
         if not rows:

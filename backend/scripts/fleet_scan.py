@@ -216,6 +216,19 @@ def highest_applied_schema() -> int | None:
 ROSTER_REPORT: dict[str, Any] = {}
 
 
+def _without_user_listings(dealer_ids: list[str]) -> list[str]:
+    """Defence in depth (S20): a person's own listing (``dealer-portal-<user id>``) is never a
+    site to scan, even when ``SCAN_DEALERS`` names it by hand. The roster query already leaves
+    these out; this keeps a hand-typed or stale list from reaching the pipeline."""
+    from backend.utils.portal_ids import is_dealer_portal_dealer_id
+
+    kept = [d for d in dealer_ids if not is_dealer_portal_dealer_id(d)]
+    dropped = [d for d in dealer_ids if is_dealer_portal_dealer_id(d)]
+    if dropped:
+        print("fleet   dropped user listings from the roster: " + ", ".join(dropped), flush=True)
+    return kept
+
+
 def load_roster() -> list[str]:
     """SCAN_DEALERS (explicit, never filtered) or, with SCAN_FLEET=1, dealers with
     active inventory minus do-not-scan, plus revived recipe-only dealers.
@@ -230,7 +243,8 @@ def load_roster() -> list[str]:
     ROSTER_REPORT.clear()
     raw = (os.environ.get("SCAN_DEALERS") or "").strip()
     if raw:
-        return [d.strip() for d in raw.split(",") if d.strip()]
+        named = [d.strip() for d in raw.split(",") if d.strip()]
+        return _without_user_listings(named)
     if (os.environ.get("SCAN_FLEET") or "").strip().lower() in ("1", "true", "yes"):
         from backend.scanner.manifest import _load_scannable_dealers, apply_scannable_roster_rule
 
@@ -248,7 +262,7 @@ def load_roster() -> list[str]:
             print("fleet   do-not-scan: " + ", ".join(report["excluded_do_not_scan"]), flush=True)
         if report["revived_recipe_only"]:
             print("fleet   revived: " + ", ".join(report["revived_recipe_only"]), flush=True)
-        return sorted({d["dealer_id"] for d in kept})
+        return _without_user_listings(sorted({d["dealer_id"] for d in kept}))
     return []
 
 

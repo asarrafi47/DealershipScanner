@@ -19,6 +19,7 @@ from backend.utils.fuel_type_normalize import normalize_fuel_type_for_storage
 from backend.scanner.upsert import (
     dedupe_sorted_by_vin,
     guard_window,
+    hide_front_run_user_listings,
     prefetch_existing,
     report_conflicts,
     reset_stats,
@@ -474,6 +475,8 @@ def upsert_vehicles(vehicles: list[dict], stats: dict | None = None) -> int:
         moves_logged = _log_owner_moves(conn, cursor, [m for m in moves if m.vin not in conflicts])
     finally:
         conn.close()
+    if conflicts:
+        hide_front_run_user_listings(conflicts, reasons)
     logger.info("Upserted %d vehicles", count)
     if stats is not None:
         stats["car_moves_logged"] = moves_logged
