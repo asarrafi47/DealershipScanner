@@ -158,7 +158,7 @@ class CheckOutcome:
 @dataclass(frozen=True)
 class SignInOutcome:
     ok: bool
-    reason: str  # signed_in | signed_up | dormant_fresh | retry
+    reason: str  # signed_in | signed_up | dormant_fresh | retry | wrong_purpose
     user_id: int | None = None
     identity_id: int | None = None
 
@@ -263,7 +263,9 @@ class AuthPhoneService:
         recent = self.repo.recent_vendor_outcomes(limit=lim.BREAKER_RUN)
         if len(recent) < lim.BREAKER_RUN:
             return False
-        if any(outcome != "unavailable" for outcome, _ in recent):
+        # ``pending`` rows among the newest vendor rows are sends whose outcome is unknown (a timeout
+        # that may have sent): they count as failures, like ``unavailable``.
+        if any(outcome not in ("unavailable", "pending") for outcome, _ in recent):
             return False
         newest = max(at for _, at in recent)
         return newest > now - lim.BREAKER_SKIP
@@ -452,6 +454,15 @@ class AuthPhoneService:
         return self._sent_outcome(numbers.mask(e164), challenge.public_id, nonce)
 
     def _start_failed(self, send_id: int, result: p.StartResult, purpose: str) -> StartOutcome:
+        if result.maybe_sent:
+            # A text may have gone out (read timeout, reset after sending, vendor 5xx): the row stays
+            # ``pending`` at its reserved cost, so it counts against the day's sends and spend, the
+            # number and the source like a real text. The breaker treats it as a vendor failure.
+            _event("provider_unavailable" if result.reason == p.START_UNAVAILABLE else "provider_error",
+                   purpose=purpose, reason=result.reason, maybe_sent=1)
+            if result.reason in (p.START_INVALID_NUMBER, p.START_BLOCKED):
+                return StartOutcome(False, R_PROVIDER, COULD_NOT_SEND)
+            return StartOutcome(False, R_UNAVAILABLE, UNAVAILABLE)
         if result.reason == p.START_UNAVAILABLE:
             self.repo.set_send_outcome(send_id, "unavailable", est_cost_cents=0)
             _event("provider_unavailable", purpose=purpose)
@@ -653,6 +664,11 @@ class AuthPhoneService:
         """
         if not approved.approved or not approved.phone_e164:
             raise ValueError("sign_in needs an approved check")
+        if approved.purpose != "login":
+            # A link, claim, change, step-up or seller code proves the number for that flow only; it
+            # never signs anyone in, and dormant detach and the login stamp never run for it.
+            _event("sign_in_refused", purpose=approved.purpose, why="purpose")
+            return SignInOutcome(False, "wrong_purpose")
         e164 = approved.phone_e164
         now = self._now()
         ident = self.repo.find_identity_by_phone(e164)

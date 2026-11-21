@@ -105,6 +105,20 @@ def _log_failure(op: str, reason: str, exc: BaseException) -> None:
     )
 
 
+def _may_have_sent(exc: BaseException, never_reached: bool) -> bool:
+    """True when the create call may have produced a text although it failed for us: a read timeout,
+    a reset after sending, or a vendor 5xx. A 4xx is a refusal (nothing sent); a failed connect never
+    reached the vendor. Unknown exceptions count as sent: over-counting costs a cap slot, under-counting
+    lets real texts escape every cap."""
+    if never_reached:
+        return False
+    vendor = _vendor_error(exc)
+    if vendor is not None:
+        status = vendor[0]
+        return status is None or status >= 500
+    return True
+
+
 class TwilioVerifyProvider:
     name = "twilio_verify"
 
@@ -142,7 +156,9 @@ class TwilioVerifyProvider:
         except Exception as exc:  # noqa: BLE001 - every failure becomes a reason code
             reason = self._start_reason(exc)
             _log_failure("start", reason, exc)
-            return p.StartResult(False, None, None, reason), _is_connect_failure(exc)
+            never_reached = _is_connect_failure(exc)
+            result = p.StartResult(False, None, None, reason, maybe_sent=_may_have_sent(exc, never_reached))
+            return result, never_reached
         ref = getattr(verification, "sid", None)
         return p.StartResult(True, ref if isinstance(ref, str) and ref else None, None, p.START_SENT), False
 

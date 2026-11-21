@@ -313,3 +313,19 @@ def test_phone_libraries_are_pinned_with_upper_bounds_and_the_lite_phone_build()
 def test_lookup_cost_is_read_and_a_bad_value_falls_back_to_1(monkeypatch, value, expected):
     monkeypatch.setenv("SMS_EST_LOOKUP_CENTS", value)
     assert config.est_lookup_cents() == expected
+
+
+def test_boot_check_refuses_a_spoofable_proxy_chain(prod):
+    # TRUSTED_PROXY_HOPS=2 without TRUSTED_PROXY_CIDRS: a request straight to the origin picks its own
+    # address, so the per-address phone limits would key on what the client wrote (review R2).
+    _full_production(prod)
+    prod.setenv("TRUST_PROXY_HEADERS", "1")
+    prod.setenv("TRUSTED_PROXY_HOPS", "2")
+    prod.delenv("TRUSTED_PROXY_CIDRS", raising=False)
+    with pytest.raises(RuntimeError, match="TRUSTED_PROXY_CIDRS"):
+        assert_production_security_config()
+    prod.setenv("TRUSTED_PROXY_CIDRS", "cloudflare")
+    assert_production_security_config()
+    prod.setenv("TRUSTED_PROXY_HOPS", "1")
+    prod.delenv("TRUSTED_PROXY_CIDRS")
+    assert_production_security_config()  # one hop: the right-most entry is the proxy's own view
