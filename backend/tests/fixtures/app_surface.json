@@ -598,6 +598,34 @@
    ]
   ],
   [
+   "/api/loop/export",
+   "loop_api.export",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/api/loop/file",
+   "loop_api.get_file",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/api/loop/list",
+   "loop_api.list_files",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/api/loop/submit",
+   "loop_api.submit",
+   [
+    "POST"
+   ]
+  ],
+  [
    "/api/nearby-dealers",
    "api_nearby_dealers",
    [
@@ -1519,6 +1547,9 @@
     "_default_template_ctx_processor"
    ],
    "dev_console": [
+    "_default_template_ctx_processor"
+   ],
+   "loop_api": [
     "_default_template_ctx_processor"
    ]
   }

@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.51] - 2026-11-21
+
 ## [1.5.50] - 2026-11-21
 
 - scan loop storage moves from a private git repository to the Railway database (owner decision 2026-11-21: the code repository is public). New `loop_files` table (migration V032), `backend/scanner/loop/store.py` (path rules, per-file and 256 MB caps, 30-run retention), token-guarded `/api/loop` (`backend/routes/loop_api.py`: read token for list, file and export; separate submit token that can only add schema-checked requests and proposals and a session's summary and location notes; 404 until a token is set), `scripts/cloud/loop_client.py`, and `persist.sh` and `ops_hydrate.sh` rewritten on it. The Railway publisher and `ops_tick.py` read and write the store (`LOOP_STORE=db`); no git, no data repository, no token for GitHub. `docs/scan_loop/data_repo_template` became `data_template`. `OWNER_SETUP.md` rewritten.
