@@ -1290,3 +1290,17 @@ def app_factory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Callable[...
         return main
 
     return _make
+
+
+@pytest.fixture()
+def fake_turnstile():
+    """Opt-in (S19): a Turnstile verifier that accepts the token ``"pass"`` once, for tests that post
+    to a form behind the check (``/dealer/register``). Production never loads it."""
+    from backend.auth.phone import turnstile
+
+    verifier = turnstile.FakeTurnstileVerifier()
+    turnstile.set_verifier(verifier)
+    try:
+        yield verifier
+    finally:
+        turnstile.set_verifier(None)

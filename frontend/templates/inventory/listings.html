@@ -15,6 +15,10 @@
     {% endif %}
     {% endwith %}
 
+    {% if posting_held %}
+    <p class="dealer-inv-hint">Posting cars publicly opens soon. Your car is saved.</p>
+    {% endif %}
+
     <section class="db-section dealer-inv-section" id="add-by-vin">
         <div class="db-section-header">
             <p class="db-eyebrow">Dealer tools</p>

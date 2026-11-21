@@ -30,12 +30,54 @@ someone else's VIN.
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any
 from urllib.parse import urljoin
 
 from backend.config import Config
 
 _log = logging.getLogger(__name__)
+
+# S19: until phone-verified private sellers exist (S22), a car saved in the portal is copied to the
+# public ``cars`` table only for accounts that already had a vehicle before this release, or when
+# the owner turns posting on with the environment variable below (environment only, default off).
+MARKETPLACE_POSTING_ENV = "MARKETPLACE_POSTING_ENABLED"
+# An account is grandfathered when it had at least one ``dealer_vehicles`` row created before this
+# instant. The PR that ships S19 lists those accounts by id for the owner to check.
+GRANDFATHER_CUTOFF = "2026-11-21T00:00:00+00:00"
+
+POSTING_HELD_MESSAGE = "Posting cars publicly opens soon. Your car is saved."
+VIN_COLLISION_MESSAGE = "This VIN is already listed on the site; it was saved but not published."
+
+# What :func:`sync_portal_vehicle_to_public_listings` did, so the page can tell the seller.
+SYNC_PUBLISHED = "published"
+SYNC_HELD = "held"  # saved, not copied: posting is not open to this account yet
+SYNC_COLLISION = "collision"  # saved, not copied: the VIN is already listed by someone else
+SYNC_SKIPPED = "skipped"  # nothing to do (no VIN)
+SYNC_FAILED = "failed"
+
+
+def marketplace_posting_enabled() -> bool:
+    return (os.environ.get(MARKETPLACE_POSTING_ENV) or "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def is_grandfathered(user_id: int) -> bool:
+    """True when the account had a ``dealer_vehicles`` row before :data:`GRANDFATHER_CUTOFF`.
+
+    Fails closed: an unreadable portal database means "not grandfathered" (logged).
+    """
+    try:
+        from backend.db import dealer_portal_db as ddb
+
+        cutoff = GRANDFATHER_CUTOFF[:19]
+        return any(str(v.get("created_at") or "9999")[:19] < cutoff for v in ddb.list_vehicles_for_user(int(user_id)))
+    except Exception:
+        _log.exception("dealer-portal sync: could not check grandfathering for user=%s", user_id)
+        return False
+
+
+def may_post_publicly(user_id: int) -> bool:
+    return marketplace_posting_enabled() or is_grandfathered(user_id)
 
 # Namespace prefix for cars.dealer_id on portal-sourced rows, so they can
 # never collide with a real scanned rooftop's dealer_id and are easy to spot.
@@ -96,13 +138,8 @@ def _dealer_display_name(user_id: int) -> str:
     return user.get("username") or f"Dealer portal seller #{user_id}"
 
 
-def _vin_is_safe_to_sync(vin: str, user_id: int) -> bool:
-    """Refuse to sync onto a VIN owned by a scanned listing OR another portal user.
-
-    Matches the row's ``dealer_id`` to THIS caller's own portal dealer_id, not
-    just "any dealer-portal-* id" — otherwise portal user B could silently
-    overwrite portal user A's listing by entering A's VIN.
-    """
+def _vin_sync_state(vin: str, user_id: int) -> str:
+    """``"ok"``, ``"collision"`` (the VIN is someone else's row) or ``"unreadable"`` (could not check)."""
     try:
         from backend.db.repositories.cars_repo import get_car_by_vin
 
@@ -111,30 +148,44 @@ def _vin_is_safe_to_sync(vin: str, user_id: int) -> bool:
         # Read failure: fail closed (skip sync) rather than risk overwriting
         # a row we could not inspect.
         _log.exception("dealer-portal sync: could not check existing row for vin=%s", vin)
-        return False
-    if existing is None:
-        return True
-    return existing.get("dealer_id") == dealer_portal_dealer_id(user_id)
+        return "unreadable"
+    if existing is None or existing.get("dealer_id") == dealer_portal_dealer_id(user_id):
+        return "ok"
+    return "collision"
 
 
-def sync_portal_vehicle_to_public_listings(user_id: int, vehicle: dict[str, Any]) -> None:
+def _vin_is_safe_to_sync(vin: str, user_id: int) -> bool:
+    """Refuse to sync onto a VIN owned by a scanned listing OR another portal user.
+
+    Matches the row's ``dealer_id`` to THIS caller's own portal dealer_id, not
+    just "any dealer-portal-* id" — otherwise portal user B could silently
+    overwrite portal user A's listing by entering A's VIN.
+    """
+    return _vin_sync_state(vin, user_id) == "ok"
+
+
+def sync_portal_vehicle_to_public_listings(user_id: int, vehicle: dict[str, Any]) -> str:
     """Upsert one dealer-portal vehicle into the public ``cars`` table.
 
     Call after create/update/photo-gallery changes so the vehicle appears on
-    ``/listings`` and its car page. Never raises.
+    ``/listings`` and its car page. Never raises. Returns one of the ``SYNC_*``
+    values so the caller can tell the seller what happened.
     """
     vin = str(vehicle.get("vin") or "").strip()
     if not vin:
-        return
+        return SYNC_SKIPPED
     try:
-        if not _vin_is_safe_to_sync(vin, user_id):
+        if not may_post_publicly(user_id):
+            return SYNC_HELD
+        state = _vin_sync_state(vin, user_id)
+        if state != "ok":
             _log.warning(
                 "dealer-portal sync: vin=%s (user_id=%s) collides with an existing "
                 "listing owned by someone else; skipping public sync to avoid "
                 "overwriting another dealer's data",
                 vin, user_id,
             )
-            return
+            return SYNC_COLLISION if state == "collision" else SYNC_FAILED
 
         gallery = vehicle.get("gallery") or []
         if not isinstance(gallery, list):
@@ -169,11 +220,13 @@ def sync_portal_vehicle_to_public_listings(user_id: int, vehicle: dict[str, Any]
         from backend.scanner.database import upsert_vehicles
 
         upsert_vehicles([row])
+        return SYNC_PUBLISHED
     except Exception:
         _log.exception(
             "dealer-portal sync: failed to upsert vin=%s (user_id=%s) into cars",
             vin, user_id,
         )
+        return SYNC_FAILED
 
 
 def remove_portal_vehicle_from_public_listings(vin: str, user_id: int) -> None:

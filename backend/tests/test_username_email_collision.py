@@ -57,7 +57,7 @@ def test_username_equal_to_existing_email_counts_as_taken(app_factory) -> None:
     assert not user_exists_by_username("someone-else")
 
 
-def test_dealer_register_rejects_username_with_at(app_factory) -> None:
+def test_dealer_register_rejects_username_with_at(app_factory, fake_turnstile) -> None:
     app = app_factory().app
     from backend.db.users_db import find_users_by_email
 
@@ -65,6 +65,7 @@ def test_dealer_register_rejects_username_with_at(app_factory) -> None:
         r = _post_form(c, "/dealer/register", {
             "username": "victim@example.com", "email": "dealer@example.com",
             "password": "dealer-password-long-1", "org_name": "Squat Motors",
+            "cf-turnstile-response": "pass",
         })
     assert r.status_code == 200
     assert b"cannot contain @" in r.data

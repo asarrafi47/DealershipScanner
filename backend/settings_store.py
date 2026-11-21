@@ -74,6 +74,8 @@ SPECS: dict[str, Spec] = {
         Spec("chat.web_research_weight", "CHAT_WEB_RESEARCH_WEIGHT", 3, max_value=100),
         Spec("chat.reset_tz", "CHAT_RESET_TZ", "America/New_York", "tz"),
         Spec("chat.alert_pcts", "CHAT_ALERT_PCTS", (50, 80), "pcts"),
+        # S19: the owner's switch for new dealership sign-ups (POST /dealer/register answers with a sentence).
+        Spec("seller.signup_paused", "SELLER_SIGNUP_PAUSED", False, "bool"),
     )
 }
 

@@ -25,6 +25,9 @@
                 <div class="error-box">{{ error }}</div>
                 {% endif %}
 
+                {% if not signup_open %}
+                <p class="hero-text">Dealer sign-up is not available right now.</p>
+                {% else %}
                 <form method="POST" action="{{ url_for('dealer_portal.dealer_register') }}" class="auth-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="field-group">
@@ -46,8 +49,13 @@
                         <p class="field-hint">This identifies your business for subscription billing and future team invites.</p>
                     </div>
 
+                    {% if turnstile_site_key %}
+                    <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+                    {% endif %}
+
                     <button type="submit" class="primary-button full-width">Create dealership account</button>
                 </form>
+                {% endif %}
 
                 <p class="auth-footer">Already have an account? <a href="{{ url_for('dealer_portal.dealer_login') }}">Sign in</a></p>
                 <p class="auth-footer">Not a dealer? <a href="/register">Create a general account</a></p>
@@ -57,6 +65,9 @@
     </div>
 
     <script src="{{ url_for('static', filename='password_toggle.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+    {% if signup_open and turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer nonce="{{ csp_nonce }}"></script>
+    {% endif %}
 {% include "_footer_version.html" %}
 </body>
 </html>

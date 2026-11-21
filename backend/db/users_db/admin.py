@@ -1,7 +1,11 @@
+import logging
+
 from ._common import _users_select_columns, get_conn
 from .accounts import delete_user_by_email, save_user, user_exists_by_username
 from .auth import clear_user_password_reset_token, reset_user_password
 from .schema import sync_env_admin_user_row
+
+_log = logging.getLogger(__name__)
 
 
 def _saved_car_counts_for_users(user_ids: list[int]) -> dict[int, int]:
@@ -510,4 +514,14 @@ def set_user_is_active(user_id: int, *, active: bool) -> bool:
     conn.close()
     if ok:
         _users_select_columns.cache_clear()
+    if ok and not active:
+        # A suspended seller's cars stop showing at once (S19). Un-suspending does not bring them
+        # back: the seller publishes again, which runs today's checks. Only the exact
+        # ``dealer-portal-<id>`` rows are touched, never a scanned dealer's.
+        try:
+            from backend.dealer.portal_sync import retire_portal_listings_for_user
+
+            retire_portal_listings_for_user(uid)
+        except Exception:
+            _log.exception("suspend: could not retire the public listings of user=%s", uid)
     return bool(ok)

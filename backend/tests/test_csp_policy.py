@@ -96,12 +96,24 @@ _CROSS_ORIGIN_IMPORT = re.compile(
 )
 
 
+# The one cross-origin script the site loads (S19): Cloudflare's Turnstile widget, on the pages in
+# ``security._TURNSTILE_ENDPOINTS`` only, whose policy adds that host (see test_seller_doors.py).
+_TURNSTILE_SCRIPT_TAG = re.compile(
+    r"<script[^>]*\ssrc=\"https://challenges\.cloudflare\.com/turnstile/v0/api\.js\"[^>]*>\s*</script>",
+    re.IGNORECASE,
+)
+
+
 def test_no_template_or_static_script_loads_a_cross_origin_script():
-    """script-src is 'self' (+ nonce): a cross-origin script would be blocked."""
+    """script-src is 'self' (+ nonce): a cross-origin script would be blocked.
+
+    The only exception is the Turnstile script tag, exactly as written above."""
     tag_hits = [
         str(p.relative_to(FRONTEND))
         for p in (FRONTEND / "templates").rglob("*.html")
-        if _CROSS_ORIGIN_SCRIPT_TAG.search(p.read_text(encoding="utf-8", errors="ignore"))
+        if _CROSS_ORIGIN_SCRIPT_TAG.search(
+            _TURNSTILE_SCRIPT_TAG.sub("", p.read_text(encoding="utf-8", errors="ignore"))
+        )
     ]
     import_hits = [
         str(p.relative_to(FRONTEND))

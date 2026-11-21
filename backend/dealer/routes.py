@@ -50,6 +50,7 @@ from backend.utils.roles import (
     ROLE_DEALERSHIP_OWNER,
     REGISTRATION_ADMIN_BLOCKED_MSG,
     is_admin_role,
+    is_dealer_portal_role,
     normalize_role,
     registration_blocked_by_env_admin,
 )
@@ -69,6 +70,15 @@ _MAX_GALLERY_IMAGES = int(os.environ.get("DEALER_GALLERY_MAX_IMAGES", "24"))
 _DEALER_VIN_RPM = int(os.environ.get("RATE_LIMIT_DEALER_VIN_PER_MIN", "20"))
 _DEALER_AUTH_RPM = int(os.environ.get("RATE_LIMIT_DEALER_AUTH_PER_MIN", "20"))
 _MIN_DEALER_PASSWORD = Config.MIN_PASSWORD_LENGTH
+_DEALER_SIGNUPS_PER_HOUR = 3  # per address (S19; in memory, per worker)
+
+# One sentence for every failed sign-in, so the page never says which part was wrong (S19).
+_LOGIN_FAILED = "Invalid username or password."
+_NOT_DEALERSHIP_MSG = "Inventory is for dealership accounts for now. Private sellers will be able to post cars soon."
+_SIGNUP_UNAVAILABLE_MSG = "Dealer sign-up is not available right now."
+_SIGNUP_PAUSED_MSG = "Dealer sign-up is paused for now. Please try again later."
+_SIGNUP_CHECK_MSG = "Please complete the check and try again."
+_SIGNUP_HOURLY_MSG = "Too many sign-ups from this address. Try again later."
 
 
 @bp.route("/dealer/login", methods=["GET", "POST"])
@@ -98,30 +108,69 @@ def dealer_login():
             _refund_login_slot(slot)
             u = get_user_by_login(login_input)
             if not u:
-                return render_template("dealer_login.html", error="Invalid username or password.")
+                return render_template("dealer_login.html", error=_LOGIN_FAILED)
             sync_env_admin_user_row(int(u["id"]))
             u = get_user_by_login(login_input)
             if not u:
-                return render_template("dealer_login.html", error="Invalid username or password.")
+                return render_template("dealer_login.html", error=_LOGIN_FAILED)
             from backend.auth.session import finalize_app_session as _finalize_app_session, post_login_redirect as _post_login_redirect  # noqa: PLC0415
             session.clear()
             if not _finalize_app_session(int(u["id"])):
-                return render_template("dealer_login.html", error="Login failed. Try again.")
+                # A suspended account lands here: say the same thing as a wrong password.
+                return render_template("dealer_login.html", error=_LOGIN_FAILED)
             return _post_login_redirect()
+        # A wrong password used to fall through to a blank form; every failure says the same thing.
+        return render_template("dealer_login.html", error=_LOGIN_FAILED)
     return render_template("dealer_login.html")
+
+
+def _signup_form_context() -> dict[str, Any]:
+    """Template values for the sign-up form: the Turnstile site key, and whether the form may show.
+
+    Without both Turnstile keys the form cannot work, so it says so instead of showing a form that
+    always fails (S19). Outside production the form still shows, so a developer sees it.
+    """
+    from backend.auth.phone import config as phone_config  # noqa: PLC0415
+    from backend.utils.runtime_env import is_production_env  # noqa: PLC0415
+
+    site_key = phone_config.turnstile_site_key()
+    keys = bool(site_key and phone_config.turnstile_secret_key())
+    return {"turnstile_site_key": site_key, "signup_open": keys or not is_production_env()}
+
+
+def _signup_refusal(**ctx: Any) -> Any | None:
+    """The response for a sign-up that must not go on, or None. Order: paused, then Turnstile."""
+    from backend import settings_store  # noqa: PLC0415
+    from backend.auth.phone import turnstile  # noqa: PLC0415
+
+    if settings_store.get_bool("seller.signup_paused"):
+        return render_template("dealer_register.html", error=_SIGNUP_PAUSED_MSG, **ctx), 503
+    if not ctx.get("signup_open"):  # production without both Turnstile keys: no token can pass
+        return render_template("dealer_register.html", error=_SIGNUP_UNAVAILABLE_MSG, **ctx), 503
+    token = request.form.get("cf-turnstile-response")
+    result = turnstile.verify_turnstile(token, _client_ip(request))
+    if result.ok:
+        return None
+    if result.reason == turnstile.NOT_CONFIGURED:
+        return render_template("dealer_register.html", error=_SIGNUP_UNAVAILABLE_MSG, **ctx), 503
+    return render_template("dealer_register.html", error=_SIGNUP_CHECK_MSG, **ctx), 400
 
 
 @bp.route("/dealer/register", methods=["GET", "POST"])
 def dealer_register():
+    ctx = _signup_form_context()
     if request.method == "POST":
         ip = _client_ip(request)
         if not allow_request(
             f"dealer_app_register:{ip}", max_events=_DEALER_AUTH_RPM, window_seconds=60.0
         ):
             return (
-                render_template("dealer_register.html", error="Too many registration attempts. Try again later."),
+                render_template("dealer_register.html", error="Too many registration attempts. Try again later.", **ctx),
                 429,
             )
+        refused = _signup_refusal(**ctx)
+        if refused is not None:
+            return refused
         username = normalize_registration_username(request.form.get("username") or "")
         email = normalize_registration_email(request.form.get("email") or "")
         password = (request.form.get("password") or "")
@@ -130,35 +179,40 @@ def dealer_register():
             username, email, password, min_password_len=_MIN_DEALER_PASSWORD
         ) or username_format_error(username)
         if err:
-            return render_template("dealer_register.html", error=err)
+            return render_template("dealer_register.html", error=err, **ctx)
         if registration_blocked_by_env_admin(email, username):
-            return render_template("dealer_register.html", error=REGISTRATION_ADMIN_BLOCKED_MSG)
+            return render_template("dealer_register.html", error=REGISTRATION_ADMIN_BLOCKED_MSG, **ctx)
         if user_exists_by_email(email) or user_exists_by_username(username):
             return render_template(
                 "dealer_register.html",
                 error="That username or email is already registered.",
+                **ctx,
             )
         if not org_name:
-            return render_template("dealer_register.html", error="Organization (dealership) name is required.")
+            return render_template("dealer_register.html", error="Organization (dealership) name is required.", **ctx)
+        if not allow_request(
+            f"dealer_signup_hour:{ip}", max_events=_DEALER_SIGNUPS_PER_HOUR, window_seconds=3600.0
+        ):
+            return render_template("dealer_register.html", error=_SIGNUP_HOURLY_MSG, **ctx), 429
         try:
             org_id = create_org(org_name)
         except sqlite3.IntegrityError:
             return render_template(
-                "dealer_register.html", error="That organization name is already in use."
+                "dealer_register.html", error="That organization name is already in use.", **ctx
             )
         except ValueError as e:
-            return render_template("dealer_register.html", error=str(e))
+            return render_template("dealer_register.html", error=str(e), **ctx)
         role = ROLE_DEALERSHIP_OWNER
         try:
             uid = save_user(username, email, password, role=role, org_id=org_id)
         except sqlite3.IntegrityError:
-            return render_template("dealer_register.html", error="That username or email is already registered.")
+            return render_template("dealer_register.html", error="That username or email is already registered.", **ctx)
         from backend.auth.session import finalize_app_session as _finalize_app_session, post_login_redirect as _post_login_redirect  # noqa: PLC0415
         session.clear()
         if not _finalize_app_session(int(uid)):
-            return render_template("dealer_register.html", error="Registration failed. Try again.")
+            return render_template("dealer_register.html", error="Registration failed. Try again.", **ctx)
         return _post_login_redirect()
-    return render_template("dealer_register.html")
+    return render_template("dealer_register.html", **ctx)
 
 
 def _require_login() -> int:
@@ -176,7 +230,22 @@ def _require_login() -> int:
     profile = get_user_profile(uid)
     if not profile or not profile.get("is_active", True):
         return 0
+    # Until private sellers can post (S22), the inventory is for dealership accounts and admins.
+    role = normalize_role(profile.get("role"))
+    if not (is_admin_role(role) or is_dealer_portal_role(role)):
+        return -1
     return uid
+
+
+def _sync_and_tell(uid: int, vehicle: dict[str, Any]) -> None:
+    """Copy the saved vehicle to the public listings, and say so when it was not published."""
+    from backend.dealer import portal_sync as ps  # noqa: PLC0415
+
+    result = ps.sync_portal_vehicle_to_public_listings(uid, vehicle)
+    if result == ps.SYNC_HELD:
+        flash(ps.POSTING_HELD_MESSAGE, "info")
+    elif result == ps.SYNC_COLLISION:
+        flash(ps.VIN_COLLISION_MESSAGE, "error")
 
 
 def _vehicle_upload_dir(user_id: int, vehicle_id: int) -> Path:
@@ -196,6 +265,8 @@ def _safe_upload_basename(name: str) -> str | None:
 @bp.route("/inventory")
 def inventory_dashboard():
     uid = _require_login()
+    if uid == -1:
+        abort(403, description=_NOT_DEALERSHIP_MSG)
     if not uid:
         return redirect(url_for("dealer_portal.dealer_login"))
     vehicles = ddb.list_vehicles_for_user(uid)
@@ -209,13 +280,18 @@ def inventory_dashboard():
 @bp.route("/inventory/listings")
 def inventory_listings():
     uid = _require_login()
+    if uid == -1:
+        abort(403, description=_NOT_DEALERSHIP_MSG)
     if not uid:
         return redirect(url_for("dealer_portal.dealer_login"))
     vehicles = ddb.list_vehicles_for_user(uid)
+    from backend.dealer.portal_sync import may_post_publicly  # noqa: PLC0415
+
     return render_template(
         "inventory/listings.html",
         vehicles=vehicles,
         username=session.get("username") or "",
+        posting_held=not may_post_publicly(uid),
     )
 
 
@@ -223,7 +299,7 @@ def inventory_listings():
 def inventory_add_vin():
     uid = _require_login()
     if uid == -1:
-        abort(403)
+        abort(403, description=_NOT_DEALERSHIP_MSG)
     if not uid:
         abort(403)
     ip = _client_ip(request)
@@ -250,9 +326,7 @@ def inventory_add_vin():
     except ValueError as e:
         flash(str(e), "error")
         return redirect(url_for("dealer_portal.inventory_listings"))
-    from backend.dealer.portal_sync import sync_portal_vehicle_to_public_listings
-
-    sync_portal_vehicle_to_public_listings(uid, ddb.get_vehicle(uid, new_id) or {})
+    _sync_and_tell(uid, ddb.get_vehicle(uid, new_id) or {})
     if err:
         flash(f"Vehicle added with partial decode ({err}). Review and edit fields as needed.", "info")
     else:
@@ -264,7 +338,7 @@ def inventory_add_vin():
 def inventory_upload_photos(vehicle_id: int):
     uid = _require_login()
     if uid == -1:
-        abort(403)
+        abort(403, description=_NOT_DEALERSHIP_MSG)
     if not uid:
         abort(403)
     car = ddb.get_vehicle(uid, vehicle_id)
@@ -309,9 +383,7 @@ def inventory_upload_photos(vehicle_id: int):
         saved += 1
     if saved:
         ddb.update_vehicle_gallery(uid, vehicle_id, gallery)
-        from backend.dealer.portal_sync import sync_portal_vehicle_to_public_listings
-
-        sync_portal_vehicle_to_public_listings(uid, ddb.get_vehicle(uid, vehicle_id) or {})
+        _sync_and_tell(uid, ddb.get_vehicle(uid, vehicle_id) or {})
         flash(f"Saved {saved} photo(s).", "success")
     return redirect(url_for("dealer_portal.inventory_listings"))
 
@@ -321,7 +393,7 @@ def inventory_delete_photo(vehicle_id: int):
     """Remove one photo from a vehicle's gallery without deleting the vehicle."""
     uid = _require_login()
     if uid == -1:
-        abort(403)
+        abort(403, description=_NOT_DEALERSHIP_MSG)
     if not uid:
         abort(403)
     car = ddb.get_vehicle(uid, vehicle_id)
@@ -342,9 +414,7 @@ def inventory_delete_photo(vehicle_id: int):
             except OSError:
                 pass
     ddb.update_vehicle_gallery(uid, vehicle_id, gallery)
-    from backend.dealer.portal_sync import sync_portal_vehicle_to_public_listings
-
-    sync_portal_vehicle_to_public_listings(uid, ddb.get_vehicle(uid, vehicle_id) or {})
+    _sync_and_tell(uid, ddb.get_vehicle(uid, vehicle_id) or {})
     flash("Photo removed.", "success")
     return redirect(url_for("dealer_portal.inventory_listings"))
 
@@ -353,7 +423,7 @@ def inventory_delete_photo(vehicle_id: int):
 def inventory_update_vehicle(vehicle_id: int):
     uid = _require_login()
     if uid == -1:
-        abort(403)
+        abort(403, description=_NOT_DEALERSHIP_MSG)
     if not uid:
         abort(403)
     if not ddb.get_vehicle(uid, vehicle_id):
@@ -411,9 +481,7 @@ def inventory_update_vehicle(vehicle_id: int):
 
     if fields:
         ddb.update_vehicle_fields(uid, vehicle_id, fields)
-        from backend.dealer.portal_sync import sync_portal_vehicle_to_public_listings
-
-        sync_portal_vehicle_to_public_listings(uid, ddb.get_vehicle(uid, vehicle_id) or {})
+        _sync_and_tell(uid, ddb.get_vehicle(uid, vehicle_id) or {})
         flash("Vehicle updated.", "success")
     return redirect(url_for("dealer_portal.inventory_listings"))
 
@@ -422,7 +490,7 @@ def inventory_update_vehicle(vehicle_id: int):
 def inventory_delete_vehicle(vehicle_id: int):
     uid = _require_login()
     if uid == -1:
-        abort(403)
+        abort(403, description=_NOT_DEALERSHIP_MSG)
     if not uid:
         abort(403)
     car = ddb.get_vehicle(uid, vehicle_id)
@@ -451,7 +519,7 @@ def inventory_delete_vehicle(vehicle_id: int):
 def dealer_upload_file(user_id: int, vehicle_id: int, filename: str):
     uid = _require_login()
     if uid == -1:
-        abort(403)
+        abort(403, description=_NOT_DEALERSHIP_MSG)
     if not uid or uid != user_id:
         abort(403)
     if not ddb.get_vehicle(uid, vehicle_id):

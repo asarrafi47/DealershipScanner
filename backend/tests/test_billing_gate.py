@@ -61,7 +61,7 @@ def test_register_rejects_env_admin_email(monkeypatch, tmp_path, app_factory):
         assert b"reserved" in r.data.lower() or b"administrator" in r.data.lower()
 
 
-def test_register_non_admin_requires_billing(monkeypatch, tmp_path, app_factory):
+def test_register_non_admin_requires_billing(monkeypatch, tmp_path, app_factory, fake_turnstile):
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "1")
     monkeypatch.setenv("APP_ADMIN_EMAILS", "")
     app = app_factory().app
@@ -81,6 +81,7 @@ def test_register_non_admin_requires_billing(monkeypatch, tmp_path, app_factory)
                 "email": "u1@example.com",
                 "password": "long-enough-password",
                 "org_name": "Test Org",
+                "cf-turnstile-response": "pass",
             },
             follow_redirects=False,
         )

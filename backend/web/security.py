@@ -196,6 +196,22 @@ _CSP_REPORT_ONLY = (
 )
 
 
+# Pages that show a Cloudflare Turnstile widget. Only these get the Cloudflare host in their policy.
+_TURNSTILE_ENDPOINTS = frozenset({"dealer_portal.dealer_register"})
+_TURNSTILE_HOST = "https://challenges.cloudflare.com"
+
+
+def _csp_allow_turnstile(value: str) -> str:
+    """Add Cloudflare's challenge host to script-src, frame-src and connect-src of one policy."""
+    out = []
+    for directive in value.split("; "):
+        name = directive.split(" ", 1)[0]
+        if name in ("script-src", "frame-src", "connect-src") and _TURNSTILE_HOST not in directive:
+            directive = f"{directive.rstrip(';')} {_TURNSTILE_HOST}"
+        out.append(directive)
+    return "; ".join(out)
+
+
 def _csp_headers(response):
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("X-Frame-Options", "DENY")
@@ -208,7 +224,10 @@ def _csp_headers(response):
     if _csp_enforce_wanted():
         nonce = (getattr(g, "csp_nonce", None) or "") or ""
         if nonce and not response.headers.get("Content-Security-Policy"):
-            response.headers["Content-Security-Policy"] = _csp_header_value_enforced(nonce)
+            value = _csp_header_value_enforced(nonce)
+            if request.endpoint in _TURNSTILE_ENDPOINTS:
+                value = _csp_allow_turnstile(value)
+            response.headers["Content-Security-Policy"] = value
         return response
     if Config.csp_report_only_enabled():
         if not response.headers.get("Content-Security-Policy-Report-Only"):
