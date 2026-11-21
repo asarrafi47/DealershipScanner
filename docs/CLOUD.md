@@ -155,7 +155,7 @@ Do not set any of these in a cloud environment (or anywhere a session can read):
   `MERGE_SPECS_GOLDEN_DB_URL`. A session works against its own throwaway cluster only, and
   `scripts/pg_test_up.sh` and the pg harness refuse a real database anyway.
 - Deploy and vault credentials: `VAULT_TOKEN`, `VAULT_TOKEN_LOCAL`, `RAILWAY_VAULT_TOKEN`, and any
-  `RAILWAY_*` variable or Railway token. Deploys stay on the Mac (docs/RELEASING.md).
+  `RAILWAY_*` variable or Railway token. Deploys run in the `Release and deploy` GitHub Actions workflow, which holds the Railway project token as a repository secret (docs/scan_loop/OWNER_SETUP.md, section 1).
 - Application secrets: `SECRET_KEY`, `FLASK_SECRET_KEY`, `ADMIN_PASSWORD`, `USERS_DB_ENCRYPTION_KEY`,
   `DEV_USERS_DB_ENCRYPTION_KEY`, `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `GOOGLE_MAPS_API_KEY`.
   Code work and every test run without them.
@@ -329,7 +329,7 @@ command that Claude polls), make it resumable in chunks, and commit results as i
   `phase/*` branch. If the first session pushes to the branch it started from instead of a new one,
   stop and tell the session.
 - **Never `main`.** Not even a fast-forward. Tags cannot be pushed from the cloud (the proxy rejects
-  them), so releases, tags and `main` stay on the Mac (docs/RELEASING.md). The ruleset of section 0
+  them), so releases, tags and `main` move only through the `Release and deploy` workflow in GitHub Actions (docs/scan_loop/OWNER_SETUP.md, section 1; the steps of docs/RELEASING.md still apply). The ruleset of section 0
   is the enforcement. The pre-push hook refuses a push to `main` whose VERSION does not rise or
   whose CHANGELOG section is empty (if hooks run in the cloud at all; not confirmed), so it does
   not stop a well-formed one.
@@ -360,7 +360,7 @@ command that Claude polls), make it resumable in chunks, and commit results as i
 | Not possible | Why | Instead |
 |---|---|---|
 | Live dealer scans (`dealer_pipeline`, `scanner.py`, `fleet_scan`) | Owner decision 2026-11-21: Railway scans. Recipes live in the `dealer_recipes` table, dealer logs on the Railway volume and in the loop store (`loop_files`, Railway database); a VM loses anything in `workspace/` when reclaimed, and dealer sites may refuse the cloud's addresses | Railway runs the fleet; a session reads the published bundle, proposes fixes as request files and changes scanner code through a PR into `dev` (`docs/scan_loop/README.md`) |
-| Railway deploys and `railway` commands | No Railway CLI or token (do not add one), Railway hosts are not allowed, tags cannot be pushed | `docs/RELEASING.md`, on the Mac |
+| Railway deploys and `railway` commands | No Railway CLI or token (do not add one), Railway hosts are not allowed, tags cannot be pushed | the `Release and deploy` workflow (docs/scan_loop/OWNER_SETUP.md, section 1) |
 | The real databases, the scan databases, the production database | Unreachable, refused by `pg_test_up.sh` and the pg harness by name, and they must stay that way | A session has its own empty throwaway cluster |
 | Local data: `.env`, `workspace/`, the dev inventory, brochure PDFs, the dictionary catalog build | Gitignored, so not in the clone | Asset-gated tests skip, as in CI |
 | Your memory and user-level setup (user skills such as dealer-discovery, plugins, user MCP servers, `~/.claude/CLAUDE.md`) | User-level files do not carry into the VM. Only the repo's own `.claude/` does (`.claude/workflows/dealer-discovery.js` is tracked; whether it loads in the cloud is not confirmed) | Put what a session needs in a tracked file, without private details |
