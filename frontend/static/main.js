@@ -51,6 +51,18 @@ document.addEventListener("DOMContentLoaded", () => {
     } = DSL;
     const _buildCarRowsFromCars = DSL.buildCarRowsFromCars;
 
+    // ── Facet payload (web speed 2026-11, PR 4) ────────────────────────
+    // /listings no longer inlines the fleet cascade table and the package rows: they
+    // come with the model/trim/package lists in one cacheable, versioned document
+    // (GET /api/listings/facets?v=, listings_boot.js -> window.__DS_FACETS_URL),
+    // loaded when the shopper opens the filters or starts a search, never on a bare
+    // visit. Until it lands (and no area is loaded) the cascade has no table to test
+    // options against, so it leaves every option as rendered instead of hiding (and
+    // unchecking) all of them. The dealership page inlines its table: no URL, ready.
+    const FACETS_URL = window.__DS_FACETS_URL || "";
+    let _cascadeTableReady = !FACETS_URL;
+    let _cascadeSkipped = false;
+
     // Bridge closure functions to the extracted geo.js / market_intel.js files
     // (their call sites stay typeof-guarded). Function declarations hoist, so
     // both are initialized even though they are defined further down.
@@ -166,6 +178,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function runCascade() {
         invalidateCheckedCache();
+        if (RADIUS_CAR_ROWS === null && !_cascadeTableReady) {
+            _cascadeSkipped = true;
+            updateAllCounts();
+            return;
+        }
         _compatRowCache = new Map();
         cascadeParam("make",        r => r.make,        ["options-make",        "acc-options-make"]);
         cascadeMakeByCountry();
@@ -388,13 +405,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // with nothing shown to the user. Rejecting + clearing the slot means
         // the next accordion open retries.
         if (!_facetOptionsPromise) {
-            const attempt = fetch("/api/listings/filter-options", { credentials: "same-origin" })
+            const attempt = fetch(FACETS_URL || "/api/listings/filter-options", { credentials: "same-origin" })
                 .then((r) => {
                     if (!r.ok) throw new Error(`filter-options HTTP ${r.status}`);
                     return r.json();
                 })
                 .then((d) => {
                     if (!d || !d.ok) throw new Error("filter-options payload not ok");
+                    applyFacetTable(d);
                     return d;
                 })
                 .catch((err) => {
@@ -404,6 +422,67 @@ document.addEventListener("DOMContentLoaded", () => {
             _facetOptionsPromise = attempt;
         }
         return _facetOptionsPromise;
+    }
+
+    let _facetPayloadData = null;
+
+    /** The cascade inputs the page used to inline: the fleet table and the package rows. */
+    function applyFacetTable(d) {
+        _facetPayloadData = d;
+        if (FACETS_URL && !_cascadeTableReady) {
+            // A loaded area already replaced CAR_ROWS with its own rows
+            // (applyListingsCarsPayload); the fleet table must not overwrite them.
+            if (d.car_rows && !window.__DS_listingsCarsScope && typeof window.__DS_unpackCarRows === "function") {
+                window.CAR_ROWS = window.__DS_unpackCarRows(d.car_rows);
+            }
+            if (Array.isArray(d.package_rows)) window.PACKAGE_ROWS = d.package_rows;
+            _cascadeTableReady = true;
+        }
+        applyPendingSmartChecks(d);
+    }
+
+    /** True once if a cascade was skipped while the table was missing (rerun it now). */
+    function takeSkippedCascade() {
+        if (!_cascadeSkipped || !_cascadeTableReady) return false;
+        _cascadeSkipped = false;
+        return true;
+    }
+
+    /** Load the facet payload (one request, memoised); lazy lists graft only when opened. */
+    function requestFacetPayload() {
+        if (!FACETS_URL || _cascadeTableReady) return;
+        loadFacetOptions().then(
+            () => { if (takeSkippedCascade()) runCascade(); },
+            () => {}
+        );
+    }
+    window.__DS_requestFacetPayload = requestFacetPayload;
+
+    // Smart search checks the parsed model/package in the sidebar. A lazy list that has
+    // not been opened yet has no boxes: graft it from the payload if it is here, else
+    // remember the values and check them when it arrives.
+    const _pendingSmartChecks = new Map();
+
+    function lazyFacetReadyForSmart(param) {
+        if (_lazyFacetHydrated.has(param)) return true;
+        if (_facetPayloadData) {
+            hydrateLazyFacet(param, _facetPayloadData);
+            return _lazyFacetHydrated.has(param);
+        }
+        return false;
+    }
+
+    function applyPendingSmartChecks(d) {
+        if (!_pendingSmartChecks.size) return;
+        for (const [param, normVals] of _pendingSmartChecks) {
+            hydrateLazyFacet(param, d);
+            document.querySelectorAll(`input[type=checkbox][name="${param}"]`).forEach((cb) => {
+                if (normVals.some((v) => DSL.smartFilterOptionMatches(param, v, cb.value))) cb.checked = true;
+            });
+        }
+        _pendingSmartChecks.clear();
+        invalidateCheckedCache();
+        updateAllCounts();
     }
 
     /** Visible, retryable failure state — an empty accordion is indistinguishable from "no options". */
@@ -519,11 +598,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /** Fill in a section's options right now if the facet payload has landed; otherwise when it does. */
     function ensureLazyFacet(param) {
-        if (!LAZY_FACET_PARAMS.includes(param) || _lazyFacetHydrated.has(param)) return;
+        if (!LAZY_FACET_PARAMS.includes(param) || _lazyFacetHydrated.has(param)) {
+            requestFacetPayload();
+            return;
+        }
         setLazyFacetError(param, false);
         loadFacetOptions().then(
             (facets) => {
-                if (hydrateLazyFacet(param, facets)) runCascade();
+                const grafted = hydrateLazyFacet(param, facets);
+                if (takeSkippedCascade() || grafted) runCascade();
             },
             () => setLazyFacetError(param, true)
         );
@@ -587,6 +670,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function markListingsSearchStarted() {
         if (window.__DS_listingsSearchStarted) return;
         window.__DS_listingsSearchStarted = true;
+        requestFacetPayload();
         const prompt = document.getElementById("listings-start-prompt");
         if (prompt) prompt.hidden = true;
     }
@@ -617,6 +701,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (empty) empty.style.display = "none";
         if (pag) pag.hidden = true;
         if (zeroHint) zeroHint.hidden = true;
+        retireServerRenderedPage();
         const prompt = document.getElementById("listings-start-prompt");
         if (!prompt) return;
         const zip = scalarVal("zip_code");
@@ -638,6 +723,14 @@ document.addEventListener("DOMContentLoaded", () => {
         prompt.hidden = false;
     }
 
+    /** The client grid takes over: drop the server page's marker and its link pager. */
+    function retireServerRenderedPage() {
+        const grid = document.getElementById("results-grid");
+        if (grid) grid.removeAttribute("data-ssr");
+        const pager = document.getElementById("listings-ssr-pager");
+        if (pager) pager.remove();
+    }
+
     function showListingsZipRequired() {
         markListingsSearchStarted();
         showListingsStartPrompt();
@@ -645,6 +738,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showListingsLoadError(err) {
+        retireServerRenderedPage();
         const grid = document.getElementById("results-grid");
         const count = document.getElementById("results-count");
         const empty = document.getElementById("empty-state");
@@ -1404,6 +1498,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderCarGrid(cars, opts) {
         if (!resultsGrid) return;
+        retireServerRenderedPage();
         window.__DS_lastResultCount = Array.isArray(cars) ? cars.length : 0;
         window.__DS_lastResults = Array.isArray(cars) ? cars.slice(0, 12) : [];
         const preserveOrder = opts && opts.preserveOrder;
@@ -1832,6 +1927,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.__DS_applySmartFilters = function(filters, opts) {
         if (!filters) return;
         const skipCascade = !!(opts && opts.skipCascade);
+        _pendingSmartChecks.clear();
         // Uncheck all filter checkboxes without triggering change events
         document.querySelectorAll(".filter-option input[type=checkbox]").forEach(cb => {
             cb.checked = false;
@@ -1839,6 +1935,11 @@ document.addEventListener("DOMContentLoaded", () => {
         function checkFilter(name, value) {
             if (value == null || value === "") return;
             const normVal = String(value).trim().toLowerCase();
+            if (LAZY_FACET_PARAMS.includes(name) && !lazyFacetReadyForSmart(name)) {
+                if (!_pendingSmartChecks.has(name)) _pendingSmartChecks.set(name, []);
+                _pendingSmartChecks.get(name).push(normVal);
+                requestFacetPayload();
+            }
             document.querySelectorAll(`input[type=checkbox][name="${name}"]`).forEach(cb => {
                 if (DSL.smartFilterOptionMatches(name, normVal, cb.value)) {
                     cb.checked = true;
@@ -1986,6 +2087,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!resultsGrid) return;
         const prompt = document.getElementById("listings-start-prompt");
         if (prompt) prompt.hidden = true;
+        if (resultsGrid.getAttribute("data-ssr") === "1") {
+            // The server already rendered this page of cards: keep them on screen (no
+            // skeleton flash) until the area lands and renderCarGrid draws the same page.
+            return;
+        }
         if (
             LISTINGS_DEALER_SCOPE
             && Array.isArray(window.BOOTSTRAP_GRID_CARS)
@@ -2734,15 +2840,36 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Background fill so smart search, chips and the make→model cascade see the
-    // full option lists without the user having to open the section first.
-    hydrateAllLazyFacets();
+    if (!FACETS_URL) {
+        // Dealership page: its (dealer-scoped, small) lists fill in the background as before.
+        hydrateAllLazyFacets();
+    } else {
+        // /listings: the facet payload loads on intent -- the shopper touches the filter
+        // panel or the search line, opens the mobile filter sheet, or a search starts
+        // (deep link, ZIP, first filter) -- never on a bare visit. Model/Trim/Packages
+        // graft into the DOM only when their section opens (ensureLazyFacet), so a search
+        // no longer rebuilds thousands of hidden options.
+        const sidebar = document.getElementById("listings-sidebar-panel");
+        if (sidebar) {
+            ["pointerdown", "focusin", "keydown"].forEach((type) =>
+                sidebar.addEventListener(type, requestFacetPayload, { once: true, passive: true }));
+        }
+        const filtersOpen = document.getElementById("listings-filters-open");
+        if (filtersOpen) filtersOpen.addEventListener("click", requestFacetPayload, { once: true });
+        if (listingsSearchStarted()) {
+            deferListingsIdleWork(requestFacetPayload, 1500);
+        }
+    }
 
     // Poll inventory JSON while a scan writes to inventory.db (LISTINGS_CLIENT_POLL_MS, e.g. 8000).
     const pollAttr = document.body && document.body.getAttribute("data-listings-poll-ms");
     const pollMs = pollAttr != null ? parseInt(pollAttr, 10) : 0;
     if (Number.isFinite(pollMs) && pollMs > 0) {
-        setInterval(() => {
+        // Stopped on pagehide and restarted on a bfcache restore (pageshow persisted):
+        // a poll in flight when the shopper leaves would keep the page out of the
+        // back/forward cache, and a hidden page has nothing to refresh.
+        let pollTimer = 0;
+        const pollOnce = () => {
             // Only refresh an area already loaded; polling never starts a search.
             if (!listingsCarsReady()) return;
             fetchListingsCarsJson(false)
@@ -2757,7 +2884,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 })
                 .catch(() => {});
-        }, pollMs);
+        };
+        const startPoll = () => {
+            if (!pollTimer) pollTimer = setInterval(pollOnce, pollMs);
+        };
+        startPoll();
+        window.addEventListener("pagehide", () => {
+            clearInterval(pollTimer);
+            pollTimer = 0;
+        });
+        window.addEventListener("pageshow", (e) => {
+            if (e.persisted) startPoll();
+        });
     }
 
     document.querySelectorAll("form.nav-search").forEach((navForm) => {

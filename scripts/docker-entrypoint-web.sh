@@ -73,6 +73,15 @@ GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
 GUNICORN_MAX_REQUESTS="${GUNICORN_MAX_REQUESTS:-0}"
 GUNICORN_MAX_REQUESTS_JITTER="${GUNICORN_MAX_REQUESTS_JITTER:-0}"
 
+# Threads per worker, the worker (silent-request) timeout and the graceful shutdown window.
+# The defaults are the values this script always hardcoded (4 / 120 s / 30 s). Threads only
+# overlap I/O waits (Postgres, Redis, outbound HTTP): a GIL-bound request still stalls every
+# other thread of the one worker. GUNICORN_TIMEOUT also bounds post_fork, where the aggregate
+# warm-up waits up to AGGREGATE_WARM_CAP_S (keep it well under the timeout).
+GUNICORN_THREADS="${GUNICORN_THREADS:-4}"
+GUNICORN_TIMEOUT="${GUNICORN_TIMEOUT:-120}"
+GUNICORN_GRACEFUL_TIMEOUT="${GUNICORN_GRACEFUL_TIMEOUT:-30}"
+
 # --preload loads backend.main (and its module-level load_kmac_vault_secrets()
 # call) once in the gunicorn master before forking, so every worker inherits
 # the SAME populated os.environ instead of each independently re-fetching
@@ -80,9 +89,9 @@ GUNICORN_MAX_REQUESTS_JITTER="${GUNICORN_MAX_REQUESTS_JITTER:-0}"
 # -c gunicorn.conf.py: moves the listings prewarm out of the --preload arbiter
 # (which otherwise builds a ~2GB grid it never serves) into post_fork per worker.
 exec gunicorn -c "${GUNICORN_CONF:-/app/gunicorn.conf.py}" \
-  -w "${GUNICORN_WORKERS}" --threads 4 -b "0.0.0.0:${PORT}" \
+  -w "${GUNICORN_WORKERS}" --threads "${GUNICORN_THREADS}" -b "0.0.0.0:${PORT}" \
   --preload \
-  --timeout 120 --graceful-timeout 30 \
+  --timeout "${GUNICORN_TIMEOUT}" --graceful-timeout "${GUNICORN_GRACEFUL_TIMEOUT}" \
   --max-requests "${GUNICORN_MAX_REQUESTS}" --max-requests-jitter "${GUNICORN_MAX_REQUESTS_JITTER}" \
   ${GUNICORN_RELOAD} \
   backend.main:app

@@ -12,7 +12,10 @@
  *
  *  - One request per prefetch. This used to issue BOTH a fetch() and a
  *    <link rel=prefetch> for the same document; a listings page idle-warming 8
- *    cards produced 16 car-page renders.
+ *    cards produced 16 car-page renders. Since 2026-11-20 the same rule applies
+ *    across mechanisms: where the browser runs speculation rules (Chromium; see
+ *    below) the RULES do every prefetch and this file never fetch()es; the
+ *    fetch() path below is only the fallback for browsers without them.
  *
  *  - Documents only. It also fetched /api/cars/<id> for every warmed card. That
  *    endpoint does have one consumer -- car_trim_ladder.js hydrates the trim
@@ -31,11 +34,33 @@
  *    would both guess the scope and break that rule. Hovering a /listings link
  *    prefetches the DOCUMENT, nothing more.
  *
+ *  - Only side-effect-free documents (2026-11-20; ALLOWED_DOC below, the same list
+ *    as frontend/static/speculation-rules.json): /, bare /listings, /car/<id>
+ *    (optionally ?zip_code=), /find-dealers. A /listings URL WITH a query records
+ *    search history and analytics and writes the remembered area to the session,
+ *    /compare?ids= records a compare session, /premium pops a session flag, /home
+ *    and /dashboard are per-user and heavy: none of them is speculated. Car pages
+ *    record a "view" unless the request says it is a prefetch (X-DS-Prefetch here,
+ *    Sec-Purpose for speculation rules; backend/routes/car_detail/viewer.py), and
+ *    are never PRERENDERED: a prerender would run the page and its activation
+ *    would not reach the server.
+ *
  *  - Bounded and cancellable, and off entirely under Save-Data or a 2g-class
- *    connection.
+ *    connection. Speculation rules cannot read either signal: Chromium skips them
+ *    itself under Save-Data (and Battery/Memory Saver, or with preloading turned
+ *    off), and for 2g this file sets <html data-ds-nospec>, which every rule in
+ *    speculation-rules.json excludes via selector_matches.
+ *
+ * Speculation rules (Chromium 121+): delivered by the Speculation-Rules response
+ * header (backend/web/static.py), so they need no inline script and no CSP nonce
+ * and also work on edge-cached HTML. They prefetch the allowed links on hover
+ * (moderate eagerness: ~200 ms hover, or pointerdown), prefetch the few car cards
+ * this file marks data-ds-warm on /listings, and PRERENDER only links marked
+ * data-ds-prerender (the landing's "Browse inventory" -> bare /listings).
  *
  * Everything here is an enhancement: with JS disabled or failing, every link is
- * still a plain <a href> and navigates normally.
+ * still a plain <a href> and navigates normally; browsers without speculation
+ * rules, view transitions or bfcache simply ignore those parts.
  */
 (function () {
     "use strict";
@@ -45,6 +70,11 @@
     var WARM_LIMIT = 3;        // in-view cars warmed by themselves, once the browser is idle
     var WARM_IDLE_TIMEOUT_MS = 3000;
     var HOVER_DELAY_MS = 65;   // ignore pointers merely sweeping across a grid
+    var NAV_BAR_GIVE_UP_MS = 15000;  // a navigation that never unloads (204, download)
+
+    // Speculation rules do the prefetching where the browser supports them.
+    var SPEC_RULES = !!(window.HTMLScriptElement && typeof HTMLScriptElement.supports === "function" &&
+        HTMLScriptElement.supports("speculationrules"));
 
     var prefetched = new Set();
     var inflight = 0;
@@ -52,6 +82,7 @@
     var budget = MAX_PER_PAGE;
     var controllers = new Set();
     var navBarEl = null;
+    var navBarTimer = null;
     var hoverTimer = null;
 
     // ---- connection policy -------------------------------------------------
@@ -67,6 +98,15 @@
     // Re-read per call: effectiveType and saveData can change mid-session.
     function prefetchAllowed() {
         return !dataSaverOn() && budget > 0;
+    }
+
+    // Every speculation rule excludes ":root[data-ds-nospec] *"; Chromium re-evaluates
+    // selector_matches when the attribute changes.
+    function syncSpeculationSwitch() {
+        var root = document.documentElement;
+        if (!root) return;
+        if (dataSaverOn()) root.setAttribute("data-ds-nospec", "");
+        else root.removeAttribute("data-ds-nospec");
     }
 
     // ---- url helpers -------------------------------------------------------
@@ -86,7 +126,15 @@
         return /^\/car\/\d+/.test(String(path || ""));
     }
 
-    // ---- prefetch engine ---------------------------------------------------
+    // The documents a speculative request may fetch (mirrors speculation-rules.json).
+    // Not "/": it redirects a signed-in visitor to their per-user /home (review 2026-11-20).
+    var ALLOWED_DOC = /^(?:\/listings|\/find-dealers|\/car\/\d+(?:\?zip_code=[^&#]*)?)$/;
+
+    function allowedDocument(url) {
+        return ALLOWED_DOC.test(String(url || ""));
+    }
+
+    // ---- prefetch engine (fallback for browsers without speculation rules) --
 
     function pump() {
         while (inflight < MAX_INFLIGHT && queue.length && budget > 0) {
@@ -121,7 +169,10 @@
     }
 
     function prefetchDocument(url) {
-        if (!url || prefetched.has(url) || !prefetchAllowed()) return;
+        // With speculation rules the browser prefetches this very href itself; a
+        // fetch() here would be a second request for the same document.
+        if (SPEC_RULES) return;
+        if (!allowedDocument(url) || prefetched.has(url) || !prefetchAllowed()) return;
         prefetched.add(url);
         queue.push(url);
         pump();
@@ -146,18 +197,40 @@
         return navBarEl;
     }
 
-    function showCarNavProgress() {
+    function showNavProgress() {
         var bar = ensureNavBar();
         bar.style.width = "35%";
         requestAnimationFrame(function () { bar.style.width = "72%"; });
+        window.clearTimeout(navBarTimer);
+        navBarTimer = window.setTimeout(finishNavProgress, NAV_BAR_GIVE_UP_MS);
     }
 
-    function finishCarNavProgress() {
+    function finishNavProgress() {
+        window.clearTimeout(navBarTimer);
+        var pending = document.querySelectorAll(".is-car-nav-pending");
+        for (var i = 0; i < pending.length; i++) pending[i].classList.remove("is-car-nav-pending");
         if (!navBarEl) return;
         navBarEl.style.width = "100%";
         window.setTimeout(function () {
             if (navBarEl) navBarEl.style.width = "0%";
         }, 180);
+    }
+
+    // A click that will load another document in THIS tab: plain left click, no
+    // modifier, no target/download, same origin, not just a #fragment of this page.
+    function documentNavigationUrl(el, event) {
+        if (!el || event.defaultPrevented) return null;
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return null;
+        if (el.hasAttribute("download")) return null;
+        var target = (el.getAttribute("target") || "").toLowerCase();
+        if (target && target !== "_self") return null;
+        var u;
+        try { u = new URL(el.href, window.location.href); } catch (_) { return null; }
+        if (u.protocol !== "http:" && u.protocol !== "https:") return null;
+        if (u.origin !== window.location.origin) return null;
+        if (u.pathname.indexOf("/static/") === 0 || u.pathname.indexOf("/api/") === 0) return null;
+        if (u.hash && u.pathname === window.location.pathname && u.search === window.location.search) return null;
+        return u.pathname + u.search;
     }
 
     // ---- intent ------------------------------------------------------------
@@ -188,24 +261,51 @@
         if (el) onLinkIntent(el);
     }
 
-    function onCarLinkClick(event) {
+    // Capture phase: a committed click on a car card gets the whole connection.
+    function onLinkClickCapture(event) {
         var el = event.target && event.target.closest
             ? event.target.closest("a[href]")
             : null;
-        if (!el || event.defaultPrevented) return;
-        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        var url = sameOriginUrl(el.href);
-        if (!isCarPath(url)) return;
-        // The click is committed: let it have the whole connection.
-        cancelAll();
-        onLinkIntent(el);
-        el.classList.add("is-car-nav-pending");
-        showCarNavProgress();
+        var url = documentNavigationUrl(el, event);
+        if (url) cancelAll();
+    }
+
+    // Bubble phase, so a handler that turns the click into something else
+    // (preventDefault) is seen and gets no progress bar.
+    function onLinkClick(event) {
+        var el = event.target && event.target.closest
+            ? event.target.closest("a[href]")
+            : null;
+        var url = documentNavigationUrl(el, event);
+        if (!url) return;
+        if (isCarPath(url)) el.classList.add("is-car-nav-pending");
+        showNavProgress();
+    }
+
+    function onFormSubmit(event) {
+        var form = event.target;
+        if (event.defaultPrevented || !form || form.tagName !== "FORM") return;
+        var target = (form.getAttribute("target") || "").toLowerCase();
+        if (target && target !== "_self") return;
+        showNavProgress();
     }
 
     // ---- viewport warming --------------------------------------------------
 
     var io = null;
+
+    function warmLink(el) {
+        var url = sameOriginUrl(el.href);
+        if (!isCarPath(url) || !allowedDocument(url) || prefetched.has(url) || !prefetchAllowed()) return;
+        if (SPEC_RULES) {
+            // The "immediate" rule in speculation-rules.json prefetches a[data-ds-warm].
+            prefetched.add(url);
+            budget -= 1;
+            el.setAttribute("data-ds-warm", "");
+            return;
+        }
+        prefetchDocument(url);
+    }
 
     function observeCarLinks(root, limit) {
         if (!prefetchAllowed()) return;
@@ -215,7 +315,7 @@
                 entries.forEach(function (e) {
                     if (!e.isIntersecting) return;
                     io.unobserve(e.target);
-                    onLinkIntent(e.target);
+                    warmLink(e.target);
                 });
             }, { rootMargin: "200px" });
         }
@@ -233,18 +333,27 @@
     // ---- boot --------------------------------------------------------------
 
     function boot() {
+        syncSpeculationSwitch();
+        var conn = navigator.connection;
+        if (conn && typeof conn.addEventListener === "function") {
+            conn.addEventListener("change", syncSpeculationSwitch);
+        }
         document.addEventListener("mouseover", delegatedIntent, { passive: true });
         document.addEventListener("mouseout", function () {
             window.clearTimeout(hoverTimer);
         }, { passive: true });
         document.addEventListener("touchstart", immediateIntent, { passive: true });
         document.addEventListener("focusin", immediateIntent, { passive: true });
-        document.addEventListener("click", onCarLinkClick, true);
+        document.addEventListener("click", onLinkClickCapture, true);
+        document.addEventListener("click", onLinkClick, false);
+        document.addEventListener("submit", onFormSubmit, false);
 
         window.addEventListener("pageshow", function () {
-            // Restored from bfcache: the budget belongs to this page view again.
+            // Restored from bfcache: the budget belongs to this page view again,
+            // and the progress bar of the navigation that left it is stale.
             budget = MAX_PER_PAGE;
-            finishCarNavProgress();
+            syncSpeculationSwitch();
+            finishNavProgress();
         });
         window.addEventListener("pagehide", cancelAll);
 

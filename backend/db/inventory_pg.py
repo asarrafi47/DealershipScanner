@@ -124,6 +124,8 @@ def _pg_connect_timeout_s() -> int:
 def pg_connect():
     import psycopg
 
+    from backend.utils import request_timing
+
     dsn = inventory_postgres_dsn() or ""
     kwargs: dict = {"autocommit": False}
     # Without a bound a dead host hangs the caller at libpq's wait-forever
@@ -131,7 +133,142 @@ def pg_connect():
     # and a kwarg would silently override it, so only add ours when absent.
     if "connect_timeout" not in dsn.lower():
         kwargs["connect_timeout"] = _pg_connect_timeout_s()
-    return psycopg.connect(dsn, **kwargs)
+    options = _web_request_connect_options(dsn)
+    if options is not None:
+        kwargs["options"] = options
+    with request_timing.timed("db_connect"):
+        return psycopg.connect(dsn, **kwargs)
+
+
+# ── web request scope ────────────────────────────────────────────────────────────────
+#
+# A car page used to open 14-15 Postgres connections, one per ``db_conn()`` /
+# ``get_conn()`` call (~3 ms each locally, a TLS handshake more on Railway). Inside a
+# web request (``backend.web.request_scope`` enters the scope; nothing else does, so the
+# scanner, jobs, background threads and scripts keep connect-per-call) the thread keeps
+# ONE raw connection and hands it to SEQUENTIAL ``get_conn()`` calls:
+#
+# * a wrapper's ``close()`` rolls back (committed work persists, uncommitted work is
+#   discarded, an aborted transaction is cleared: what closing a fresh connection did)
+#   and restores ``autocommit=False``; a second ``close()`` is a no-op;
+# * while one wrapper is still open, the next ``get_conn()`` gets a FRESH connection, so
+#   two logical connections that are open at once never share a transaction;
+# * a broken or closed raw connection is dropped and replaced on the next call;
+# * when the request ends the raw connection is closed; a wrapper still open then (leaked
+#   or handed to another thread) takes ownership and closes it on its own ``close()``.
+#
+# ``INVENTORY_REQUEST_CONN_REUSE=0`` turns the reuse off (connect-per-call everywhere).
+#
+# ``WEB_PG_STATEMENT_TIMEOUT_MS`` (unset or 0 = off, the default) adds
+# ``-c statement_timeout=<ms>`` to every connection a web request thread opens while the
+# scope is active; never to the scanner, jobs, background threads or scripts.
+_request_scope = threading.local()
+
+
+class _RequestConnSlot:
+    __slots__ = ("raw", "leased", "closed")
+
+    def __init__(self) -> None:
+        self.raw: Any = None
+        self.leased = False
+        self.closed = False
+
+
+def request_conn_reuse_enabled() -> bool:
+    raw = (os.environ.get("INVENTORY_REQUEST_CONN_REUSE") or "").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+def web_statement_timeout_ms() -> int:
+    """``WEB_PG_STATEMENT_TIMEOUT_MS`` as a positive int, or 0 (off)."""
+    raw = (os.environ.get("WEB_PG_STATEMENT_TIMEOUT_MS") or "").strip()
+    try:
+        v = int(float(raw)) if raw else 0
+    except ValueError:
+        return 0
+    return v if v > 0 else 0
+
+
+def _web_request_connect_options(dsn: str) -> str | None:
+    """libpq ``options`` for a connection opened inside a web request scope, or None."""
+    if getattr(_request_scope, "active", False) is not True:
+        return None
+    ms = web_statement_timeout_ms()
+    if not ms:
+        return None
+    extra = f"-c statement_timeout={ms}"
+    try:
+        from psycopg.conninfo import conninfo_to_dict
+
+        existing = str(conninfo_to_dict(dsn).get("options") or "").strip()
+    except Exception:  # noqa: BLE001 - unparsable DSN: connect() reports it
+        existing = ""
+    return f"{existing} {extra}".strip()
+
+
+def in_request_scope() -> bool:
+    return getattr(_request_scope, "active", False) is True
+
+
+def begin_request_scope() -> None:
+    """Enter the web request scope on this thread (see the block comment above)."""
+    _request_scope.active = True
+    _request_scope.slot = _RequestConnSlot() if request_conn_reuse_enabled() else None
+
+
+def end_request_scope() -> None:
+    """Leave the scope: close the kept connection unless a wrapper still holds it."""
+    slot = getattr(_request_scope, "slot", None)
+    _request_scope.active = False
+    _request_scope.slot = None
+    if slot is None:
+        return
+    slot.closed = True
+    if slot.raw is not None and not slot.leased:
+        _close_quietly(slot.raw)
+        slot.raw = None
+
+
+def _close_quietly(raw: Any) -> None:
+    try:
+        raw.close()
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def _raw_usable(raw: Any) -> bool:
+    return not (getattr(raw, "closed", False) or getattr(raw, "broken", False))
+
+
+def acquire_request_connection() -> tuple[Any, _RequestConnSlot] | None:
+    """The scope's raw connection and its slot, or None (no scope, reuse off, or in use)."""
+    slot = getattr(_request_scope, "slot", None)
+    if slot is None or slot.leased or slot.closed:
+        return None
+    if slot.raw is not None and not _raw_usable(slot.raw):
+        _close_quietly(slot.raw)
+        slot.raw = None
+    if slot.raw is None:
+        slot.raw = pg_connect()
+    slot.leased = True
+    return slot.raw, slot
+
+
+def release_request_connection(raw: Any, slot: _RequestConnSlot) -> None:
+    """Give a leased connection back: reset it for the next caller, or close it."""
+    slot.leased = False
+    keep = not slot.closed and slot.raw is raw and _raw_usable(raw)
+    if keep:
+        try:
+            raw.rollback()
+            if getattr(raw, "autocommit", False):
+                raw.autocommit = False
+        except Exception:  # noqa: BLE001 - unusable: drop it, the next call reconnects
+            keep = False
+    if not keep:
+        if slot.raw is raw:
+            slot.raw = None
+        _close_quietly(raw)
 
 
 # Lexical runs of one SQL statement, as Postgres reads them. Only what decides

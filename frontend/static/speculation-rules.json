@@ -1,0 +1,50 @@
+{
+  "prefetch": [
+    {
+      "source": "document",
+      "where": {
+        "and": [
+          {
+            "href_matches": [
+              { "pathname": "/listings", "search": "" },
+              { "pathname": "/car/:id(\\d+)", "search": "" },
+              { "pathname": "/car/:id(\\d+)", "search": "zip_code=:zip([^&]*)" },
+              { "pathname": "/find-dealers", "search": "" }
+            ]
+          },
+          { "not": { "selector_matches": "[download], [target]:not([target=_self]), [rel~=nofollow], [data-no-prefetch], :root[data-ds-nospec] *" } }
+        ]
+      },
+      "eagerness": "moderate"
+    },
+    {
+      "source": "document",
+      "where": {
+        "and": [
+          {
+            "href_matches": [
+              { "pathname": "/car/:id(\\d+)", "search": "" },
+              { "pathname": "/car/:id(\\d+)", "search": "zip_code=:zip([^&]*)" }
+            ]
+          },
+          { "selector_matches": "a[data-ds-warm]" },
+          { "not": { "selector_matches": "[download], [target]:not([target=_self]), [rel~=nofollow], [data-no-prefetch], :root[data-ds-nospec] *" } }
+        ]
+      },
+      "eagerness": "immediate"
+    }
+  ],
+  "prerender": [
+    {
+      "source": "document",
+      "where": {
+        "and": [
+          { "href_matches": { "pathname": "/listings", "search": "" } },
+          { "selector_matches": "a[data-ds-prerender]" },
+          { "not": { "selector_matches": "[download], [target]:not([target=_self]), [rel~=nofollow], [data-no-prefetch], :root[data-ds-nospec] *" } }
+        ]
+      },
+      "eagerness": "moderate"
+    }
+  ]
+}

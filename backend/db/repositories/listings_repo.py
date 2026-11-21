@@ -239,6 +239,9 @@ _PUBLIC_COUNT_TTL_S = 300.0
 # While a scan writes ``cars`` the write fingerprint moves on every request; the
 # display rounds to hundreds, so keep the last count at least this long anyway.
 _PUBLIC_COUNT_MIN_RECOUNT_S = 60.0
+# (the cache entry it checked, time.time()) of public_listings_count's last fingerprint
+# read; tied to the entry by identity, so replacing or clearing the cache forgets it.
+_public_count_fp_checked: tuple[Any, float] | None = None
 
 
 def _count_public_listings_uncached() -> int:
@@ -281,9 +284,27 @@ def public_listings_count() -> int:
     background recount (a failing recount keeps the old value). The first count of the
     process, and a legacy-token change (another database), are computed inline.
     """
-    global _public_count_cache
+    global _public_count_cache, _public_count_fp_checked
     now = time.time()
+    hit = _public_count_cache
+    checked_at = (
+        _public_count_fp_checked[1]
+        if hit is not None and _public_count_fp_checked is not None and _public_count_fp_checked[0] is hit
+        else 0.0
+    )
+    # The fingerprint is read at most once per recount floor: a count keyed by one and
+    # checked (or built) less than _PUBLIC_COUNT_MIN_RECOUNT_S ago is served as is. The
+    # pg_stat_user_tables read cost the landing a PG connection and ~3 ms on every request
+    # (perf 2026-11-20); a finished scan now shows up at most one floor later.
+    if (
+        hit is not None
+        and _is_write_fingerprint(hit[0])
+        and 0 <= now - max(hit[1], checked_at) < _PUBLIC_COUNT_MIN_RECOUNT_S
+    ):
+        return hit[2]
     fp = _pg_grid_write_fingerprint()
+    if hit is not None:
+        _public_count_fp_checked = (hit, now)
     token: Any = fp if fp is not None else _listings_cache_token()
     hit = _public_count_cache
     if hit is not None:
@@ -307,6 +328,11 @@ def public_listings_count() -> int:
     value = _count_public_listings_uncached()
     _public_count_cache = (token, now, value)
     return value
+
+
+def _is_write_fingerprint(token: Any) -> bool:
+    """True for a :func:`_pg_grid_write_fingerprint` value (not the legacy mtime token)."""
+    return isinstance(token, tuple) and bool(token) and isinstance(token[0], tuple)
 
 
 def warm_public_listings_count() -> None:
@@ -677,6 +703,10 @@ def listings_geo_coords_maps() -> dict[str, Any]:
 
 _facet_options_rebuild_thread: threading.Thread | None = None
 _facet_options_rebuild_lock = threading.Lock()
+# Serialises the COLD build only: the post_fork background warm-up and the first
+# /listings visitor used to build the facets side by side (twice the GIL-bound work);
+# now the visitor waits for the build already in flight. Never held on the warm path.
+_facet_options_cold_lock = threading.Lock()
 
 
 def _spawn_facet_options_rebuild(token: Any) -> None:
@@ -698,6 +728,14 @@ def _spawn_facet_options_rebuild(token: Any) -> None:
             _facet_options_cache_token = token
             _facet_options_cache_value = facets
             _facet_options_built_at = _facet_clock()
+            try:
+                # Serialize + gzip the /api/listings/facets body here, off the request
+                # path, so the next /listings render only reads its version.
+                from backend.listings.facets_payload import get_facets_payload
+
+                get_facets_payload()
+            except Exception:
+                pass
 
         t = threading.Thread(target=_run, name="facet-options-refresh", daemon=True)
         _facet_options_rebuild_thread = t
@@ -727,10 +765,12 @@ def get_filter_options() -> dict[str, Any]:
 
     token = grid_scope_token()
     if _facet_options_cache_value is None:
-        facets = _build_filter_options_uncached()
-        _facet_options_cache_token = token
-        _facet_options_cache_value = facets
-        _facet_options_built_at = _facet_clock()
+        with _facet_options_cold_lock:
+            if _facet_options_cache_value is None:
+                facets = _build_filter_options_uncached()
+                _facet_options_cache_token = token
+                _facet_options_cache_value = facets
+                _facet_options_built_at = _facet_clock()
     elif _facet_options_cache_token != token:
         # Facets are filter choices, not live data: during a scan the token moves on
         # every write, so rebuild at most once per interval (the cold start above and
@@ -739,6 +779,15 @@ def get_filter_options() -> dict[str, Any]:
             _spawn_facet_options_rebuild(token)
 
     return dict(_facet_options_cache_value or {})
+
+
+def filter_options_snapshot() -> dict[str, Any]:
+    """The cached facet dict itself (not a copy), refreshed like :func:`get_filter_options`.
+
+    Read-only for callers. Its identity changes exactly when the facets are rebuilt, so
+    ``backend/listings/facets_payload.py`` keys its serialized body on it."""
+    get_filter_options()
+    return _facet_options_cache_value or {}
 
 
 def _build_filter_options_uncached() -> dict[str, Any]:

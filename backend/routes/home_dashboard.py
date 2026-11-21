@@ -78,16 +78,27 @@ def _landing_featured_cars(limit: int = 4) -> list[dict]:
 
 
 def home():
-    """Public marketing landing; signed-in users go to ``/home``."""
+    """Public marketing landing; signed-in users go to ``/home``.
+
+    Edge-cacheable for a request with no app cookie (``backend/web/edge_cache.py``):
+    the page has no inline script and renders no CSRF token or per-user value.
+    """
+    from backend.web.edge_cache import begin_edge_page, finish_edge_page, private_response
+
     if session.get("user_id"):
-        return redirect(url_for("app_home"))
+        return private_response(redirect(url_for("app_home")))
     from datetime import datetime
 
-    return render_template(
-        "landing.html",
-        now=datetime.utcnow(),
-        inventory_count_display=_inventory_count_display(),
-        featured_cars=_landing_featured_cars(),
+    begin_edge_page()
+    return finish_edge_page(
+        make_response(
+            render_template(
+                "landing.html",
+                now=datetime.utcnow(),
+                inventory_count_display=_inventory_count_display(),
+                featured_cars=_landing_featured_cars(),
+            )
+        )
     )
 
 
