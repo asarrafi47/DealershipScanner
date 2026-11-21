@@ -50,6 +50,7 @@
                     {% from '_password_field.html' import password_field %}
                     {{ password_field('password', id='register-pass', label='Password', autocomplete='new-password') }}
 
+{% if billing_stripe_enabled %}
                     <div class="rgs-plan">
                         <span class="rgs-plan-label" id="rgs-plan-label">Plan</span>
                         <div class="rgs-plan-row" role="radiogroup" aria-labelledby="rgs-plan-label">
@@ -65,6 +66,9 @@
                             </label>
                         </div>
                     </div>
+{% else %}
+                    <input type="hidden" name="plan" value="free">
+{% endif %}
 
                     <button type="submit" class="rgs-submit">Create account</button>
                 </form>

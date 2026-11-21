@@ -12,17 +12,22 @@
     {# No inventory is fetched from <head> any more (owner decision 2026-09-28): the page
        shows no cars until the shopper begins a search, then main.js asks for their
        ZIP + radius once (GET /api/listings/cars?zip=&radius=). #}
+    {% if ssr_page and ssr_page.prev_href %}<link rel="prev" href="{{ ssr_page.prev_href }}">{% endif %}
+    {% if ssr_page and ssr_page.next_href %}<link rel="next" href="{{ ssr_page.next_href }}">{% endif %}
 </head>
 <body class="listings-page" data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}" data-search-started="{{ '1' if search_started else '0' }}"{% if logged_in_user %} data-logged-in="1"{% endif %}>
 
-{# Dictionary-encoded cascade table (see backend/listings/routes.py::pack_car_rows).
-   main.js unpacks it into the same row objects the cascade always consumed. #}
-<script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ car_rows_packed | tojson }}</script>
+{# The cascade table and the long facet lists (models, trims, packages) are NOT inlined
+   any more (web speed 2026-11, PR 4: they were 87% of this document's bytes). They live
+   in one cacheable, versioned JSON document (GET /api/listings/facets?v=, see
+   backend/listings/facets_payload.py) that main.js fetches when the shopper opens the
+   filters or starts a search. This element stays as the listings-page marker and
+   carries that URL; its body is an empty table. #}
+<script type="application/json" id="ds-listings-car-rows" data-facets-url="{{ facets_url }}" nonce="{{ csp_nonce }}">[]</script>
 <script type="application/json" id="ds-listings-country-to-makes" nonce="{{ csp_nonce }}">{{ options.country_to_makes | tojson }}</script>
 <script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{{ (listings_zip_coords_boot if listings_zip_coords_boot is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{{ (options.dealer_coords if options.dealer_coords is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">{{ (initial_grid_cars or []) | tojson }}</script>
-<script type="application/json" id="ds-listings-package-rows" nonce="{{ csp_nonce }}">{{ (options.package_rows or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-premium" nonce="{{ csp_nonce }}">{{ (has_paid_access and viewer_can('market_intel')) | tojson }}</script>
 <script type="application/json" id="ds-listings-saved-ids" nonce="{{ csp_nonce }}">{{ (saved_car_ids or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-hidden-dealers" nonce="{{ csp_nonce }}">{{ (hidden_dealer_ids or []) | tojson }}</script>
@@ -37,7 +42,7 @@
         <div class="guest-banner-content">
             <span class="guest-banner-text">
                 <strong>Save cars you like</strong> — <a href="{{ url_for('register_page') }}">create a free account</a>.
-                Want advanced features? <a href="{{ url_for('premium_page') }}">Go Premium</a>.
+                {% if billing_stripe_enabled %}Want advanced features? <a href="{{ url_for('premium_page') }}">Go Premium</a>.{% endif %}
             </span>
             <button type="button" class="guest-banner-dismiss" aria-label="Dismiss" id="guest-banner-dismiss">&#x2715;</button>
         </div>
@@ -117,9 +122,11 @@
                                 <div class="listings-dealer-picker-list pill-options" id="dealer-filter-list" role="group" aria-label="Dealerships">
                                     <p class="dealer-filter-loading">Set ZIP and radius ≤ 50 mi</p>
                                 </div>
+                                {% if billing_stripe_enabled %}
                                 <p class="dealer-filter-premium-hint" id="dealer-filter-premium" hidden>
                                     <a href="{{ url_for('premium_page') }}">Premium</a> — filter by specific dealerships near you.
                                 </p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -384,7 +391,7 @@
                                 <span>Filters</span>
                                 <span class="listings-filters-mobile-count" id="listings-filters-mobile-count" hidden></span>
                             </button>
-                            <p class="results-count" id="results-count" aria-live="polite"></p>
+                            <p class="results-count" id="results-count" aria-live="polite">{% if ssr_page and ssr_page.total %}{% if ssr_page.total_pages > 1 %}{{ "{:,}".format(ssr_page.start) }}–{{ "{:,}".format(ssr_page.end) }} of {{ "{:,}".format(ssr_page.total) }}{% else %}{{ "{:,}".format(ssr_page.total) }} vehicle{{ '' if ssr_page.total == 1 else 's' }}{% endif %}{% endif %}</p>
                             {% if hidden_dealer_ids %}
                             <p class="results-hidden-note" id="results-hidden-note">{{ hidden_dealer_ids | length }} dealership{{ '' if hidden_dealer_ids | length == 1 else 's' }} hidden · <a href="{{ url_for('account_profile_page') }}#hidden-dealers">Manage</a></p>
                             {% endif %}
@@ -421,8 +428,12 @@
                             </select>
                         </div>
                     </div>
-                    <div class="listings-active-chips-wrap" id="listings-active-chips-wrap" hidden>
-                        <div class="listings-active-chips" id="listings-active-chips" aria-label="Active filters"></div>
+                    {# With a server page the chip row is drawn here too (same markup as
+                       DSL.chipsHtml), so the cards do not move down when main.js fills it. #}
+                    <div class="listings-active-chips-wrap" id="listings-active-chips-wrap"{% if not (ssr_page and ssr_page.chips) %} hidden{% endif %}>
+                        <div class="listings-active-chips" id="listings-active-chips" aria-label="Active filters">
+                            {%- if ssr_page %}{% for chip in ssr_page.chips %}<button type="button" class="listings-filter-chip" data-chip-param="{{ chip.param }}" data-chip-value="{{ chip.value }}"><span class="listings-filter-chip-label">{{ chip.label }}</span><span class="listings-filter-chip-x" aria-hidden="true">×</span></button>{% endfor %}{% endif -%}
+                        </div>
                         <button type="button" class="listings-chips-clear" id="listings-chips-clear">Clear all</button>
                     </div>
                     <p class="listings-zero-hint" id="listings-zero-hint" hidden role="status">
@@ -451,7 +462,22 @@
                             <button type="button" class="primary-button listings-start-prompt__go" id="listings-start-prompt-go"{% if not (listings_geo_default and listings_geo_default.zip) %} hidden{% endif %}>Show all cars within {{ listings_geo_default.radius if listings_geo_default else 50 }} mi</button>
                         </div>
                     </div>
-                    <div class="results-grid" id="results-grid"></div>
+                    {% from "_listings_ssr_card.html" import ssr_card %}
+                    {# Server-rendered page of cards (crawlers, no-JS, first paint) when the
+                       area body is already cached; main.js keeps it on screen while it loads
+                       the area, then renders the same page itself. #}
+                    <div class="results-grid" id="results-grid"{% if ssr_page and ssr_page.cards %} data-ssr="1"{% endif %}>
+                        {%- if ssr_page %}{% for c in ssr_page.cards %}{{ ssr_card(c, logged_in_user) }}{% endfor %}{% endif -%}
+                    </div>
+                    {% if ssr_page and ssr_page.total_pages > 1 %}
+                    <nav class="listings-pagination listings-pagination--ssr" id="listings-ssr-pager" aria-label="Results pages">
+                        <p class="listings-pagination__summary">Page {{ ssr_page.page }} of {{ ssr_page.total_pages }} · {{ ssr_page.per_page }} per page</p>
+                        <div class="listings-pagination__controls">
+                            {% if ssr_page.prev_href %}<a class="listings-page-btn listings-page-btn--prev" rel="prev" href="{{ ssr_page.prev_href }}">Previous</a>{% endif %}
+                            {% if ssr_page.next_href %}<a class="listings-page-btn listings-page-btn--next" rel="next" href="{{ ssr_page.next_href }}">Next</a>{% endif %}
+                        </div>
+                    </nav>
+                    {% endif %}
                     <nav class="listings-pagination" id="listings-pagination" aria-label="Results pages" hidden>
                         <p class="listings-pagination__summary" id="listings-range" aria-live="polite"></p>
                         <div class="listings-pagination__controls">

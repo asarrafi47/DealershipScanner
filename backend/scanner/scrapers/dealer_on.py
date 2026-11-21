@@ -193,12 +193,63 @@ def _build_gallery(vc: dict, base_url: str, vin: str) -> list[str]:
     return gallery[:48]
 
 
+def _cosmos_rooftop(vc: dict, dealer_name: str, own_site_id: str = "") -> dict[str, str] | None:
+    """The lot this card sits at, verbatim from the feed (N1.2 cosmos map).
+
+    ``DealerLocatedAtId`` / ``VehicleLocation`` / ``DealerLocatedAtCity/State``
+    are on every card (17,894 of 17,894) and name the lot holding the car, which
+    on a group site is often a sister store (cleveland-nissan's feed: 956 cars
+    over 4 rooftops). The site's own lot is the card whose lot id equals the
+    ``DealerId`` that served it; its rooftop is named by the roster ``dealer_name``
+    so the gate picks it as the target, and siblings keep the lot's own label.
+
+    Without an own site id (no ``DealerId`` on the card, no learned hint) the
+    target cannot be named, so nothing is stamped: the rows are kept, as before,
+    and a log line says why. Stamping sibling labels with no target would make
+    the gate refuse the whole feed.
+    """
+    lot_id = str(vc.get("DealerLocatedAtId") or "").strip()
+    label = str(vc.get("VehicleLocation") or "").strip()
+    city = str(vc.get("DealerLocatedAtCity") or "").strip()
+    state = str(vc.get("DealerLocatedAtState") or "").strip()
+    if not (lot_id or label or city):
+        return None
+    site_id = str(vc.get("DealerId") or "").strip() or str(own_site_id or "").strip()
+    if not site_id:
+        _log_unknown_site_id(dealer_name)
+        return None
+    rooftop: dict[str, str] = {
+        "key": lot_id,
+        "name": label,
+        "lot_id": lot_id,
+        "city": city,
+        "state": state,
+    }
+    if lot_id and lot_id == site_id:
+        rooftop["own_site"] = "1"
+        if dealer_name:
+            rooftop["name"] = dealer_name
+            if label and label != dealer_name:
+                rooftop["alt_name"] = label
+    return rooftop
+
+
+_warned_unknown_site: set[str] = set()
+
+
+def _log_unknown_site_id(dealer_name: str) -> None:
+    if dealer_name not in _warned_unknown_site:
+        _warned_unknown_site.add(dealer_name)
+        logger.info("DealerOn cosmos: %s - no DealerId on the card and no own-site hint; rooftop not stamped (rows kept)", dealer_name)
+
+
 def _map_vehicle_card(
     vc: dict,
     base_url: str,
     dealer_id: str,
     dealer_name: str,
     dealer_url: str,
+    own_site_id: str = "",
 ) -> dict[str, Any] | None:
     vin = str(vc.get("VehicleVin") or "").strip().upper()
     if not vin:
@@ -240,6 +291,9 @@ def _map_vehicle_card(
         "dealer_url": dealer_url,
         "dealer_id": dealer_id,
     }
+    rooftop = _cosmos_rooftop(vc, dealer_name, own_site_id)
+    if rooftop:
+        row["_rooftop"] = rooftop
     if carfax_url:
         row["carfax_url"] = carfax_url
     if packages:
@@ -260,11 +314,16 @@ def _extract_vehicles_from_srp_body(
     dealer_url: str,
 ) -> list[dict[str, Any]]:
     vehicles = []
+    own_site_id: str | None = None  # learned hint, read once and only if a card lacks DealerId
     for card in body.get("DisplayCards") or []:
         vc = card.get("VehicleCard")
         if not isinstance(vc, dict):
             continue
-        v = _map_vehicle_card(vc, base_url, dealer_id, dealer_name, dealer_url)
+        if own_site_id is None and not vc.get("DealerId"):
+            from backend.attribution.place import own_site_id as _hint
+
+            own_site_id = _hint(dealer_id)
+        v = _map_vehicle_card(vc, base_url, dealer_id, dealer_name, dealer_url, own_site_id or "")
         if v:
             vehicles.append(v)
     return vehicles

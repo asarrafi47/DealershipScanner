@@ -13,6 +13,11 @@ Now every gate reads one :class:`AccessContext`, built once per request from the
 users row (role, plan, is_premium, org subscription) plus the dev-operator session
 and the billing switch, and cached on :data:`flask.g`.
 
+Owner decision 2026-11-13: the whole site is free and features are NOT gated by plan any
+more. ``BILLING_STRIPE_ENABLED`` stays unset, so every signed-in user passes every feature
+check below. The plan and Stripe code is kept dormant, unchanged, in case paid plans return;
+the AI chat is limited by ``backend/chat_budget`` instead.
+
 Rules
 -----
 - API gate, :meth:`AccessContext.check`: dev operator passes; an anonymous caller

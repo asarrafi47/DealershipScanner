@@ -15,9 +15,10 @@ def _verified(user_id: int) -> int:
     return int(user_id)
 
 
-def _make_app(app_factory, *, show_button: bool = False, google: bool = False):
+def _make_app(app_factory, *, show_button: bool = False, google: bool = False, billing: bool = False):
     env = {
-        "BILLING_STRIPE_ENABLED": "0",
+        # the premium offer after sign-in only exists with billing on (the site is free otherwise)
+        "BILLING_STRIPE_ENABLED": "1" if billing else "0",
         "ALLOW_DEFAULT_APP_USER": "0",
         "GOOGLE_OAUTH_SHOW_BUTTON": "1" if show_button else None,
         "GOOGLE_OAUTH_OFFER_PREMIUM_ON_LOGIN": None,
@@ -61,7 +62,7 @@ def test_google_start_redirects_to_google_when_configured(
 def test_google_callback_creates_user_and_logs_in(
     monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _make_app(app_factory, google=True)
+    app = _make_app(app_factory, google=True, billing=True)
     client = app.test_client()
 
     with client.session_transaction() as sess:
@@ -141,7 +142,7 @@ def test_google_callback_returning_user_skips_premium_offer_by_default(
 def test_google_start_premium_intent_offers_premium_for_returning_user(
     monkeypatch: pytest.MonkeyPatch, tmp_path, app_factory
 ) -> None:
-    app = _make_app(app_factory, google=True)
+    app = _make_app(app_factory, google=True, billing=True)
     from backend.db.users_db import save_user
     from backend.utils.roles import ROLE_GENERAL
 

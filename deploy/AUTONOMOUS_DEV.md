@@ -5,14 +5,14 @@ Rules for unattended agent development:
 - **No git push** until local stack tests pass
 - **Secrets:** `deploy/load-vault-env.sh` → kmac vault; scaffold if key missing
 - **Stack:** `./deploy/up.sh` → postgres (pgvector) + web; scans run on a host via `backend/scripts/dealer_pipeline.py`, not in this stack
-- **Verify:** health, `/billing/plans`, `docker compose ps`, web logs; pytest gate below
+- **Verify:** health, `/listings`, `docker compose ps`, web logs; pytest gate below
 - **Full-stack env:** `deploy/up.sh` writes `deploy/.env` with `INVENTORY_DATABASE_URL`
 
 ## Local verify (after sprint chunks)
 
 ```bash
 curl -sf http://127.0.0.1:8000/health   # or :18000 if WEB_PORT set
-curl -sf http://127.0.0.1:8000/billing/plans
+curl -sf http://127.0.0.1:8000/listings   # /billing/plans answers 404 while billing is off (the site is free)
 docker compose -f deploy/docker-compose.yml ps
 docker exec dealership-scanner-web python3 -m pytest \
   backend/tests/test_billing_portal.py \

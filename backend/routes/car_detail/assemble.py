@@ -19,6 +19,7 @@ def assemble_view_context(
     listing_incomplete_fields: list,
     dealer_info: dict | None,
     inventory_last_checked: str | None,
+    details_pending: bool = False,
     attribution_fields: dict,
     dealer_map,
     market_intel,
@@ -95,4 +96,5 @@ def assemble_view_context(
         # "Inventory last checked <date>" (N3.11; None hides the line). Last so the
         # historical key order above is unchanged; same key on dealership.html.
         "inventory_last_checked": inventory_last_checked,
+        "details_pending": details_pending,
     }

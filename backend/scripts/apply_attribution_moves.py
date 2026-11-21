@@ -36,12 +36,14 @@ import re
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
+from datetime import datetime
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.connect import connect as db_connect, inventory_dsn  # noqa: E402
+from backend.utils.user_listings import DEALER_PORTAL_DEALER_ID_PREFIX, is_dealer_portal_dealer_id  # noqa: E402
 
 _log = logging.getLogger("attribution_moves")
 
@@ -69,6 +71,19 @@ def _dealer_slug(website: str) -> str:
     if host.startswith("www."):
         host = host[4:]
     return host.replace(".", "-")
+
+
+def destination_dealer_id(site: str, rid: int, shared_hosts: set[str], rid_dealer_ids: dict[int, str]) -> str:
+    """``cars.dealer_id`` a moved car takes at registry row *rid*.
+
+    The website host's slug, except for a store on a host shared with sister stores
+    (www.autosavvy.com): the host names no store there, so the id is the one that row's
+    cars already carry, and a row with none yields "" (the move is skipped, never filed
+    under a sister's id).
+    """
+    if _dealer_slug(site) and (urlparse(site or "").hostname or "").lower().removeprefix("www.") in shared_hosts:
+        return rid_dealer_ids.get(int(rid), "")
+    return _dealer_slug(site)
 
 
 # ---------------------------------------------------------------------------
@@ -278,6 +293,36 @@ def choose_destination(observed: str, dealers, group_tokens: set[str]):
     return hits[0][1], "specificity"
 
 
+def plan_moves(candidates, dealers, group_tokens: set[str], shared_hosts: set[str],
+               rid_dealer_ids: dict[int, str]) -> tuple[list[tuple], int, int, int]:
+    """``(moves, ambiguous, ungeocoded, unmapped)`` for the ``conflicting`` candidate rows.
+
+    A user's posted car (``dealer-portal-<id>``, card S20) never moves, and nothing moves
+    onto a user id: photo evidence says where a car was photographed, not who sells it now.
+    """
+    moves: list[tuple] = []
+    ambiguous = ungeocoded = unmapped = 0
+    for car_id, rooftop, evidence, from_did, from_name, from_rid in candidates:
+        if is_dealer_portal_dealer_id(from_did):
+            continue
+        best, why = choose_destination(rooftop, dealers, group_tokens)
+        if best is None:
+            if why == "ambiguous":
+                ambiguous += 1
+            else:
+                unmapped += 1
+            continue
+        rid, dname, site, lat = best
+        if lat is None:
+            ungeocoded += 1
+            continue
+        to_did = destination_dealer_id(site, rid, shared_hosts, rid_dealer_ids)
+        if not to_did or to_did == from_did or is_dealer_portal_dealer_id(to_did):
+            continue
+        moves.append((car_id, from_did, from_name, from_rid, to_did, dname, rid, evidence))
+    return moves, ambiguous, ungeocoded, unmapped
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dry-run", action="store_true")
@@ -298,10 +343,14 @@ def main() -> int:
         )
         rows = cur.fetchall()
         for log_id, car_id, did, dname, rid in rows:
+            if is_dealer_portal_dealer_id(did):
+                # A dealer took a retired user row (card S20): never hand its car back to the user id.
+                continue
+            # A car that is now a user's posted car (card S20) is never overwritten.
             cur.execute(
                 "UPDATE cars SET dealer_id = %s, dealer_name = %s, dealership_registry_id = %s "
-                "WHERE id = %s",
-                (did, dname, rid, car_id),
+                "WHERE id = %s AND LEFT(COALESCE(dealer_id, ''), %s) <> %s",
+                (did, dname, rid, car_id, len(DEALER_PORTAL_DEALER_ID_PREFIX), DEALER_PORTAL_DEALER_ID_PREFIX),
             )
             cur.execute("UPDATE car_move_log SET reverted_at = NOW() WHERE id = %s", (log_id,))
         _log.info("reverted %d move(s)", len(rows))
@@ -314,6 +363,24 @@ def main() -> int:
     )
     dealers = cur.fetchall()
     group_tokens = group_vocabulary(d[1] or "" for d in dealers)
+    host_rows: dict[str, set[int]] = {}
+    for d in dealers:
+        h = (urlparse(d[2] or "").hostname or "").lower().removeprefix("www.")
+        if h:
+            host_rows.setdefault(h, set()).add(d[0])
+    shared_hosts = {h for h, ids in host_rows.items() if len(ids) > 1}
+    rid_dealer_ids: dict[int, str] = {}
+    if shared_hosts:
+        cur.execute(
+            "SELECT dealership_registry_id, dealer_id, COUNT(*) FROM cars "
+            "WHERE dealership_registry_id IS NOT NULL AND dealer_id IS NOT NULL "
+            "AND listing_removed_at IS NULL GROUP BY dealership_registry_id, dealer_id"
+        )
+        best: dict[int, tuple[int, str]] = {}
+        for r_rid, r_did, n in cur.fetchall():
+            if n > best.get(int(r_rid), (0, ""))[0]:
+                best[int(r_rid)] = (n, r_did)
+        rid_dealer_ids = {k: v[1] for k, v in best.items()}
 
     cur.execute(
         """
@@ -329,24 +396,7 @@ def main() -> int:
     )
     candidates = cur.fetchall()
 
-    moves: list[tuple] = []
-    ambiguous = ungeocoded = unmapped = 0
-    for car_id, rooftop, evidence, from_did, from_name, from_rid in candidates:
-        best, why = choose_destination(rooftop, dealers, group_tokens)
-        if best is None:
-            if why == "ambiguous":
-                ambiguous += 1
-            else:
-                unmapped += 1
-            continue
-        rid, dname, site, lat = best
-        if lat is None:
-            ungeocoded += 1
-            continue
-        to_did = _dealer_slug(site)
-        if not to_did or to_did == from_did:
-            continue
-        moves.append((car_id, from_did, from_name, from_rid, to_did, dname, rid, evidence))
+    moves, ambiguous, ungeocoded, unmapped = plan_moves(candidates, dealers, group_tokens, shared_hosts, rid_dealer_ids)
 
     if args.limit:
         moves = moves[: args.limit]
@@ -373,13 +423,20 @@ def main() -> int:
             (car_id, from_did, from_name, from_rid, to_did, to_name, to_rid, evidence),
         )
         cur.execute(
-            "UPDATE cars SET dealer_id = %s, dealer_name = %s, dealership_registry_id = %s "
-            "WHERE id = %s",
-            (to_did, to_name, to_rid, car_id),
+            "UPDATE cars SET dealer_id = %s, dealer_name = %s, dealership_registry_id = %s, "
+            "scraped_at = %s WHERE id = %s AND LEFT(COALESCE(dealer_id, ''), %s) <> %s",
+            (to_did, to_name, to_rid, _now_iso(), car_id,
+             len(DEALER_PORTAL_DEALER_ID_PREFIX), DEALER_PORTAL_DEALER_ID_PREFIX),
         )
     _log.info("moved %d car(s); undo with --revert", len(moves))
     conn.close()
     return 0
+
+
+def _now_iso() -> str:
+    """``scraped_at`` text shape of the scanner (utc isoformat + Z): a manual move refreshes it so
+    the owner is fresh and the car_move_log row is what the VIN guard honours (N8.6)."""
+    return datetime.utcnow().isoformat() + "Z"
 
 
 if __name__ == "__main__":

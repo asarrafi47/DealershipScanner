@@ -16,6 +16,7 @@ from backend.parsers.carscommerce import detect as detect_carscommerce
 from backend.parsers.carscommerce import parse as parse_carscommerce
 from backend.parsers.chapman import detect as detect_chapman
 from backend.parsers.chapman import parse as parse_chapman
+from backend.parsers.dealer_dot_com import detect_ws_inventory as detect_dealer_dot_com_ws
 from backend.parsers.dealer_dot_com import parse as parse_dealer_dot_com
 from backend.parsers.dealer_eprocess import parse as parse_dealer_eprocess
 from backend.parsers.dealermasters import parse as parse_dealermasters
@@ -25,6 +26,7 @@ from backend.parsers.oneaudi import parse as parse_oneaudi
 from backend.parsers.wp_vehicles_index import parse as parse_wp_vehicles_index
 from backend.parsers.dealer_on import parse as parse_dealer_on
 from backend.parsers.jazel import parse as parse_jazel
+from backend.parsers.motive_ridemotive import detect as detect_motive
 from backend.parsers.motive_ridemotive import parse as parse_motive_ridemotive
 from backend.parsers.overfuel import parse as parse_overfuel
 from backend.parsers.rooftop_aliases import roster_name_aliases  # noqa: F401 - re-export; the gate resolves aliases through this name
@@ -173,6 +175,24 @@ def _parse_rows(provider: str, raw_data, _kwargs: dict, dealer_id: str) -> list[
         chapman_rows = list(parse_chapman(raw_data, **_kwargs))
         if chapman_rows:
             return chapman_rows
+
+    # Motive (ridemotive) Algolia hits: browser-captured recipes of Motive sites are
+    # tagged "dealer_dot_com", whose parser reads none of the Motive field names
+    # (trim/body/stock/gallery 0%) and drops the per-car store the gate reads.
+    if provider != "motive_ridemotive" and detect_motive(raw_data):
+        motive_rows = list(parse_motive_ridemotive(raw_data, **_kwargs))
+        if motive_rows:
+            return motive_rows
+
+    # Dealer.com ws-inv-data bodies belong to the dealer.com parser whatever the
+    # recipe is tagged: tagged "unknown" they went to the generic parser below,
+    # which drops the per-car ``accountId`` the rooftop gate reads (6 recipes lost
+    # it, 1,082 owner rows and 874 claimant rows). A shape that also matches by
+    # accident but yields no rows falls through to the usual order.
+    if provider != "dealer_dot_com" and detect_dealer_dot_com_ws(raw_data):
+        ddc_rows = list(parse_dealer_dot_com(raw_data, **_kwargs))
+        if ddc_rows:
+            return ddc_rows
 
     fn = PARSERS.get(provider)
     if fn:

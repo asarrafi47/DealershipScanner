@@ -341,6 +341,6 @@ def test_web_image_installs_no_browser() -> None:
     packages = set(re.split(r"\s+", body))
     assert not packages & set(_CHROMIUM_ONLY_LIBS), sorted(packages & set(_CHROMIUM_ONLY_LIBS))
     # The rest of the image is unchanged: deps, app code, static precompression, entrypoint.
-    assert "pip install --no-cache-dir gunicorn[gthread] -r requirements.txt" in body
+    assert "pip install --no-cache-dir gunicorn[gthread] -r requirements-web.txt" in body
     assert "python scripts/build_static_compressed.py --quiet" in body
     assert 'entrypoint ["/app/scripts/docker-entrypoint-web.sh"]' in body

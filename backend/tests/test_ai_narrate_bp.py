@@ -6,6 +6,7 @@ from flask import Flask
 
 import backend.routes.ai_narrate_bp as bp_mod
 from backend.routes.ai_narrate_bp import ai_narrate_bp
+from backend.utils.csrf import _SESSION_KEY
 
 
 @pytest.fixture(autouse=True)
@@ -15,8 +16,11 @@ def _clear_narration_cache():
     bp_mod._cache.clear()
 
 
+_TOKEN = "n" * 32
+
+
 @pytest.fixture()
-def client(monkeypatch):
+def client(monkeypatch, chat_gate_open):
     def fake_get_car_by_id(car_id, *, include_inactive=False):
         if car_id == 1:
             return {"id": 1, "year": 2022, "make": "BMW", "model": "M3"}
@@ -28,9 +32,15 @@ def client(monkeypatch):
     )
 
     app = Flask(__name__)
+    app.secret_key = "narrate-test-secret"
     app.register_blueprint(ai_narrate_bp)
     app.testing = True
-    return app.test_client()
+    c = app.test_client()
+    # Card C3: narration needs the CSRF header (so another site cannot spend the budget with a link).
+    with c.session_transaction() as sess:
+        sess[_SESSION_KEY] = _TOKEN
+    c.environ_base["HTTP_X_CSRF_TOKEN"] = _TOKEN
+    return c
 
 
 def test_narrate_found(client):

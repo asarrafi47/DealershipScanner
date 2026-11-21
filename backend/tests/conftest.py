@@ -44,6 +44,12 @@ So this file provides, in order:
 * ``app_factory`` - the one way a test gets a freshly reloaded ``backend.main``
   with every user database in its own tmp dir (21 hand-rolled ``_fresh_app``
   copies used to drift on which keys they set).
+* ``pg_template`` (session) and ``pg_db`` (function) - the Postgres tier
+  (``@pytest.mark.pg``, backend/tests/pg_harness.py): one migration-built template
+  per session, one cloned throwaway database per test. Needs
+  ``TEST_PG_ADMIN_DSN`` (a LOCAL server; never read from the inventory env vars);
+  without it the tests skip with a counted reason and ``REQUIRE_PG=1`` turns that
+  into a failure.
 * asset-gated skip accounting - the brochure PDFs are gitignored and parts of
   ``backend/dictionary`` exist only on dev machines, so a class of tests skips
   silently on CI and a regression in what they cover has no failing test
@@ -74,6 +80,10 @@ import weakref
 from pathlib import Path
 from typing import Any, Callable, Iterator
 from urllib.parse import urljoin, urlsplit
+
+# The dev hash pepper is opt-in (never implied by a missing PHONE_HASH_PEPPER); tests opt in once here.
+# A test about the unset case removes this variable itself.
+os.environ.setdefault("ALLOW_DEV_PHONE_PEPPER", "1")
 
 import pytest
 
@@ -636,9 +646,13 @@ _ASSET_GATE_SKIP_REASONS: tuple[str, ...] = (
 
 _ENV_GATE_SKIP_REASONS: tuple[str, ...] = (
     "DQ_INVARIANTS_LIVE_DB",    # needs a real Postgres, not a file on disk
+    "TEST_PG_ADMIN_DSN not set (pg tier)",   # pg_harness.SKIP_REASON_NO_DSN
+    "pg tier unavailable:",     # server cannot host the tier (pg_harness.PgUnavailable)
 )
+_PG_GATE_SKIP_REASONS: tuple[str, ...] = _ENV_GATE_SKIP_REASONS[1:]
 
 REQUIRE_LOCAL_ASSETS_ENV = "REQUIRE_LOCAL_ASSETS"
+REQUIRE_PG_ENV = "REQUIRE_PG"
 
 
 def _skip_reason_of(report: Any) -> str:
@@ -661,6 +675,15 @@ def pytest_runtest_makereport(item: Any, call: Any):  # noqa: ANN201 - pytest ho
     if report.when not in ("setup", "call") or not report.skipped:
         return
     reason = _skip_reason_of(report)
+    if _matches(reason, _PG_GATE_SKIP_REASONS):
+        if (os.environ.get(REQUIRE_PG_ENV) or "").strip() == "1":
+            report.outcome = "failed"
+            report.longrepr = (
+                f"{item.nodeid}: pg-tier skip ({reason!r}) with {REQUIRE_PG_ENV}=1.\n"
+                "CI runs the pg tier against a service container; a skip there means "
+                "the tier silently stopped running."
+            )
+        return
     if not _matches(reason, _ASSET_GATE_SKIP_REASONS):
         return
     if (os.environ.get(REQUIRE_LOCAL_ASSETS_ENV) or "").strip() == "1":
@@ -1147,6 +1170,57 @@ def sqlite_inventory(tmp_path: Path) -> Iterator[SqliteInventory]:
 
 
 # ---------------------------------------------------------------------------
+# 3b. A throwaway Postgres database per test (the ``pg`` tier)
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="session")
+def pg_template() -> Iterator[Any]:
+    """The migration-built template database of this session (backend/tests/pg_harness.py)."""
+    from backend.tests import pg_harness as pgh
+
+    dsn = pgh.admin_dsn()
+    if dsn is None:
+        pytest.skip(pgh.SKIP_REASON_NO_DSN)
+    pytest.importorskip("psycopg")
+    try:
+        pgh.assert_safe_admin_dsn(dsn)
+    except pgh.HarnessRefused as exc:
+        pytest.fail(f"TEST_PG_ADMIN_DSN refused: {exc}", pytrace=False)
+    try:
+        pgh.janitor(dsn)
+        template = pgh.build_template(dsn)
+    except pgh.PgUnavailable as exc:
+        pytest.skip(f"pg tier unavailable: {exc}")
+    try:
+        yield template
+    finally:
+        pgh.drop(dsn, template.name)
+
+
+@pytest.fixture
+def pg_db(pg_template: Any, monkeypatch: pytest.MonkeyPatch) -> Iterator[Any]:
+    """A fresh clone of the template, wired in as the inventory database.
+
+    Named ``pg_db``, not ``pg_inventory``: test_search_golden.py defines that.
+    """
+    from backend.tests import pg_harness as pgh
+
+    name, dsn = pgh.clone(pg_template)
+    monkeypatch.setenv("INVENTORY_DATABASE_URL", dsn)
+    monkeypatch.setenv("DATABASE_URL", "")
+    monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "")
+    monkeypatch.setenv("INVENTORY_SCHEMA_CHECK", "strict")
+    monkeypatch.setenv("INVENTORY_AUTO_MIGRATE", "")
+    pgh.reset_pg_process_caches()
+    try:
+        yield pgh.PgInventory(dsn, name)
+    finally:
+        pgh.reset_pg_process_caches()
+        pgh.drop(pg_template.admin, name)
+
+
+# ---------------------------------------------------------------------------
 # 4. One app factory: a freshly reloaded backend.main on tmp databases
 # ---------------------------------------------------------------------------
 
@@ -1208,8 +1282,75 @@ def app_factory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Callable[...
         from backend.routes import fuel_api, home_dashboard
 
         home_dashboard._reco_cache.clear()
+        home_dashboard._lists_cache.clear()
+        home_dashboard._reco_refreshers.clear()
+        home_dashboard._reco_build_locks.clear()
         fuel_api._live_gas_prices_cache = None
         fuel_api._live_gas_prices_cache_mtime = None
         return main
 
     return _make
+
+
+# ---------------------------------------------------------------------------
+# 5. The chat gate for offline route tests (card C3)
+# ---------------------------------------------------------------------------
+
+
+class _OpenGuard:
+    """Stands in for ``chat_budget.guard`` when a test is about a chat route, not about its limits."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self.args = args
+        self.kwargs = kwargs
+
+    def __enter__(self) -> "_OpenGuard":
+        return self
+
+    def __exit__(self, *exc: Any) -> bool:
+        return False
+
+    def fail(self) -> None: ...
+
+    def no_model_call(self) -> None: ...
+
+    def note_text(self) -> None: ...
+
+
+@pytest.fixture
+def chat_gate_open(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, dict[str, Any]]]:
+    """Every chat route's guard lets the message through without a database (offline tier).
+
+    The chat routes count messages in Postgres (card C3) and fail closed without it, so offline
+    tests of what a route *answers* use this; the limits themselves are tested in the Postgres
+    tier (``test_chat_limits_routes.py``). Returns the ``(kind, kwargs)`` of every guard opened.
+    """
+    from backend.chat_budget import web as chat_web
+
+    opened: list[tuple[str, dict[str, Any]]] = []
+
+    def fake_open_guard(kind: str, **kwargs: Any) -> _OpenGuard:
+        opened.append((kind, kwargs))
+        return _OpenGuard(kind, **kwargs)
+
+    monkeypatch.setattr(chat_web, "open_guard", fake_open_guard)
+    return opened
+
+
+@pytest.fixture
+def session_users_exist(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Opt-in for route tests that sign in with a made-up user id (no users row).
+
+    Card S10's session hook signs out a cookie whose user does not exist. Tests about comments,
+    chat or stickers that never created the account use this fixture: a missing row reads as an
+    active plain shopper. Session rules themselves are tested in test_session_lifetime.py.
+    """
+    from backend.auth import session as auth_session
+
+    real = auth_session._load_user
+
+    def load(uid: int):
+        row = real(uid)
+        return row if row is not None else {"id": int(uid), "role": "general_user", "is_active": True}
+
+    monkeypatch.setattr(auth_session, "_load_user", load)

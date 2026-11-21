@@ -39,14 +39,10 @@ from backend.intelligence.ai.agent import (
 from backend.listings.geo_session import listings_geo_kwargs_from_session
 from backend.routes._shared import _client_ip
 from backend.routes.home_dashboard import _invalidate_reco_cache
-from backend.utils.car_chat_policy import (
-    car_chat_listing_daily_limit,
-    car_chat_rate_limits,
-    car_chat_user_daily_limit,
-    web_research_playwright_allowed,
-)
+from backend.chat_budget import ChatDenied
+from backend.chat_budget import web as chat_web
+from backend.utils.car_chat_policy import web_research_playwright_allowed
 from backend.utils.csrf import validate_csrf_header
-from backend.utils.ip_rate_limit import allow_request
 
 # The packages/sticker fetch job manager lives in car_detail/packages_ensure.py
 # (monolith audit 2026-10-01, W5). The names the routes below use are imported
@@ -100,7 +96,8 @@ def _serve_car_window_sticker_preview(car_id: int):
         window_sticker_visual_local_path,
     )
 
-    ensure_window_sticker_for_car(car_id, allow_vision_fallback=False)
+    # A sticker model call made here is counted against the shopper (card C3, kind "sticker").
+    chat_web.bind_sticker_guard().run(ensure_window_sticker_for_car, car_id, allow_vision_fallback=False)
     path = window_sticker_visual_local_path(
         car.get("vin"),
         dealer_id=car.get("dealer_id"),
@@ -168,6 +165,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
     listing_incomplete_fields = _cd_listing.listing_incomplete_fields(car_id)
     dealer_info = _cd_listing.registry_dealer_info(car_raw)
     inventory_last_checked = _cd_listing.inventory_last_checked(car_raw)
+    details_pending = _cd_listing.details_pending(car_id)
     attribution, attribution_fields = _cd_listing.apply_attribution_overlay(car_id, car)
     _cd_listing.apply_sticker_fact_overlays(car_id, car, car_raw)
     dealer_map = _cd_location.dealer_map_for_car(car_raw, dealer_info, attribution)
@@ -195,6 +193,7 @@ def _build_car_detail_view_context(car_id: int, car_raw: dict) -> dict:
         listing_incomplete_fields=listing_incomplete_fields,
         dealer_info=dealer_info,
         inventory_last_checked=inventory_last_checked,
+        details_pending=details_pending,
         attribution_fields=attribution_fields,
         dealer_map=dealer_map,
         market_intel=market_intel,
@@ -247,7 +246,8 @@ def api_car_window_sticker(car_id: int):
         dealership_registry_id=car.get("dealership_registry_id"),
     )
     if not path:
-        ensure_window_sticker_for_car(car_id, allow_vision_fallback=False)
+        # counted against the shopper when it calls the model (card C3, kind "sticker")
+        chat_web.bind_sticker_guard().run(ensure_window_sticker_for_car, car_id, allow_vision_fallback=False)
         path = window_sticker_visual_local_path(
             car.get("vin"),
             dealer_id=car.get("dealer_id"),
@@ -542,7 +542,11 @@ def api_car_packages_ensure(car_id: int):
         remaining = max(budget - (time.perf_counter() - t0), 0.01)
     else:
         remaining = 0.0
-    status, outcome = _run_packages_ensure_with_budget(
+    # Any sticker or vision model call the pipeline makes for this request runs under the chat
+    # gate (kind "sticker", weight 3), in this thread or in the worker it starts.
+    sticker_ctx = chat_web.bind_sticker_guard()
+    status, outcome = sticker_ctx.run(
+        _run_packages_ensure_with_budget,
         car_id,
         allow_vision=allow_vision,
         budget=remaining,
@@ -558,6 +562,11 @@ def api_car_packages_ensure(car_id: int):
         # worker dropped the panel cache on its way out, so rebuild rather than
         # answer from the pre-worker snapshot and then tell the client to stop.
         payload = _packages_ensure_payload(car_id)
+    refused = chat_web.sticker_denial(sticker_ctx)
+    if refused is not None:
+        # The panel is the same; the sticker reading was skipped and the sentence says why.
+        payload["chat_limit_error"] = refused.error
+        payload["chat_limit_message"] = refused.message
     return jsonify(
         _finalize_ensure_payload(
             payload,
@@ -574,51 +583,11 @@ def api_car_chat(car_id: int):
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_AI_CAR_CHAT, err)), 403
 
-    ip = _client_ip()
-    rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()
-
-    if rpm_global > 0 and not allow_request(
-        "chat:global",
-        max_events=rpm_global,
-        window_seconds=60.0,
-    ):
+    # Per-minute burst guard (in memory, one shared function). The daily allowance and the
+    # site budget are counted in Postgres by the chat gate below, after the car and the
+    # message are known to be valid, so a 404 or an empty message never costs a message.
+    if not chat_web.burst_allowed(chat_web.BURST_CAR, _client_ip(), pair=str(car_id)):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
-
-    if not allow_request(f"chat:ip:{ip}", max_events=rpm_ip, window_seconds=60.0):
-        return jsonify({"ok": False, "error": "rate_limited"}), 429
-
-    if not allow_request(f"chat:{ip}:{car_id}", max_events=rpm_pair, window_seconds=60.0):
-        return jsonify({"ok": False, "error": "rate_limited"}), 429
-
-    uid = session.get("user_id")
-
-    daily_limit = car_chat_user_daily_limit()
-    if daily_limit > 0:
-        if uid:
-            daily_key = f"chat:daily:user:{int(uid)}"
-        else:
-            daily_key = f"chat:daily:ip:{ip}"
-        if not allow_request(
-            daily_key,
-            max_events=daily_limit,
-            window_seconds=86400.0,
-        ):
-            return jsonify({"ok": False, "error": "user_chat_limit_reached"}), 429
-
-    # Second tier: per-(user, listing). Keeps one car's thread from draining
-    # the whole-account budget sideways and vice versa — both tiers must pass.
-    listing_limit = car_chat_listing_daily_limit()
-    if listing_limit > 0:
-        if uid:
-            listing_key = f"chat:daily:user:{int(uid)}:car:{car_id}"
-        else:
-            listing_key = f"chat:daily:ip:{ip}:car:{car_id}"
-        if not allow_request(
-            listing_key,
-            max_events=listing_limit,
-            window_seconds=86400.0,
-        ):
-            return jsonify({"ok": False, "error": "listing_chat_limit_reached"}), 429
 
     if request.content_length is not None and request.content_length > Config.CHAT_MAX_BODY_BYTES:
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
@@ -666,7 +635,16 @@ def api_car_chat(car_id: int):
         return jsonify({"ok": False, "error": "message_too_long"}), 400
 
     allow_playwright = web_research_playwright_allowed(session.get("user_id"))
-    out = run_car_page_chat(car_dict, message, allow_web_research=allow_playwright)
+    try:
+        with chat_web.open_guard(
+            chat_web.KIND_CAR,
+            listing_id=car_id,
+            weight=chat_web.message_weight(message, allow_playwright),
+        ) as chat_guard:
+            out = run_car_page_chat(car_dict, message, allow_web_research=allow_playwright)
+            chat_web.give_back_if_unanswered(chat_guard, out)
+    except ChatDenied as denied:
+        return chat_web.denial_response(denied.denial)
     err = out.get("error")
     return jsonify(
         {
@@ -683,38 +661,8 @@ def api_compare_chat():
     if not ok:
         return jsonify(paid_access.denied_json(FEATURE_AI_COMPARE_CHAT, err)), 403
 
-    ip = _client_ip()
-    rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()
-
-    if rpm_global > 0 and not allow_request(
-        "chat:global",
-        max_events=rpm_global,
-        window_seconds=60.0,
-    ):
+    if not chat_web.burst_allowed(chat_web.BURST_COMPARE, _client_ip()):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
-
-    if not allow_request(f"chat:ip:{ip}", max_events=rpm_ip, window_seconds=60.0):
-        return jsonify({"ok": False, "error": "rate_limited"}), 429
-
-    if not allow_request(f"chat:compare:ip:{ip}", max_events=rpm_pair, window_seconds=60.0):
-        return jsonify({"ok": False, "error": "rate_limited"}), 429
-
-    # Compare chat has its own daily namespace ('cmp:') so comparing cars does
-    # not drain the car-chat budget. Same per-user tier value; no per-listing
-    # tier — a compare has no single car_id.
-    daily_limit = car_chat_user_daily_limit()
-    if daily_limit > 0:
-        uid = session.get("user_id")
-        if uid:
-            daily_key = f"cmp:daily:user:{int(uid)}"
-        else:
-            daily_key = f"cmp:daily:ip:{ip}"
-        if not allow_request(
-            daily_key,
-            max_events=daily_limit,
-            window_seconds=86400.0,
-        ):
-            return jsonify({"ok": False, "error": "user_chat_limit_reached"}), 429
 
     if request.content_length is not None and request.content_length > Config.CHAT_MAX_BODY_BYTES:
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
@@ -747,7 +695,15 @@ def api_compare_chat():
         return jsonify({"ok": False, "error": "not_found"}), 404
 
     allow_playwright = web_research_playwright_allowed(session.get("user_id"))
-    out = run_compare_chat(raw_cars, message, allow_web_research=allow_playwright)
+    # One shared allowance with car chat and the sidebar (no separate compare buckets any more).
+    try:
+        with chat_web.open_guard(
+            chat_web.KIND_COMPARE, weight=chat_web.message_weight(message, allow_playwright)
+        ) as chat_guard:
+            out = run_compare_chat(raw_cars, message, allow_web_research=allow_playwright)
+            chat_web.give_back_if_unanswered(chat_guard, out)
+    except ChatDenied as denied:
+        return chat_web.denial_response(denied.denial)
     err = out.get("error")
     return jsonify(
         {

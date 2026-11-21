@@ -192,14 +192,14 @@ def _complete_login(user_id: int, *, is_new_user: bool = False):
     oauth_post_intent = (session.pop("google_oauth_post_intent", None) or "").strip().lower()
     sync_env_admin_user_row(user_id)
     session.clear()
-    if not _finalize_app_session(user_id):
+    if not _finalize_app_session(user_id, auth_method="google"):
         return _oauth_login_error("Login failed. Try again.")
 
     if is_admin_role(session.get("user_role")) or bool(session.get("user_is_premium")):
         return _post_login_redirect()
 
-    wants_premium = oauth_post_intent == "premium" or _should_offer_premium_after_google_login(
-        is_new_user=is_new_user
+    wants_premium = Config.billing_stripe_enabled() and (
+        oauth_post_intent == "premium" or _should_offer_premium_after_google_login(is_new_user=is_new_user)
     )
     if wants_premium:
         session["post_auth_intent"] = "premium"

@@ -214,14 +214,27 @@ def _load_dealer_geo() -> dict[str, tuple[float, float]]:
         conn.close()
 
 
+def _load_registry_coords() -> dict[str, list[float]]:
+    from backend.db.dealer_geo import load_registry_coords_map
+
+    conn = get_conn()
+    try:
+        return load_registry_coords_map(conn)
+    finally:
+        conn.close()
+
+
 def _car_coords(
     car: dict[str, Any],
     dealer_geo: dict[str, tuple[float, float]],
+    registry_coords: dict[str, list[float]] | None = None,
 ) -> tuple[float, float] | None:
-    from backend.db.dealer_geo import lookup_dealer_coords
+    from backend.db.dealer_geo import lookup_car_coords
     from backend.db.geo import zip_to_coords
 
-    dest = lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
+    # Registry row first (a store), then dealer_url: stores that share a website host
+    # (all AutoSavvy stores) must not share a point.
+    dest = lookup_car_coords(car, dealer_geo, registry_coords)
     if dest:
         return dest
     zc = str(car.get("zip_code") or "").strip()
@@ -259,9 +272,13 @@ def _filter_cars_by_geo(
         return cars, "nationwide inventory"
 
     dealer_geo = _load_dealer_geo()
+    try:
+        registry_coords = _load_registry_coords()
+    except Exception:  # noqa: BLE001 - no registry table: the URL tier still works
+        registry_coords = {}
     kept: list[dict[str, Any]] = []
     for car in cars:
-        dest = _car_coords(car, dealer_geo)
+        dest = _car_coords(car, dealer_geo, registry_coords)
         if not dest:
             continue
         dist = haversine(origin[0], origin[1], dest[0], dest[1])
@@ -397,7 +414,8 @@ def _load_active_listing_rows() -> list[dict[str, Any]]:
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT make, model, trim, year, mileage, price, zip_code, dealer_url
+            SELECT make, model, trim, year, mileage, price, zip_code, dealer_url,
+                   dealership_registry_id
             FROM cars
             WHERE (COALESCE(listing_active, 1) = 1)
               AND price IS NOT NULL

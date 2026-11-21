@@ -117,7 +117,7 @@ def filter_spurious_brochure_trims(
     has_core = any(honda_core.match(t.strip()) for t in trims)
     if not has_core:
         return trims
-    drop = {"limited", "premium", "platinum", "touring", "base", "standard"}
+    drop = {"limited", "premium", "platinum", "base", "standard"}
     return [t for t in trims if t.strip().lower() not in drop]
 
 

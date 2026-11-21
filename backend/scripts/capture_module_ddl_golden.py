@@ -81,7 +81,7 @@ EXCLUDED: tuple[tuple[str, str], ...] = (
     ("backend/db/search_analytics_db.py, backend/db/user_history_db.py",
      "users database (get_users_conn: SQLite / SQLCipher), not the inventory Postgres"),
     ("backend/db/users_db, backend/db/admin_users_db.py, backend/utils/ip_rate_limit.py, "
-     "backend/vector/bmw_store.py, backend/dev/routes.py, backend/enrichment/dictionary_catalog.py",
+     "backend/dev/routes.py, backend/enrichment/dictionary_catalog.py",
      "SQLite-only stores (REMEDIATION_PLAN P13A.3 allowlist)"),
     ("backend/scripts/link_cars_to_catalog.py ensure_link_columns",
      "ALTERs cars; epa_master_id, epa_match_confidence and epa_match_method are V001 columns"),

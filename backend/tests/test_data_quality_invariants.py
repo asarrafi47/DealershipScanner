@@ -25,7 +25,6 @@ Three things are worth testing here and they are not the same thing:
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -435,13 +434,12 @@ def test_the_session_is_put_in_read_only_mode(monkeypatch: pytest.MonkeyPatch) -
 # ---------------------------------------------------------------------------
 
 
-LIVE = os.environ.get("DQ_INVARIANTS_LIVE_DB") == "1"
-
-
-@pytest.mark.integration
-@pytest.mark.skipif(not LIVE, reason="set DQ_INVARIANTS_LIVE_DB=1 to run against Postgres")
-def test_live_seeded_regression_in_a_temp_table() -> None:
+@pytest.mark.pg
+def test_live_seeded_regression_in_a_temp_table(pg_db) -> None:
     """
+    Runs on the harness's throwaway clone (``pg_db`` points INVENTORY_DATABASE_URL at
+    it), so the permanent table is a migration-built empty one.
+
     Copy ``epa_extended_specs`` into ``pg_temp``, seed ONE impossible row, and run
     the shipped stored-tier SQL against it.
 
@@ -451,6 +449,15 @@ def test_live_seeded_regression_in_a_temp_table() -> None:
     """
     import psycopg
 
+    # A migration-built clone has an empty table, and a baseline of 0 reads as a
+    # NEW_DEFECT_CLASS, not a REGRESSION: seed one standing defect of each kind first.
+    with pg_db.connect() as seed:
+        seed.execute("INSERT INTO public.epa_master (id, year, make, model) VALUES (1, 2023, 'Honda', 'Accord')")
+        seed.execute(
+            "INSERT INTO public.epa_extended_specs "
+            "(epa_master_id, year, make, model, trim, curb_weight_lb, tow_capacity_lb, zero_to_60_sec) "
+            "VALUES (1, 2023, 'Honda', 'Accord', 'EX', 9998, 9998, 3.2)"
+        )
     conn = psycopg.connect(dq._inventory_url())
     try:
         with conn.cursor() as cur:

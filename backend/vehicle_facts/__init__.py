@@ -8,6 +8,8 @@ Vehicle facts: one implementation per rule that used to have many copies
   outranks the dealer feed, the EPA catalog never outranks either.
 * :func:`epa_model_candidates` -- listing model -> EPA catalog model names, one
   named strategy per consumer (the four alias maps live in one module).
+* :mod:`backend.vehicle_facts.precedence` -- write-time arbiter: per (field,
+  source) rank, stale-provenance rule, vPIC 4x2 constraint (pure, no DB).
 * :mod:`backend.vehicle_facts.extended_specs` -- the one cached reader of
   ``epa_extended_specs``.
 """
@@ -45,3 +47,5 @@ __all__ = [
     "is_battery_electric", "is_two_wheel_unknown", "normalize_drivetrain", "same_drive_wheels",
     "vpic_electrification",
 ]
+from backend.vehicle_facts import precedence
+from backend.vehicle_facts.precedence import decide, field_source, plan_updates, provenance_patch

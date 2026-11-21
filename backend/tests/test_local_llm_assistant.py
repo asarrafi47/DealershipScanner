@@ -515,10 +515,10 @@ def test_local_outage_message_names_the_missing_piece(monkeypatch):
 
 
 @pytest.fixture
-def client(monkeypatch):
+def client(monkeypatch, chat_gate_open):
     app = flask.Flask(__name__)
     app.register_blueprint(bp.ai_chat_bp)
-    monkeypatch.setattr(bp, "allow_request", lambda *a, **k: True)
+    monkeypatch.setattr(bp.chat_web, "_allow", lambda *a, **k: True)
     monkeypatch.setattr(bp.paid_access, "check_feature", lambda *a, **k: (True, ""))
     return app.test_client()
 

@@ -188,7 +188,9 @@ def upsert_review(
 
     On re-submit the prior row is updated in place (``created_at`` preserved,
     ``updated_at`` refreshed) and ``status``/``report_count`` are reset so an
-    edited review re-enters the ``published`` state.
+    edited review re-enters the ``published`` state. A ``removed`` review (admin
+    moderation) stays removed: a resubmit never resurrects it. A reset also clears
+    the review's reporter dedup rows so earlier reporters can flag the edit anew.
     """
     cur = conn.cursor()
     ensure_reviews_table(cur)
@@ -210,8 +212,10 @@ def upsert_review(
             addon_fee_reported = EXCLUDED.addon_fee_reported,
             addon_fee_amount = EXCLUDED.addon_fee_amount,
             addon_fee_desc = EXCLUDED.addon_fee_desc,
-            status = 'published',
-            report_count = 0,
+            status = CASE WHEN dealer_reviews.status = 'removed'
+                          THEN 'removed' ELSE 'published' END,
+            report_count = CASE WHEN dealer_reviews.status = 'removed'
+                                THEN dealer_reviews.report_count ELSE 0 END,
             ip_hash = EXCLUDED.ip_hash,
             updated_at = EXCLUDED.updated_at
         """,
@@ -220,6 +224,13 @@ def upsert_review(
             fee_reported, addon_fee_amount, addon_fee_desc,
             ip_hash, now, now,
         ),
+    )
+    ensure_review_reports_table(cur)
+    cur.execute(
+        "DELETE FROM review_reports WHERE review_id IN ("
+        "SELECT id FROM dealer_reviews "
+        "WHERE dealer_id = ? AND user_id = ? AND status <> 'removed')",
+        (dealer_id, int(user_id)),
     )
     conn.commit()
 

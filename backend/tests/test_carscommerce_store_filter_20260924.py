@@ -424,3 +424,37 @@ def test_location_facet_naming_the_store_on_every_car_is_single_store(monkeypatc
     assert json.loads(cary_recipe.post_template)["facetFilters"] == {"custom_text_7": ["Group 1 Ford of South Austin"]} and extra == []
     from backend.scanner.recipes import recipe_is_store_scoped
     assert recipe_is_store_scoped(cary_recipe, "Group 1 Ford of South Austin")
+
+
+def test_store_filter_unions_location_facet_over_identity_feed(monkeypatch, cary_recipe):
+    """N8.8 (D-N5): the store's own feed id (oem_code) holds its new cars; the
+    group USED pool sits under another feed id. The site's Location facet value
+    that spells the store's place is replay-verified and returned as an extra
+    recipe so the used cars are captured too (kearnymesasubaru: 42 of 213)."""
+    feed = _FakeFeed()
+    new = [_listing(f"N{i:016d}", "Kearny, NJ", "OEM1") for i in range(10)]
+    used = [_listing(f"U{i:016d}", "Kearny, NJ", "POOL") for i in range(20)]
+    other = [_listing(f"O{i:016d}", "Newark, NJ", "POOL") for i in range(30)]
+    for r in new + used:
+        r["extra_fields"]["Location"] = "Kearny, NJ"
+    for r in other:
+        r["extra_fields"]["Location"] = "Newark, NJ"
+    feed.rows = new + used + other
+
+    def call(recipe, body, origin, url=None):
+        st, d = _FakeFeed.__call__(feed, recipe, body, origin, url)
+        for f in d["data"]["facets"]:
+            if f["name"] == "source_id":
+                f["values"] = [{"key": "OEM1", "doc_count": 10}, {"key": "POOL", "doc_count": 50}]
+            elif f["name"] == "custom_text_25":
+                f["values"] = [{"key": "Kearny, NJ", "doc_count": 30}, {"key": "Newark, NJ", "doc_count": 30}]
+        return st, d
+
+    monkeypatch.setattr(rs_carscommerce_scope, "_replay_request", call)
+    monkeypatch.setattr("backend.scanner.dealer_place.learn_place", lambda *a, **k: {"dealer_city": "Kearny", "dealer_state": "NJ"})
+    monkeypatch.setattr(rooftop_aliases, "record_rooftop_alias", lambda *a, **k: True)
+    html = '"dealername":"Kearny Mesa Subaru","oem_code":"OEM1","Location":"custom_text_25"'
+    extras = rs._carscommerce_store_filter(cary_recipe, "kearnymesasubaru-com", "https://www.kearnymesasubaru.com", html)
+    assert json.loads(cary_recipe.post_template)["facetFilters"] == {"source_id": ["OEM1"]}
+    assert [json.loads(x.post_template)["facetFilters"] for x in extras] == [{"custom_text_25": ["Kearny, NJ"]}]
+    assert extras[0].vehicle_rows == 30

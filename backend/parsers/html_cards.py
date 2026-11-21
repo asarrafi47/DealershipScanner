@@ -332,6 +332,13 @@ def markup_in_json(body: Any, min_vins: int = 5) -> str | None:
     return best or None
 
 
+def _obj_states_condition(o: dict[str, Any]) -> bool:
+    """True when a hydration object says new/used itself (not just _obj_row's "Used" fallback)."""
+    if isinstance(o.get("isNew"), bool):
+        return True
+    return any(isinstance(o.get(k), str) and o.get(k).strip() for k in ("condition", "conditionDisplay", "type", "vehicleType", "inventoryType", "stockType"))
+
+
 def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: str = "", dealer_url: str = "", **_kw: Any) -> list[dict]:
     objects: dict[str, dict[str, Any]] = {}
     if isinstance(raw_data, str) and raw_data[:1] in "{[":
@@ -387,6 +394,7 @@ def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: s
             if sm:
                 row["condition"] = row.get("condition") or ("Used" if sm.group(1).lower() != "new" else "New")
                 row["make"], row["model"], row["year"] = sm.group(2).title(), sm.group(3).upper() if len(sm.group(3)) <= 3 else sm.group(3).title(), int(sm.group(4))
+    cond_defaulted: set[str] = set()  # cards whose "Used" is a placeholder, not a read value
     for vin, row in rows.items():
         info = ld.get(vin)
         if info:
@@ -411,7 +419,9 @@ def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: s
                     row.setdefault("year", int(ym.group(1)))
                     row["make"] = row.get("make") or ym.group(2).title()
                     row["model"] = row.get("model") or ym.group(3).strip().title()
-        row.setdefault("condition", "Used")
+        if not row.get("condition"):
+            row["condition"] = "Used"
+            cond_defaulted.add(vin)
         if row.get("image_url") and row["image_url"] not in row["gallery"]:
             row["gallery"].append(row["image_url"])
     # hydration objects: richer than the cards, and they carry every car the page holds
@@ -424,5 +434,8 @@ def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: s
         for k, v in rich.items():
             if v not in (None, "", []) and not row.get(k):
                 row[k] = v
-        row.setdefault("condition", rich["condition"])
+        if vin in cond_defaulted and _obj_states_condition(obj):
+            row["condition"] = rich["condition"]
+        else:
+            row.setdefault("condition", rich["condition"])
     return [clean_car_row_dict(r) for r in rows.values() if r.get("vin")]

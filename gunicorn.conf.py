@@ -10,8 +10,12 @@ module level. Under ``--preload`` that thread starts in the ARBITER; the arbiter
 forks its workers within milliseconds, the prewarm's 3 s head-start elapses
 after the fork, and threads do not survive fork. Net effect: the arbiter builds
 the entire ~2 GB listings grid that no request is ever served from, and each
-worker then builds its own on first hit. Two full copies for one worker's worth
-of serving. Railway bills memory.
+worker then builds its own. Two full copies for one worker's worth of serving.
+Railway bills memory. Measured on prod (GUNICORN_WORKERS=1): 4.92 GB before
+this file, ~3.3 GB warm after.
+
+Prod runs one worker; post_fork starts the prewarm in each worker, so with N
+workers the grid is built N times (``--preload`` does not share it).
 
 ORDERING MATTERS -- verified against gunicorn 26.0.0 source:
   Application.__init__ -> do_load_config()      <- THIS FILE is exec'd here
@@ -43,9 +47,19 @@ def post_fork(server, worker) -> None:  # runs in each worker, after fork
     # cars, fallback URLs) BEFORE this worker accepts a connection, so /health passes
     # only once the first car page will not pay for them. Capped (AGGREGATE_WARM_CAP_S,
     # default 45 s, well under the 120 s worker timeout) and never fatal.
-    from backend.utils.aggregate_warmup import warm_blocking
+    from backend.utils.aggregate_warmup import warm_background, warm_blocking
 
     try:
         warm_blocking()
+    except Exception:
+        pass
+
+    # Then, without waiting: the /listings facets and the search parser vocabulary on a
+    # daemon thread (BACKGROUND_WARM=0 turns it off). Not part of the blocking warm, so
+    # boot and /health never wait for it; it builds what the first /listings and the
+    # first /listings?q= would otherwise build inline, so it adds no resident memory
+    # beyond what one visitor would have caused.
+    try:
+        warm_background()
     except Exception:
         pass

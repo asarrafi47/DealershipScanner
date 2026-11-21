@@ -112,6 +112,56 @@ def warm_aggregates(steps=WARM_STEPS, *, deadline: float | None = None) -> dict[
     return out
 
 
+def _facets() -> None:
+    from backend.db.repositories.listings_repo import get_filter_options
+
+    get_filter_options()
+
+
+def _parser_vocabulary() -> None:
+    from backend.utils.query_parser import parser_vocabulary
+
+    parser_vocabulary()
+
+
+# Warmed AFTER post_fork returns, on a daemon thread, so neither boot nor /health waits
+# for them: the /listings facets (~3.7 s of DISTINCT scans locally, the cold /listings)
+# and the search parser's vocabulary (the first ``/listings?q=``). Both are built by the
+# first request that needs them anyway, so warming them adds no steady-state memory;
+# it only moves the cost off the first visitor. While it runs it holds the GIL in
+# bursts, so the first requests after boot may be a little slower, never blocked.
+def _semantic_model() -> None:
+    from backend.vector import pgvector_service as pv
+
+    if pv.pgvector_configured():
+        pv._encode_model()
+
+
+BACKGROUND_STEPS: tuple[tuple[str, Callable[[], None]], ...] = (
+    ("search parser vocabulary", _parser_vocabulary),
+    ("listings facets", _facets),
+    # Last: importing torch + loading the sentence-transformer took 6-9 s of the first
+    # /listings?q= after a start. It is the same model the first search would load, so
+    # it adds no steady-state memory, only loads it earlier.
+    ("semantic search model", _semantic_model),
+)
+
+
+def background_warm_enabled() -> bool:
+    return os.environ.get("BACKGROUND_WARM", "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def warm_background(steps=BACKGROUND_STEPS) -> threading.Thread | None:
+    """Start the background warm-up thread and return it at once (None when disabled)."""
+    if not background_warm_enabled():
+        return None
+    t = threading.Thread(
+        target=warm_aggregates, args=(steps,), name="background-warmup", daemon=True
+    )
+    t.start()
+    return t
+
+
 def warm_blocking(cap_s: float | None = None, steps=WARM_STEPS) -> dict[str, str] | None:
     """Warm in a thread and wait at most ``cap_s``. Returns the step results, or None when
     disabled or when the cap passed first (the thread keeps going in the background)."""

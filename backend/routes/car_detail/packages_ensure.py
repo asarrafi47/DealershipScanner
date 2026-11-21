@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import logging
 import os
+import contextvars
 import threading
 import time
 
@@ -324,7 +325,12 @@ def _run_packages_ensure_with_budget(
         if existing is not None and existing.is_alive():
             # Someone is already fetching this VIN — don't start a second one.
             return None, ENSURE_INFLIGHT
-        t = threading.Thread(target=_work, name=f"packages-ensure-{car_id}", daemon=True)
+        # The worker runs in a copy of this context, so a sticker model call inside it is
+        # counted against the shopper who asked (chat_budget.web.sticker_guard, card C3).
+        work_ctx = contextvars.copy_context()
+        t = threading.Thread(
+            target=work_ctx.run, args=(_work,), name=f"packages-ensure-{car_id}", daemon=True
+        )
         _packages_ensure_inflight[car_id] = t
         if snapshot is not None:
             _packages_ensure_snapshot[car_id] = dict(snapshot)

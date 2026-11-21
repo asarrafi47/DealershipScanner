@@ -386,7 +386,7 @@ def test_lifecycle_pass_rescans_only_validated_dealers(monkeypatch, hints, log_r
     patch_pipeline(monkeypatch, "run_discovery_capture", lambda did, timeout_sec=900: {"error": "capture timed out after 900s", "recipes_after": 0})
     scanned: list[list[str]] = []
 
-    def fake_scan(dealer_ids, *, concurrency, log_path, timeout_sec):
+    def fake_scan(dealer_ids, *, concurrency, log_path, timeout_sec, stats=None):
         scanned.append(list(dealer_ids))
         for did in dealer_ids:
             _seed_retry_rows(sqlite_inventory.path, did, 18, 12)

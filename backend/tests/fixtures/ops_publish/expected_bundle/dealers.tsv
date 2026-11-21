@@ -1,0 +1,173 @@
+dealer_id	verdict	provider	rows	rows_stamped	rows_new	rows_used	active_before	active_after	minutes	flags	vin_owner_conflicts	retired	lifecycle	recipe_fetch	reason
+5starford-com	ok	jazel	944	944	742	202	0	944	14.3	cap_hit+slow+upsert_slow	0	0	none	full+http_only	secondary gaps: body_style, description, stock_number, msrp, gallery_8plus
+albanysubaru-com	ok	dealer_dot_com	102	102	70	32	0	102	5.5	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: engine_description, msrp
+arlingtontoyota-com	inaccurate	dealer_dot_com	630	630	0	630	0	630	4.3	host_exhausted+slowed_host	0	0	none	full+http_only	only one condition captured (new 0, used 630)
+audihuntsville-com	ok	oneaudi	352	352	154	198	0	352	3.2		0	0	none	full+http_only	secondary gaps: engine_description, fuel_type
+audisouthaustin-com	ok	dealer_dot_com	426	426	244	182	0	426	1.5	host_exhausted+slowed_host	0	0	none	full+http_only	secondary gaps: transmission, drivetrain, description
+autoboutiqueohio-com	thin	overfuel	853	853	0	853	0	856	11.1	slow+upsert_slow	0	0	none	full+http_only	key fields below 90%: price=80%
+autonationfordtustin-com	inaccurate	dealer_dot_com	74	74	0	74	0	320	0.4		0	0	none	partial+http_only	only one condition captured (new 0, used 74)
+autonationhondawestknoxville-com	ok	dealer_dot_com	326	326	214	112	0	326	3.1		0	0	none	full+http_only	secondary gaps: description, msrp, gallery_8plus
+autonationsubaruwest-com	ok	dealer_dot_com	463	463	324	139	0	463	4.8	slowed_host	0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+autonationtoyotacerritos-com	ok	dealer_dot_com	1070	1070	872	198	0	1070	13.9	slowed_host+slow+upsert_slow	0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+autosavvy-com	no_rows	dealer_dot_com	0		0	0	0	3958	0.1		0	0	failed:capture_validation_rejected:zero_rows	none+http_only	recipe replay yielded 0 rows
+beamancdjr-com	ok	dealer_on_cosmos	284	284	188	96	0	388	2.8		0	104	none	full+http_only	secondary gaps: drivetrain, msrp
+bellhonda-com	ok	dealer_dot_com	298	298	192	106	0	298	4.5		0	0	none	full+http_only	secondary gaps: gallery_8plus
+bentleygmc-com	inaccurate	dealer_on_cosmos	1008	567	567	0	0	840	12.0	cap_hit+slow	441	0	none	full+http_only	only one condition captured (new 567, used 0); VIN owner guard: 441 VINs owned by other dealers not written (bentleycadillac-com 441)
+billestestoyota-com	ok	dealer_dot_com	346	346	253	93	0	346	7.5		0	0	none	full+http_only	secondary gaps: gallery_8plus
+billluke-com	ok	dealer_dot_com	1778	1778	1143	635	0	1778	6.3	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: msrp
+bmwbellevue-com	inaccurate	dealer_dot_com	315	315	219	96	0	315	10.3	cap_hit+slow+upsert_slow	0	0	none	full+http_only	discrepancies 18/315: vpic_fuel
+bmwnorthscottsdale-com	inaccurate	dealer_dot_com	608	608	297	311	0	608	7.6	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 190/608: mileage, price, trim; discrepancies 33/608: vpic_fuel
+bmwofarlington-com	ok	dealer_dot_com	375	375	207	168	0	375	5.5	cap_hit+host_exhausted	0	0	none	full+http_only	complete and verified
+bmwofbloomfield-com	thin	dealer_eprocess	462	462	345	117	0	462	13.3	cap_hit+host_exhausted+slowed_host+slow+upsert_slow	0	0	none	partial+http_only	key fields below 90%: trim=36%
+bmwoffairfax-com	ok	dealer_dot_com	571	571	373	198	0	571	7.8	cap_hit	0	0	none	full+http_only	secondary gaps: transmission, drivetrain, description
+bmwoffremont-com	ok	dealer_dot_com	364	364	288	76	0	364	4.6		0	0	none	full+http_only	secondary gaps: interior_color, transmission, msrp, gallery_8plus
+bmwofmurrieta-com	inaccurate	dealer_dot_com	208	208	162	46	0	437	9.4	cap_hit+host_exhausted+upsert_slow	0	137	none	partial+http_only	discrepancies 17/208: vpic_fuel, electric_label_combustion_text
+bmwofsanantonio-com	inaccurate	dealer_dot_com	787	787	460	327	0	787	9.3	cap_hit	0	0	none	full+http_only	discrepancies 44/787: vpic_fuel, vpic_model, catalog_engine
+bmwofsouthaustin-com	inaccurate	dealer_dot_com	322	322	209	113	0	322	6.5	host_exhausted+slowed_host+upsert_slow	0	0	none	full+http_only	discrepancies 26/322: vpic_fuel, vpic_model
+bmwseattle-com	inaccurate	dealer_dot_com	367	367	260	107	0	367	5.7	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 24/367: exterior_color, trim; discrepancies 40/367: vpic_fuel, vpic_model, vpic_displacement_vs_text, vpic_cylinders_vs_text
+burnschevycadillac-com	inaccurate	dealer_dot_com	451	451	196	255	0	451	7.3		0	0	none	full+http_only	incomplete 83/451: exterior_color, drivetrain, price, mileage
+butlertoyotajacksonville-com	ok	dealer_dot_com	93	93	91	2	0	212	5.7	cap_hit+host_exhausted	0	119	none	full+http_only	secondary gaps: stock_number
+cadillacoflagunaniguel-com	ok	dealer_dot_com	76	76	54	22	0	76	0.7		0	0	none	full+http_only	secondary gaps: interior_color, drivetrain, stock_number
+camelbacktoyota-com	inaccurate	dealer_dot_com	102	102	0	102	0	102	4.6		0	0	none	full+http_only	only one condition captured (new 0, used 102)
+capitaltoyota-com	inaccurate	dealer_eprocess	334	334	183	151	0	530	7.1	cap_hit+host_exhausted+slowed_host	0	196	none	partial+http_only	discrepancies 22/334: electric_label_combustion_text, vpic_fuel
+capomazda-com	ok	dealer_dot_com	203	203	147	56	0	203	5.4	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: description, stock_number, msrp, gallery_8plus
+carproshonda-com	ok	dealer_dot_com	481	481	418	63	0	481	7.0	cap_hit	0	0	none	full+http_only	secondary gaps: gallery_8plus
+cartersubaruballard-com	ok	dealer_eprocess	308	308	208	100	0	308	7.3	cap_hit+host_exhausted+slowed_host	0	0	none	partial+http_only	secondary gaps: engine_description, drivetrain, fuel_type, description, msrp, gallery_8plus
+cdjrofalbertville-com	ok	dealer_dot_com	328	313	111	202	0	313	5.7	cap_hit+host_exhausted	15	0	none	full+http_only	secondary gaps: msrp; VIN owner guard: 15 VINs owned by other dealers not written (basswoodcdjr-com 15)
+centurybmwhuntsville-com	thin	dealer_dot_com	190	190	151	39	0	190	6.3	upsert_slow	0	0	none	full+http_only	key fields below 90%: trim=62%
+chapmanbmwchandler-com	ok	chapman	1341	1336	762	574	0	1336	4.1	upsert_slow	5	0	none	full+http_only	secondary gaps: description, gallery_8plus
+cherokeecountynissan-com	thin	dealer_on_cosmos	237	237	165	72	0	237	4.6		0	0	none	full+http_only	key fields below 90%: exterior_color=82%
+chevroletofboaz-com	thin	dealer_dot_com	366	366	288	78	0	366	7.2	cap_hit	0	0	none	full+http_only	key fields below 90%: price=83%
+chicagotoyota-com	ok	dealer_dot_com	430	430	285	145	0	430	3.2		0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+citytoyota-com	inaccurate	dealer_dot_com	1208	1208	1051	157	0	1208	6.4	cap_hit+host_exhausted	0	0	none	full+http_only	discrepancies 119/1208: vpic_fuel
+cleveland-nissan-com	ok	dealer_on_cosmos	1037	1037	759	278	0	1037	7.9	cap_hit	0	0	none	full+http_only	secondary gaps: drivetrain, msrp
+coastlinecdjr-com	ok	motive_ridemotive	283	283	215	68	0	283	0.5		0	0	resynth_ok	full+http_only	secondary gaps: body_style, description, msrp
+conicellihonda-com	ok	dealer_dot_com	477	477	346	131	0	477	5.1		0	0	none	full+http_only	complete and verified
+cookevillehonda-com	inaccurate	dealer_dot_com	163	163	83	80	0	163	7.1	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 15/163: exterior_color, price
+courtesychev-com	ok	dealer_dot_com	465	465	306	159	0	465	5.4	cap_hit+host_exhausted	0	0	resynth_ok	full+http_only	secondary gaps: msrp
+crevierbmw-com	thin	dealer_dot_com	843	843	630	213	0	843	6.1	cap_hit+host_exhausted	0	0	none	full+http_only	key fields below 90%: price=89%
+crownlexus-com	inaccurate	unknown	643	207	167	40	0	1000	7.3		436	0	none	partial+http_only	incomplete 35/207: mileage; VIN owner guard: 436 VINs owned by other dealers not written (bmwofmonrovia-net 436)
+crowntoyota-com	ok	dealer_on_cosmos	1058	1058	841	217	0	1058	10.3	slow	0	0	none	full+http_only	secondary gaps: drivetrain, stock_number, gallery_8plus
+cumberlandkia-com	ok	typesense	136	136	99	37	0	136	1.4	host_exhausted+slowed_host	0	0	none	full+http_only	secondary gaps: interior_color, description
+davekirk-com	ok	dealer_dot_com	151	61	59	2	0	128	5.7	cap_hit+host_exhausted	90	30	none	full+http_only	secondary gaps: fuel_type, msrp; VIN owner guard: 90 VINs owned by other dealers not written (easttennesseedodge-com 90)
+dchhondaofmissionvalley-com	ok	dealer_dot_com	339	339	200	139	0	339	4.8		0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+doggetthondamedcenter-com	ok	motive_ridemotive	363	363	298	65	0	1148	2.8		0	0	none	partial+http_only	secondary gaps: body_style, description, msrp, gallery_8plus
+donohoochevrolet-com	thin	dealer_on_cosmos	1045	1045	505	540	0	1045	8.8	cap_hit+upsert_slow	0	0	none	full+http_only	key fields below 90%: price=85%
+dreyerreinboldbmwnorth-com	thin	dealer_dot_com	36	36	0	36	0	36	1.5		0	0	none	full+http_only	key fields below 90%: trim=0%
+dthondachicago-com	ok	team_velocity	205	205	133	72	0	284	1.5	host_exhausted+slowed_host	0	79	none	full+http_only	secondary gaps: description, gallery_8plus
+eastsidesubaru-com	ok	dealer_dot_com	272	272	212	60	0	272	6.1		0	0	none	full+http_only	secondary gaps: msrp
+easttennesseeford-com	inaccurate	dealer_dot_com	178	178	119	59	0	178	6.5	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 11/178: price
+eddrogersvalleyford-com	ok	dealer_on_cosmos	155	155	30	125	0	155	1.5		0	0	none	partial+http_only	secondary gaps: drivetrain, msrp, gallery_8plus
+familytoyotaofarlington-com	ok	dealer_dot_com	835	835	239	596	0	835	8.1		0	0	none	partial+http_only	secondary gaps: drivetrain, stock_number, msrp, gallery_8plus
+fjmercedes-com	inaccurate	dealer_dot_com	90	90	0	90	0	90	3.2	host_exhausted	0	0	none	full+http_only	only one condition captured (new 0, used 90)
+fordlincolnofcookeville-com	inaccurate	dealer_dot_com	363	363	264	99	0	363	5.6	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 21/363: exterior_color, price
+freemantoyota-com	ok	dealer_dot_com	741	741	523	218	0	1297	4.8		0	556	none	full+http_only	secondary gaps: msrp, gallery_8plus
+fremonttoyota-com	inaccurate	dealer_eprocess	507	507	507	0	0	565	9.3	cap_hit	0	0	none	full+http_only	discrepancies 31/507: vpic_fuel; only one condition captured (new 507, used 0)
+germainford-com	inaccurate	dealer_dot_com	424	424	287	137	0	424	5.4	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 24/424: exterior_color, price
+gilbertbaughford-com	ok	dealer_on_cosmos	165	165	62	103	0	165	2.4		0	0	none	partial+http_only	secondary gaps: drivetrain, msrp, gallery_8plus
+glakeshyundaiofdublin-com	ok	dealer_dot_com	592	592	422	170	0	592	8.7	cap_hit	0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+gphonda-com	ok	dealer_dot_com	461	461	314	147	0	461	2.9		0	0	resynth_ok	full+http_only	secondary gaps: gallery_8plus
+greenwaycdjrofrome-com	ok	dealer_dot_com	100	100	58	42	0	100	5.1	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: msrp
+groovetoyota-com	ok	dealer_eprocess	974	974	776	198	0	974	11.1	cap_hit+slowed_host+slow	0	0	none	full+http_only	secondary gaps: drivetrain, body_style, description, msrp, gallery_8plus
+group1hondagreenbelt-com	inaccurate	dealer_dot_com	85	85	0	85	0	340	4.7	host_exhausted	0	0	none	partial+http_only	incomplete 6/85: exterior_color, price; only one condition captured (new 0, used 85)
+gunnhonda-com	ok	dealer_on_cosmos	954	946	461	485	0	946	4.8		8	0	resynth_ok	full+http_only	secondary gaps: drivetrain, msrp, gallery_8plus
+guntersvillechevrolet-com	inaccurate	dealer_dot_com	174	174	99	75	0	174	5.7	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 19/174: exterior_color, fuel_type, price, mileage
+harehonda-com	ok	dealer_dot_com	321	321	237	84	0	321	1.8		0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+hemborgford-com	ok	jazel	267	267	223	44	0	267	6.0		0	0	none	full+http_only	secondary gaps: body_style, msrp, gallery_8plus
+hendrickbuickgmccary-com	inaccurate	dealer_dot_com	458	458	334	124	0	458	6.1	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 23/458: exterior_color, price
+hendrickhondasc-com	ok	dealer_dot_com	207	206	132	74	0	206	2.9		1	0	resynth_ok	full+http_only	secondary gaps: msrp, gallery_8plus
+hendricklexusnorthlake-com	ok	dealer_dot_com	255	255	104	151	0	255	5.2	host_exhausted+slowed_host	0	0	none	full+http_only	secondary gaps: transmission, drivetrain, description, msrp, gallery_8plus
+hendricktoyotaconcord-com	ok	dealer_dot_com	580	580	466	114	0	580	6.1	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: stock_number
+highcountrytoyota-com	ok	dealer_eprocess	198	198	107	91	0	198	2.8		0	0	none	full+http_only	secondary gaps: interior_color, engine_description, drivetrain, fuel_type, body_style, description, msrp, gallery_8plus
+hileyvwhuntsville-com	ok	team_velocity	350	152	150	2	0	309	4.2		198	56	none	full+http_only	secondary gaps: gallery_8plus; VIN owner guard: 198 VINs owned by other dealers not written (audihuntsville-com 197, hileymazdahuntsville-com 1)
+hillsidehonda-com	ok	dealer_dot_com	616	616	491	125	0	616	6.0	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: description, gallery_8plus
+holmantoyota-com	ok	dealer_dot_com	569	569	395	174	0	569	5.5	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: description, stock_number, msrp, gallery_8plus
+hondaofcleveland-com	ok	wp_vehicles_index	268	268	168	100	0	268	5.9		0	0	none	partial+http_only	secondary gaps: engine_description, fuel_type, body_style, msrp, gallery_8plus
+hondaoffortworth-com	ok	dealer_dot_com	346	346	246	100	0	452	6.8		0	106	none	full+http_only	secondary gaps: interior_color, gallery_8plus
+hondaofserramonte-com	ok	dealer_dot_com	297	297	176	121	0	297	5.0		0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+howardbentleyauto-com	inaccurate	dealer_dot_com	1232	1232	1059	173	0	1232	8.2	cap_hit	0	0	none	full+http_only	incomplete 149/1232: transmission, exterior_color, price, drivetrain
+howdyhonda-com	ok	dealer_dot_com	662	662	472	190	0	662	7.2	cap_hit	0	0	none	full+http_only	secondary gaps: transmission, drivetrain, description, msrp, gallery_8plus
+hudsontoyota-com	ok	dealer_dot_com	364	364	258	106	0	748	5.1		0	384	none	full+http_only	secondary gaps: gallery_8plus
+hyundaiofcarmel-com	ok	dealer_dot_com	306	306	195	111	0	306	6.0		0	0	none	full+http_only	secondary gaps: msrp
+hyundaiofsanbruno-com	ok	team_velocity	512	512	450	62	0	512	6.9	cap_hit	0	0	none	full+http_only	secondary gaps: description, gallery_8plus
+infinitiofcharlotte-com	inaccurate	dealer_dot_com	2441	2441	90	2351	0	2441	7.9	cap_hit+host_exhausted	0	0	none	full+http_only	incomplete 235/2441: exterior_color, price, trim, mileage
+integrityofchattanooga-com	ok	dealer_on	368	368	262	106	0	368	6.4		0	0	none	full+http_only	secondary gaps: description, gallery_8plus
+irvinesubaru-com	ok	team_velocity	253	253	203	50	0	253	6.7	upsert_slow	0	0	none	full+http_only	secondary gaps: engine_description, fuel_type
+jasonlewisautomotive-com	ok	dealer_on_cosmos	334	334	165	169	0	334	5.0		0	0	none	partial+http_only	secondary gaps: drivetrain, msrp
+jimelliscdjrwoodstock-com	ok	dealer_dot_com	256	255	194	61	0	255	6.0	cap_hit+host_exhausted	1	0	none	full+http_only	secondary gaps: msrp
+johnrobertstoyota-com	ok	dealer_on_cosmos	155	155	104	51	0	155	6.2		0	0	none	full+http_only	secondary gaps: drivetrain, stock_number, msrp, gallery_8plus
+kearnymesasubaru-com	inaccurate	dealer_dot_com	106	106	44	62	0	872	5.6	cap_hit+host_exhausted	0	0	none	partial+http_only	incomplete 11/106: exterior_color, price, mileage, trim
+keithpiersontoyota-com	ok	dealer_dot_com	251	251	157	94	0	411	4.1		0	160	none	full+http_only	secondary gaps: interior_color, drivetrain, stock_number, gallery_8plus
+kianorthaustin-com	ok	dealer_dot_com	416	416	265	151	0	416	6.7	cap_hit	0	0	none	full+http_only	secondary gaps: transmission, drivetrain, description, msrp, gallery_8plus
+kiaofcleveland-com	ok	dealer_dot_com	211	211	144	67	0	281	7.0		0	70	none	partial+http_only	secondary gaps: msrp, gallery_8plus
+kingfordsales-com	thin	dealer_dot_com	317	317	182	135	0	317	5.7		0	0	none	full+http_only	key fields below 90%: price=58%, trim=88%
+koonstoyotaarlington-com	inaccurate	dealer_dot_com	246	246	168	78	0	481	6.7	cap_hit	0	235	none	full+http_only	incomplete 20/246: price, drivetrain; discrepancies 13/246: vpic_fuel, vpic_model
+lambonb-com	inaccurate	dealer_eprocess	28	28	4	24	0	28	1.3	host_exhausted+slowed_host	0	0	none	full+http_only	discrepancies 8/28: vpic_fuel
+landersmclartyfordfortpayne-net	ok	dealer_dot_com	543	543	185	358	0	543	5.8	cap_hit	0	0	none	full+http_only	secondary gaps: stock_number, msrp
+landersmclartysubaru-net	ok	dealer_on_cosmos	430	342	184	158	0	509	6.9	cap_hit	88	167	none	full+http_only	secondary gaps: engine_description, drivetrain, description, stock_number, msrp, gallery_8plus; VIN owner guard: 88 VINs owned by other dealers not written (...
+lbmboaz-com	inaccurate	dealer_dot_com	239	239	0	239	0	239	1.5		0	0	none	full+http_only	incomplete 25/239: trim, price, transmission, engine; only one condition captured (new 0, used 239)
+lexusescondido-com	inaccurate	motive_ridemotive	633	56	0	56	0	326	1.0		577	0	resynth_ok	full+http_only	incomplete 8/56: price, exterior_color; only one condition captured (new 0, used 56); VIN owner guard: 577 VINs owned by other dealers not written (lexuscarl...
+lexusofbellevue-com	inaccurate	dealer_dot_com	602	602	489	113	0	602	11.3	cap_hit+slow+upsert_slow	0	0	none	full+http_only	discrepancies 36/602: vpic_fuel
+lexusofgreenwoodvillage-com	inaccurate	dealer_dot_com	276	276	156	120	0	276	5.8		0	0	none	full+http_only	discrepancies 16/276: vpic_fuel, vpic_cylinders_vs_text, column_cylinders_vs_text, vpic_displacement_vs_text
+lexusofknoxville-com	inaccurate	dealer_eprocess	186	186	186	0	0	186	5.4		0	0	none	full+http_only	only one condition captured (new 186, used 0)
+lexusserramonte-com	inaccurate	dealer_dot_com	344	344	286	58	0	344	10.7	cap_hit+slow+upsert_slow	0	0	none	full+http_only	discrepancies 24/344: vpic_fuel
+lifetimekia-com	ok	dealer_dot_com	132	132	78	54	0	132	5.6	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: msrp
+longbeachbmw-com	inaccurate	dealer_dot_com	450	411	360	51	0	411	4.5		39	0	none	full+http_only	discrepancies 35/411: vpic_fuel, electric_label_combustion_text; VIN owner guard: 39 VINs owned by other dealers not written (bmwofmonrovia-net 39)
+longolexus-com	inaccurate	dealer_on_cosmos	762	762	707	55	0	762	12.0	slow	0	0	none	full+http_only	discrepancies 52/762: vpic_fuel
+machaikchevy-com	ok	dealer_dot_com	1528	1528	1358	170	0	1716	12.1	host_exhausted+slow	0	188	none	full+http_only	secondary gaps: description, stock_number, msrp
+marinochryslerjeepdodge-net	ok	dealer_dot_com	387	387	237	150	0	387	5.7	cap_hit+host_exhausted	0	0	none	full+http_only	secondary gaps: msrp
+marshalmizeford-com	inaccurate	dealer_dot_com	462	462	370	92	0	462	10.6	cap_hit+slow+upsert_slow	0	0	none	full+http_only	incomplete 43/462: fuel_type, transmission, exterior_color, drivetrain
+mazdaoflodi-com	ok	dealer_dot_com	1032	1032	983	49	0	1032	6.4	cap_hit	0	0	none	full+http_only	secondary gaps: drivetrain, gallery_8plus
+mbbeverlyhills-com	ok	dealer_dot_com	1363	1160	685	475	0	1160	6.3	cap_hit+host_exhausted	203	0	none	full+http_only	secondary gaps: gallery_8plus; VIN owner guard: 203 VINs owned by other dealers not written (fjmercedes-com 89, audiofcostamesa-com 79, bmwsantamonica-com 35)
+mbhsv-com	inaccurate	dealer_dot_com	361	105	104	1	0	232	4.8		256	23	none	full+http_only	discrepancies 35/105: vpic_displacement_vs_text, vpic_model, vpic_fuel, electric_label_combustion_text; VIN owner guard: 256 VINs owned by other dealers not...
+mbnorthlake-com	inaccurate	dealer_dot_com	267	267	151	116	0	267	1.9	host_exhausted+slowed_host	0	0	none	full+http_only	discrepancies 15/267: vpic_fuel, vpic_displacement_vs_text
+mbofstevenscreek-com	inaccurate	dealer_dot_com	986	985	853	132	0	985	11.0	slow	1	0	none	full+http_only	discrepancies 163/985: vpic_model, vpic_fuel, vpic_displacement_vs_text
+mbsd-com	inaccurate	dealer_dot_com	400	399	326	73	0	399	5.6	cap_hit	1	0	none	full+http_only	incomplete 29/399: price, exterior_color, trim, model; discrepancies 33/399: vpic_displacement_vs_text, vpic_fuel
+mbzla-com	inaccurate	dealer_dot_com	658	658	440	218	0	658	5.6	host_exhausted	0	0	none	full+http_only	discrepancies 51/658: vpic_fuel, vpic_model, vpic_displacement_vs_text, vpic_cylinders_vs_text
+mcgrathcityhonda-com	ok	dealer_eprocess	286	286	158	128	0	286	8.9	cap_hit	0	0	none	partial+http_only	secondary gaps: engine_description, fuel_type, body_style, description, stock_number, msrp, gallery_8plus
+mckennasubaru-com	no_rows	dealer_dot_com	0		0	0	0	48	0.0		0	0	capture_ok	none+http_only	recipe replay yielded 0 rows
+mercedesbenzofaustin-com	inaccurate	dealer_dot_com	570	570	355	215	0	570	5.1		0	0	none	full+http_only	discrepancies 33/570: vpic_displacement_vs_text, vpic_fuel, vpic_cylinders_vs_text, column_cylinders_vs_text
+mercedesfortworth-com	inaccurate	dealer_dot_com	323	323	217	106	0	323	9.0	cap_hit	0	0	none	full+http_only	discrepancies 28/323: vpic_model, vpic_fuel, vpic_displacement_vs_text, catalog_engine
+mikecalverttoyota-com	ok	dealer_dot_com	761	760	635	125	0	760	6.2	cap_hit	1	0	none	full+http_only	secondary gaps: drivetrain, stock_number, gallery_8plus
+miniofcharleston-com	inaccurate	dealer_dot_com	90	90	56	34	0	90	1.6	host_exhausted+slowed_host	0	0	none	full+http_only	incomplete 33/90: drivetrain, transmission; discrepancies 27/90: vpic_model
+mossbroshondamorenovalley-com	ok	dealer_dot_com	189	189	157	32	0	226	7.0		0	37	none	full+http_only	secondary gaps: msrp, gallery_8plus
+mountainstatestoyota-com	ok	dealer_dot_com	1199	1199	973	226	0	1199	6.4		0	0	none	full+http_only	secondary gaps: transmission, drivetrain, description, msrp, gallery_8plus
+mtnviewford-com	inaccurate	dealer_dot_com	468	468	310	158	0	468	4.4		0	0	none	full+http_only	incomplete 56/468: fuel_type, mileage, price
+murgadofordchicago-com	ok	team_velocity	354	354	296	58	0	354	3.5	host_exhausted+slowed_host	0	0	none	full+http_only	secondary gaps: description, gallery_8plus
+napletonhondamortongrove-com	inaccurate	dealer_dot_com	29	28	28	0	0	430	2.2		1	0	none	partial+http_only	discrepancies 3/28: catalog_engine; only one condition captured (new 28, used 0)
+newtonnissansouth-com	ok	dealer_dot_com	476	475	370	105	0	475	5.3		1	0	none	full+http_only	secondary gaps: interior_color, engine_description, stock_number, gallery_8plus
+nissanofalbertville-net	ok	dealer_dot_com	104	104	75	29	0	136	3.8		0	32	none	full+http_only	complete and verified
+nissanofcostamesa-com	ok	dealer_dot_com	248	248	166	82	0	248	4.2		0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+normreeveshondairvine-com	inaccurate	dealer_dot_com	422	422	347	75	0	422	5.2	host_exhausted	0	0	none	full+http_only	incomplete 22/422: price, exterior_color
+normreevestoyotadallas-com	ok	dealer_dot_com	242	242	147	95	0	486	3.3		0	244	none	full+http_only	secondary gaps: msrp
+northcountrycjdr-cars	ok	dealer_dot_com	178	178	154	24	0	178	1.5	host_exhausted+slowed_host	0	0	none	full+http_only	complete and verified
+northhollywoodtoyota-com	ok	team_velocity	585	585	474	111	0	585	4.1		0	0	none	full+http_only	secondary gaps: gallery_8plus
+oakridgenissan-com	ok	overfuel	352	352	258	94	0	352	4.2		0	0	none	full+http_only	secondary gaps: engine_description, msrp, gallery_8plus
+ocauto-com	ok	dealer_dot_com	319	319	207	112	0	319	4.0		0	0	none	full+http_only	complete and verified
+orangecountykia-com	ok	dealer_on_cosmos	508	508	275	233	0	508	8.2		0	0	none	full+http_only	secondary gaps: drivetrain, msrp, gallery_8plus
+overdrive-usa-com	no_rows	dealer_eprocess	156	14	0	14	0	131	1.3		142	0	resynth_ok	full+http_only	14 rows stamped to this store of 156 in the feed (rooftop gate refused the rest; floor 20); VIN owner guard: 142 VINs owned by other dealers not written (cum...
+paradiseautos-com	ok	dealer_on_cosmos	330	330	254	76	0	330	3.2		0	0	none	full+http_only	secondary gaps: drivetrain
+parksidekia-com	ok	dealer_eprocess	1229	385	336	49	0	555	8.6	cap_hit	844	0	none	full+http_only	secondary gaps: drivetrain, body_style, description, msrp, gallery_8plus; VIN owner guard: 844 VINs owned by other dealers not written (fordofmurfreesboro-co...
+praterford-com	inaccurate	dealer_dot_com	122	122	78	44	0	122	5.5	cap_hit	0	0	none	full+http_only	incomplete 12/122: price, exterior_color
+premiumautosinc-com	thin	overfuel	480	480	0	480	0	480	7.2		0	0	none	partial+http_only	key fields below 90%: price=81%, trim=0%, exterior_color=0%
+quantumautosales-com	ok	html_cards	165	165	0	165	0	165	6.0	upsert_slow	0	0	none	full+http_only	secondary gaps: msrp, one condition by design (new 0, used 165)
+righthonda-com	ok	dealer_dot_com	551	550	399	151	0	550	5.1		1	0	none	full+http_only	secondary gaps: engine_description, fuel_type, gallery_8plus
+robinsford-com	ok	jazel	24	24	10	14	0	287	1.2		0	0	none	partial+http_only	secondary gaps: body_style, msrp
+sandmountaintoyota-com	inaccurate	dealer_dot_com	254	254	115	139	0	382	7.9	cap_hit	0	128	none	full+http_only	incomplete 17/254: price, exterior_color, trim
+secretcitycdjr-com	ok	dealer_dot_com	252	252	161	91	0	252	3.5		0	0	none	full+http_only	secondary gaps: msrp
+shottenkirkacurahuntsville-com	ok	typesense	208	208	77	131	0	208	1.3	host_exhausted+slowed_host	0	0	none	full+http_only	secondary gaps: description, gallery_8plus
+shottenkirkhondarome-com	ok	typesense	188	188	66	122	0	188	3.8	host_exhausted+slowed_host	0	0	none	full+http_only	secondary gaps: description
+southcoasttoyota-com	inaccurate	typesense	532	532	376	156	0	915	6.3	host_exhausted+slowed_host	0	383	none	full+http_only	incomplete 29/532: trim, price, exterior_color; discrepancies 32/532: vpic_fuel, vpic_model
+sterlingbmw-com	thin	dealer_dot_com	272	272	201	71	0	272	3.6		0	0	none	full+http_only	key fields below 90%: trim=76%
+sutherlinsubaru-com	ok	dealer_on_cosmos	288	288	159	129	0	288	4.5		0	0	none	full+http_only	secondary gaps: engine_description, drivetrain, fuel_type, stock_number, gallery_8plus
+toyotacarlsbad-com	thin	unknown	1147	1147	1040	107	0	1147	8.5	cap_hit+slowed_host	0	0	none	partial+http_only	key fields below 90%: price=66%, exterior_color=66%
+toyotaescondido-com	ok	dealer_dot_com	785	785	695	90	0	785	2.8		0	0	none	partial+http_only	secondary gaps: msrp, gallery_8plus
+toyotaofcleveland-com	ok	dealer_dot_com	319	317	170	147	0	317	3.9		0	0	none	full+http_only	secondary gaps: msrp, gallery_8plus
+toyotaofredlands-com	ok	dealer_dot_com	476	476	409	67	0	476	6.0		0	0	none	full+http_only	secondary gaps: gallery_8plus
+toyotaplace-com	inaccurate	typesense	308	308	237	71	0	308	1.7	host_exhausted+slowed_host	0	0	none	full+http_only	discrepancies 17/308: vpic_fuel
+tustinlexus-com	thin	dealer_dot_com	348	346	235	111	0	346	4.9		2	0	none	full+http_only	key fields below 90%: trim=90%
+tuttleclickstustinjeep-com	ok	dealer_dot_com	165	165	147	18	0	165	6.0	cap_hit	0	0	none	full+http_only	secondary gaps: msrp
+tvtoyota-com	inaccurate	dealer_dot_com	1010	1010	847	163	0	1010	3.7	cap_hit	0	0	none	full+http_only	discrepancies 52/1010: vpic_fuel, vpic_cylinders_vs_text, column_cylinders_vs_text
+villagevw-com	ok	dealer_dot_com	152	152	117	35	0	152	0.8		0	0	none	full+http_only	secondary gaps: interior_color, transmission, msrp, gallery_8plus
+welbornchevroletofrome-com	inaccurate	dealer_dot_com	147	147	86	61	0	147	2.1		0	0	none	full+http_only	incomplete 11/147: price
+wisimonson-net	inaccurate	dealer_dot_com	588	536	464	72	0	609	2.1		52	73	none	full+http_only	discrepancies 109/536: vpic_model, vpic_fuel; VIN owner guard: 52 VINs owned by other dealers not written (bmwofmonrovia-net 52)

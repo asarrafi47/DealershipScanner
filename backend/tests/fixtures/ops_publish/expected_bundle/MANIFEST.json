@@ -1,0 +1,93 @@
+{
+ "schema": 1,
+ "run_id": "fleet_20261103T175955Z",
+ "target": "prod",
+ "kind": "fleet",
+ "request_ids": [],
+ "started": "2026-11-03T17:59:55Z",
+ "finished": null,
+ "exit": null,
+ "code": {
+  "version": "unknown",
+  "commit": "unknown",
+  "image_tag": "unknown",
+  "db_schema": null
+ },
+ "egress_tag": "",
+ "roster": {
+  "n": null,
+  "sha256": null,
+  "rule_counts": null
+ },
+ "shards": {
+  "n": null,
+  "batch": null,
+  "rc": null,
+  "seconds": null
+ },
+ "totals": {
+  "assessed": 172,
+  "rows": 77225,
+  "verdicts": {
+   "ok": 101,
+   "thin": 13,
+   "inaccurate": 55,
+   "no_rows": 3,
+   "error": 0,
+   "no_recipe": 0
+  },
+  "vin_owner_conflicts": 3404,
+  "http_403_429": null,
+  "http_first_statuses": {
+   "200": 38981,
+   "403": 1,
+   "404": 445,
+   "503": 9
+  }
+ },
+ "resources": {
+  "scan": null,
+  "total": null,
+  "scan_seconds": null,
+  "total_seconds": null
+ },
+ "post": null,
+ "gates": null,
+ "artifacts": [
+  {
+   "path": "dealers.tsv",
+   "bytes": 27388,
+   "sha256": "09a486cdada186611c0bf322062c3d7f6234bb4328a5656386247fe3aba9e130"
+  },
+  {
+   "path": "digest.md",
+   "bytes": 2486,
+   "sha256": "b84a293ba0287d5d5f11cafd2fe2a40fa75acba443f727b7feeb713bfd13f6f2"
+  },
+  {
+   "path": "needs_discovery.txt",
+   "bytes": 369,
+   "sha256": "a23c174b372942639740dabe284a31fe1fff03c0835c8f3be246e34cdbbd0d6e"
+  },
+  {
+   "path": "slow_dealers.txt",
+   "bytes": 3909,
+   "sha256": "53fe2cc262a2cde8716fdea8354259a528c22af428b221d1b350a2e4c148ea5a"
+  },
+  {
+   "path": "triage.json.gz",
+   "bytes": 53133,
+   "sha256": "de48dc729109e90258308a5fb0d86c616d6acd57fbbf6d4bdd2cff0b6baec39f"
+  }
+ ],
+ "publisher": {
+  "rc": 0,
+  "redactions": {
+   "env_value": 0,
+   "url_param": 0,
+   "header_value": 0,
+   "control_chars": 0
+  }
+ },
+ "prev_run_id": null
+}

@@ -13,20 +13,22 @@ from typing import Any
 from backend.db.inventory_db import get_conn
 
 # Static fallbacks keyed by (make_lower, model_lower). Drivetrain uses short tokens
-# (FWD/RWD/AWD/4WD) consistent with ``decode_trim_logic`` / EPA merge.
+# (FWD/RWD/AWD/4WD) consistent with ``decode_trim_logic`` / EPA merge. Nameplates sold in
+# several layouts (Tucson, RAV4, M5, 550e ...) carry NO drivetrain here: a guess would
+# outrank the VIN decode (B-014); only single-layout nameplates keep one.
 _MODEL_FALLBACK: dict[tuple[str, str], dict[str, Any]] = {
     # BMW — dealer often omits trans/drive on performance / niche codes
-    ("bmw", "228i"): {"cylinders": 4, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
+    ("bmw", "228i"): {"cylinders": 4, "transmission": "8-Speed Automatic"},
     ("bmw", "m2"): {"cylinders": 6, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
-    ("bmw", "m3"): {"cylinders": 6, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
-    ("bmw", "m4"): {"cylinders": 6, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
-    ("bmw", "m5"): {"cylinders": 8, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
+    ("bmw", "m3"): {"cylinders": 6, "transmission": "8-Speed Automatic"},
+    ("bmw", "m4"): {"cylinders": 6, "transmission": "8-Speed Automatic"},
+    ("bmw", "m5"): {"cylinders": 8, "transmission": "8-Speed Automatic"},
     ("bmw", "m6"): {"cylinders": 8, "transmission": "7-Speed Automatic", "drivetrain": "RWD"},
-    ("bmw", "m8"): {"cylinders": 8, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
-    ("bmw", "m340"): {"cylinders": 6, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
-    ("bmw", "550e"): {"cylinders": 6, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
-    ("bmw", "750e"): {"cylinders": 6, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
-    ("bmw", "x2"): {"cylinders": 4, "transmission": "8-Speed Automatic", "drivetrain": "AWD"},
+    ("bmw", "m8"): {"cylinders": 8, "transmission": "8-Speed Automatic"},
+    ("bmw", "m340"): {"cylinders": 6, "transmission": "8-Speed Automatic"},
+    ("bmw", "550e"): {"cylinders": 6, "transmission": "8-Speed Automatic"},
+    ("bmw", "750e"): {"cylinders": 6, "transmission": "8-Speed Automatic"},
+    ("bmw", "x2"): {"cylinders": 4, "transmission": "8-Speed Automatic"},
     ("bmw", "z4"): {"cylinders": 4, "transmission": "8-Speed Automatic", "drivetrain": "RWD"},
     ("bmw", "x3 m"): {"cylinders": 6, "transmission": "8-Speed Automatic", "drivetrain": "AWD"},
     ("bmw", "x5 m"): {"cylinders": 8, "transmission": "8-Speed Automatic", "drivetrain": "AWD"},
@@ -44,22 +46,18 @@ _MODEL_FALLBACK: dict[tuple[str, str], dict[str, Any]] = {
     ("hyundai", "palisade"): {
         "cylinders": 6,
         "transmission": "8-Speed Automatic",
-        "drivetrain": "AWD",
     },
     ("hyundai", "santa cruz"): {
         "cylinders": 4,
         "transmission": "8-Speed Automatic",
-        "drivetrain": "AWD",
     },
     ("hyundai", "santa fe"): {
         "cylinders": 4,
         "transmission": "8-Speed Dual-Clutch",
-        "drivetrain": "AWD",
     },
     ("hyundai", "santa fe hybrid"): {
         "cylinders": 4,
         "transmission": "6-Speed Automatic",
-        "drivetrain": "AWD",
     },
     # Jeep — PHEV trim name not in seed table
     ("jeep", "wrangler 4xe"): {
@@ -78,38 +76,32 @@ _MODEL_FALLBACK: dict[tuple[str, str], dict[str, Any]] = {
     ("volkswagen", "id. buzz"): {
         "cylinders": 0,
         "transmission": "1-Speed Automatic",
-        "drivetrain": "RWD",
         "fuel_type": "Electric",
     },
     # Hyundai EV / PHEV
     ("hyundai", "ioniq 6"): {
         "cylinders": 0,
         "transmission": "Single-speed automatic",
-        "drivetrain": "RWD",
         "fuel_type": "Electric",
     },
     ("hyundai", "ioniq 5"): {
         "cylinders": 0,
         "transmission": "Single-speed automatic",
-        "drivetrain": "RWD",
         "fuel_type": "Electric",
     },
     ("hyundai", "tucson"): {
         "cylinders": 4,
         "transmission": "8-Speed Automatic",
-        "drivetrain": "AWD",
     },
     ("hyundai", "tucson plug-in hybrid"): {
         "cylinders": 4,
         "transmission": "6-Speed Automatic",
-        "drivetrain": "AWD",
         "fuel_type": "Plug-In Hybrid",
     },
     # Kia
     ("kia", "seltos"): {
         "cylinders": 4,
         "transmission": "8-Speed Dual-Clutch",
-        "drivetrain": "AWD",
     },
     ("kia", "optima plug-in hybrid"): {
         "cylinders": 4,
@@ -121,7 +113,6 @@ _MODEL_FALLBACK: dict[tuple[str, str], dict[str, Any]] = {
     ("toyota", "rav4"): {
         "cylinders": 4,
         "transmission": "8-Speed Automatic",
-        "drivetrain": "AWD",
     },
     ("toyota", "tacoma 4wd"): {
         "cylinders": 4,
@@ -131,30 +122,25 @@ _MODEL_FALLBACK: dict[tuple[str, str], dict[str, Any]] = {
     ("toyota", "tacoma"): {
         "cylinders": 4,
         "transmission": "8-Speed Automatic",
-        "drivetrain": "4WD",
     },
     # Lexus
     ("lexus", "rx 350"): {
         "cylinders": 6,
         "transmission": "8-Speed Automatic",
-        "drivetrain": "AWD",
     },
     # Mercedes-Benz
     ("mercedes-benz", "gle"): {
         "cylinders": 4,
         "transmission": "9-Speed Automatic",
-        "drivetrain": "AWD",
     },
     ("mercedes-benz", "glb"): {
         "cylinders": 4,
         "transmission": "8-Speed Automatic",
-        "drivetrain": "AWD",
     },
     # GMC
     ("gmc", "canyon"): {
         "cylinders": 4,
         "transmission": "8-Speed Automatic",
-        "drivetrain": "4WD",
     },
 }
 

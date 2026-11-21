@@ -19,3 +19,12 @@ def test_used_from_mileage():
 
 def test_cpo_from_classification_text():
     assert normalize_inventory_condition({"classificationName": "BMW Certified"}) == "Certified"
+
+
+def test_missing_odometer_is_unknown_not_new():
+    from backend.parsers.inventory_condition import normalize_inventory_condition
+
+    assert normalize_inventory_condition({}, mileage=None) is None
+    assert normalize_inventory_condition({"odometer": None}) is None
+    assert normalize_inventory_condition({}, mileage=12000) == "Used"
+    assert normalize_inventory_condition({}, mileage=5) == "New"

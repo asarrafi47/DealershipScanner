@@ -1,0 +1,861 @@
+#!/usr/bin/env bash
+# Cloud VM setup for DealershipScanner (Claude Code on the web). Owner guide: docs/CLOUD.md.
+#
+# Makes a fresh Ubuntu cloud VM match this repo's CI, and keeps it that way: the repo's
+# SessionStart hook (.claude/settings.json) runs this on every session start, and a VM that
+# is already set up finishes in a second or two. Steps (--skip / --only take these names):
+#
+#   git       core.hooksPath=scripts/git-hooks, so the pre-push VERSION rule runs in a fresh
+#             clone, and a local origin/main, which that hook needs for a new branch
+#   python    a Python 3.12 venv outside the clone, CPU-only torch FIRST, then
+#             requirements.txt + requirements-test.txt (the CI order, D-TC5), pinned ruff
+#   pgeocode  the US postal table; backend/db/geo.py loads it at import, and a cold cache
+#             downloads from hosts the default cloud network policy blocks
+#   node      Node 20 at /opt/node20 (CI's version; the VM puts 22 first on PATH). Missing, it is
+#             installed from nodejs.org against a pinned SHA-256; optional, so a failure only reports
+#   pg        Postgres 18 + pgvector from the PGDG apt repository, for the pg test tier. If
+#             that host is not allowed, the image's own PostgreSQL 16 gets pgvector from the
+#             Ubuntu archive instead: it runs the tier, but it is not CI parity, and the
+#             report says so
+#   env       .venv link, and PATH / PG_TEST_BIN / PG_TEST_EXT into $CLAUDE_ENV_FILE
+#
+# It never connects to a database and never reads or writes a secret. The only cluster this
+# directory starts is the throwaway one in scripts/pg_test_up.sh (via with_pg.sh).
+#
+# Written for bash 3.2 and up: --check and --help also run on the owner's Mac.
+set -euo pipefail
+
+# --- constants. backend/tests/test_cloud_setup.py pins the ones that must match CI. ---------
+PYTHON_MINOR="3.12"
+TORCH_INDEX="https://download.pytorch.org/whl/cpu"
+RUFF_PIN="ruff==0.15.22"
+PG_MAJOR="18"
+# Used only when PG_MAJOR cannot be installed. backend/tests/pg_harness.py needs 15 or newer;
+# the cloud image ships 16 (and Ubuntu 24.04's archive has pgvector for it).
+PG_FALLBACK_MAJORS="17 16 15"
+PG_FALLBACK_INSTALL="16"
+# Debian and Ubuntu package layout (scripts/pg_test_up.sh takes PG_TEST_BIN and PG_TEST_EXT).
+PG_LIB_ROOT="/usr/lib/postgresql"
+PG_SHARE_ROOT="/usr/share/postgresql"
+# Plain http on purpose: apt checks every file against the pinned key, and a cloud network
+# proxy that re-signs https traffic would otherwise need its CA in apt's trust store.
+PGDG_URL="http://apt.postgresql.org/pub/repos/apt"
+PGDG_KEY_URL="https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+PGDG_KEY_FPR="B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
+# Shipped by Ubuntu's postgresql-common, so no download is needed on the cloud image.
+PGDG_KEY="/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc"
+PGDG_LIST="/etc/apt/sources.list.d/pgdg.list"
+NODE_DIR="/opt/node20/bin"
+# Used only when the image has no Node 20 (the cloud VM image normally ships /opt/node20). The
+# tarball is checked against this pinned SHA-256, so a changed or truncated download is refused.
+# x86_64 only: the cloud VM is x86_64, and no other architecture's checksum is pinned here.
+NODE_VERSION="20.20.2"
+NODE_SHA256_X64="df770b2a6f130ed8627c9782c988fda9669fa23898329a61a871e32f965e007d"
+NODE_URL_BASE="https://nodejs.org/dist"
+# Tried in this order, one at a time: pgeocode itself falls back only on HTTP errors, and a
+# blocked host often fails as a connection error instead.
+PGEOCODE_URLS="https://download.geonames.org/export/zip/{country}.zip https://raw.githubusercontent.com/symerio/postal-codes-data/master/data/geonames/{country}.txt"
+STEPS="git python pgeocode node pg env"
+
+TMP_ROOT="${TMPDIR:-/tmp}"
+TMP_ROOT="${TMP_ROOT%/}"
+VENV="${DS_CLOUD_VENV:-/opt/ds-venv}"
+LOG_DIR="${DS_CLOUD_LOG_DIR:-$TMP_ROOT/ds-cloud-setup}"
+LOCK_FILE="$TMP_ROOT/ds-cloud-setup.lock"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+
+CHECK_ONLY=0
+HOOK=0
+FORCE=0
+SKIP=""
+ONLY=""
+
+# Per-run state. REPORT collects "<sort key>|<level>|<label>|<detail>" lines; it is a file
+# because the pg step runs in a background subshell next to the python step.
+REPORT=""
+STEP_LOG=/dev/null
+CUR_IDX=0
+SEQ=0
+DETAIL=""
+FIXERR=""
+ENSURED=0
+REQS_OK=0
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/cloud/setup.sh [options]
+
+  (no options)  install or repair whatever is missing (Linux only; root for apt and /opt)
+  --check       only report what is missing and change nothing; exit 1 when a required
+                item is missing (Postgres and Node are optional)
+  --hook        SessionStart mode: acts only when CLAUDE_CODE_REMOTE=true, prints a short
+                summary for the session, always exits 0
+  --force       redo the pip install even when the requirements digest matches
+  --skip A,B    leave these steps out        --only A,B    run only these steps
+  -h, --help    this text
+
+Steps: git python pgeocode node pg env
+Environment: DS_CLOUD_VENV (default /opt/ds-venv), DS_CLOUD_LOG_DIR (default /tmp/ds-cloud-setup)
+Guide: docs/CLOUD.md
+EOF
+}
+
+die() { printf 'setup.sh: %s\n' "$1" >&2; exit "${2:-1}"; }  # die <message> [exit code]
+say() { if [ "$HOOK" = 0 ]; then printf '%s\n' "$*"; fi; }
+have() { command -v "$1" >/dev/null 2>&1; }
+
+want() {  # is step $1 enabled?
+  case ",$SKIP," in *",$1,"*) return 1 ;; esac
+  [ -z "$ONLY" ] && return 0
+  case ",$ONLY," in *",$1,"*) return 0 ;; esac
+  return 1
+}
+
+check_step_names() {
+  local list="$1" s
+  local IFS=,
+  for s in $list; do
+    case " $STEPS " in *" $s "*) ;; *) die "unknown step '$s' (steps: $STEPS)" 2 ;; esac
+  done
+}
+
+parse_args() {
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --check) CHECK_ONLY=1 ;;
+      --hook) HOOK=1 ;;
+      --force) FORCE=1 ;;
+      --skip) shift; SKIP="${1:-}" ;;
+      --skip=*) SKIP="${1#--skip=}" ;;
+      --only) shift; ONLY="${1:-}" ;;
+      --only=*) ONLY="${1#--only=}" ;;
+      -h|--help) usage; exit 0 ;;
+      *) usage >&2; die "unknown option: $1" 2 ;;
+    esac
+    shift
+  done
+  check_step_names "$SKIP"
+  check_step_names "$ONLY"
+}
+
+# --- reporting ----------------------------------------------------------------------------
+report() {  # report <ok|fixed|missing|failed|optional> <label> <detail>
+  printf '%02d%03d|%s|%s|%s\n' "$CUR_IDX" "$SEQ" "$1" "$2" "$3" >>"$REPORT"
+  SEQ=$((SEQ + 1))
+}
+
+# ensure <required|optional> <label> <check_fn> <fix_fn>
+#   check_fn sets DETAIL and returns 0 when the item is in place. fix_fn runs only without
+#   --check; it sets FIXERR when it fails. ENSURED is 1 afterwards when the item is in place.
+#   Always returns 0, so a problem is reported instead of tripping `set -e`.
+ensure() {
+  local need="$1" label="$2" check="$3" fix="$4" why
+  ENSURED=0
+  DETAIL=""
+  FIXERR=""
+  if "$check"; then
+    ENSURED=1
+    report ok "$label" "$DETAIL"
+    return 0
+  fi
+  why="$DETAIL"
+  # --check, or an item this script cannot fix (an empty fix_fn): report the gap and go on.
+  if [ "$CHECK_ONLY" = 1 ] || [ -z "$fix" ]; then
+    if [ "$need" = required ]; then report missing "$label" "$why"; else report optional "$label" "$why"; fi
+    return 0
+  fi
+  say "  $label: $why; fixing"
+  if [ "$STEP_LOG" != /dev/null ]; then printf '=== %s: fix started ===\n' "$label" >>"$STEP_LOG"; fi
+  if "$fix"; then
+    DETAIL=""
+    if "$check"; then
+      ENSURED=1
+      report fixed "$label" "$DETAIL"
+      return 0
+    fi
+    FIXERR="${FIXERR:-still not in place after the fix: $DETAIL}"
+  fi
+  FIXERR="${FIXERR:-the fix failed}"
+  if [ "$HOOK" = 0 ] && [ "$STEP_LOG" != /dev/null ] && [ -s "$STEP_LOG" ]; then
+    say "  last lines logged by that fix ($STEP_LOG):"
+    awk -v m="=== $label: fix started ===" '
+      $0 == m { n = 0; next }
+      { buf[n++] = $0 }
+      END { for (i = (n > 12 ? n - 12 : 0); i < n; i++) print "    | " buf[i] }' "$STEP_LOG"
+  fi
+  if [ "$need" = required ]; then report failed "$label" "$FIXERR"; else report optional "$label" "$FIXERR"; fi
+  return 0
+}
+
+# needs ...: like ensure, but only when the item before it is in place. --check lists every
+# gap regardless, so one missing venv does not hide the rest.
+needs() {
+  if [ "$CHECK_ONLY" = 1 ] || [ "$ENSURED" = 1 ]; then
+    ensure "$@"
+  else
+    if [ "$1" = required ]; then report failed "$2" "skipped: the step before it failed"; else report optional "$2" "skipped: the step before it failed"; fi
+  fi
+}
+
+# --- helpers --------------------------------------------------------------------------------
+sha256_stdin() {
+  if have sha256sum; then sha256sum | cut -d' ' -f1; else shasum -a 256 | cut -d' ' -f1; fi
+}
+
+tmo() {  # tmo <seconds> <cmd...>: run with a time limit when `timeout` exists
+  local secs="$1"
+  shift
+  if have timeout; then timeout "$secs" "$@"; else "$@"; fi
+}
+
+apt_run() {  # apt_run <apt-get args...>: non-interactive, serialized with this script's other apt calls
+  local -a pre=()
+  if have flock; then pre=(flock /var/lock/ds-cloud-apt.lock); fi
+  env DEBIAN_FRONTEND=noninteractive NEEDRESTART_SUSPEND=1 ${pre[@]+"${pre[@]}"} \
+    apt-get -o DPkg::Lock::Timeout=300 -o Dpkg::Options::=--force-confold "$@" >>"$STEP_LOG" 2>&1
+}
+
+apt_install() {
+  apt_run update -qq || true  # a flaky unrelated repo must not stop the install
+  apt_run install -y --no-install-recommends "$@"
+}
+
+pip_run() {  # pip inside the venv; output goes to the step log
+  "$VENV/bin/python" -m pip --disable-pip-version-check --no-input "$@" >>"$STEP_LOG" 2>&1
+}
+
+# --- step: git ----------------------------------------------------------------------------
+git_hooks_ok() {
+  local v hook
+  v="$(git -C "$ROOT" config --get core.hooksPath 2>/dev/null || true)"
+  case "$v" in
+    scripts/git-hooks) hook="$ROOT/$v" ;;
+    */scripts/git-hooks) hook="$v" ;;
+    *) DETAIL="core.hooksPath is ${v:-unset}; the pre-push VERSION rule will not run"; return 1 ;;
+  esac
+  if [ ! -x "$hook/pre-push" ]; then
+    DETAIL="$hook/pre-push is missing or not executable (git skips a hook that is not)"
+    return 1
+  fi
+  DETAIL="core.hooksPath=$v"
+}
+
+git_hooks_fix() {
+  git -C "$ROOT" config core.hooksPath scripts/git-hooks || return 1
+  chmod +x "$ROOT/scripts/git-hooks/pre-push" 2>/dev/null || true
+}
+
+origin_main_ok() {
+  local sha
+  if sha="$(git -C "$ROOT" rev-parse --verify -q refs/remotes/origin/main 2>/dev/null)"; then
+    DETAIL="origin/main at $(printf '%s' "$sha" | cut -c1-9)"
+    return 0
+  fi
+  DETAIL="no refs/remotes/origin/main; the pre-push hook silently skips the VERSION check for a new branch"
+  return 1
+}
+
+origin_main_fix() {
+  local -a args=(--no-tags)
+  git -C "$ROOT" remote get-url origin >/dev/null 2>&1 || { FIXERR="no origin remote to fetch main from"; return 1; }
+  if [ "$(git -C "$ROOT" rev-parse --is-shallow-repository 2>/dev/null)" = true ]; then args+=(--depth=50); fi
+  tmo 120 git -C "$ROOT" fetch "${args[@]}" origin +refs/heads/main:refs/remotes/origin/main >>"$STEP_LOG" 2>&1 \
+    || { FIXERR="git fetch origin main failed or timed out"; return 1; }
+}
+
+step_git() {
+  if ! have git || ! git -C "$ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    report optional "git" "$ROOT is not a git work tree (or git is missing); hooks and origin/main skipped"
+    return 0
+  fi
+  ensure required "git hooks" git_hooks_ok git_hooks_fix
+  ensure optional "origin/main" origin_main_ok origin_main_fix
+}
+
+# --- step: python -------------------------------------------------------------------------
+find_python312() {  # print an interpreter whose version is 3.12.x
+  local c v
+  for c in python3.12 /usr/bin/python3.12 python3 python; do
+    have "$c" || continue
+    v="$("$c" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2>/dev/null)" || continue
+    if [ "$v" = "$PYTHON_MINOR" ]; then command -v "$c"; return 0; fi
+  done
+  if have uv; then
+    c="$(uv python find "$PYTHON_MINOR" 2>/dev/null)" || c=""
+    if [ -n "$c" ]; then printf '%s\n' "$c"; return 0; fi
+  fi
+  return 1
+}
+
+venv_ok() {
+  local v
+  if [ ! -x "$VENV/bin/python" ]; then DETAIL="no venv at $VENV (CI runs Python $PYTHON_MINOR)"; return 1; fi
+  v="$("$VENV/bin/python" -c 'import sys; print("%d.%d.%d" % sys.version_info[:3])' 2>/dev/null)" \
+    || { DETAIL="$VENV/bin/python does not run"; return 1; }
+  case "$v" in "$PYTHON_MINOR".*) ;; *) DETAIL="$VENV is Python $v, CI runs $PYTHON_MINOR"; return 1 ;; esac
+  "$VENV/bin/python" -m pip --version >/dev/null 2>&1 || { DETAIL="$VENV has no working pip"; return 1; }
+  DETAIL="$VENV, Python $v"
+}
+
+venv_make() {
+  local py
+  if [ -e "$VENV" ] && [ ! -f "$VENV/pyvenv.cfg" ] && [ -n "$(ls -A "$VENV" 2>/dev/null)" ]; then
+    FIXERR="$VENV exists and is not a Python venv; refusing to touch it (set DS_CLOUD_VENV to another path)"
+    return 1
+  fi
+  mkdir -p "$(dirname "$VENV")" 2>/dev/null \
+    || { FIXERR="cannot create $(dirname "$VENV"): run as root or set DS_CLOUD_VENV to a writable path"; return 1; }
+  if [ -f "$VENV/pyvenv.cfg" ]; then rm -rf "$VENV"; fi  # wrong Python or no pip: rebuild
+  if py="$(find_python312)" && "$py" -m venv "$VENV" >>"$STEP_LOG" 2>&1; then return 0; fi
+  if [ -f "$VENV/pyvenv.cfg" ]; then rm -rf "$VENV"; fi
+  if have uv && uv venv --seed --python "$PYTHON_MINOR" "$VENV" >>"$STEP_LOG" 2>&1; then return 0; fi
+  if [ -f "$VENV/pyvenv.cfg" ]; then rm -rf "$VENV"; fi
+  if have apt-get && [ "$(id -u)" -eq 0 ] \
+    && apt_install "python${PYTHON_MINOR}" "python${PYTHON_MINOR}-venv" \
+    && "python${PYTHON_MINOR}" -m venv "$VENV" >>"$STEP_LOG" 2>&1; then
+    return 0
+  fi
+  FIXERR="could not create a Python $PYTHON_MINOR venv (tried python${PYTHON_MINOR} -m venv, uv, apt); see $STEP_LOG"
+  return 1
+}
+
+torch_ok() {
+  local v
+  v="$("$VENV/bin/python" -c 'import importlib.metadata as m; print(m.version("torch"))' 2>/dev/null)" \
+    || { DETAIL="torch is not installed"; return 1; }
+  case "$(uname -m)" in
+    x86_64|amd64)
+      case "$v" in
+        *+cpu) ;;
+        *) DETAIL="torch $v is not the CPU build; the default wheel is the multi-GB CUDA stack"; return 1 ;;
+      esac ;;
+  esac
+  DETAIL="torch $v"
+}
+
+torch_install() {
+  if "$VENV/bin/python" -c 'import importlib.metadata as m; m.version("torch")' >/dev/null 2>&1; then
+    pip_run uninstall -y torch || true  # a non-CPU build is in the way
+  fi
+  if pip_run install --retries 2 --timeout 30 --no-cache-dir torch --index-url "$TORCH_INDEX"; then return 0; fi
+  FIXERR="CPU torch install failed. download.pytorch.org and download-r2.pytorch.org must be allowed (docs/CLOUD.md, Network access); see $STEP_LOG"
+  return 1
+}
+
+reqs_digest() {  # what the pip install depends on: every requirements*.txt plus the torch index
+  { cat "$ROOT"/requirements*.txt; printf '%s\n' "$TORCH_INDEX"; } | sha256_stdin
+}
+
+reqs_ok() {
+  local want have_digest
+  if [ ! -f "$ROOT/requirements.txt" ] || [ ! -f "$ROOT/requirements-test.txt" ]; then
+    DETAIL="requirements.txt or requirements-test.txt not found under $ROOT"
+    return 1
+  fi
+  # CPU torch comes first, and a requirements install must not have replaced it with the CUDA build.
+  if ! torch_ok; then DETAIL="needs CPU torch first ($DETAIL)"; return 1; fi
+  want="$(reqs_digest)"
+  have_digest="$(cat "$VENV/.ds-requirements.sha256" 2>/dev/null || true)"
+  if [ "$FORCE" = 0 ] && [ "$want" = "$have_digest" ]; then
+    DETAIL="requirements.txt + requirements-test.txt installed (digest ${want:0:8})"
+    return 0
+  fi
+  if [ "$FORCE" = 1 ]; then DETAIL="--force"; else DETAIL="requirements changed since the last install, or none yet"; fi
+  return 1
+}
+
+reqs_install() {
+  # CI order (D-TC5): CPU torch is already in, so pip skips the CUDA build sentence-transformers would pull.
+  if ! torch_ok; then
+    FIXERR="refusing to install the requirements without CPU torch (the default torch wheel is multi-GB): $DETAIL"
+    return 1
+  fi
+  if ! pip_run install --retries 3 --timeout 60 --no-cache-dir \
+    -r "$ROOT/requirements.txt" -r "$ROOT/requirements-test.txt"; then
+    FIXERR="pip install -r requirements.txt -r requirements-test.txt failed; see $STEP_LOG"
+    return 1
+  fi
+  reqs_digest >"$VENV/.ds-requirements.sha256"
+  FORCE=0
+}
+
+ruff_ok() {
+  local v
+  v="$("$VENV/bin/ruff" --version 2>/dev/null)" || { DETAIL="ruff is not installed (CI lints with $RUFF_PIN)"; return 1; }
+  if [ "$v" = "ruff ${RUFF_PIN#ruff==}" ]; then DETAIL="$v"; return 0; fi
+  DETAIL="$v is installed, CI pins $RUFF_PIN"
+  return 1
+}
+
+ruff_install() {
+  pip_run install --no-cache-dir "$RUFF_PIN" || { FIXERR="pip install $RUFF_PIN failed; see $STEP_LOG"; return 1; }
+}
+
+step_python() {
+  ensure required "python venv" venv_ok venv_make
+  needs required "cpu torch" torch_ok torch_install
+  needs required "requirements" reqs_ok reqs_install
+  REQS_OK="$ENSURED"
+  needs required "ruff" ruff_ok ruff_install
+}
+
+# --- step: pgeocode -----------------------------------------------------------------------
+pgeocode_dir() { "$VENV/bin/python" -c 'import pgeocode; print(pgeocode.STORAGE_DIR)' 2>/dev/null; }
+
+pgeocode_ok() {
+  local d
+  d="$(pgeocode_dir)" || { DETAIL="pgeocode is not installed in $VENV"; return 1; }
+  if [ -s "$d/US.txt" ] && [ -s "$d/US-index.txt" ]; then
+    DETAIL="US postal table cached in $d"
+    return 0
+  fi
+  DETAIL="US postal table not cached in $d; backend/db/geo.py would download it at import"
+  return 1
+}
+
+pgeocode_seed() {
+  # Each source is fetched with curl (it uses the system CA store and the VM's proxy variables,
+  # and has a connect timeout), then handed to pgeocode as a file:// URL, so pgeocode's own
+  # parser builds its cache. pgeocode alone would try the second source only after an HTTP
+  # error, not after a blocked connection, and Python's urllib needs its own CA setup behind a
+  # cloud proxy.
+  local dir url src ext file
+  if ! have curl && have apt-get && [ "$(id -u)" -eq 0 ]; then apt_install ca-certificates curl || true; fi
+  if ! have curl; then FIXERR="curl is not installed, so the US postal table cannot be downloaded"; return 1; fi
+  dir="$(mktemp -d)"
+  for src in $PGEOCODE_URLS; do
+    url="${src//\{country\}/US}"
+    ext=".txt"
+    case "$url" in *.zip) ext=".zip" ;; esac
+    file="$dir/US$ext"
+    if ! curl -fsSL --connect-timeout 15 --max-time 180 --retry 2 -o "$file" "$url" >>"$STEP_LOG" 2>&1; then
+      printf 'pgeocode: %s could not be downloaded\n' "$url" >>"$STEP_LOG"
+      continue
+    fi
+    if DS_PGEOCODE_FILE="$file" "$VENV/bin/python" - >>"$STEP_LOG" 2>&1 <<'PY'
+import os
+import pathlib
+
+import pgeocode
+
+pgeocode.DOWNLOAD_URL = [pathlib.Path(os.environ["DS_PGEOCODE_FILE"]).as_uri()]
+data = pgeocode.Nominatim("us")._data
+print("pgeocode: cached %d US postal codes" % len(data))
+PY
+    then
+      printf 'pgeocode: US table cached from %s\n' "$url" >>"$STEP_LOG"
+      rm -rf "$dir"
+      return 0
+    fi
+  done
+  rm -rf "$dir"
+  FIXERR="could not download the US postal table: allow download.geonames.org, or check raw.githubusercontent.com for the mirror (docs/CLOUD.md); see $STEP_LOG"
+  return 1
+}
+
+step_pgeocode() {
+  if [ "$CHECK_ONLY" = 0 ] && [ "$REQS_OK" != 1 ] && want python; then
+    report failed "pgeocode table" "skipped: the requirements are not in place"
+    return 0
+  fi
+  ensure required "pgeocode table" pgeocode_ok pgeocode_seed
+}
+
+# --- step: node (check only) ---------------------------------------------------------------
+node_ok() {
+  local v bin
+  if [ -x "$NODE_DIR/node" ]; then bin="$NODE_DIR/node"; elif have node; then bin="$(command -v node)"; else
+    DETAIL="node not found (the VM image normally ships $NODE_DIR); the JS unit tests skip without it"
+    return 1
+  fi
+  v="$("$bin" --version 2>/dev/null)" || { DETAIL="$bin does not run"; return 1; }
+  case "$v" in
+    v20.*) DETAIL="node $v at $bin"; return 0 ;;
+  esac
+  DETAIL="node $v at $bin; CI runs Node 20 (the VM image normally ships it at $NODE_DIR)"
+  return 1
+}
+
+node_install() {
+  # Linux x86_64 and root only (it writes /opt). Any other machine, such as the owner's Mac,
+  # only gets the report from node_ok.
+  local root dir tarball sum
+  root="${NODE_DIR%/bin}"
+  if [ "$(uname -s)" != Linux ] || [ "$(uname -m)" != x86_64 ]; then
+    FIXERR="Node 20 is installed only on Linux x86_64 (this is $(uname -s) $(uname -m))"; return 1
+  fi
+  if [ "$(id -u)" -ne 0 ]; then FIXERR="installing Node 20 into $root needs root"; return 1; fi
+  if ! have curl || ! have tar || ! have xz; then FIXERR="curl, tar and xz are needed to install Node 20"; return 1; fi
+  dir="$(mktemp -d)"
+  tarball="node-v${NODE_VERSION}-linux-x64.tar.xz"
+  if ! curl -fsSL --connect-timeout 15 --max-time 300 --retry 2 -o "$dir/$tarball" "$NODE_URL_BASE/v${NODE_VERSION}/$tarball" >>"$STEP_LOG" 2>&1; then
+    rm -rf "$dir"
+    FIXERR="could not download Node ${NODE_VERSION}: allow nodejs.org in the environment's network policy (docs/CLOUD.md); see $STEP_LOG"
+    return 1
+  fi
+  sum="$(sha256_stdin <"$dir/$tarball")"
+  if [ "$sum" != "$NODE_SHA256_X64" ]; then
+    rm -rf "$dir"
+    FIXERR="the Node ${NODE_VERSION} download has SHA-256 $sum, not the pinned $NODE_SHA256_X64; nothing was installed"
+    return 1
+  fi
+  # Unpack beside the target and rename, so a half-unpacked tree never sits at $root.
+  rm -rf "$root.new"
+  mkdir -p "$root.new"
+  if ! tar -xJf "$dir/$tarball" -C "$root.new" --strip-components=1 >>"$STEP_LOG" 2>&1; then
+    rm -rf "$dir" "$root.new"
+    FIXERR="could not unpack the Node ${NODE_VERSION} tarball; see $STEP_LOG"
+    return 1
+  fi
+  rm -rf "$root"
+  mv "$root.new" "$root"
+  rm -rf "$dir"
+  printf 'node: installed %s into %s\n' "$NODE_VERSION" "$root" >>"$STEP_LOG"
+}
+
+# Optional: a failed install leaves the report line, and the JS unit tests skip without Node 20.
+step_node() { ensure optional "node 20" node_ok node_install; }
+
+# --- step: pg ---------------------------------------------------------------------------
+# Debian and Ubuntu layout. Two routes lead to a usable server, in this order:
+#   1. PostgreSQL $PG_MAJOR + pgvector from the PGDG apt repository (CI parity). Needs the
+#      environment to allow apt.postgresql.org.
+#   2. The image's own PostgreSQL (16 on the cloud image) + pgvector from the Ubuntu archive.
+#      The harness accepts 15 or newer, but this is NOT CI parity and the report says so.
+pg_bin() { printf '%s/%s/bin' "$PG_LIB_ROOT" "$1"; }
+pg_ext() { printf '%s/%s/extension' "$PG_SHARE_ROOT" "$1"; }
+
+# pg_lacks <major>: print what that major is missing and return 0, or print nothing and return 1.
+pg_lacks() {
+  local b e
+  b="$(pg_bin "$1")"
+  e="$(pg_ext "$1")"
+  if [ ! -x "$b/initdb" ] || [ ! -x "$b/pg_ctl" ] || [ ! -x "$b/pg_isready" ] || [ ! -x "$b/psql" ]; then
+    printf 'no PostgreSQL %s server and client binaries in %s' "$1" "$b"
+    return 0
+  fi
+  if [ ! -f "$e/vector.control" ]; then printf 'pgvector is missing from %s' "$e"; return 0; fi
+  if [ ! -f "$e/dblink.control" ]; then printf 'dblink (contrib) is missing from %s' "$e"; return 0; fi
+  return 1
+}
+
+pg_describe() {  # pg_describe <major>: "PostgreSQL 18.6", from the server binary itself
+  local v
+  # "postgres (PostgreSQL) 18.6 (Ubuntu 18.6-1.pgdg24.04+2)": the third word is the version.
+  v="$("$(pg_bin "$1")/postgres" --version 2>/dev/null | awk '{print $3}')" || v=""
+  printf 'PostgreSQL %s' "${v:-$1}"
+}
+
+pg_fallback_major() {  # print the first fallback major that is complete; return 1 when none is
+  local m
+  for m in $PG_FALLBACK_MAJORS; do
+    if ! pg_lacks "$m" >/dev/null; then printf '%s' "$m"; return 0; fi
+  done
+  return 1
+}
+
+pg_pick_major() {  # the major the session should use: CI's, else the first complete fallback
+  if ! pg_lacks "$PG_MAJOR" >/dev/null; then printf '%s' "$PG_MAJOR"; return 0; fi
+  pg_fallback_major
+}
+
+pg_ok() {
+  local why
+  if why="$(pg_lacks "$PG_MAJOR")"; then DETAIL="$why"; return 1; fi
+  DETAIL="$(pg_describe "$PG_MAJOR") with pgvector and dblink"
+}
+
+pgfb_ok() {
+  local m
+  if ! m="$(pg_fallback_major)"; then
+    DETAIL="no PostgreSQL ${PG_FALLBACK_MAJORS// /, } with pgvector either, so the pg tier cannot run"
+    return 1
+  fi
+  DETAIL="$(pg_describe "$m") with pgvector and dblink; NOT CI parity (CI and production run $PG_MAJOR)"
+}
+
+# Fingerprint of the first key in an armored key file. awk reads all of gpg's output (no early
+# exit), because under `set -o pipefail` a reader that quits first turns the pipeline into a failure.
+key_fingerprint() {
+  local home out
+  home="$(mktemp -d)"
+  out="$(GNUPGHOME="$home" gpg --show-keys --with-colons "$1" 2>/dev/null | awk -F: '/^fpr:/ && !seen {print $10; seen = 1}')" || out=""
+  rm -rf "$home"
+  printf '%s' "$out"
+}
+
+pgdg_key_ok() {
+  [ -s "$PGDG_KEY" ] || return 1
+  have gpg || return 1
+  [ "$(key_fingerprint "$PGDG_KEY")" = "$PGDG_KEY_FPR" ]
+}
+
+pg_root_apt() {  # the checks both installers share
+  if [ "$(id -u)" -ne 0 ]; then FIXERR="installing PostgreSQL needs root"; return 1; fi
+  if ! have apt-get; then FIXERR="no apt-get here; the pg tier needs a Debian or Ubuntu VM (docs/CLOUD.md)"; return 1; fi
+}
+
+# No default cluster: the package would create and start <major>/main on a port the tests do not use.
+pg_no_default_cluster() {
+  local conf=/etc/postgresql-common/createcluster.conf
+  mkdir -p /etc/postgresql-common
+  if [ -f "$conf" ] && grep -qE '^[#[:space:]]*create_main_cluster' "$conf"; then
+    sed -i -E 's/^[#[:space:]]*create_main_cluster[[:space:]]*=.*/create_main_cluster = false/' "$conf"
+  elif [ -f "$conf" ]; then
+    printf 'create_main_cluster = false\n' >>"$conf"
+  else
+    printf 'create_main_cluster = false\n' >"$conf"
+  fi
+}
+
+# pg_selftest <major>: end to end. Start the throwaway cluster the way the tests do, load both
+# extensions, stop and delete it again. The single quotes are deliberate: the inner shell
+# expands $0 (the bin dir) and the DSN.
+pg_selftest() {
+  local b e
+  b="$(pg_bin "$1")"
+  e="$(pg_ext "$1")"
+  # shellcheck disable=SC2016
+  PG_TEST_BIN="$b" PG_TEST_EXT="$e" "$ROOT/scripts/cloud/with_pg.sh" -- \
+    bash -c '"$0/psql" "$TEST_PG_ADMIN_DSN" -qAtX -c "create extension vector; create extension dblink; select 1"' "$b" >>"$STEP_LOG" 2>&1
+}
+
+pg_install() {
+  local id codename tmp fpr line policy
+  pg_root_apt || return 1
+  # shellcheck source=/dev/null
+  id="$(. /etc/os-release && printf '%s' "${ID:-}")"
+  # shellcheck source=/dev/null
+  codename="$(. /etc/os-release && printf '%s' "${VERSION_CODENAME:-}")"
+  case "$id" in ubuntu|debian) ;; *) FIXERR="PGDG packages are set up here for Ubuntu and Debian only, not '$id'"; return 1 ;; esac
+  [ -n "$codename" ] || { FIXERR="no VERSION_CODENAME in /etc/os-release"; return 1; }
+  # From the distribution's own archive (allowed by default): the tools below, and
+  # postgresql-common, which ships the PGDG signing key and the pg_wrapper the clients use.
+  if ! have gpg || ! have curl || [ ! -s "$PGDG_KEY" ]; then
+    apt_install ca-certificates curl gnupg postgresql-common \
+      || { FIXERR="could not install curl, gnupg and postgresql-common; see $STEP_LOG"; return 1; }
+  fi
+
+  # Fail early, before touching apt's sources, with the fix that matters in a restricted cloud network.
+  if ! curl -fsS -o /dev/null --max-time 10 "$PGDG_URL/dists/${codename}-pgdg/InRelease" 2>>"$STEP_LOG"; then
+    FIXERR="apt.postgresql.org is not reachable: add it to the environment's allowed domains (docs/CLOUD.md)"
+    return 1
+  fi
+
+  if ! pgdg_key_ok; then
+    mkdir -p "$(dirname "$PGDG_KEY")"
+    tmp="$(mktemp)"
+    if ! curl -fsSL --max-time 60 --retry 2 -o "$tmp" "$PGDG_KEY_URL" 2>>"$STEP_LOG"; then
+      rm -f "$tmp"
+      FIXERR="the PGDG signing key is not on this image and could not be downloaded from www.postgresql.org (allow it in the environment's network settings)"
+      return 1
+    fi
+    fpr="$(key_fingerprint "$tmp")"
+    if [ "$fpr" != "$PGDG_KEY_FPR" ]; then
+      rm -f "$tmp"
+      FIXERR="the downloaded PGDG key has fingerprint '${fpr:-none}', expected $PGDG_KEY_FPR; not trusting it"
+      return 1
+    fi
+    install -m 0644 "$tmp" "$PGDG_KEY"
+    rm -f "$tmp"
+  fi
+  line="deb [signed-by=$PGDG_KEY] $PGDG_URL ${codename}-pgdg main"
+  if ! grep -qxF "$line" "$PGDG_LIST" 2>/dev/null; then printf '%s\n' "$line" >"$PGDG_LIST"; fi
+
+  pg_no_default_cluster
+  apt_run update -qq || true
+  # Read into a variable and match with `case`: `apt-cache | grep -q` can take SIGPIPE, which
+  # `set -o pipefail` turns into a failure even though the candidate is there.
+  policy="$(apt-cache policy "postgresql-$PG_MAJOR" 2>/dev/null || true)"
+  case "$policy" in
+    *"Candidate: "[0-9]*) ;;
+    *) FIXERR="postgresql-$PG_MAJOR has no install candidate after apt-get update (apt.postgresql.org blocked?); see $STEP_LOG"; return 1 ;;
+  esac
+  apt_run install -y --no-install-recommends \
+    "postgresql-$PG_MAJOR" "postgresql-client-$PG_MAJOR" "postgresql-$PG_MAJOR-pgvector" \
+    || { FIXERR="apt-get install postgresql-$PG_MAJOR failed; see $STEP_LOG"; return 1; }
+  pg_selftest "$PG_MAJOR" \
+    || { FIXERR="PostgreSQL $PG_MAJOR installed, but a throwaway cluster with pgvector and dblink did not start; see $STEP_LOG"; return 1; }
+}
+
+pgfb_install() {
+  local m="$PG_FALLBACK_INSTALL"
+  pg_root_apt || return 1
+  pg_no_default_cluster
+  apt_install "postgresql-$m" "postgresql-client-$m" "postgresql-$m-pgvector" \
+    || { FIXERR="apt-get install postgresql-$m and its pgvector failed; see $STEP_LOG"; return 1; }
+  pg_selftest "$m" \
+    || { FIXERR="PostgreSQL $m installed, but a throwaway cluster with pgvector and dblink did not start; see $STEP_LOG"; return 1; }
+}
+
+step_pg() {
+  ensure optional "postgres $PG_MAJOR + pgvector" pg_ok pg_install
+  if [ "$ENSURED" = 0 ]; then ensure optional "postgres fallback" pgfb_ok pgfb_install; fi
+}
+
+# --- step: env ------------------------------------------------------------------------------
+venvlink_ok() {
+  if [ -L "$ROOT/.venv" ] && [ "$(readlink "$ROOT/.venv")" = "$VENV" ]; then DETAIL=".venv -> $VENV"; return 0; fi
+  if [ -e "$ROOT/.venv" ]; then DETAIL="$ROOT/.venv already exists and is left alone"; return 0; fi
+  DETAIL="no .venv link; scripts that call .venv/bin/python will not find the venv"
+  return 1
+}
+
+venvlink_make() {
+  local exclude
+  [ -x "$VENV/bin/python" ] || { FIXERR="no venv to link"; return 1; }
+  ln -s "$VENV" "$ROOT/.venv" || return 1
+  # .gitignore's ".venv/" does not match a symlink, so keep it out of `git status` locally.
+  if have git && exclude="$(git -C "$ROOT" rev-parse --git-path info/exclude 2>/dev/null)"; then
+    case "$exclude" in /*) ;; *) exclude="$ROOT/$exclude" ;; esac
+    mkdir -p "$(dirname "$exclude")"
+    grep -qxF '.venv' "$exclude" 2>/dev/null || printf '.venv\n' >>"$exclude"
+  fi
+}
+
+env_line() {  # env_line <line>: append to $CLAUDE_ENV_FILE unless that exact line is already in it
+  grep -qxF -- "$1" "$CLAUDE_ENV_FILE" 2>/dev/null || printf '%s\n' "$1" >>"$CLAUDE_ENV_FILE"
+}
+
+# Claude Code runs the contents of $CLAUDE_ENV_FILE as shell code before each command it runs in
+# the session. Lines are appended (other hooks share the file) and never repeated, so a /clear or
+# a compaction, which run this hook again, adds nothing.
+env_file_write() {
+  local path m
+  [ -n "${CLAUDE_ENV_FILE:-}" ] || return 0
+  path="$VENV/bin"
+  if [ -d "$NODE_DIR" ]; then path="$path:$NODE_DIR"; fi
+  # \$PATH stays literal on purpose: the file is run before each command, and expands it then.
+  env_line "export PATH=\"$path:\$PATH\""
+  if m="$(pg_pick_major)"; then
+    env_line "export PG_TEST_BIN=\"$(pg_bin "$m")\""
+    env_line "export PG_TEST_EXT=\"$(pg_ext "$m")\""
+  fi
+}
+
+step_env() {
+  if [ -x "$VENV/bin/python" ]; then ensure optional ".venv link" venvlink_ok venvlink_make; fi
+  if [ -z "${CLAUDE_ENV_FILE:-}" ]; then
+    report ok "session env" "CLAUDE_ENV_FILE not set (outside a SessionStart hook): PATH and PG_TEST_* not exported"
+  elif [ "$CHECK_ONLY" = 1 ]; then
+    report ok "session env" "would append PATH and PG_TEST_* to CLAUDE_ENV_FILE"
+  else
+    env_file_write
+    report ok "session env" "PATH (venv, node 20) and PG_TEST_BIN/PG_TEST_EXT appended to CLAUDE_ENV_FILE"
+  fi
+}
+
+# --- driver ---------------------------------------------------------------------------------
+run_step() {  # run_step <index> <name> <function>
+  want "$2" || return 0
+  CUR_IDX="$1"
+  SEQ=0
+  if [ "$CHECK_ONLY" = 0 ]; then
+    STEP_LOG="$LOG_DIR/$2.log"
+    say "[$2]"
+  else
+    STEP_LOG=/dev/null
+  fi
+  "$3"
+}
+
+summary_table() {
+  sort "$REPORT" | while IFS='|' read -r _key level label detail; do
+    printf '  %-9s %-24s %s\n' "$level" "$label" "$detail"
+  done
+}
+
+count_level() { grep -cE "^[0-9]+\|($1)\|" "$REPORT" || true; }
+
+hook_summary() {
+  local facts bad
+  bad="$(sort "$REPORT" | awk -F'|' '$2=="missing"||$2=="failed" {printf "%s%s (%s)", sep, $3, $4; sep="; "}')"
+  facts="$(sort "$REPORT" | awk -F'|' '($2=="ok"||$2=="fixed") && ($3 ~ /^python venv|^cpu torch|^node|^postgres/) {printf "%s%s", sep, $4; sep="; "}')"
+  if [ -n "$bad" ]; then
+    printf 'cloud-setup: NOT READY after %ss: %s\n' "$SECONDS" "$bad"
+    printf 'cloud-setup: run scripts/cloud/setup.sh in a shell to see why; logs are in %s. Guide: docs/CLOUD.md\n' "$LOG_DIR"
+  else
+    printf 'cloud-setup: environment ready in %ss. %s\n' "$SECONDS" "$facts"
+  fi
+  printf 'cloud-setup: rules for this VM (docs/CLOUD.md): never push main or a tag; every push after a branch'"'"'s first needs scripts/bump_version.sh patch; no live dealer scans, deploys or real databases here.\n'
+  sort "$REPORT" | awk -F'|' '$2=="optional" {printf "cloud-setup: not available: %s (%s)\n", $3, $4}'
+}
+
+finish() {
+  local bad opt
+  bad="$(count_level 'missing|failed')"
+  opt="$(count_level 'optional')"
+  if [ "$HOOK" = 1 ]; then
+    hook_summary
+    return 0
+  fi
+  printf '\nsetup.sh report (repo %s, venv %s, %ss)\n' "$ROOT" "$VENV" "$SECONDS"
+  summary_table
+  if [ "$bad" -gt 0 ]; then
+    printf '\n%s required item(s) %s.\n' "$bad" "$([ "$CHECK_ONLY" = 1 ] && echo missing || echo "not in place")"
+    return 1
+  fi
+  if [ "$opt" -gt 0 ]; then
+    printf '\nAll required items are in place; %s optional item(s) are not available (see above).\n' "$opt"
+  else
+    printf '\nAll items are in place.\n'
+  fi
+}
+
+# One run at a time. The script re-runs itself under flock(1), which holds the lock for the
+# child and closes the lock file in it (-o): a process that outlives the script, like a service a
+# package started, cannot inherit the lock and block every later run.
+acquire_lock() {
+  have flock || return 0
+  [ -z "${DS_CLOUD_LOCKED:-}" ] || return 0
+  DS_CLOUD_LOCKED=1 exec flock -o -w 1800 "$LOCK_FILE" bash "${BASH_SOURCE[0]}" "$@"
+}
+
+# A SessionStart hook must not fail the session: whatever goes wrong, say so and exit 0.
+# Runs from the EXIT trap in main.
+# shellcheck disable=SC2329
+hook_exit() {
+  local rc=$?
+  rm -f "$REPORT"
+  if [ "$rc" -ne 0 ]; then
+    printf 'cloud-setup: setup.sh stopped early (exit %s); run scripts/cloud/setup.sh in a shell to see why. Guide: docs/CLOUD.md\n' "$rc"
+  fi
+  exit 0
+}
+
+main() {
+  local pg_pid=""
+  parse_args "$@"
+  if [ "$HOOK" = 1 ]; then
+    if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then exit 0; fi  # a local session: nothing to do, nothing printed
+    if [ "$(uname -s)" != Linux ]; then printf 'cloud-setup: not a Linux VM, so there is nothing to install.\n'; exit 0; fi
+  elif [ "$CHECK_ONLY" = 0 ] && [ "$(uname -s)" != Linux ]; then
+    die "this installs system packages and belongs on the Linux cloud VM; use --check to inspect this machine"
+  fi
+  if [ "$CHECK_ONLY" = 0 ]; then acquire_lock "$@"; fi  # may re-exec, so before anything that needs cleanup
+  if [ "$HOOK" = 1 ]; then trap hook_exit EXIT; else trap 'rm -f "$REPORT"' EXIT; fi
+  REPORT="$(mktemp "$TMP_ROOT/ds-cloud-report.XXXXXX")"
+  if [ "$CHECK_ONLY" = 0 ]; then mkdir -p "$LOG_DIR"; fi
+
+  # The two slow downloads (apt for Postgres, pip for the Python side) overlap.
+  if want pg; then
+    if [ "$CHECK_ONLY" = 0 ] && want python; then
+      ( run_step 5 pg step_pg ) &
+      pg_pid=$!
+    else
+      run_step 5 pg step_pg
+    fi
+  fi
+  run_step 1 git step_git
+  run_step 2 python step_python
+  run_step 3 pgeocode step_pgeocode
+  run_step 4 node step_node
+  if [ -n "$pg_pid" ]; then wait "$pg_pid" || true; fi
+  run_step 6 env step_env
+  finish
+}
+
+# Sourcing the file (for tests) defines everything and runs nothing.
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  main "$@"
+fi

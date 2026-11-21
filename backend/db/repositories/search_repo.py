@@ -256,13 +256,14 @@ def search_cars_by_make_model_pairs(
         origin = zip_to_coords(zip_code)
         if origin is None:
             return []
-        from backend.db.dealer_geo import load_dealer_geo_index, lookup_dealer_coords
+        from backend.db.dealer_geo import load_dealer_geo_index, load_registry_coords_map, lookup_car_coords
 
         with db_conn() as _gc:
             dealer_geo = load_dealer_geo_index(_gc)
+            registry_coords = load_registry_coords_map(_gc)
         filtered = []
         for car in results:
-            dest = lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
+            dest = lookup_car_coords(car, dealer_geo, registry_coords)
             if dest:
                 dist = haversine(origin[0], origin[1], dest[0], dest[1])
                 if dist <= radius_miles:

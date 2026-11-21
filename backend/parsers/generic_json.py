@@ -72,6 +72,12 @@ def _urls(v: Any) -> list[str]:
 
 
 def detect(raw_data: Any) -> list[dict] | None:
+    # A platform shape wins: the generic parser would drop what that platform's own
+    # parser reads (dealer.com ws-inv-data's per-car ``accountId``).
+    from backend.parsers.dealer_dot_com import detect_ws_inventory
+
+    if detect_ws_inventory(raw_data):
+        return None
     items = raw_data if isinstance(raw_data, list) else find_vehicle_list(raw_data, min_vin_count=1)
     if not items or not isinstance(items, list):
         return None

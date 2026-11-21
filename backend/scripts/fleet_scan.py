@@ -15,20 +15,29 @@ way on any machine:
               with its own SCANNER_LOCK_PATH and `--batch SCAN_BATCH` (default 6).
               vPIC heal, assess, reconcile, lifecycle and per-dealer logs run
               inside each pipeline.
-  3. post     compute_market_stats, then build_listings_grid_cards with
+  3. post     rebuild_incomplete_index, compute_market_stats, then build_listings_grid_cards with
               FLASK_ENV=production (listings_include_incomplete_cars() is part of
               the card key, so cards must be built the way the web serves them)
   4. summary  one `FLEET SUMMARY {...}` JSON line on stdout (dealers, verdict
               counts, 403/429 tallies by host, duration, peak memory, CPU) and
-              <run>/fleet_summary.json; exit 0 when every shard and post step
-              exited 0, else 1.
+              <run>/fleet_summary.json (with the build block, the applied schema
+              version and the window); exit code below.
 
 With neither SCAN_DEALERS nor SCAN_FLEET=1 it prints `idle` and exits 0, so a
-deploy of the scanner service never starts a fleet scan by itself.
+deploy of the scanner service never starts a fleet scan by itself. With SCAN_FLEET=1
+a restart or redeploy outside SCAN_FLEET_WINDOW_UTC also prints `idle` and exits 0,
+and a Postgres advisory lock (the fleet lease) keeps two fleets off one database.
+Explicit SCAN_DEALERS runs ignore both.
+
+Exit codes: 0 clean, 1 infrastructure (a shard, a post step or the lease check
+failed), 2 data-quality hold (reserved, set by the pre-flight card, not yet used),
+3 fleet lease busy.
 
 Env:
   SCAN_FLEET=1            scan the fleet roster (active inventory, see step 1)
   SCAN_DEALERS=a,b,c      scan only these (wins over SCAN_FLEET)
+  SCAN_FLEET_WINDOW_UTC   HH:MM-HH:MM; with SCAN_FLEET=1 start only inside it (start
+                          inclusive, end exclusive, may wrap midnight). Unset = no window.
   SCAN_SHARDS=8           parallel pipeline processes
   SCAN_BATCH=6            dealers per scanner process inside a shard
   SCAN_POST_STEPS=1       0 skips compute_market_stats + build_listings_grid_cards
@@ -54,7 +63,7 @@ import time
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from backend.utils.project_env import load_project_dotenv
 
@@ -78,6 +87,129 @@ def _env_int(name: str, default: int) -> int:
 
 
 # --------------------------------------------------------------------------
+# safety: run window, fleet lease, exit codes, build identity
+# --------------------------------------------------------------------------
+
+EXIT_OK = 0
+EXIT_INFRA = 1          # a shard, a post step or the lease check failed
+EXIT_DATA_HOLD = 2      # reserved: data-quality hold (pre-flight card)
+EXIT_LEASE_BUSY = 3     # another fleet holds the lease
+
+# Session advisory lock key of the fleet lease (7306001 is the incomplete-index rebuild).
+FLEET_LEASE_KEY = 7306002
+
+_WINDOW_RE = re.compile(r"(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})")
+_COMMIT_RE = re.compile(r"[0-9a-f]{7,64}")
+_TAG_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._+-]{0,63}")
+
+
+def fleet_mode() -> bool:
+    """SCAN_FLEET=1 and no explicit SCAN_DEALERS (which wins and ignores window and lease)."""
+    if (os.environ.get("SCAN_DEALERS") or "").strip():
+        return False
+    return (os.environ.get("SCAN_FLEET") or "").strip().lower() in ("1", "true", "yes")
+
+
+def parse_window(spec: str | None) -> tuple[int, int] | None:
+    """``HH:MM-HH:MM`` (UTC) as (start, end) minutes of the day; None for an empty spec.
+    Raises ValueError for anything else, including a window of zero length."""
+    text = (spec or "").strip()
+    if not text:
+        return None
+    m = _WINDOW_RE.fullmatch(text)
+    if not m:
+        raise ValueError("expected HH:MM-HH:MM")
+    h1, m1, h2, m2 = (int(g) for g in m.groups())
+    if h1 > 23 or h2 > 23 or m1 > 59 or m2 > 59:
+        raise ValueError("time out of range")
+    start, end = h1 * 60 + m1, h2 * 60 + m2
+    if start == end:
+        raise ValueError("empty window")
+    return start, end
+
+
+def in_window(now: datetime, window: tuple[int, int] | None) -> bool:
+    """Start inclusive, end exclusive, midnight wrap allowed; no window = always inside."""
+    if window is None:
+        return True
+    start, end = window[0] * 60, window[1] * 60
+    secs = now.hour * 3600 + now.minute * 60 + now.second
+    return start <= secs < end if start < end else (secs >= start or secs < end)
+
+
+def acquire_fleet_lease() -> Any | None:
+    """Take the fleet lease on a dedicated connection and return it (closing it, or the
+    process dying, releases the lock). Returns None when the lease is held elsewhere.
+    Without a Postgres inventory (a SQLite dev checkout) there is nothing to lock: returns
+    a ``False`` sentinel so the caller can tell "not needed" from "busy"."""
+    from backend.db import inventory_pg
+
+    if not inventory_pg.is_inventory_postgres():
+        return False
+    conn = inventory_pg.pg_connect()
+    try:
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute("SELECT pg_try_advisory_lock(%s)", (FLEET_LEASE_KEY,))
+        if cur.fetchone()[0]:
+            return conn
+    except Exception:
+        conn.close()
+        raise
+    conn.close()
+    return None
+
+
+def release_fleet_lease(conn: Any) -> None:
+    if not conn:
+        return
+    try:
+        conn.close()  # ends the session, which drops the session-level lock
+    except Exception:  # noqa: BLE001 - the process is ending
+        pass
+
+
+def _root_file(root: Path, name: str) -> str:
+    try:
+        return (root / name).read_text(encoding="utf-8").strip()
+    except (OSError, ValueError):
+        return ""
+
+
+def read_build_info(root: Path | None = None) -> dict[str, str]:
+    """{commit, tag, version} from the files the deploy stage writes next to VERSION
+    (BUILD_COMMIT, BUILD_TAG); ``unknown`` for a missing or malformed file, as
+    backend/routes/site_misc.py does for the commit."""
+    base = root or ROOT
+    commit = _root_file(base, "BUILD_COMMIT")
+    tag = _root_file(base, "BUILD_TAG")
+    version = _root_file(base, "VERSION")
+    return {
+        "commit": commit if _COMMIT_RE.fullmatch(commit) else "unknown",
+        "tag": tag if _TAG_RE.fullmatch(tag) else "unknown",
+        "version": version if _TAG_RE.fullmatch(version) else "unknown",
+    }
+
+
+def highest_applied_schema() -> int | None:
+    """Highest version in schema_migrations, or None when it cannot be read."""
+    try:
+        from backend.db import inventory_pg
+        from backend.db.schema_version import applied_schema_versions
+
+        if not inventory_pg.is_inventory_postgres():
+            return None
+        conn = inventory_pg.pg_connect()
+        try:
+            applied = applied_schema_versions(conn.cursor())
+        finally:
+            conn.close()
+        return max(applied) if applied else None
+    except Exception:  # noqa: BLE001 - reporting only
+        return None
+
+
+# --------------------------------------------------------------------------
 # roster + sharding
 # --------------------------------------------------------------------------
 
@@ -98,7 +230,7 @@ def load_roster() -> list[str]:
     ROSTER_REPORT.clear()
     raw = (os.environ.get("SCAN_DEALERS") or "").strip()
     if raw:
-        return [d.strip() for d in raw.split(",") if d.strip()]
+        return _without_user_ids([d.strip() for d in raw.split(",") if d.strip()])
     if (os.environ.get("SCAN_FLEET") or "").strip().lower() in ("1", "true", "yes"):
         from backend.scanner.manifest import _load_scannable_dealers, apply_scannable_roster_rule
 
@@ -116,8 +248,20 @@ def load_roster() -> list[str]:
             print("fleet   do-not-scan: " + ", ".join(report["excluded_do_not_scan"]), flush=True)
         if report["revived_recipe_only"]:
             print("fleet   revived: " + ", ".join(report["revived_recipe_only"]), flush=True)
-        return sorted({d["dealer_id"] for d in kept})
+        return _without_user_ids(sorted({d["dealer_id"] for d in kept}))
     return []
+
+
+def _without_user_ids(dealer_ids: list[str]) -> list[str]:
+    """Defence in depth (card S20): a ``dealer-portal-<id>`` is a user's posted cars, never
+    a dealer site, so it is dropped even from an explicit SCAN_DEALERS list."""
+    from backend.utils.user_listings import is_dealer_portal_dealer_id
+
+    users = [d for d in dealer_ids if is_dealer_portal_dealer_id(d)]
+    if users:
+        print(f"fleet   roster: left out {len(users)} user listing id(s) (dealer-portal-*); "
+              "the scanner never scans users' cars", flush=True)
+    return [d for d in dealer_ids if not is_dealer_portal_dealer_id(d)]
 
 
 def active_rows(dealer_ids: list[str]) -> dict[str, int]:
@@ -251,6 +395,21 @@ def tally_http(log_paths: list[Path]) -> dict[str, Any]:
             "carscommerce_api": carscommerce, "cloudflare_marked_lines": challenge}
 
 
+def rooftop_candidate_report(since: datetime) -> dict[str, Any]:
+    """Unrostered rooftops (N8.13): the whole open queue, and the ones this run saw."""
+    try:
+        from backend.attribution import candidates
+
+        new = candidates.new_candidates()
+        cutoff = since.replace(tzinfo=None).isoformat()
+        fresh = [c for c in new if str(c.get("last_seen") or "") >= cutoff]
+        keys = ("id", "name", "address", "store_id", "host", "car_count", "first_seen", "last_seen")
+        return {"open": len(new), "seen_this_run": len(fresh),
+                "new_this_run": [{k: c.get(k) for k in keys} for c in fresh[:50]]}
+    except Exception as exc:  # noqa: BLE001 - reporting only
+        return {"error": str(exc)[:120]}
+
+
 def http_first_statuses(results: list[dict[str, Any]]) -> dict[str, int]:
     c: Counter[str] = Counter()
     for r in results:
@@ -292,21 +451,75 @@ def prune(out_root: Path, keep_days: int) -> None:
                 pass
 
 
-def main() -> int:
+def _idle_hold() -> None:
+    hold = _env_int("SCAN_IDLE_HOLD_SECONDS", 0)
+    if hold > 0:
+        # Keep the container (and its /data volume) up so `railway ssh` /
+        # `railway volume files download` can read the logs; a stopped
+        # Railway service exposes no volume.
+        print(f"fleet   holding {hold}s for log retrieval (SCAN_IDLE_HOLD_SECONDS)", flush=True)
+        time.sleep(hold)
+
+
+def main(clock: Callable[[], datetime] | None = None) -> int:
+    """``clock`` returns the current UTC time; tests inject it, the window is its only reader."""
     started = datetime.now(timezone.utc).replace(microsecond=0)
     t_start = time.time()
+    window_spec = (os.environ.get("SCAN_FLEET_WINDOW_UTC") or "").strip()
+    if fleet_mode() and window_spec:
+        try:
+            window = parse_window(window_spec)
+        except ValueError as exc:
+            # Fail closed: a misspelt window must not start a fleet.
+            print(f"fleet   idle: SCAN_FLEET_WINDOW_UTC is not valid ({exc}); expected HH:MM-HH:MM", flush=True)
+            _idle_hold()
+            return EXIT_OK
+        now = (clock or (lambda: datetime.now(timezone.utc)))()
+        if not in_window(now, window):
+            print(f"fleet   idle: {now.strftime('%H:%M:%S')} UTC is outside the run window "
+                  f"{window_spec} (SCAN_FLEET_WINDOW_UTC)", flush=True)
+            _idle_hold()
+            return EXIT_OK
     roster = load_roster()
     if not roster:
         print("fleet   idle: set SCAN_FLEET=1 (whole roster) or SCAN_DEALERS=a,b,c to scan", flush=True)
-        hold = _env_int("SCAN_IDLE_HOLD_SECONDS", 0)
-        if hold > 0:
-            # Keep the container (and its /data volume) up so `railway ssh` /
-            # `railway volume files download` can read the logs; a stopped
-            # Railway service exposes no volume.
-            print(f"fleet   holding {hold}s for log retrieval (SCAN_IDLE_HOLD_SECONDS)", flush=True)
-            time.sleep(hold)
-        return 0
+        _idle_hold()
+        return EXIT_OK
 
+    lease: Any = False
+    if fleet_mode():
+        try:
+            lease = acquire_fleet_lease()
+        except Exception as exc:  # noqa: BLE001 - cannot prove we are alone: do not scan
+            print(f"fleet   cannot take the fleet lease ({type(exc).__name__}); not scanning", flush=True)
+            return EXIT_INFRA
+        if lease is None:
+            print("fleet   lease busy: another fleet scan holds the lock on this database; exiting", flush=True)
+            return EXIT_LEASE_BUSY
+    try:
+        return _scan(roster, window_spec or None, started, t_start)
+    finally:
+        release_fleet_lease(lease)
+
+
+def publish_run(run_dir: Path) -> None:
+    """Hand the finished run to the scan loop store in the Railway database (card L18). Never changes the exit code.
+
+    Skipped unless ``LOOP_STORE=db``; a failure or a timeout is logged and left in ``publisher.rc`` beside the
+    summary, and the next run's catch-up publishes what is missing.
+    """
+    if (os.environ.get("LOOP_STORE") or "").strip().lower() != "db":
+        return
+    try:
+        proc = subprocess.run([sys.executable, "-m", "backend.scripts.ops_publish", "publish", "--run-dir", str(run_dir)],
+                              capture_output=True, text=True, timeout=_env_int("LOOP_PUBLISH_TIMEOUT", 900))
+        tail = (proc.stdout or proc.stderr or "").strip().splitlines()[-1:] or [""]
+        print(f"fleet   publish rc={proc.returncode}: {tail[0][:300]}", flush=True)
+    except Exception as exc:  # noqa: BLE001 - publishing must never fail the scan
+        print(f"fleet   publish skipped: {type(exc).__name__}", flush=True)
+
+
+def _scan(roster: list[str], window_spec: str | None, started: datetime, t_start: float) -> int:
     out_root = Path(os.environ.get("SCAN_OUT_ROOT") or (ROOT / "workspace" / "pipeline"))
     keep_days = _env_int("SCAN_KEEP_DAYS", 14)
     prune(out_root, keep_days)
@@ -334,6 +547,7 @@ def main() -> int:
         (run_dir / f"{tag}.txt").write_text("\n".join(ids) + "\n")
         env = dict(os.environ)
         env["SCANNER_LOCK_PATH"] = str(run_dir / f"{tag}.lock")
+        env.setdefault("SCANNER_ROOFTOP_CANDIDATES", "1")  # N8.13: unrostered rooftops -> profiling queue
         cmd = [py, "-m", "backend.scripts.dealer_pipeline", "--dealers", ",".join(ids),
                "--out", str(run_dir / tag), "--batch", str(batch), *extra]
 
@@ -354,6 +568,18 @@ def main() -> int:
     post: dict[str, dict[str, Any]] = {}
     if (os.environ.get("SCAN_POST_STEPS") or "1").strip() != "0":
         env = dict(os.environ)
+        # Before market stats and the grid cards: cards are keyed on each car's
+        # public-incomplete flag, so the index must be final first.
+        # Once per fleet, after every shard's vPIC heal and reconcile; per-car syncs run
+        # before backfill and leave complete cars flagged (N6.1). Forced: shards changed data.
+        env = dict(os.environ)
+        rc, secs = run_step(
+            "index",
+            [py, "-c", "from backend.db.incomplete_listings_db import rebuild_index_chunked as r;"
+                       "import json;res=r(force=True);print(json.dumps(res));"
+                       "raise SystemExit(0 if res['status'] in ('rebuilt','locked') else 1)"],
+            env, run_dir / "post.out")
+        post["rebuild_incomplete_index"] = {"rc": rc, "seconds": secs}
         rc, secs = run_step("market", [py, "-m", "backend.scripts.compute_market_stats"], env, run_dir / "post.out")
         post["compute_market_stats"] = {"rc": rc, "seconds": secs}
         env = dict(os.environ)
@@ -382,10 +608,14 @@ def main() -> int:
         "verdicts": dict(verdicts),
         "rows": sum(int(r.get("rows") or 0) for r in results),
         "vin_owner_conflicts": sum(int(r.get("vin_owner_conflicts") or 0) for r in results),
+        "rooftop_candidates": rooftop_candidate_report(started),
         "http_403_429": tally_http(logs),
         "http_first_statuses": http_first_statuses(results),
         "scan_seconds": scan_secs,
         "total_seconds": round(time.time() - t_start, 1),
+        "build": read_build_info(),
+        "schema_version": highest_applied_schema(),
+        "window": {"utc": window_spec, "enforced": bool(window_spec) and fleet_mode()},
         "shard_rc": rcs,
         "shard_seconds": shard_secs,
         "post": post,
@@ -393,9 +623,10 @@ def main() -> int:
         "resources_total": sampler.summary(),
     }
     ok = all(rc == 0 for rc in rcs.values()) and len(rcs) == len(shards) and all(p["rc"] == 0 for p in post.values())
-    summary["exit"] = 0 if ok else 1
+    summary["exit"] = EXIT_OK if ok else EXIT_INFRA
     (run_dir / "fleet_summary.json").write_text(json.dumps(summary, indent=1, default=str))
     print("FLEET SUMMARY " + json.dumps(summary, default=str), flush=True)
+    publish_run(run_dir)
     h = summary["http_403_429"]["by_status"]
     print(f"fleet   done: {len(roster)} dealers, verdicts {dict(verdicts)}, 403={h.get('403', 0)} 429={h.get('429', 0)}, "
           f"{summary['total_seconds'] / 60:.1f} min, peak {summary['resources_total'].get('peak_mem_mb')} MB, "

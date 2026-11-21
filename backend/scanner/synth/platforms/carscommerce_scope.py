@@ -175,6 +175,11 @@ def _cc_verify_store_filter(recipe: EndpointRecipe, body: dict, origin: str, fac
             "total": int((parsed.get("data") or {}).get("total_vehicle_count") or 0)}
 
 
+def chosen_pair(chosen: tuple[str, list[str]]) -> tuple[str, str]:
+    """(facet, key) of a single-key chosen filter, else ("", "") (never equals a candidate)."""
+    return (chosen[0], chosen[1][0]) if len(chosen[1]) == 1 else ("", "")
+
+
 def _nrm_facet(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
 
@@ -408,6 +413,16 @@ def _carscommerce_store_filter(recipe: EndpointRecipe, dealer_id: str, dealer_ur
                                          observed=datetime.now(timezone.utc).date().isoformat())
                     logger.info("carscommerce [%s]: feed names this store %r (recorded as roster alias)", dealer_id, nm)
     extras: list[EndpointRecipe] = []
+
+    def _add_extra(facet: str, key: str, v: dict[str, Any]) -> None:
+        extra_body = dict(body)
+        extra_body["facetFilters"] = {facet: [key]}
+        extras.append(EndpointRecipe(
+            dealer_id=recipe.dealer_id, url=recipe.url, method=recipe.method, content_type=recipe.content_type,
+            post_template=json.dumps(extra_body), auth_headers=dict(recipe.auth_headers), pagination=recipe.pagination,
+            provider_hint=recipe.provider_hint, vehicle_rows=v["rows"], total_count=int(v.get("total") or 0),
+        ))
+
     if chosen[0] == "source_id" and name_facets:
         # the facet may cover a DIFFERENT subset than the feed ids (the used pool
         # vs the new feed), so its size says nothing; VIN dedupe absorbs overlap
@@ -415,17 +430,29 @@ def _carscommerce_store_filter(recipe: EndpointRecipe, dealer_id: str, dealer_ur
             v = _cc_verify_store_filter(recipe, body, origin, facet, key, label, identity=True, site_name=site_name)
             tried.append(f"{facet}={key!r} ({n} cars, store-name facet, extra): " + ("accepted" if v["ok"] else f"stamps {[r[:40] for r in v['rooftops'][:3]]}"))
             if v["ok"]:
-                extra_body = dict(body)
-                extra_body["facetFilters"] = {facet: [key]}
-                extras.append(EndpointRecipe(
-                    dealer_id=recipe.dealer_id, url=recipe.url, method=recipe.method, content_type=recipe.content_type,
-                    post_template=json.dumps(extra_body), auth_headers=dict(recipe.auth_headers), pagination=recipe.pagination,
-                    provider_hint=recipe.provider_hint, vehicle_rows=v["rows"], total_count=int(v.get("total") or 0),
-                ))
+                _add_extra(facet, key, v)
                 break
+    if chosen[0] == "source_id":
+        # N8.8 (D-N5): the store's own feed ids cover its new cars only; the group
+        # USED pool is filed under other feed ids (kearnymesasubaru: source_id =
+        # oem_code returned 42 of 213 new cars and dropped the 553-car used pool;
+        # terrylabontechevy: 13 RHendrickUsed cars at the store's Greensboro
+        # address). Union the site's own Location facet value that spells this
+        # store's place, taken only when a replay shows one rooftop in that place.
+        have = {json.dumps(json.loads(x.post_template).get("facetFilters"), sort_keys=True) for x in extras}
+        for _rank, negn, facet, key in candidates:
+            if facet not in mapped_rank or (facet, key) == chosen_pair(chosen):
+                continue
+            if json.dumps({facet: [key]}, sort_keys=True) in have:
+                continue
+            v = _cc_verify_store_filter(recipe, body, origin, facet, key, label, site_name=site_name)
+            tried.append(f"{facet}={key!r} ({-negn} cars, Location facet, union): " + ("accepted" if v["ok"] else f"{len(v['rooftops'])} rooftops, places {v['places'][:4]}"))
+            if v["ok"]:
+                _add_extra(facet, key, v)
+                have.add(json.dumps({facet: [key]}, sort_keys=True))
     body["facetFilters"] = {chosen[0]: chosen[1]}
     recipe.post_template = json.dumps(body)
     logger.info("carscommerce [%s]: group account (%d cars); store filter %s=%r verified on %d rows, %s cars%s (tried: %s)",
                 dealer_id, total, chosen[0], chosen[1], sum(v["rows"] for v in verdicts), sum(int(v.get("total") or 0) for v in verdicts),
-                f"; extra recipe {json.loads(extras[0].post_template)['facetFilters']} ({extras[0].total_count} cars)" if extras else "", "; ".join(tried))
+                "".join(f"; extra recipe {json.loads(x.post_template)['facetFilters']} ({x.total_count} cars)" for x in extras), "; ".join(tried))
     return extras

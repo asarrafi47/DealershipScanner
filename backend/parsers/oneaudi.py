@@ -19,10 +19,27 @@ One response::
 """
 from __future__ import annotations
 
+import logging
 import re
 from typing import Any
 
 from backend.utils.field_clean import clean_car_row_dict
+
+logger = logging.getLogger(__name__)
+
+_warned_cannot_assess: set[str] = set()
+
+
+def _note_cannot_assess(dealer_id: str) -> None:
+    """N8.3 / N1.2 oneaudi_omnigraph field map: ``stockCar.dealer`` is the
+    publishing store on every car (not the lot holding it) and omnigraph returns
+    no other per-car store field, so the rooftop is not assessable from this
+    feed. It is deliberately NOT stamped as ``_rooftop`` (that would make the
+    publishing store look like the car's lot); rows are kept and this is logged."""
+    if dealer_id not in _warned_cannot_assess:
+        _warned_cannot_assess.add(dealer_id)
+        logger.info("OneAudi: %s - omnigraph returns no per-car lot field; rooftop cannot_assess (rows kept, not stamped)", dealer_id)
+
 
 _TITLE_RE = re.compile(r"^\s*((?:19|20)\d{2})\s+(\S+)\s*(.*)$")
 
@@ -92,7 +109,10 @@ def _condition(car: dict) -> str:
 def parse(raw_data: Any, base_url: str = "", dealer_id: str = "", dealer_name: str = "", dealer_url: str = "", **_kw: Any) -> list[dict]:
     out: list[dict] = []
     seen: set[str] = set()
-    for wrapper in _cars(raw_data):
+    cars = _cars(raw_data)
+    if cars:
+        _note_cannot_assess(dealer_id)
+    for wrapper in cars:
         car = wrapper.get("stockCar") if isinstance(wrapper.get("stockCar"), dict) else wrapper
         vin = str(car.get("vin") or "").strip().upper()
         if len(vin) != 17 or vin in seen:

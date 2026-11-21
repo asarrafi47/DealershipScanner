@@ -186,11 +186,17 @@ def upsert_discovery_row(row: dict[str, Any]) -> int:
         state = (row.get("state") or "").strip().upper()
         if name:
             cursor.execute(
-                "SELECT id, name, website_url, city, state FROM dealerships "
+                "SELECT id, name, website_url, city, state, osm_id FROM dealerships "
                 "WHERE state = ? AND duplicate_of_id IS NULL",
                 (state,),
             )
-            for cid, cname, curl, ccity, cstate in cursor.fetchall():
+            for cid, cname, curl, ccity, cstate, cosm in cursor.fetchall():
+                # Different rooftops share a name and site (multi-city groups); a
+                # differing city or osm_id means a distinct store, not a duplicate.
+                if city and (ccity or "").strip() and city.lower() != ccity.strip().lower():
+                    continue
+                if osm_id and (cosm or "").strip() and osm_id != cosm.strip():
+                    continue
                 score = fuzz.token_set_ratio(
                     _normalize_dedupe_key(name, row.get("dealer_website_url") or "", city, state),
                     _normalize_dedupe_key(cname, curl or "", ccity, cstate),

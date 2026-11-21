@@ -48,6 +48,13 @@ def _self_user_id() -> int:
         return 0
 
 
+def _revoke_sessions(user_id: int, reason: str) -> None:
+    """Card S10: void the user's sessions (never raises; the users row refuses them anyway)."""
+    from backend.auth.phone.session_epoch import revoke_user_sessions
+
+    revoke_user_sessions(int(user_id), reason=reason)
+
+
 def _redirect_users(q: str = "") -> str:
     if q.strip():
         return url_for("store_admin.admin_users_hub", q=q.strip())
@@ -77,7 +84,12 @@ def admin_users_hub():
             if target_id == self_id:
                 flash("You cannot suspend your own account.", "error")
             elif set_user_is_active(target_id, active=False):
-                flash(f"Suspended user #{target_id}.", "success")
+                _revoke_sessions(target_id, "suspend")
+                flash(
+                    f"Suspended user #{target_id}. Their cars are off the public site; "
+                    "reactivating does not put them back.",
+                    "success",
+                )
             else:
                 flash("Could not suspend user.", "error")
         elif action == "activate":
@@ -91,6 +103,7 @@ def admin_users_hub():
             else:
                 ok, err = delete_user_by_id(target_id)
                 if ok:
+                    _revoke_sessions(target_id, "delete")
                     flash(f"Deleted user #{target_id}.", "success")
                 else:
                     flash(err or "Could not delete user.", "error")
@@ -193,6 +206,7 @@ def admin_users_edit(user_id: int):
                 if err:
                     flash(err, "error")
                 else:
+                    _revoke_sessions(user_id, "password_reset")
                     flash(f"Password updated for user #{user_id}.", "success")
             return redirect(url_for("store_admin.admin_users_edit", user_id=user_id))
 
@@ -202,6 +216,7 @@ def admin_users_edit(user_id: int):
             else:
                 ok, err = delete_user_by_id(user_id)
                 if ok:
+                    _revoke_sessions(user_id, "delete")
                     flash(f"Deleted user #{user_id}.", "success")
                     return redirect(url_for("store_admin.admin_users_hub"))
                 flash(err or "Could not delete user.", "error")

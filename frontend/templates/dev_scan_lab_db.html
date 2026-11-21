@@ -25,9 +25,9 @@
             <p class="db-eyebrow">Database</p>
             <h1 class="dev-title">Inventory editor (manifest scope)</h1>
             <p class="dev-sub">
-                SQLite path: <code>{{ lab.inventory_db_path }}</code>.
+                Scratch Postgres database: <code>{{ lab.lab_database or "SCAN_LAB_DATABASE_URL not set" }}</code>.
                 Patch fields via this UI or CLI:
-                <code>sqlite3 {{ lab.inventory_db_path }}</code>.
+                <code>psql "$SCAN_LAB_DATABASE_URL"</code>.
                 Model specs dictionary:
                 <code>python -m backend.scripts.db_admin</code> (separate tool).
             </p>

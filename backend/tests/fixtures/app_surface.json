@@ -52,6 +52,14 @@
    ]
   ],
   [
+   "/admin/chat-usage",
+   "store_admin.admin_chat_usage_hub",
+   [
+    "GET",
+    "POST"
+   ]
+  ],
+  [
    "/admin/data-quality",
    "store_admin.admin_data_quality_hub",
    [
@@ -562,6 +570,13 @@
    ]
   ],
   [
+   "/api/listings/facets",
+   "api_listings_facets",
+   [
+    "GET"
+   ]
+  ],
+  [
    "/api/listings/filter-options",
    "api_listings_filter_options",
    [
@@ -580,6 +595,34 @@
    "api_listings_market_stats",
    [
     "GET"
+   ]
+  ],
+  [
+   "/api/loop/export",
+   "loop_api.export",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/api/loop/file",
+   "loop_api.get_file",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/api/loop/list",
+   "loop_api.list_files",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/api/loop/submit",
+   "loop_api.submit",
+   [
+    "POST"
    ]
   ],
   [
@@ -1425,6 +1468,13 @@
    [
     "GET"
    ]
+  ],
+  [
+   "/webhooks/twilio/verify",
+   "twilio_webhook.twilio_verify_webhook",
+   [
+    "POST"
+   ]
   ]
  ],
  "hooks": {
@@ -1439,19 +1489,27 @@
     "_dev_console_csrf"
    ],
    "None": [
+    "enforce_session_policy",
     "_per_request_csp_nonce",
     "_csrf_mutating_requests",
-    "_billing_gate_paid_routes"
+    "_billing_gate_paid_routes",
+    "_device_cookie_before"
    ]
   },
   "after_request_funcs": {
    "None": [
     "_static_cache_headers",
+    "_speculation_rules_header",
     "_gzip_large_json",
-    "_csp_headers"
+    "_csp_headers",
+    "_device_cookie_after"
    ]
   },
-  "teardown_request_funcs": {},
+  "teardown_request_funcs": {
+   "None": [
+    "_leave_request_scope"
+   ]
+  },
   "template_context_processors": {
    "None": [
     "_default_template_ctx_processor",
@@ -1470,6 +1528,9 @@
    "billing": [
     "_default_template_ctx_processor"
    ],
+   "twilio_webhook": [
+    "_default_template_ctx_processor"
+   ],
    "google_oauth": [
     "_default_template_ctx_processor"
    ],
@@ -1486,6 +1547,9 @@
     "_default_template_ctx_processor"
    ],
    "dev_console": [
+    "_default_template_ctx_processor"
+   ],
+   "loop_api": [
     "_default_template_ctx_processor"
    ]
   }

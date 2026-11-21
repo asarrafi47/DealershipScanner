@@ -189,9 +189,36 @@ def fields_shared_across_trims(
     return frozenset(shared)
 
 
+@lru_cache(maxsize=16384)
+def family_trim_count(year: int, make: str, model: str) -> int | None:
+    """How many distinct trims the (year, make, model) family has rows for.
+
+    None when it cannot be read (callers treat unknown as "more than one").
+    """
+    try:
+        conn = _get_conn()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT count(DISTINCT trim) FROM epa_extended_specs "
+                "WHERE year=? AND lower(make)=lower(?) AND lower(model)=lower(?)",
+                (year, make, model),
+            )
+            row = cur.fetchone()
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+        return int(row[0] or 0) if row else 0
+    except Exception:
+        return None
+
+
 def clear_cache() -> None:
     """Drop every memoized read (tests, and after a catalog reload)."""
     _by_master_id.cache_clear()
     _by_ymmt.cache_clear()
     hp_family_suspicious.cache_clear()
     fields_shared_across_trims.cache_clear()
+    family_trim_count.cache_clear()

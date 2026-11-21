@@ -6,12 +6,17 @@ requirements-scanner.txt:
 
     python scripts/scanner_import_sweep.py
 
+``--profile web`` sweeps the web entry point against the web image's packages
+(requirements-web.txt: no Playwright); ``--profile discovery`` expects the scanner
+set plus Playwright (requirements-scanner.txt + requirements-browser.txt). The default profile is ``scanner`` (P15B.2).
+
 Exit 1 when an entry module fails to import, or when any module under the swept
 packages fails on a package that is not in the allowed-missing set (the browser /
 ML / web stacks the scan never touches).
 """
 from __future__ import annotations
 
+import argparse
 import importlib
 import pkgutil
 import sys
@@ -49,10 +54,33 @@ ALLOWED_MISSING = {
     "resend", "bcrypt", "jwt", "duckdb", "httpx", "pytest",
 }
 
+# Per-image profiles (P15B.2): entry modules, swept packages, and the packages
+# that image may lack. "scanner" is the default and uses the lists above.
+# Playwright is browser-only (requirements-browser.txt); web must import without it.
+PROFILES = {
+    "scanner": {"entry": ENTRY, "sweep": SWEEP, "allowed": ALLOWED_MISSING},
+    "web": {
+        "entry": ["backend.main"],
+        "sweep": ["backend.web", "backend.routes", "backend.auth", "backend.db"],
+        "allowed": {"playwright", "playwright_stealth", "pytest"},
+    },
+    "discovery": {
+        "entry": ENTRY + ["backend.scanner.discovery_capture"],
+        "sweep": SWEEP,
+        # Slim image (P15B.5): scanner + browser files, so only Playwright is present
+        # beyond what the scanner profile has; the rest stays allowed-missing.
+        "allowed": ALLOWED_MISSING - {"playwright", "playwright_stealth"},
+    },
+}
 
-def main() -> int:
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--profile", choices=sorted(PROFILES), default="scanner")
+    prof = PROFILES[ap.parse_args(argv).profile]
+    entry, sweep, allowed = prof["entry"], prof["sweep"], prof["allowed"]
     bad = 0
-    for mod in ENTRY:
+    for mod in entry:
         try:
             importlib.import_module(mod)
             print(f"ok      {mod}")
@@ -61,7 +89,7 @@ def main() -> int:
             print(f"ENTRY   {mod}: {type(exc).__name__}: {exc}")
             traceback.print_exc(limit=3)
     missing: dict[str, list[str]] = {}
-    for pkg in SWEEP:
+    for pkg in sweep:
         p = importlib.import_module(pkg)
         for info in pkgutil.walk_packages(p.__path__, pkg + "."):
             if ".tests" in info.name or info.name.endswith("__main__"):
@@ -76,7 +104,7 @@ def main() -> int:
             except Exception as exc:  # noqa: BLE001
                 print(f"other   {info.name}: {type(exc).__name__}: {str(exc)[:120]}")
     for top, mods in sorted(missing.items()):
-        tag = "allowed" if top in ALLOWED_MISSING or top == "backend" else "MISSING"
+        tag = "allowed" if top in allowed or top == "backend" else "MISSING"
         if tag == "MISSING":
             bad += 1
         print(f"{tag:8s}{top}: {len(mods)} module(s), e.g. {', '.join(mods[:4])}")

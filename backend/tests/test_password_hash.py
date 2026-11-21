@@ -96,3 +96,24 @@ def test_plaintext_password_rejected_in_production(monkeypatch: pytest.MonkeyPat
     monkeypatch.setenv("FLASK_ENV", "production")
     assert verify_or_legacy("secret", "secret") is False
     assert verify_or_legacy("secret", hash_password("secret")) is True
+
+
+def test_bcrypt_prod_defaults_unchanged_without_test_knob(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("BCRYPT_TEST_LOW_COST", raising=False)
+    monkeypatch.delenv("BCRYPT_ROUNDS", raising=False)
+    assert bcrypt_rounds() == 13
+    monkeypatch.setenv("BCRYPT_ROUNDS", "4")
+    assert bcrypt_rounds() == 12  # floor holds in production
+
+
+def test_cost_13_hash_verifies_under_test_low_cost(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("BCRYPT_TEST_LOW_COST", raising=False)
+    monkeypatch.setenv("BCRYPT_ROUNDS", "13")
+    prod_hash = hash_password("pw-secret")
+    assert bcrypt_cost(prod_hash) == 13
+    monkeypatch.setenv("BCRYPT_TEST_LOW_COST", "1")
+    monkeypatch.setenv("BCRYPT_ROUNDS", "4")
+    assert bcrypt_rounds() == 4
+    assert verify_password("pw-secret", prod_hash) is True
+    assert password_needs_rehash(prod_hash) is False
+    assert bcrypt_cost(hash_password("x")) == 4

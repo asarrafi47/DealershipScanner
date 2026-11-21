@@ -9,6 +9,17 @@ import re
 from urllib.parse import urlparse
 
 
+# Row marker: the detail URL was built from the dealer host + VIN, not read from the
+# feed. An invented URL says nothing about whose car it is, so the attribution gate
+# never treats its host as evidence (N8.5).
+GUESSED_KEY = "_source_url_guessed"
+
+
+def mark_guessed(row: dict) -> None:
+    """Flag *row*'s detail URL as invented (see :data:`GUESSED_KEY`)."""
+    row[GUESSED_KEY] = True
+
+
 def looks_like_real_vin(vin: str) -> bool:
     s = (vin or "").strip().upper()
     return bool(re.match(r"^[A-HJ-NPR-Z0-9]{17}$", s))
@@ -198,6 +209,12 @@ def apply_vehicle_source_url(vehicle: dict) -> None:
         return
     resolved = resolve_vehicle_source_url(vehicle)
     if resolved:
+        # an explicit link was resolved as-is; anything else was constructed
+        explicit = {
+            u for u in (_normalize_http_url(vehicle.get(k)) for k in ("source_url", "_detail_url", "detail_url")) if u
+        }
+        if resolved not in explicit:
+            mark_guessed(vehicle)
         vehicle["source_url"] = resolved
         if not vehicle.get("_detail_url"):
             vehicle["_detail_url"] = resolved

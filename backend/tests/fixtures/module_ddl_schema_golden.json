@@ -1341,7 +1341,7 @@
    "why": "users database (get_users_conn: SQLite / SQLCipher), not the inventory Postgres"
   },
   {
-   "what": "backend/db/users_db, backend/db/admin_users_db.py, backend/utils/ip_rate_limit.py, backend/vector/bmw_store.py, backend/dev/routes.py, backend/enrichment/dictionary_catalog.py",
+   "what": "backend/db/users_db, backend/db/admin_users_db.py, backend/utils/ip_rate_limit.py, backend/dev/routes.py, backend/enrichment/dictionary_catalog.py",
    "why": "SQLite-only stores (REMEDIATION_PLAN P13A.3 allowlist)"
   },
   {

@@ -43,3 +43,13 @@ def test_build_trim_candidate_structure():
     cand = build_trim_candidate(data, make="Toyota", model="Camry", year=2025)
     assert cand["status"] == "draft"
     assert len(cand.get("trims_available") or []) >= 2
+
+
+def test_honda_ladder_keeps_touring():
+    from backend.enrichment.brochure_trim_candidates import filter_spurious_brochure_trims
+
+    out = filter_spurious_brochure_trims(
+        ["LX", "EX", "EX-L", "Touring", "Limited"], make="Honda", model="Pilot"
+    )
+    assert "Touring" in out
+    assert "Limited" not in out

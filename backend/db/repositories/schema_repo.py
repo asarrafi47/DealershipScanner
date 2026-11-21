@@ -54,6 +54,8 @@ def ensure_cars_table_columns(cursor) -> None:
         ("epa_master_id", "INTEGER"),
         ("epa_match_confidence", "REAL"),
         ("epa_match_method", "TEXT"),
+        ("rooftop_tier", "TEXT NOT NULL DEFAULT 'none'"),
+        ("rooftop_evidence", "TEXT"),
     ]:
         if col not in existing:
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")

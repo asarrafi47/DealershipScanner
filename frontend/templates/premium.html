@@ -37,7 +37,7 @@
             </p>
         </header>
 
-        {% if subscription_plans %}
+        {% if subscription_plans and billing_enabled %}
         <p class="pp-prices-inline">
             {% for plan in subscription_plans %}{{ plan.name }} {{ plan.monthly_display }}{% if not loop.last %}, {% endif %}{% endfor %}, each a month. Every plan includes the one before it.
         </p>
@@ -49,9 +49,9 @@
                 <thead>
                     <tr>
                         <th scope="col" class="pp-table__feature"><span class="visually-hidden">Feature</span></th>
-                        <th scope="col">Free<span class="pp-price">$0</span></th>
+                        <th scope="col">Free{% if billing_enabled %}<span class="pp-price">$0</span>{% endif %}</th>
                         {% for plan in subscription_plans %}
-                        <th scope="col"{% if current_plan_id == plan.id %} class="pp-table__current"{% endif %}>{{ plan.name }}<span class="pp-price">{{ plan.monthly_display }}<small> a month</small></span></th>
+                        <th scope="col"{% if current_plan_id == plan.id %} class="pp-table__current"{% endif %}>{{ plan.name }}{% if billing_enabled %}<span class="pp-price">{{ plan.monthly_display }}<small> a month</small></span>{% endif %}</th>
                         {% endfor %}
                     </tr>
                 </thead>

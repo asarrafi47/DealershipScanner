@@ -1,0 +1,1 @@
+{"enabled":true,"kinds":["probe","validate","rescan"],"dealers_per_cycle":6,"cycles_per_day":4,"attempts_per_dealer":3,"applies_per_dealer_per_day":1,"stale_after_hours":36,"cloud_run":{"dealers":8,"agents":20,"max_fixes":4,"workflows_at_once":1,"routines":3,"weekly_share_stop":0.6}}

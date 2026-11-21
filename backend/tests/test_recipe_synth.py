@@ -959,7 +959,7 @@ def _dep_srp(vins: list[str], total: int, page_sizes=(12, 24, 36, 48)) -> str:
 
 
 def _vins(prefix: str, n: int) -> list[str]:
-    return [f"{prefix}{i:03d}" for i in range(n)]
+    return [f"{prefix}{i:06d}" for i in range(n)]
 
 
 def test_dep_page_size_reads_largest_numeric_option():
@@ -1043,7 +1043,7 @@ def test_validate_dep_keeps_recipe_query_and_sets_p(monkeypatch):
         1: _dep_srp(_vins("2HGFC2F5XNH", 48), 56),
         2: _dep_srp(_vins("2HGFC2F5XNH", 8), 56),  # disjoint from p=1 by construction below
     }
-    pages[2] = _dep_srp([f"2HGFC2F5XNH9{i:02d}" for i in range(8)], 56)
+    pages[2] = _dep_srp([f"2HGFC2F5XNH9{i:05d}" for i in range(8)], 56)
     calls: list[str] = []
 
     def fake(url):

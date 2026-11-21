@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Edit",
+      "Write",
+      "Bash(bash scripts/cloud/persist.sh:*)",
+      "Bash(python -m backend.scripts.ops_gates:*)",
+      "Bash(python -m backend.scripts.ops_requests:*)"
+    ],
+    "deny": ["WebFetch", "WebSearch"]
+  }
+}

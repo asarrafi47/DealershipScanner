@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import math
 import os
 import re
 from typing import Any
@@ -18,6 +19,7 @@ BODY_MIN = 10
 BODY_MAX = 4000
 RATING_MIN = 1
 RATING_MAX = 5
+ADDON_DESC_MAX = 300
 
 # At most this many review submits per user per rolling hour.
 RATE_LIMIT_PER_HOUR = 5
@@ -105,9 +107,15 @@ def validate_review(payload: dict) -> tuple[bool, str | None]:
         desc = (payload.get("addon_fee_desc") or "").strip()
         if not desc:
             return False, "Please describe the add-on fee you were charged."
+        if len(desc) > ADDON_DESC_MAX:
+            return False, f"Please keep the add-on fee description under {ADDON_DESC_MAX} characters."
+        if _contains_url(desc):
+            return False, "Links aren't allowed in reviews. Please remove any URLs or website addresses."
+        if _contains_profanity(desc):
+            return False, "Please keep your review free of profanity."
         amount = _to_number(payload.get("addon_fee_amount"))
-        if amount is not None and amount < 0:
-            return False, "Add-on fee amount can't be negative."
+        if amount is not None and (not math.isfinite(amount) or amount < 0):
+            return False, "Add-on fee amount must be a valid, non-negative number."
 
     return True, None
 

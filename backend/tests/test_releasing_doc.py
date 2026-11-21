@@ -53,7 +53,7 @@ BUMP = REPO_ROOT / "scripts" / "bump_version.sh"
 RELEASE_GUARD = REPO_ROOT / "scripts" / "release_guard.py"
 MIGRATE = REPO_ROOT / "backend" / "scripts" / "migrate.py"
 CI_YML = REPO_ROOT / ".github" / "workflows" / "ci.yml"
-CI_JOBS = {"lint", "pytest", "pytest-integration", "release-guard"}
+CI_JOBS = {"lint", "pytest", "pytest-pg", "release-guard"}
 # Docs rewritten by P2B.7 to drop "deploy from main" (plan Accept: grep -rn "deploy from .main").
 REWRITTEN_DOCS = (
     RELEASING,

@@ -188,7 +188,7 @@ def test_target_matched_when_the_feed_spells_the_store_out_more_fully():
         _rows("Welborn Chevrolet GMC of Rome", "Welborn Nissan of Rome",
               "Welborn GMC Cadillac of Cartersville"),
         dealer_id="welbornchevroletofrome-com", dealer_name="Welborn Chevrolet of Rome",
-        dealer_url="https://www.welbornchevroletofrome.com",
+        dealer_url="https://www.welbornchevroletofrome.com", dealer_city="Rome", dealer_state="GA",
     )
     assert [r["vin"] for r in kept] == [_vin(70)]
     assert len(refused) == 2
@@ -995,3 +995,106 @@ def test_every_production_parse_caller_passes_rejected_out():
         "parse() called without rejected_out — these callers will ingest rows the rooftop "
         "gate refused:\n  " + "\n  ".join(offenders)
     )
+
+
+# ── N8.5: detail-page host of another roster store, weak name tier without a street ──
+
+@pytest.fixture(params=["scorer", "legacy"])
+def _both_paths(request, monkeypatch):
+    monkeypatch.setenv("SCANNER_ROOFTOP_SCORER", "1" if request.param == "scorer" else "0")
+    return request.param
+
+
+def _host_index(monkeypatch, mapping):
+    from backend.attribution import place
+
+    monkeypatch.setattr(place, "host_owner_index",
+                        lambda **kw: {h: frozenset(ids) for h, ids in mapping.items()})
+    monkeypatch.setattr(place, "_hinted_host_aliases", lambda d: ())
+
+
+_MB = {"mbontario.com": {"mbontario-com"}, "mbbeverlyhills.com": {"mbbeverlyhills-com"}}
+
+
+def _url_rows(host, n=3, **extra):
+    return [{"vin": _vin(200 + i), "source_url": f"https://{host}/used-inventory/vin-{_vin(200 + i)}.htm", **extra}
+            for i in range(n)]
+
+
+def _gate_mb(rows):
+    return resolve_rooftop_attribution(
+        rows, dealer_id="mbbeverlyhills-com", dealer_name="Mercedes-Benz of Beverly Hills",
+        dealer_url="https://www.mbbeverlyhills.com",
+    )
+
+
+def test_unstamped_rows_on_another_stores_host_are_refused_for_the_write_only(_both_paths, monkeypatch):
+    from backend.attribution.disown import EVIDENCE_BACKED_REJECTS, split_refusals
+
+    _host_index(monkeypatch, _MB)
+    kept, refused = _gate_mb(_url_rows("www.mbontario.com"))
+    assert kept == [] and len(refused) == 3
+    assert {r["_rooftop_reject"] for r in refused} == {"vdp_host_other_store"}
+    assert "vdp_host_other_store" not in EVIDENCE_BACKED_REJECTS
+    assert split_refusals(refused) == ([], 3)  # refuse the write, never un-list (D-N7)
+
+
+def test_own_host_unknown_host_and_alias_host_are_untouched(_both_paths, monkeypatch):
+    from backend.attribution import place
+
+    _host_index(monkeypatch, _MB)
+    for host in ("www.mbbeverlyhills.com", "cdn.example-unlisted.com"):
+        kept, refused = _gate_mb(_url_rows(host))
+        assert len(kept) == 3 and not refused
+    monkeypatch.setitem(place.HOST_ALIASES, "mbbeverlyhills-com", ("mbontario.com",))
+    kept, refused = _gate_mb(_url_rows("www.mbontario.com"))
+    assert len(kept) == 3 and not refused
+
+
+def test_guessed_urls_and_homepages_are_never_evidence(_both_paths, monkeypatch):
+    _host_index(monkeypatch, _MB)
+    kept, refused = _gate_mb(_url_rows("www.mbontario.com", _source_url_guessed=True))
+    assert len(kept) == 3 and not refused
+    kept, refused = _gate_mb([{"vin": _vin(210), "source_url": "https://www.mbontario.com/"}])
+    assert len(kept) == 1 and not refused
+
+
+def test_rows_with_store_evidence_are_not_judged_by_their_host(_both_paths, monkeypatch):
+    # a group site serves its sister store's cars on its own domain: a row the feed
+    # stamps with THIS store stays, whatever host its detail page is on
+    _host_index(monkeypatch, _MB)
+    rows = _url_rows("www.mbontario.com", 2, _rooftop={"key": "MB BH", "name": "Mercedes-Benz of Beverly Hills", "site": ""})
+    rows += [{"vin": _vin(220), "_rooftop": {"key": "MB Ont", "name": "Mercedes-Benz of Ontario", "site": ""}}]
+    kept, refused = _gate_mb(rows)
+    assert len(kept) == 2 and [r["_rooftop_reject"] for r in refused] == ["sibling_rooftop"]
+
+
+def test_empty_host_index_changes_nothing(_both_paths, monkeypatch):
+    _host_index(monkeypatch, {})
+    kept, refused = _gate_mb(_url_rows("www.mbontario.com"))
+    assert len(kept) == 3 and not refused
+
+
+def test_vdp_urls_flag_constructed_links():
+    from backend.parsers.vdp_urls import apply_vehicle_source_url
+
+    built = {"vin": _vin(230), "dealer_url": "https://www.mbbeverlyhills.com"}
+    apply_vehicle_source_url(built)
+    assert built["source_url"].endswith(f"vin-{_vin(230)}.htm") and built["_source_url_guessed"] is True
+    real = {"vin": _vin(231), "dealer_url": "https://www.x.com", "source_url": "https://www.x.com/used/a-car"}
+    apply_vehicle_source_url(real)
+    assert "_source_url_guessed" not in real
+
+
+def test_weak_name_tier_without_a_roster_street_needs_a_town_to_keep(_both_paths):
+    names = ["Fletcher Jones Mercedes-Benz Motorcars Henderson"] * 2 + ["Rusty Wallace Honda"]
+    kw = dict(dealer_id="fjmotors-com", dealer_name="Fletcher Jones Motorcars", dealer_url="https://www.fletcherjones.com")
+    # no street, and Henderson is not the roster town: the loose name match no longer keeps
+    kept, refused = resolve_rooftop_attribution(_rows(*names), dealer_city="Las Vegas", dealer_state="NV", **kw)
+    assert kept == [] and len(refused) == 3
+    # the roster's town on the rooftop backs it ...
+    kept, _ = resolve_rooftop_attribution(_rows(*names), dealer_city="Henderson", dealer_state="NV", **kw)
+    assert len(kept) == 2
+    # ... and so does a roster street
+    kept, _ = resolve_rooftop_attribution(_rows(*names), dealer_address="1 Main St", **kw)
+    assert len(kept) == 2

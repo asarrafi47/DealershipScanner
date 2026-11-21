@@ -73,3 +73,22 @@ def test_main_reload_does_not_reset_dev_admin_password(dev_admin_db, monkeypatch
         DEV_USERS_DB_PATH=str(dev_admin_db),
     )
     assert authenticate_admin("admin", "user-chosen-password") is not None
+
+
+def test_save_duplicate_raises_admin_user_exists(dev_admin_db) -> None:
+    from backend.db.admin_users_db import AdminUserExists
+
+    save_dev_admin_user("dup", "dup@localhost", "pw")
+    with pytest.raises(AdminUserExists):
+        save_dev_admin_user("dup", "dup2@localhost", "pw")
+
+
+def test_backend_flag_defaults_to_sqlite(monkeypatch) -> None:
+    from backend.db.admin_users_db import dev_users_backend
+
+    monkeypatch.setenv("DEV_USERS_DB_BACKEND", "")
+    assert dev_users_backend() == "sqlite"
+    monkeypatch.setenv("DEV_USERS_DB_BACKEND", "bogus")
+    assert dev_users_backend() == "sqlite"
+    monkeypatch.setenv("DEV_USERS_DB_BACKEND", "PG")
+    assert dev_users_backend() == "pg"

@@ -22,7 +22,7 @@ def test_name_token_subset_match_refuses_siblings_with_the_weak_marker():
     kept, refused = resolve_rooftop_attribution(
         _rows("Ted Russell Ford Parkside", "Ted Russell Ford Parkside", "Rusty Wallace Honda"),
         dealer_id="tedrussellford-net", dealer_name="Ted Russell Ford",
-        dealer_url="https://www.tedrussellford.net",
+        dealer_url="https://www.tedrussellford.net", dealer_address="1 Roster Way",
     )
     assert sorted(r["vin"] for r in kept) == [_vin(100), _vin(101)]
     assert [r["vin"] for r in refused] == [_vin(102)]

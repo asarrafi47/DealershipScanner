@@ -446,3 +446,44 @@ def test_no_script_defines_dsn_or_parses_dotenv() -> None:
         "use backend.db.connect.inventory_dsn()/connect() instead of a private DSN "
         f"helper or a hand-rolled .env parser: {bad}"
     )
+
+
+# ---------------------------------------------------------------------------
+# inventory_pg.pg_connect: bounded connect, DSN-supplied timeout respected
+# ---------------------------------------------------------------------------
+
+
+def _capture_pg_connect(monkeypatch, dsn, env=None):
+    import psycopg
+
+    from backend.db import inventory_pg
+
+    seen = {}
+
+    def fake(conninfo, **kw):
+        seen.update(kw, dsn=conninfo)
+        return object()
+
+    monkeypatch.setattr(psycopg, "connect", fake)
+    monkeypatch.setenv("INVENTORY_DATABASE_URL", dsn)
+    monkeypatch.delenv("PG_CONNECT_TIMEOUT", raising=False)
+    for k, v in (env or {}).items():
+        monkeypatch.setenv(k, v)
+    inventory_pg.pg_connect()
+    return seen
+
+
+def test_pg_connect_default_timeout_10(monkeypatch) -> None:
+    seen = _capture_pg_connect(monkeypatch, "postgresql://h/db")
+    assert seen["connect_timeout"] == 10 and seen["autocommit"] is False
+
+
+def test_pg_connect_timeout_env_and_bad_value(monkeypatch) -> None:
+    assert _capture_pg_connect(monkeypatch, "postgresql://h/db", {"PG_CONNECT_TIMEOUT": "4"})["connect_timeout"] == 4
+    assert _capture_pg_connect(monkeypatch, "postgresql://h/db", {"PG_CONNECT_TIMEOUT": "x"})["connect_timeout"] == 10
+
+
+def test_pg_connect_dsn_timeout_not_overridden(monkeypatch) -> None:
+    seen = _capture_pg_connect(monkeypatch, "postgresql://h/db?connect_timeout=3")
+    assert "connect_timeout" not in seen
+    assert seen["dsn"] == "postgresql://h/db?connect_timeout=3"

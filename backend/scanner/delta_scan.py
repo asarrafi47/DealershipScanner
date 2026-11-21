@@ -157,7 +157,10 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
         return out
 
     t0 = time.perf_counter()
-    fetched = await try_fetch_via_recipes(dealer_id, provider, url, name, union=True)
+    registry_id = dealer.get("dealership_registry_id")
+    # keyword only when set: a single-store dealer calls exactly as before
+    _rid_kw = {"registry_id": registry_id} if registry_id else {}
+    fetched = await try_fetch_via_recipes(dealer_id, provider, url, name, union=True, **_rid_kw)
     if not fetched:
         if hints.get("requires_browser"):
             out["skipped"] = "no_recipe (requires_browser hinted)"
@@ -178,7 +181,7 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     # and handing every VIN to _disown_foreign_rooftop_vins. The street learned
     # from the dealer page (scan hints) completes a roster that has only the
     # town, exactly as in the full scan.
-    attr_ctx = await asyncio.to_thread(DealerCtx.for_store, dealer_id, name, url)
+    attr_ctx = await asyncio.to_thread(DealerCtx.for_store, dealer_id, name, url, registry_id)
     page_kept: list[dict[str, Any]] = []
     page_refused: list[dict[str, Any]] = []
     for _rec_url, body in records:
@@ -197,6 +200,10 @@ async def delta_scan_dealer(dealer: dict[str, Any]) -> dict[str, Any]:
     for v in vehicles:
         v.setdefault("dealer_name", name)
         v.setdefault("dealer_url", url)
+        # the store's own roster row (shared-host stores are told apart by it); the
+        # upsert keeps a stored id when this is None
+        if registry_id:
+            v.setdefault("dealership_registry_id", registry_id)
     vehicles = _dedupe_vin_list(vehicles)
     n = len(vehicles)
     # Rows the feed assigns to a SIBLING rooftop. The store's own site served

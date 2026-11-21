@@ -43,38 +43,52 @@ def test_inventory_summary_empty_manifest(tmp_path, monkeypatch):
     assert summary["dealer_count"] == 0
 
 
-def test_list_scan_lab_cars_paginated_shape(tiny_manifest):
+@pytest.fixture
+def lab_pg(pg_db, monkeypatch):
+    """pg_db wired as the lab database; the inventory DSN is blanked so the lab
+    DSN is not 'the same database as the inventory' (a real lab is a second DB)."""
+    monkeypatch.setenv("SCAN_LAB_DATABASE_URL", pg_db.dsn)
+    monkeypatch.setenv("INVENTORY_DATABASE_URL", "")
+    sl.invalidate_scan_lab_summary_cache()
+    return pg_db
+
+
+@pytest.mark.pg
+def test_get_scan_lab_car_by_id_reads_lab_database(tiny_manifest, lab_pg):
+    lab_pg.add_cars([{"dealer_id": "example-com", "dealer_name": "Test Dealer", "make": "BMW", "model": "X3"}])
+    with sl.scan_lab_db_conn() as conn:
+        cid = conn.execute("SELECT id FROM cars").fetchone()[0]
+    car = sl.get_scan_lab_car_by_id(cid)
+    assert car is not None
+    assert car["make"] == "BMW"
+    assert sl.get_scan_lab_car_by_id(cid + 999) is None
+
+
+@pytest.mark.pg
+def test_lab_list_summary_patch_and_counts(tiny_manifest, lab_pg):
+    lab_pg.add_cars([
+        {"dealer_id": "example-com", "dealer_name": "Test Dealer", "make": "BMW", "model": "X3"},
+        {"dealer_id": "example-com", "dealer_name": "Test Dealer", "make": "Audi", "model": "A4"},
+        {"dealer_id": "other-com", "dealer_name": "Other", "make": "BMW", "model": "M3"},
+    ])
+    page = sl.list_scan_lab_cars(limit=10)
+    assert page["total"] == 2
+    assert len(sl.list_scan_lab_cars(q="audi")["cars"]) == 1
+    summary = sl.inventory_summary_for_manifest(force_refresh=True)
+    assert summary["total_cars"] == 2
+    car_id = page["cars"][0]["id"]
+    assert sl.patch_scan_lab_car(car_id, {"trim": "xDrive"})
+    assert sl.get_scan_lab_car_by_id(car_id)["trim"] == "xDrive"
+    counts = sl.db_table_counts()
+    assert counts["cars"] == 3
+    assert counts["dealer_scan_profile"] >= -1  # absent table reports -1, never raises
+
+
+@pytest.mark.pg
+def test_list_scan_lab_cars_paginated_shape(tiny_manifest, lab_pg):
     page = sl.list_scan_lab_cars(limit=10, offset=0)
     assert "cars" in page
     assert "total" in page
     assert "limit" in page
     assert "offset" in page
     assert isinstance(page["cars"], list)
-
-
-def test_get_scan_lab_car_by_id_uses_lab_db_not_production(
-    tiny_manifest, tmp_path, monkeypatch
-):
-    import backend.db.inventory_db as inv_db
-
-    lab_db = tmp_path / "lab_inventory.db"
-    prod_db = tmp_path / "production_inventory.db"
-    monkeypatch.setenv("SCAN_LAB_INVENTORY_DB_PATH", str(lab_db))
-    monkeypatch.setenv("INVENTORY_DB_PATH", str(lab_db))
-    # inv_db.DB_PATH is resolved once at import time, so the env var above has no effect
-    # on it post-import — patch the module attribute directly (via monkeypatch so it's
-    # restored after the test, rather than leaking into whichever test runs next).
-    monkeypatch.setattr(inv_db, "DB_PATH", str(lab_db))
-    inv_db.init_inventory_db()
-    monkeypatch.setattr(inv_db, "DB_PATH", str(prod_db))
-    with sl.scan_lab_db_conn() as conn:
-        conn.execute(
-            """
-            INSERT INTO cars (vin, dealer_id, dealer_name, make, model, listing_active)
-            VALUES ('1HGBH41JXMN109186', 'example-com', 'Test Dealer', 'BMW', 'X3', 1)
-            """
-        )
-    car = sl.get_scan_lab_car_by_id(1)
-    assert car is not None
-    assert car["make"] == "BMW"
-    assert inv_db.get_car_by_id(1) is None

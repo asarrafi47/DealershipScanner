@@ -24,6 +24,27 @@ _CAPTURE_FIELDS = (
 )
 
 
+def used_mileage_coverage(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
+    """Mileage on used rows (N6.9). A used car at 0 mi is reported, not counted as
+    covered. Model year 2026+ at 0 mi is the F4 data question (D-N16): reported in
+    ``used_zero_mi_my2026`` and left out of the gated share, never "incomplete"."""
+    used = [v for v in vehicles if str(v.get("condition") or "").strip().lower() not in ("", "new")]
+    zero = [v for v in used if not (isinstance(v.get("mileage"), (int, float)) and v["mileage"] > 0)]
+
+    def _my(v: dict[str, Any]) -> int:
+        try:
+            return int(float(v.get("year") or 0))
+        except (TypeError, ValueError):
+            return 0
+
+    f4 = [v for v in zero if _my(v) >= 2026]
+    gated = len(used) - len(f4)
+    out: dict[str, Any] = {"used_n": len(used), "used_zero_mi": len(zero), "used_zero_mi_my2026": len(f4)}
+    if gated > 0:
+        out["used_mileage"] = round((gated - (len(zero) - len(f4))) / gated, 3)
+    return out
+
+
 def _capture_coverage(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
     """Share of captured rows carrying each field, BEFORE the upsert's COALESCE can
     hide gaps behind values the DB already had. This is the honest measure of what
@@ -64,6 +85,7 @@ def _capture_coverage(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
         elif len(examples.setdefault("gallery_8plus", [])) < 3:
             examples["gallery_8plus"].append(str(v.get("vin") or "")[:17])
     out["gallery_8plus"] = round(g8 / n, 3)
+    out.update(used_mileage_coverage(vehicles))
     out["missing_examples"] = {k: v for k, v in examples.items() if v}
     return out
 
@@ -139,7 +161,20 @@ async def prefetch_details(run: DealerRun) -> None:
     try:
         from backend.scanner.vdp.prefetch import prefetch_before_vdp
 
-        _pf = await prefetch_before_vdp(run.all_vehicles, run.dealer_id, name)
+        from backend.scanner import database as _db
+
+        # Cars the write-time guard will refuse never get a VDP fetch (they stay in
+        # all_vehicles; the persist step refuses them as before).
+        _claim = [
+            v if str(v.get("dealer_id") or "").strip() else {**v, "dealer_id": run.dealer_id}
+            for v in run.all_vehicles
+        ]
+        _refused = await asyncio.to_thread(_db.vins_refused_by_owner_guard, _claim)
+        _fetchable = [v for v in run.all_vehicles if str(v.get("vin") or "").strip() not in _refused]
+        if _refused:
+            result["vdp_prefetch_ownership_skipped"] = len(_refused)
+            logger.info("VDP prefetch [%s]: %d guard-refused VIN(s) skipped", name, len(_refused))
+        _pf = await prefetch_before_vdp(_fetchable, run.dealer_id, name)
         if _pf:
             result["vdp_prefetch"] = _pf
     except Exception as _pf_e:
@@ -248,7 +283,12 @@ async def run_monroney_vision(run: DealerRun, monroney_vision: bool) -> None:
 
 def stamp_registry_and_source_urls(run: DealerRun) -> None:
     """The manifest's dealership_registry_id (else resolved from the URL) onto
-    every row that lacks one, then each row's canonical source URL."""
+    every row that lacks one, then each row's canonical source URL.
+
+    The URL fallback names a store only when ONE registry row sits on the host; for a
+    shared host (all AutoSavvy stores on www.autosavvy.com) it returns nothing, so a
+    manifest row without its own registry id stamps none and the upsert keeps the id
+    already stored (N8.14)."""
     reg_id = run.dealer.get("dealership_registry_id")
     if not reg_id:
         try:

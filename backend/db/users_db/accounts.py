@@ -28,7 +28,8 @@ def get_org(org_id: int) -> dict | None:
     if oid <= 0:
         return None
     conn = get_conn()
-    conn.row_factory = sqlite3.Row
+    # No sqlite3.Row: under SQLCipher the cursor is a sqlcipher3 cursor, which
+    # sqlite3.Row rejects with TypeError (found 2026-11-20). Build the dict by hand.
     cursor = conn.cursor()
     cursor.execute(
         """
@@ -39,8 +40,9 @@ def get_org(org_id: int) -> dict | None:
         (oid,),
     )
     row = cursor.fetchone()
+    names = [d[0] for d in cursor.description or ()]
     conn.close()
-    return dict(row) if row else None
+    return dict(zip(names, row)) if row else None
 
 
 def update_org_stripe_subscription(
@@ -469,6 +471,9 @@ def delete_user_by_email(email: str) -> bool:
     uid = int(row[0])
     org_id = int(row[1]) if len(row) > 1 and row[1] is not None else None
     ddb.delete_vehicles_for_user(uid)
+    from backend.dealer.portal_sync import retire_portal_listings_for_user
+
+    retire_portal_listings_for_user(uid)
     try:
         cursor.execute("DELETE FROM org_invites WHERE used_by_user_id = ?", (uid,))
     except sqlite3.Error:

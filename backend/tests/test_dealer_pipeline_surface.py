@@ -140,18 +140,21 @@ def _py() -> str:
 def test_http_only_scan_command_line(monkeypatch, tmp_path):
     calls = []
 
-    def _run(cmd, **kw):
-        calls.append((cmd, kw))
-        return subprocess.CompletedProcess(cmd, 3)
+    class _Proc:
+        def __init__(self, cmd, **kw):
+            calls.append((cmd, kw))
 
-    monkeypatch.setattr(subprocess, "run", _run)
+        def wait(self, timeout=None):
+            return 3
+
+    monkeypatch.setattr(subprocess, "Popen", _Proc)
     monkeypatch.delenv("DEALERS_FROM_SCANNABLE", raising=False)
-    rc = dp.run_http_only_scan(["a-com", "b-com"], concurrency=2, log_path=tmp_path / "logs" / "scanner.log", timeout_sec=77)
-    assert rc == 3
+    stats: dict = {}
+    rc = dp.run_http_only_scan(["a-com", "b-com"], concurrency=2, log_path=tmp_path / "logs" / "scanner.log", timeout_sec=77, stats=stats)
+    assert rc == 3 and set(stats) == {"wall_seconds", "active_seconds"}
     (cmd, kw), = calls
     assert cmd == [_py(), "scanner.py", "--dealer-id", "a-com,b-com", "--dealer-concurrency", "2", "--scan-only"]
-    assert kw["cwd"] == str(REPO_ROOT)
-    assert kw["timeout"] == 77 and kw["stderr"] is subprocess.STDOUT
+    assert kw["cwd"] == str(REPO_ROOT) and kw["stderr"] is subprocess.STDOUT
     env = kw["env"]
     assert env["SCANNER_HTTP_ONLY"] == "1" and env["SCANNER_VDP_DB_MERGE"] == "0" and env["DEALERS_FROM_SCANNABLE"] == "1"
 

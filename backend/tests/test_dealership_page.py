@@ -58,7 +58,7 @@ FLEET = [
           package_names=["—"]),
     # A marque MAKE_TO_COUNTRY has never heard of. It is a real car on the lot, so
     # dropping it from the Make facet makes it unreachable by that filter.
-    _card(id=6, make="Rivian", model="R1S", trim="Adventure", price=80000,
+    _card(id=6, make="Spyker", model="C8", trim="Adventure", price=80000,
           fuel_type="Electric", cylinders=0),
     # A different rooftop — must never leak into this dealer's page.
     _card(id=9, dealer_id="othertoyota-com", make="Toyota", model="Camry",
@@ -90,7 +90,7 @@ def fleet(monkeypatch):
     monkeypatch.setattr(lr, "listings_grid_serialized_cars", _whole_fleet_forbidden)
     # The marque list comes from the epa_master catalogue at runtime; pin it so the
     # tests do not depend on a database.
-    monkeypatch.setattr(dp, "_known_catalog_makes", lambda: frozenset({"rivian", "lucid", "mclaren"}))
+    monkeypatch.setattr(dp, "_known_catalog_makes", lambda: frozenset({"spyker", "lucid", "mclaren"}))
     return FLEET
 
 
@@ -119,7 +119,7 @@ def test_facet_values_come_from_the_serialized_card(fleet):
 
 def test_make_variants_collapse_and_junk_makes_are_dropped(fleet):
     f = dp._dealer_facets(dp._dealer_grid_cars("beamancdjr-com"))
-    assert sorted(m.lower() for m in f["makes"]) == ["jeep", "ram", "rivian"]
+    assert sorted(m.lower() for m in f["makes"]) == ["jeep", "ram", "spyker"]
     assert [r for r in f["trim_rows"] if r[1] == "1500"] == [("RAM", "1500", "Limited")]
 
 
@@ -132,10 +132,10 @@ def test_marques_missing_from_the_country_dict_still_get_a_make_option(fleet):
     """
     from backend.db.repositories.listings_repo import _facet_make_valid
 
-    assert not _facet_make_valid("Rivian")  # the gap being covered
+    assert not _facet_make_valid("Spyker")  # the gap being covered
     f = dp._dealer_facets(dp._dealer_grid_cars("beamancdjr-com"))
-    assert "Rivian" in f["makes"]
-    assert ("Rivian", "R1S") in f["model_rows"]
+    assert "Spyker" in f["makes"]
+    assert ("Spyker", "C8") in f["model_rows"]
     # ...and the junk make is still out, on the same code path.
     assert not any("a3" in m.lower() for m in f["makes"])
 
@@ -158,7 +158,7 @@ def test_package_rows_ship_alongside_the_package_names(fleet):
     f = dp._dealer_facets(dp._dealer_grid_cars("beamancdjr-com"))
     assert f["all_package_names"] == ["Level 2 Equipment Group"]
     assert {"make": "RAM", "model": "1500", "name": "Level 2 Equipment Group"} in f["package_rows"]
-    assert {"make": "Rivian", "model": "R1S", "name": "Level 2 Equipment Group"} in f["package_rows"]
+    assert {"make": "Spyker", "model": "C8", "name": "Level 2 Equipment Group"} in f["package_rows"]
     # Rows carry the same labels the Make/Model checkboxes do, or the cascade hides
     # every package the moment a make is checked.
     for row in f["package_rows"]:

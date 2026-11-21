@@ -12,14 +12,14 @@
 # or SCAN_DEALERS is set, so a deploy never starts a fleet scan by itself.
 FROM python:3.12-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates procps \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates git procps \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/app
 
-COPY requirements-scanner.txt .
+COPY requirements*.txt ./
 RUN pip install --no-cache-dir -r requirements-scanner.txt
 
 COPY . .

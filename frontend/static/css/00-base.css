@@ -11,9 +11,45 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Metric-matched fallback, so the font-display: swap above moves nothing.
+   Until the woff2 arrives, text renders in Arial (or its metric twins Helvetica /
+   Liberation Sans) resized to Inter's average glyph width and given Inter's vertical
+   metrics; when Inter swaps in, line boxes and wrapped widths stay put (no layout
+   shift). Numbers: Inter 4 (UPM 2048, hhea ascender 1984, descender -494, line gap 0)
+   over Arial, size-adjust = Inter/Arial weighted average advance width (the
+   capsize/next-font method): ascent 1984/2048/1.0712, descent 494/2048/1.0712.
+   Same unicode-range as Inter: a character Inter lacks (e.g. U+2192) keeps falling
+   through to the rest of --font-ui, exactly as before. Two faces so bold text falls back to real Arial Bold, never a synthesised bold;
+   Arial Bold is wider than Inter SemiBold (600, the site's bold), so that face is
+   scaled 102.07% (ascent/descent re-divided by it). Checked in Chromium on a 133-char
+   line at 20px: regular 1273.7 vs Inter 1281.8 px, 600 within 0.5%, same 24px line. */
+@font-face {
+    font-family: "Inter Fallback";
+    font-style: normal;
+    font-weight: 100 549;
+    src: local("Arial"), local("ArialMT"), local("Helvetica"), local("Liberation Sans");
+    size-adjust: 107.12%;
+    ascent-override: 90.44%;
+    descent-override: 22.52%;
+    line-gap-override: 0%;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: "Inter Fallback";
+    font-style: normal;
+    font-weight: 550 900;
+    src: local("Arial Bold"), local("Arial-BoldMT"), local("Helvetica Bold"), local("Helvetica-Bold"), local("Liberation Sans Bold");
+    size-adjust: 102.07%;
+    ascent-override: 94.91%;
+    descent-override: 23.63%;
+    line-gap-override: 0%;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
     --main-radius: 4px; /* 2026-09-30: was 10px; no rounded boxes anywhere */
-    --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-ui: "Inter", "Inter Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 
     /* Luxury interior palette — warm cream, navy, fine wood trim, chrome accents */
     --bg-page: #f4f2ec;

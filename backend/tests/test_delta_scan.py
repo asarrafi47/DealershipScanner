@@ -85,3 +85,25 @@ def test_delta_no_recipe_skips(monkeypatch):
     monkeypatch.setattr("backend.scanner.recipes.try_fetch_via_recipes", _none)
     out = asyncio.run(ds.delta_scan_dealer(_dealer()))
     assert out["skipped"] == "no_recipe_yield"
+
+
+def test_delta_carries_the_manifest_registry_id_to_the_gate_and_the_rows(monkeypatch):
+    """N8.14: a store on a shared host is scanned with its own registry row (place + stamp)."""
+    seen = {}
+    upserts = []
+    _patch_pipeline(monkeypatch, replay_rows=_rows(60), known_active=60, upserts=upserts)
+
+    async def _fetch(dealer_id, provider, base_url, dealer_name, **kw):
+        seen["fetch"] = kw
+        return ([("https://d.example/api", {"x": 1})], 60)
+
+    monkeypatch.setattr("backend.scanner.recipes.try_fetch_via_recipes", _fetch)
+    real = ds.DealerCtx.for_store
+    monkeypatch.setattr(ds.DealerCtx, "for_store", classmethod(lambda cls, *a: seen.setdefault("ctx", a) and real.__func__(cls, *a)))
+    monkeypatch.setattr("backend.attribution.gate.store_place", lambda *a: {})
+    monkeypatch.setattr("backend.scanner.inventory_reconcile.reconcile_dealer_inventory_after_scan", lambda *a, **k: {"ran": True})
+    d = dict(_dealer(), dealership_registry_id=302)
+    asyncio.run(ds.delta_scan_dealer(d))
+    assert seen["fetch"] == {"union": True, "registry_id": 302}
+    assert seen["ctx"][-1] == 302
+    assert upserts and all(v["dealership_registry_id"] == 302 for v in upserts[0])

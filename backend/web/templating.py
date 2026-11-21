@@ -16,8 +16,9 @@ from backend.auth.google_oauth import google_oauth_configured, google_signin_vis
 from backend.auth.session import billing_enabled as _billing_enabled
 from backend.billing import access as paid_access
 from backend.utils.car_serialize import format_display_value
-from backend.utils.csrf import ensure_csrf_token
+from backend.utils.csrf import LazyCsrfToken
 from backend.utils.runtime_env import is_production_env
+from backend.web.css_bundle import CSS_BUNDLE_PARTS, CSS_BUNDLE_PATH, css_bundle_ready
 from backend.web.static import static_cache_ver
 
 
@@ -46,7 +47,8 @@ def _gzip_large_json(resp):
     resp.set_data(compressed)
     resp.headers["Content-Encoding"] = "gzip"
     resp.headers["Content-Length"] = str(len(compressed))
-    resp.headers["Vary"] = "Accept-Encoding"
+    # add, not replace: a view may already vary on Cookie (backend/web/edge_cache.py).
+    resp.vary.add("Accept-Encoding")
     return resp
 
 
@@ -67,7 +69,9 @@ def inject_csrf_and_flags():
             or prof.get("dealership_registry_id")
         )
     return {
-        "csrf_token": ensure_csrf_token(),
+        # Lazy (perf 2026-11-20): minted, and the session written, only when the
+        # template renders it, so a page with no form leaves no session cookie.
+        "csrf_token": LazyCsrfToken(),
         "csp_nonce": getattr(g, "csp_nonce", "") or "",
         "is_production": is_production_env(),
         "logged_in_user": session.get("username") or session.get("admin_username"),
@@ -79,6 +83,9 @@ def inject_csrf_and_flags():
         and is_dealer_portal_role(session.get("user_role")),
         "show_store_ops_nav": store_ops_nav,
         "static_cache_ver": static_ver,
+        "css_bundle_ready": css_bundle_ready(),
+        "css_bundle_path": CSS_BUNDLE_PATH,
+        "css_bundle_parts": CSS_BUNDLE_PARTS,
         "personal_home_url": (
             url_for("app_home") if session.get("user_id") else url_for("home")
         ),

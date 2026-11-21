@@ -447,17 +447,58 @@ def compute_offer_matches(conn: Any, dealer_id: str, offer: dict) -> dict:
     }
 
 
+# A cached match set is recomputed after this long even when the offer text is
+# unchanged, so newly arrived cars show up (sold ones are caught immediately by
+# ``_cached_cars_gone``).
+MATCH_CACHE_TTL_HOURS = 6.0
+
+
+def _cache_expired(row: dict, ttl_hours: float) -> bool:
+    """True when the cached row's ``computed_at`` is older than the TTL (or unreadable)."""
+    from datetime import datetime, timezone
+
+    raw = row.get("computed_at")
+    try:
+        ts = datetime.fromisoformat(str(raw))
+    except (TypeError, ValueError):
+        return True
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - ts).total_seconds() > ttl_hours * 3600
+
+
+def _cached_cars_gone(conn: Any, dealer_id: str, row: dict) -> bool:
+    """True when any car in the cached matches is no longer an active listing."""
+    ids = [m.get("car_id") for m in (row.get("matches") or []) if m.get("car_id") is not None]
+    if not ids:
+        return False
+    ph = ", ".join("?" for _ in ids)
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            f"SELECT id FROM cars WHERE dealer_id = ? AND id IN ({ph}) "
+            "AND COALESCE(listing_active, 1) = 1",
+            [dealer_id, *ids],
+        )
+        alive = {r[0] for r in cur.fetchall()}
+    except Exception:
+        return False
+    return any(i not in alive for i in ids)
+
+
 def refresh_dealer_lease_matches(
     conn: Any,
     dealer_id: str,
     *,
     force: bool = False,
     only_missing: bool = True,
+    ttl_hours: float = MATCH_CACHE_TTL_HOURS,
 ) -> dict:
     """Compute + cache lease matches for all of a dealer's lease offers.
 
     ``only_missing`` (default) skips offers whose ``offer_hash`` already has a
-    cached row, so re-runs are cheap; ``force`` recomputes everything. Returns a
+    *fresh* cached row (younger than ``ttl_hours`` with every matched car still
+    active), so re-runs are cheap; ``force`` recomputes everything. Returns a
     small stats dict. Safe to call from a script or a background refresh.
     """
     from backend.scanner.specials.lease_matches_store import (
@@ -474,8 +515,10 @@ def refresh_dealer_lease_matches(
     for off in lease_offers:
         h = off.get("offer_hash")
         if only_missing and not force and h and h in cached:
-            skipped += 1
-            continue
+            row = cached[h]
+            if not _cache_expired(row, ttl_hours) and not _cached_cars_gone(conn, dealer_id, row):
+                skipped += 1
+                continue
         result = compute_offer_matches(conn, dealer_id, off)
         if h:
             upsert_offer_match(

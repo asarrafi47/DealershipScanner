@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Iterator, Literal
 
 from backend.db import inventory_pg
+from backend.utils import request_timing
 
 
 class InventoryCursor:
@@ -25,10 +26,12 @@ class InventoryCursor:
                 self._noop = True
                 return self
             self._noop = False
-            self._c.execute(adapted, params)
+            with request_timing.timed("db"):
+                self._c.execute(adapted, params)
             return self
         self._noop = False
-        self._c.execute(sql, params)
+        with request_timing.timed("db"):
+            self._c.execute(sql, params)
         return self
 
     def executemany(self, sql: str, seq_of_params: Iterator[tuple]) -> InventoryCursor:
@@ -38,10 +41,12 @@ class InventoryCursor:
                 self._noop = True
                 return self
             self._noop = False
-            self._c.executemany(adapted, seq_of_params)
+            with request_timing.timed("db"):
+                self._c.executemany(adapted, seq_of_params)
             return self
         self._noop = False
-        self._c.executemany(sql, seq_of_params)
+        with request_timing.timed("db"):
+            self._c.executemany(sql, seq_of_params)
         return self
 
     def fetchone(self) -> Any:
@@ -68,6 +73,7 @@ class InventoryConnection:
         *,
         backend: Literal["sqlite", "postgres"],
         shared: bool = False,
+        request_slot: Any = None,
     ):
         self._raw = raw
         self._backend = backend
@@ -75,6 +81,9 @@ class InventoryConnection:
         # inventory_pg.borrow_read_connection): close() must NOT tear down the
         # underlying connection, only reset its transaction state.
         self._shared = shared
+        # Set when this wraps the web request scope's kept connection (see
+        # inventory_pg.acquire_request_connection): close() hands it back once.
+        self._request_slot = request_slot
         self.row_factory: Any = None
 
     def cursor(self, row_factory: Any = None) -> InventoryCursor:
@@ -103,6 +112,14 @@ class InventoryConnection:
         self._raw.rollback()
 
     def close(self) -> None:
+        slot = self._request_slot
+        if slot is not None:
+            self._request_slot = None
+            self._released = True
+            inventory_pg.release_request_connection(self._raw, slot)
+            return
+        if getattr(self, "_released", False):
+            return  # a second close() of a request-scope wrapper: the raw belongs to others now
         if self._shared:
             # Keep the borrowed connection alive; just reset transaction state so
             # the next borrower starts clean (matches per-call close semantics:
@@ -120,6 +137,10 @@ def open_inventory_connection() -> InventoryConnection:
         shared_raw = inventory_pg.current_shared_read_raw()
         if shared_raw is not None:
             return InventoryConnection(shared_raw, backend="postgres", shared=True)
+        leased = inventory_pg.acquire_request_connection()
+        if leased is not None:
+            raw, slot = leased
+            return InventoryConnection(raw, backend="postgres", request_slot=slot)
         return InventoryConnection(inventory_pg.pg_connect(), backend="postgres")
     inventory_pg.assert_inventory_backend_configured()
     if inventory_pg.inventory_sqlite_tests_allowed():

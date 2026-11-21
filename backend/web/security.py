@@ -36,6 +36,19 @@ def _per_request_csp_nonce() -> None:
     g.csp_nonce = secrets.token_urlsafe(16)
 
 
+def use_nonce_free_csp() -> None:
+    """Serve this page with ``script-src 'self'`` and no nonce (perf 2026-11-20).
+
+    Call from a view BEFORE it renders, for a page with no inline script that may be
+    cached at the edge (``backend/web/edge_cache.py``): a cached copy would otherwise
+    freeze one visitor's nonce for everyone. Templates then render ``nonce=""`` on their
+    external ``<script src>`` tags, which ``'self'`` allows; an inline script on such a
+    page is blocked, which is the point. Every other directive is unchanged.
+    """
+    g.csp_nonce = ""
+    g.csp_nonce_free = True
+
+
 # State-changing JSON routes served on DELETE. The browser clients already send
 # X-CSRF-Token on these; SameSite=Lax and the absence of CORS kept them safe,
 # this makes the token mandatory too (security review 2026-09-28).
@@ -85,6 +98,14 @@ _CSRF_HEADER_POST_ENDPOINTS = (
     "api_admin_dealer_job_diagnose",
 )
 
+
+# POST endpoints that are deliberately NOT in any CSRF list above because the caller is a server,
+# not a browser, and the request proves itself with a vendor signature instead of a token:
+#   billing.stripe_webhook, billing.premium_webhook  (Stripe-Signature, backend/billing/routes.py)
+#   twilio_webhook.twilio_verify_webhook  (X-Twilio-Signature checked against the public URL,
+#       backend/auth/phone/webhook.py; 403 on a bad or missing signature, 404 while the phone
+#       callbacks are off). backend/tests/test_csrf_coverage.py (EXEMPT) is the one list of them: it
+#       classifies each as ``exempt`` and checks the view's source for its signature check.
 
 # Endpoint-name prefixes whose POST forms carry the csrf_token field.
 _CSRF_FORM_POST_PREFIXES = ("dealer_portal.", "store_admin.")
@@ -152,20 +173,30 @@ def _csp_enforce_wanted() -> bool:
     return is_production_env()
 
 
-def _csp_header_value_enforced(nonce: str) -> str:
+# Cloudflare Turnstile (card S19): its script and its frame load from this origin, and only on
+# the pages that show the widget (``TURNSTILE_PAGE_ENDPOINTS``); every other page keeps the
+# strict policy.
+TURNSTILE_ORIGIN = "https://challenges.cloudflare.com"
+TURNSTILE_PAGE_ENDPOINTS = frozenset({"dealer_portal.dealer_register"})
+
+
+def _csp_header_value_enforced(nonce: str | None, *, turnstile: bool = False) -> str:
     # style-src: 'unsafe-inline' for existing inline style="" attributes; script nonces for all script elements.
+    # nonce None/"": the nonce-free policy of use_nonce_free_csp() (script-src 'self' only).
+    extra = f" {TURNSTILE_ORIGIN}" if turnstile else ""
+    script_nonce = f" 'nonce-{nonce}'" if nonce else ""
     return (
         "default-src 'self'; "
         "base-uri 'self'; "
         "form-action 'self'; "
         "frame-ancestors 'none'; "
         "object-src 'none'; "
-        "frame-src 'self'; "
+        f"frame-src 'self'{extra}; "
         "img-src 'self' data: https: http: blob:; "
         "font-src 'self' data:; "
         "style-src 'self' 'unsafe-inline'; "
         "style-src-elem 'self'; "
-        f"script-src 'self' 'nonce-{nonce}'; "
+        f"script-src 'self'{script_nonce}{extra}; "
         "connect-src 'self' https://tile.openstreetmap.org; "
         "worker-src 'self'; "
     )
@@ -199,8 +230,12 @@ def _csp_headers(response):
         )
     if _csp_enforce_wanted():
         nonce = (getattr(g, "csp_nonce", None) or "") or ""
-        if nonce and not response.headers.get("Content-Security-Policy"):
-            response.headers["Content-Security-Policy"] = _csp_header_value_enforced(nonce)
+        nonce_free = bool(getattr(g, "csp_nonce_free", False))
+        if (nonce or nonce_free) and not response.headers.get("Content-Security-Policy"):
+            response.headers["Content-Security-Policy"] = _csp_header_value_enforced(
+                None if nonce_free else nonce,
+                turnstile=(request.endpoint or "") in TURNSTILE_PAGE_ENDPOINTS,
+            )
         return response
     if Config.csp_report_only_enabled():
         if not response.headers.get("Content-Security-Policy-Report-Only"):

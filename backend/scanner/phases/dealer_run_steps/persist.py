@@ -33,6 +33,12 @@ async def persist(run: DealerRun) -> None:
         run.all_vehicles = [
             v for v in run.all_vehicles if (v.get("vin") or "").strip() not in _conflicted
         ]
+        # Card S20: a VIN refused because a user owns it must not reach the post-scan
+        # stages either (vPIC heal, gallery vision, gap fill): they find the row by VIN
+        # alone, which is the user's row.
+        _user_vins = set(_upsert_stats.get("vin_owner_user_listing_vins") or ())
+        if _user_vins and isinstance(result.get("vins"), list):
+            result["vins"] = [v for v in result["vins"] if v not in _user_vins]
         logger.warning(
             "VIN owner guard [%s]: %d VIN(s) owned by other dealers were NOT written: %s",
             name, len(_conflicted), result["vin_owner_conflict_owners"],

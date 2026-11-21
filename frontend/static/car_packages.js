@@ -115,7 +115,7 @@
                 done(stickerImg.naturalWidth > 0);
             };
             stickerImg.onerror = function () {
-                hideWindowStickerBlock();
+                // Hide the preview only: the wrap also holds the parsed options/packages.
                 done(false);
             };
             const current = (stickerImg.getAttribute("src") || "").split("?")[0];

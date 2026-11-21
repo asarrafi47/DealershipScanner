@@ -11,11 +11,15 @@ from __future__ import annotations
 
 import json
 from collections import Counter
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
 from backend.utils.car_serialize import DISPLAY_DASH, serialize_car_for_api
+from backend.scanner.utils.vdp_extras_parse import junk_text_value
 from backend.utils.in_transit import vehicle_is_in_transit
+from backend.utils.price_floor import classify_price
+from backend.utils.placeholder_images import is_placeholder_image
 from backend.utils.mileage_display import is_used_or_certified, odometer_absent
 
 # Human labels for ``listing_missing_field_codes`` / ``incomplete_missing_fields`` (dev UI + summaries).
@@ -68,9 +72,14 @@ _PUBLIC_INCOMPLETE_KEYS = frozenset(
 
 
 def _is_valid_image_url(u: str) -> bool:
-    """True for HTTP(S) URLs and local /car-images/ paths (served by Flask)."""
+    """True for HTTP(S) URLs and local /car-images/ paths (served by Flask).
+
+    A placeholder (N6.8, D-N15) is not a photo: a placeholder-only car has no photo.
+    """
     s = u.strip()
-    return s.startswith("http") or s.startswith("/car-images/")
+    if not (s.startswith("http") or s.startswith("/car-images/")):
+        return False
+    return not is_placeholder_image(s)
 
 
 def _has_http_image(car: dict[str, Any]) -> bool:
@@ -211,6 +220,18 @@ def listing_missing_field_codes(
 
     # Use raw row so list/MSRP ``0`` is not confused with "missing" after serialization.
     p_blank = _row_field_blank(car_raw.get("price"))
+    if not p_blank:
+        # N6.7: judge the price that is displayed. A stored positive value that is
+        # junk (under the D-N14 floor, over the cap) or that the read-time guard
+        # withheld (``car["price"]`` is None) shows no price, so it is a gap.
+        # Zero stays a stored value (the TBD rule above).
+        try:
+            _raw_p = float(car_raw.get("price"))
+        except (TypeError, ValueError):
+            _raw_p = None
+        if _raw_p is not None and _raw_p > 0:
+            if classify_price(_raw_p)[0] is None or car.get("price") is None:
+                p_blank = True
     m_blank = _row_field_blank(car_raw.get("msrp"))
     if p_blank and m_blank:
         missing.append("price")
@@ -221,7 +242,7 @@ def listing_missing_field_codes(
         missing.append("make")
     if _dash(car.get("model")):
         missing.append("model")
-    if _dash(car.get("trim")):
+    if _dash(car.get("trim")) or junk_text_value(car_raw.get("trim")) or junk_text_value(car.get("trim")):
         # A blank trim is only "missing" when the model actually has trim
         # variants. Standalone models (BMW XM/M6/i8, base F-250) have no trim —
         # the catalog shows a single trim equal to the model name — so a blank
@@ -252,9 +273,14 @@ def listing_missing_field_codes(
         missing.append("condition")
     if _cylinders_display_missing(car, vs):
         missing.append("cylinders")
-    if _dash(car.get("exterior_color")):
+    # A stored parser artifact (dict repr, "[token]", option code) is a gap, not a fill (N6.5).
+    if _dash(car.get("exterior_color")) or any(
+        junk_text_value(x, color=True) for x in (car_raw.get("exterior_color"), car.get("exterior_color"))
+    ):
         missing.append("exterior_color")
-    if _dash(car.get("interior_color")):
+    if _dash(car.get("interior_color")) or any(
+        junk_text_value(x, color=True) for x in (car_raw.get("interior_color"), car.get("interior_color"))
+    ):
         missing.append("interior_color")
 
     vin_raw = (car_raw.get("vin") or "").strip()
@@ -287,6 +313,57 @@ def listing_missing_field_codes(
     if for_public_filter:
         missing = [m for m in missing if m in _PUBLIC_INCOMPLETE_KEYS]
     return missing
+
+
+# N6.4 (D-N13): a new arrival whose only gaps are price (photo gaps never queue a car,
+# see ``_NON_ACTIONABLE``) is "pending", not incomplete, for ``PENDING_WINDOW_DAYS``.
+PENDING_WINDOW_DAYS = 3
+PENDING_ELIGIBLE_CODES = frozenset({"price", "images"})
+
+
+def parse_scrape_ts(value: Any) -> datetime | None:
+    """A ``first_seen_at`` / ``scraped_at`` value (ISO text, optional ``Z``, or datetime) as aware UTC."""
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        s = str(value).strip()
+        if not s:
+            return None
+        if s.endswith("Z"):
+            s = s[:-1] + "+00:00"
+        try:
+            dt = datetime.fromisoformat(s.replace(" ", "T", 1) if " " in s and "T" not in s else s)
+        except ValueError:
+            return None
+    return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt.astimezone(timezone.utc)
+
+
+def inside_new_arrival_window(
+    first_seen_at: Any, latest_scraped_at: Any, window_days: int = PENDING_WINDOW_DAYS
+) -> bool:
+    """D-N13: (the row's latest ``scraped_at`` - the gap's ``first_seen_at``) <= N days.
+
+    Measured against the row's own latest scrape, never the wall clock. Either
+    timestamp missing or unparseable is outside the window (fail toward "incomplete").
+    """
+    first, last = parse_scrape_ts(first_seen_at), parse_scrape_ts(latest_scraped_at)
+    if first is None or last is None:
+        return False
+    return timedelta(0) <= (last - first) <= timedelta(days=int(window_days))
+
+
+def is_pending_arrival(
+    missing: list[str],
+    first_seen_at: Any,
+    latest_scraped_at: Any,
+    window_days: int = PENDING_WINDOW_DAYS,
+) -> bool:
+    """True when every gap is price or photos and the car is inside the window."""
+    if not missing or not set(missing) <= PENDING_ELIGIBLE_CODES:
+        return False
+    return inside_new_arrival_window(first_seen_at, latest_scraped_at, window_days)
 
 
 def is_car_incomplete_for_public_listings(car: dict[str, Any]) -> bool:

@@ -759,6 +759,9 @@ def _map_vehicle_results(
 
     vdp_path = str(obj.get("url") or "").strip()
 
+    # N8.11: no per-car store field is known on this path (the N1.2 map got HTTP 500
+    # on nissanofcookeville and never saw a payload), so rows are not stamped
+    # _rooftop here; group-pool sites are covered by the SRP parser.
     out: dict[str, Any] = {
         "vin": vin,
         "year": year,

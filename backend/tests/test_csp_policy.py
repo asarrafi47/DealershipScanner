@@ -96,13 +96,31 @@ _CROSS_ORIGIN_IMPORT = re.compile(
 )
 
 
+def test_turnstile_origin_only_on_its_pages():
+    from backend.web import security
+
+    assert security.TURNSTILE_PAGE_ENDPOINTS == frozenset({"dealer_portal.dealer_register"})
+    d = _directives(security._csp_header_value_enforced("n0nce", turnstile=True))
+    assert d["script-src"] == ["'self'", "'nonce-n0nce'", "https://challenges.cloudflare.com"]
+    assert d["frame-src"] == ["'self'", "https://challenges.cloudflare.com"]
+    assert d["connect-src"] == ["'self'", "https://tile.openstreetmap.org"]
+    assert "challenges.cloudflare.com" not in security._csp_header_value_enforced("n0nce")
+
+
 def test_no_template_or_static_script_loads_a_cross_origin_script():
     """script-src is 'self' (+ nonce): a cross-origin script would be blocked."""
-    tag_hits = [
-        str(p.relative_to(FRONTEND))
-        for p in (FRONTEND / "templates").rglob("*.html")
-        if _CROSS_ORIGIN_SCRIPT_TAG.search(p.read_text(encoding="utf-8", errors="ignore"))
-    ]
+    # Card S19: the one allowed cross-origin script is Cloudflare Turnstile on the dealer sign-up
+    # page; security.TURNSTILE_PAGE_ENDPOINTS adds its origin to that page's policy only.
+    turnstile_tag = '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"'
+    allowed = {"dealer_register.html": turnstile_tag}
+    tag_hits = []
+    for p in (FRONTEND / "templates").rglob("*.html"):
+        text = p.read_text(encoding="utf-8", errors="ignore")
+        rel = str(p.relative_to(FRONTEND / "templates"))
+        if rel in allowed:
+            text = text.replace(allowed[rel], "")
+        if _CROSS_ORIGIN_SCRIPT_TAG.search(text):
+            tag_hits.append(rel)
     import_hits = [
         str(p.relative_to(FRONTEND))
         for p in (FRONTEND / "static").rglob("*")

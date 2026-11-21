@@ -18,6 +18,9 @@ from backend.db import comments_db
 from backend.db.comments_db import SCOPE_CAR, create_comment, list_comments
 from backend.main import app
 
+# Card S10: these tests sign in with made-up user ids (see conftest.session_users_exist).
+pytestmark = pytest.mark.usefixtures("session_users_exist")
+
 CSRF = "community-api-test-csrf-token-32-chars-long"
 CAR_ID = 101
 

@@ -9,6 +9,7 @@ from backend.scanner.pipeline.constants import (
     FIELD_FLOOR,
     INCOMPLETE_FLOOR,
     KEY_FIELDS,
+    MILEAGE_COVERAGE_KEYS,
     MIN_ROWS_UNKNOWN,
     ROOT,
     ROW_FLOOR,
@@ -17,14 +18,28 @@ from backend.scanner.pipeline.constants import (
 from backend.scanner.pipeline.db import _rows
 
 
+# workspace/ is not in the Railway image, so the allowlist has a tracked twin; both are read.
+ONE_CONDITION_OK_PATHS = (
+    ROOT / "workspace" / "pipeline" / "one_condition_ok.txt",
+    ROOT / "deploy" / "railway" / "one_condition_ok.txt",
+)
+
+
 def _one_condition_ok() -> set[str]:
     """Dealer ids whose lot legitimately carries a single condition (used-only
-    independents, new-only fleet/RV sellers). One id per line, `#` comments."""
-    try:
-        text = (ROOT / "workspace" / "pipeline" / "one_condition_ok.txt").read_text()
-    except OSError:
-        return set()
-    return {ln.split("#", 1)[0].strip() for ln in text.splitlines() if ln.split("#", 1)[0].strip()}
+    independents, new-only fleet/RV sellers). One id per line, `#` comments. The union
+    of the workspace file and its tracked twin (the do_not_scan pattern of manifest.py)."""
+    out: set[str] = set()
+    for path in ONE_CONDITION_OK_PATHS:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        for ln in text.splitlines():
+            did = ln.split("#", 1)[0].strip()
+            if did:
+                out.add(did)
+    return out
 
 
 # --------------------------------------------------------------------------
@@ -108,7 +123,7 @@ def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info
         "rows": n, "recipe_fetch": s.get("recipe_fetch"), "recipe_coverage": s.get("recipe_coverage"),
         "http_first": (s.get("vdp_prefetch") or {}).get("http_first"), "vdp_recipes": (s.get("vdp_prefetch") or {}).get("vdp_recipes"),
         "error": (r.get("error") or None),
-        "coverage": {k: cc.get(k) for k in KEY_FIELDS + SECONDARY_FIELDS if k in cc},
+        "coverage": {k: cc.get(k) for k in KEY_FIELDS + SECONDARY_FIELDS + MILEAGE_COVERAGE_KEYS if k in cc},
         "filtered_count": s.get("filtered_count"), "vin_facts": s.get("vin_facts"),
         "vin_owner_conflicts": int(s.get("vin_owner_conflicts") or 0),
         "vin_owner_conflict_owners": s.get("vin_owner_conflict_owners") or {},
@@ -136,6 +151,9 @@ def _assess(conn, dealer_id: str, since_iso: str, known_before: int, recipe_info
     weak = [k for k in KEY_FIELDS if float(cc.get(k) or 0) < FIELD_FLOOR]
     weak2 = [k for k in SECONDARY_FIELDS if k in cc and float(cc.get(k) or 0) < FIELD_FLOOR]
     out["weak_key_fields"], out["weak_fields"] = weak, weak2
+    # N6.9: mileage joins the gate for used rows (F4 MY2026+ at 0 mi is a data question, not a gap).
+    if cc.get("used_mileage") is not None and float(cc["used_mileage"]) < FIELD_FLOOR:
+        weak.append("used_mileage")
     if weak:
         out["verdict"], out["reason"] = "thin", "key fields below 90%: " + ", ".join(f"{k}={float(cc.get(k) or 0):.0%}" for k in weak)
         return out

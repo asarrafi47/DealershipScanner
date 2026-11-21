@@ -65,3 +65,22 @@ def test_unknown_string_defaults_automatic_and_weak() -> None:
     label, weak = normalize_transmission_standard("Totally Unknown Gearbox XYZ", log_weak=False)
     assert label == "Automatic"
     assert weak is True
+
+
+def test_automatic_with_manual_shift_mode_is_not_manual() -> None:  # B-025
+    for raw, want in (
+        ("Automatic with manual shift mode", "Automatic"),
+        ("CVT with manual shift mode", "CVT"),
+        ("Continuously Variable Transmission w/ manual mode", "CVT"),
+        ("6-Speed Manual", "Manual"),
+    ):
+        assert normalize_transmission_standard(raw, log_weak=False)[0] == want, raw
+
+
+def test_vpic_label_and_family_automatic_with_manual_mode() -> None:  # B-025
+    from backend.utils.vpic_specs import transmission_family, vpic_transmission_label
+
+    s = "Automatic with manual shift mode"
+    assert transmission_family(s) == "automatic"
+    assert vpic_transmission_label({"transmission_style": s}) == "Automatic"
+    assert transmission_family("6-Speed Manual") == "manual"

@@ -14,6 +14,12 @@ import pytest
 # Dev/test may use plain SQLite for users.db; production forbids this (SEC-088).
 os.environ.setdefault("ALLOW_UNENCRYPTED_USER_DB", "1")
 
+# bcrypt cost 13 is ~586 ms/hash; tests hash dozens of passwords. Lower the cost
+# floor and default to 4 (~1 ms) for the suite only; tests that care about the
+# production default delenv BCRYPT_ROUNDS and BCRYPT_TEST_LOW_COST themselves.
+os.environ["BCRYPT_TEST_LOW_COST"] = "1"
+os.environ.setdefault("BCRYPT_ROUNDS", "4")
+
 # --- Hermetic databases ------------------------------------------------------------
 #
 # This runs at conftest import, i.e. before collection imports any test module.
@@ -136,9 +142,9 @@ if _backend not in sys.path:
 # individual tests with ``@pytest.mark.integration`` / ``@pytest.mark.regression``
 # or add module basenames/prefixes here as tiers are classified.
 #
-# CI runs two jobs: ``-m "not integration"`` (offline) and ``-m integration``
-# (pytest-integration in ci.yml). Tag integration tests ONLY with the
-# stack_up self-skip pattern below, so they pass on a bare runner.
+# CI's ``pytest`` job runs ``-m "not integration"`` (offline); no job runs
+# ``-m integration`` any more (``pytest-pg`` runs ``-m pg``). Tag integration tests
+# ONLY with the stack_up self-skip pattern below, so they pass on a bare runner.
 REGRESSION_MODULES: frozenset = frozenset()
 REGRESSION_PREFIXES: tuple = ()
 
@@ -255,11 +261,25 @@ def _clear_query_parser_caches() -> None:
     from backend.utils.query_parser import clear_query_parser_caches
     from backend.utils.ip_rate_limit import clear_rate_limit_state
 
+    from backend.listings.dealer_locator import clear_google_cache
+
     clear_query_parser_caches()
     clear_rate_limit_state()
+    clear_google_cache()
     yield
     clear_query_parser_caches()
     clear_rate_limit_state()
+    clear_google_cache()
+
+
+@pytest.fixture(autouse=True)
+def _reset_users_conn_pool() -> None:
+    """Pooled SQLCipher users.db handles never outlive the test that opened them (the pool
+    also re-checks path, key and inode on every checkout; this keeps tmp files closable)."""
+    yield
+    from backend.db.users_sqlite import reset_users_conn_pool
+
+    reset_users_conn_pool()
 
 
 # --- Recipe caches: one tmp dir per test --------------------------------------------

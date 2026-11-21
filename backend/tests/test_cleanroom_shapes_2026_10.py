@@ -6,8 +6,7 @@ fixture's ``source`` block) and asserts the CORRECT behaviour. Each one is
 ``xfail(strict=True)`` with the defect and the N-unit that fixes it in its
 reason, so the unit that lands the fix sees it XPASS and removes the marker
 (docs/NEXT_PHASES_PLAN_2026_10.md, N1.4; N9's exit gate runs
-``-k "retire or retry or identity"``, N8.6 flips the scan-order and
-unstamped-feed shapes).
+``-k "retire or retry or identity"``, N8.6 flipped the scan-order shape, now a plain test).
 
 Facts come from the N1 gather reports (workspace/phase_runs/N1/gather/):
 retirements_rca.txt (the 21 in-run retirements, first-pass rows re-seen by the
@@ -348,12 +347,6 @@ def test_lifecycle_retry_with_known_zero_baseline_retires_nothing(inv, log_root,
 # ── 6. VIN-owner guard: the owner depends on which store wrote first ─────────
 
 _CHAP = _load("chapman_scan_order_20261013.json")
-_GUARD_REASON = (
-    "defect: first-writer-wins VIN-owner guard (scanner/database.py:83-101, upsert/guard.py:36-67, backstop "
-    "upsert/sql.py:150-155) compares no evidence, so the store scanned first keeps a car whose own store's "
-    "feed names it (clean room: chapmanfordaz-com wrote first and owns 175 CAE Chapman Dodge cars); fixed by "
-    "N8.6 (V029 persisted rooftop tier, evidence-aware guard and backstop, D-N3)"
-)
 
 
 def _wipe(db: Path) -> None:
@@ -388,7 +381,6 @@ def _chapman_scans() -> dict[str, tuple[dict[str, Any], list[dict[str, Any]], di
     return out
 
 
-@pytest.mark.xfail(strict=True, reason=_GUARD_REASON)
 def test_guard_scan_order_gives_the_same_owner(inv):
     """Two stores' feeds carry the same Chapman Dodge cars (lot code CAE in the
     photo path): Chapman Ford's feed names no store, Chapman Dodge's own feed
@@ -410,16 +402,9 @@ def test_guard_scan_order_gives_the_same_owner(inv):
     assert set(owners["ford_first"].values()) == {"chapmandodge-com"}, owners["ford_first"]
 
 
-# ── 7. an unstamped group feed files sister and off-roster cars under the store
+# ── 7. a Jazel group feed files sister and off-roster cars under the store (fixed by N8.3: the parser now stamps the card's account)
 
 _FIVE = _load("fivestar_jazel_group_srp_20261013.json")
-_FEED_REASON = (
-    "defect: the Jazel parser drops each card's accountId / accountName / accountAddress (parsers/jazel.py:156-194 "
-    "_map; :183 even prefers the manifest name), so no row carries a rooftop and the gate keeps the whole Sam Pack "
-    "group SRP (match.py:338-342 no_rooftop_evidence): 124 cars of other rooftops filed under 5starford-com, and "
-    "the guard then refuses Dallas's own cars to fivestarforddallas-com; fixed by N8.3 (Jazel account -> _rooftop) "
-    "with N8.6 (D-N4: off-roster rooftops held; the plan records the flip under N8.6)"
-)
 
 
 def _jazel_srp(cards: list[dict[str, Any]]) -> str:
@@ -442,7 +427,6 @@ def _jazel_srp(cards: list[dict[str, Any]]) -> str:
     return "\n".join(parts)
 
 
-@pytest.mark.xfail(strict=True, reason=_FEED_REASON)
 def test_unstamped_group_feed_files_no_sister_or_offroster_cars_under_the_store(inv):
     """5starford-com (Five Star Ford North Richland Hills) replays the group-wide
     /inventory/all-vehicles/ SRP: 934 cards, 810 at North Richland Hills, 59

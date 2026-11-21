@@ -25,4 +25,6 @@ fi
 # recipes stay live, scan_hints.recipe_status = blocked:railway:... (recipes.egress_tag).
 export SCANNER_EGRESS_TAG="${SCANNER_EGRESS_TAG:-railway}"
 cd /app
+# Scan loop: with LOOP_STORE=db, fleet_scan publishes the run's dealer logs, bundle and recipe mirror into the
+# Railway database afterwards (backend/scripts/ops_publisher.py). A failed publish never changes the scan's exit code.
 exec python3 -m backend.scripts.fleet_scan

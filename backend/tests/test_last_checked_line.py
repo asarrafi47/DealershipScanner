@@ -404,7 +404,7 @@ def _card():
 def dealer_client(sqlite_inventory, app_factory, tmp_path, monkeypatch):
     from backend.routes import dealership_page as dp
 
-    main = app_factory(ALLOW_DEFAULT_APP_USER="0", RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"))
+    main = app_factory(ALLOW_DEFAULT_APP_USER="0")
     # The page's other reads (card store, registry, specials, reviews) are not
     # under test; the last-checked read goes to the seeded SQLite inventory.
     monkeypatch.setattr(dp, "_dealer_grid_cards_json",
@@ -477,7 +477,7 @@ def _car_row(**over):
 def car_client(sqlite_inventory, app_factory, tmp_path, monkeypatch):
     from backend.routes import cars_pages
 
-    main = app_factory(ALLOW_DEFAULT_APP_USER="0", RATE_LIMIT_SQLITE_PATH=str(tmp_path / "rate_limits.db"))
+    main = app_factory(ALLOW_DEFAULT_APP_USER="0")
     state = {"row": _car_row()}
     monkeypatch.setattr(cars_pages, "get_car_by_id", lambda *_a, **_k: dict(state["row"]))
     monkeypatch.setattr(cars_pages, "prepare_car_detail_context",

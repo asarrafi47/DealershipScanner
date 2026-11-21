@@ -25,6 +25,10 @@ def emit_dealer_run_summary(result: dict[str, Any]) -> None:
         "seconds": round(float(result.get("seconds") or 0.0), 2),
         "upserted": result.get("upserted"),
     }
+    if result.get("wall_seconds") is not None:
+        # active (monotonic) time next to wall time: a gap is a Mac sleep, not a slow dealer
+        payload["active_seconds"] = round(float(result.get("active_seconds") or result.get("seconds") or 0.0), 2)
+        payload["wall_seconds"] = round(float(result["wall_seconds"]), 2)
     if result.get("vin_owner_conflicts"):
         payload["vin_owner_conflicts"] = result.get("vin_owner_conflicts")
     err = result.get("error")

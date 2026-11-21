@@ -9,5 +9,6 @@ import backend.dealer.admin.data_quality_hub  # noqa: F401,E402
 import backend.dealer.admin.scanner_ops_hub  # noqa: F401,E402
 import backend.dealer.admin.reviews_hub  # noqa: F401,E402
 import backend.dealer.admin.attribution_hub  # noqa: F401,E402
+import backend.dealer.admin.chat_usage_hub  # noqa: F401,E402
 
 __all__ = ["store_admin_bp"]

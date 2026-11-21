@@ -385,6 +385,10 @@ def _is_placeholder_url(url: str) -> bool:
     u = url.lower()
     if "coming-soon" in u or "placeholder" in u or "no-image" in u:
         return True
+    # Shared token list (N6.8, D-N15): same test completeness and the photo alarm use.
+    from backend.utils.placeholder_images import has_placeholder_token
+    if has_placeholder_token(u):
+        return True
     if "nophoto" in u or "no_photo" in u or "no-photo" in u:
         return True
     for signal in _FLUFF_URL_SIGNALS:

@@ -559,8 +559,14 @@ def _trim_in_text(trim_name: str, text: str) -> bool:
     if not trim_name or not text:
         return False
     tokens = _trim_tokens(trim_name)
-    hay = _norm_token(text)
-    return any(tok and tok in hay for tok in tokens)
+    # Whole-word match (B-026): 'SE' must not hit 'SEL', 'LT' must not hit 'LTZ'.
+    # Hyphenated names stay one word ('EX-L' != 'EX'); n-grams cover multi-word trims.
+    words = [w for w in (_norm_token(x) for x in re.split(r"[^A-Za-z0-9\-]+", text)) if w]
+    grams: set[str] = set()
+    for n in range(1, 5):
+        for i in range(len(words) - n + 1):
+            grams.add("".join(words[i:i + n]))
+    return any(tok and tok in grams for tok in tokens)
 
 
 def _sentence_applies_to_trim(sentence: str, trim_name: str) -> bool:

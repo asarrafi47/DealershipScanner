@@ -7,25 +7,36 @@ returns a grounded, AI-generated 2-3 sentence description produced by
 through the provider layer (Claude in prod, local Ollama in dev) and only
 narrates fields present on the row -- it never invents specs or prices.
 
+Card C3: the route needs a signed-in account (the same check as the chat, so a signed-out
+caller gets the existing login response), the ``X-CSRF-Token`` header (a GET carries the Lax
+session cookie on a cross-site link, so without the header another site could make a signed-in
+browser spend the chat budget), and a model call (a cache miss) runs under the chat gate
+(``guard(kind="narrate", weight=1)``), sharing the shopper's chat allowance.
+
 Responses:
     200 -> {"ok": true,  "description": "<prose>"}
+    401 -> {"ok": false, "error": "login_required"}     # 403 premium_required with billing on
+    403 -> {"ok": false, "error": "csrf_required"}
     404 -> {"ok": false, "error": "car not found"}
-    429 -> {"ok": false, "error": "rate_limited"}
+    429 -> {"ok": false, "error": "rate_limited"} or a chat-limit refusal (error, message, resets_at)
     500 -> {"ok": false, "error": "narration_failed"}   # detail is logged, not returned
 """
 from __future__ import annotations
 
 import hashlib
 import logging
-import os
 from collections import OrderedDict
 
 from flask import Blueprint, jsonify, request
+from werkzeug.exceptions import HTTPException
 
+from backend.billing import access as paid_access
+from backend.billing.catalog import FEATURE_AI_CAR_CHAT
+from backend.chat_budget import ChatDenied
+from backend.chat_budget import web as chat_web
 from backend.db.inventory_db import get_car_by_id
-from backend.utils.car_chat_policy import car_chat_rate_limits
 from backend.utils.client_ip import client_ip
-from backend.utils.ip_rate_limit import allow_request
+from backend.utils.csrf import validate_csrf_header
 from backend.utils.vehicle_narrator import narrate_vehicle
 
 _log = logging.getLogger(__name__)
@@ -53,37 +64,19 @@ def _cache_key(car_id: int, row: dict) -> tuple:
     return (car_id, hashlib.md5(blob.encode("utf-8")).hexdigest()[:16])
 
 
-def _narrate_global_rpm() -> int:
-    """Global (all-IPs) cap on paid narration calls per minute.
-
-    This endpoint is an unauthenticated GET that triggers a billable model call.
-    The per-IP bucket alone does not bound total spend — an attacker can iterate
-    distinct ``car_id`` values to defeat the per-car cache and rotate source IPs
-    to defeat the per-IP limit. A non-zero DEFAULT global cap bounds worst-case
-    cost regardless. ``RATE_LIMIT_NARRATE_GLOBAL_PER_MIN=0`` disables it.
-    """
-    raw = os.environ.get("RATE_LIMIT_NARRATE_GLOBAL_PER_MIN")
-    if raw is None or not str(raw).strip():
-        return 300
-    try:
-        return max(0, int(raw))
-    except (TypeError, ValueError):
-        return 300
-
-
 @ai_narrate_bp.route("/api/car/<int:car_id>/narrate", methods=["GET"])
 def narrate_car(car_id: int):
     """Return an AI-generated description for the car with ``car_id``."""
-    # Rate-limit: this triggers a paid model call in prod, so cap per-IP and
-    # globally to prevent cost-amplification / DoS on an otherwise public GET.
-    ip = _client_ip()
-    _pair, rpm_ip, _rpm_global = car_chat_rate_limits()
-    rpm_global = _narrate_global_rpm()
-    if rpm_global > 0 and not allow_request(
-        "narrate:global", max_events=rpm_global, window_seconds=60.0
-    ):
-        return jsonify({"ok": False, "error": "rate_limited"}), 429
-    if not allow_request(f"narrate:ip:{ip}", max_events=max(rpm_ip, 30), window_seconds=60.0):
+    ok, err = paid_access.check_feature(FEATURE_AI_CAR_CHAT)
+    if not ok:
+        status = 401 if err == paid_access.LOGIN_REQUIRED else 403
+        return jsonify(paid_access.denied_json(FEATURE_AI_CAR_CHAT, err)), status
+    try:
+        validate_csrf_header()
+    except HTTPException:
+        return jsonify({"ok": False, "error": "csrf_required"}), 403
+    # Per-minute burst guard (the one function every chat route uses; global cap default 300).
+    if not chat_web.burst_allowed(chat_web.BURST_NARRATE, _client_ip()):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
     try:
         row = get_car_by_id(car_id, include_inactive=False)
@@ -102,7 +95,12 @@ def narrate_car(car_id: int):
             _cache.move_to_end(key)
             return jsonify({"ok": True, "description": cached, "cached": True})
 
-        description = narrate_vehicle(row_dict)
+        # Only a cache miss calls the model, so only a cache miss is counted.
+        try:
+            with chat_web.open_guard(chat_web.KIND_NARRATE, listing_id=None, weight=1):
+                description = narrate_vehicle(row_dict)
+        except ChatDenied as denied:
+            return chat_web.denial_response(denied.denial)
         _cache[key] = description
         _cache.move_to_end(key)
         while len(_cache) > _CACHE_MAX:

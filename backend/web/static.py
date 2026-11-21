@@ -18,7 +18,7 @@ import mimetypes
 import os
 from pathlib import Path
 
-from flask import Flask, current_app, request, send_from_directory
+from flask import Flask, current_app, request, send_from_directory, url_for
 
 _STATIC_MAX_AGE = 31536000
 _STATIC_UNSTAMPED_MAX_AGE = 3600
@@ -113,6 +113,9 @@ def _static_view(filename: str):
         resp.headers["Content-Encoding"] = encoding
     if filename.endswith((".js", ".css")):
         resp.vary.add("Accept-Encoding")
+    if filename == SPECULATION_RULES_FILE:
+        # Chromium ignores a rule set served as anything else.
+        resp.mimetype = "application/speculationrules+json"
     return resp
 
 
@@ -135,11 +138,46 @@ def _static_cache_headers(resp):
     return resp
 
 
+# Speculation rules (instant navigation). Delivered as a response HEADER pointing at a
+# static JSON file, not as an inline <script type="speculationrules">:
+#  * no inline script, so no CSP nonce and no 'inline-speculation-rules' source is
+#    needed and the enforced CSP is unchanged: the rule set is a same-origin URL, which
+#    script-src 'self' / default-src 'self' already allow. Verified in Chromium 153
+#    under the enforced production CSP: rule set parsed without error, no violation,
+#    prefetches served (Preload.ruleSetUpdated / prefetchStatusUpdated over CDP);
+#  * the header value is identical for every visitor, so it works unchanged on HTML
+#    the edge caches (the landing), where a per-request nonce cannot be used;
+#  * the ?v= stamp makes the JSON immutable-cacheable like every other static file.
+# What the rules allow (and why that is safe) is documented next to them, in
+# frontend/static/nav_perf.js; backend/tests/test_speculation_rules.py pins it.
+SPECULATION_RULES_FILE = "speculation-rules.json"
+
+
+def _speculation_rules_header(resp):
+    """``Speculation-Rules`` on every HTML document response.
+
+    Browsers without speculation rules ignore the header. Chromium skips all
+    speculation itself under Save-Data, Battery Saver and Memory Saver and when the
+    user turned preloading off; nav_perf.js additionally switches the rules off
+    (``<html data-ds-nospec>``, matched by every rule) on a 2g-class connection."""
+    if request.method != "GET" or resp.status_code != 200:
+        return resp
+    if (resp.mimetype or "") != "text/html" or "Speculation-Rules" in resp.headers:
+        return resp
+    url = url_for("static", filename=SPECULATION_RULES_FILE, v=static_cache_ver())
+    resp.headers["Speculation-Rules"] = f'"{url}"'
+    return resp
+
+
 def register_static(app: Flask) -> None:
     """Year-long static max-age, the precompressed static view, the cache-header hook."""
     global _static_cache_ver_memo
     # A fresh app (e.g. ``importlib.reload(backend.main)``) recomputes the stamp.
     _static_cache_ver_memo = None
+    from backend.web.css_bundle import reset_memo
+
+    reset_memo()
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = _STATIC_MAX_AGE
     app.view_functions["static"] = _static_view
     app.after_request(_static_cache_headers)
+    app.after_request(_speculation_rules_header)

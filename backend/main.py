@@ -13,6 +13,7 @@ from backend.config import Config
 
 import logging
 import os
+import sys
 import time
 from datetime import timedelta
 
@@ -21,6 +22,7 @@ from flask import Flask
 from backend.auth.apple_oauth import bp as apple_oauth_bp
 from backend.auth.google_oauth import bp as google_oauth_bp
 from backend.billing.routes import bp as billing_bp
+from backend.auth.phone.webhook import bp as twilio_webhook_bp
 from backend.dealer.admin import store_admin_bp
 
 # Site-admin hub pages (must load before first url_for in templates).
@@ -30,6 +32,7 @@ import backend.dealer.admin.scanner_ops_hub  # noqa: F401
 from backend.dealer.routes import bp as dealer_portal_bp
 from backend.dev.console import register_dev_console
 from backend.routes.ai_narrate_bp import ai_narrate_bp
+from backend.routes.loop_api import bp as loop_api_bp
 from backend.routes.ai_chat_bp import ai_chat_bp
 from backend.routes.health import bp as health_api_bp
 from backend.dev.routes import dev_bp
@@ -78,8 +81,15 @@ if trust_proxy_headers():
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=14)
+# Card S10: the cookie lives 30 days; the per-role limits (shopper 30 days sliding, admin 12 hours and
+# staff 14 days absolute) are applied by backend.auth.session.enforce_session_policy.
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
+# Same signed-cookie session; after saving it, a response that set a cookie is never left
+# publicly cacheable (backend/web/edge_cache.py, perf 2026-11-20).
+from backend.web.edge_cache import EdgeSafeSessionInterface  # noqa: E402
+
+app.session_interface = EdgeSafeSessionInterface()
 
 # Static assets: year-long cache, ?v= cache-buster, precompressed siblings.
 register_static(app)
@@ -128,6 +138,41 @@ def _prewarm_listings_inventory_cache() -> None:
             _logger.exception("EPA dictionary index prewarm failed")
 
     threading.Thread(target=_run, name="listings-prewarm", daemon=True).start()
+    _start_registry_backfill()
+
+
+def _start_registry_backfill() -> None:
+    """
+    Run ``ensure_dealership_registry_backfill`` off the request path.
+
+    It used to run inside the first GET /api/listings/geo-coords (~621 hosts x 0.34 s
+    of seq scan, ~210 s once per process). The call is idempotent (process flag plus an
+    UPDATE that only touches rows still unstamped) and the endpoint works without it.
+    Skipped under pytest so importing the app never writes to a developer DB; set
+    DS_SKIP_REGISTRY_BACKFILL=1 to opt out elsewhere.
+    """
+    import threading
+
+    if "pytest" in sys.modules or os.environ.get("DS_SKIP_REGISTRY_BACKFILL"):
+        return
+
+    def _run() -> None:
+        try:
+            from backend.db.repositories.dealers_repo import (
+                ensure_dealership_registry_backfill,
+            )
+
+            t0 = time.perf_counter()
+            n = ensure_dealership_registry_backfill()
+            _logger.info(
+                "dealership_registry backfill done (%d rows, %.1fs)",
+                n,
+                time.perf_counter() - t0,
+            )
+        except Exception:
+            _logger.exception("dealership_registry backfill failed")
+
+    threading.Thread(target=_run, name="registry-backfill", daemon=True).start()
 
 
 # Under gunicorn this runs in the ARBITER (--preload imports the app there), which
@@ -144,9 +189,11 @@ from backend.dealer.admin.operator_api import register_admin_operator_api
 register_admin_operator_api(app)
 app.register_blueprint(dealer_portal_bp)
 app.register_blueprint(billing_bp)
+app.register_blueprint(twilio_webhook_bp)  # POST /webhooks/twilio/verify; 404 while the phone flag is off
 app.register_blueprint(google_oauth_bp)
 app.register_blueprint(apple_oauth_bp)
 app.register_blueprint(ai_narrate_bp)
+app.register_blueprint(loop_api_bp)  # /api/loop: 404 until LOOP_READ_TOKEN or LOOP_SUBMIT_TOKEN is set
 app.register_blueprint(ai_chat_bp)
 app.register_blueprint(health_api_bp)
 register_dev_console(app)
@@ -180,8 +227,15 @@ _admin_dealer_api_routes.register(app)
 # App-wide hooks, in the original order (pinned by test_app_surface_golden):
 # gzip after_request + context processor + filters + 404, then the CSP nonce,
 # CSRF and billing-gate before_request hooks and the CSP headers after_request.
+from backend.auth.session import register_session_policy  # noqa: E402
+
+register_session_policy(app)  # card S10: first before_request hook (before CSP nonce, CSRF, device cookie)
 register_templating(app)
 register_security(app)
+
+from backend.utils.device_id import register_device_cookie  # noqa: E402
+
+register_device_cookie(app)
 
 
 # Auth pages + /api/auth/* + MFA stubs, then account pages (bare endpoint names kept).
@@ -190,3 +244,9 @@ from backend.routes import account as _account_routes  # noqa: E402
 
 _auth_pages.register(app)
 _account_routes.register(app)
+
+# Outermost WSGI layer, registered last: Server-Timing on HTML/JSON responses and one
+# reused inventory connection per request (backend/web/request_scope.py).
+from backend.web.request_scope import register_request_scope  # noqa: E402
+
+register_request_scope(app)

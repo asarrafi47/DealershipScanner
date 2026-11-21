@@ -72,11 +72,15 @@ class DealerCtx:
     place: dict[str, str] = field(default_factory=dict)
 
     @classmethod
-    def for_store(cls, dealer_id: str, dealer_name: str, dealer_url: str) -> "DealerCtx":
+    def for_store(
+        cls, dealer_id: str, dealer_name: str, dealer_url: str, registry_id: int | None = None
+    ) -> "DealerCtx":
         """Look the store's place up once (:func:`store_place`). Blocking (DB);
-        async callers run it in a thread."""
+        async callers run it in a thread. ``registry_id`` is the manifest's own roster
+        row; stores that share a website host are told apart by it, never by the host."""
         try:
-            place = store_place(dealer_url, dealer_id)
+            place = (store_place(dealer_url, dealer_id, registry_id) if registry_id
+                     else store_place(dealer_url, dealer_id))
         except Exception:  # noqa: BLE001 - attribution help must never break a scan
             place = {}
         return cls(dealer_id, dealer_name, dealer_url, gate_place(place))

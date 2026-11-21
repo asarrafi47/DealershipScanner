@@ -31,7 +31,6 @@ def reset_env(monkeypatch, tmp_path):
     monkeypatch.setenv("PASSWORD_RESET_PEPPER", "test-reset-pepper")
     monkeypatch.setenv("MFA_DELIVERY_MODE", "log")
     # In-process rate-limit state (cleared per test by the root conftest), never a shared file.
-    monkeypatch.setenv("RATE_LIMIT_SQLITE_PATH", "")
     init_users_db()
     yield db_path
 
@@ -146,7 +145,6 @@ def test_forgot_password_route_fourth_request_same_page_no_email(app_factory, se
     app = app_factory(
         PASSWORD_RESET_ENABLED="1",
         PASSWORD_RESET_PEPPER="test-reset-pepper",
-        RATE_LIMIT_SQLITE_PATH="",
         ALLOW_DEFAULT_APP_USER="0",
         BILLING_STRIPE_ENABLED="0",
     ).app

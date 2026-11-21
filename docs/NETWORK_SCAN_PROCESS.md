@@ -3,6 +3,17 @@
 **Read this before scanning any dealership.** It states the goal of this effort and the
 loop every dealership goes through. Written from the owner's instructions, 2026-09-24.
 
+## Where this runs
+
+The per-dealership loop below is the process; **Railway executes it** (`scanner-nightly`, the
+fleet job in `docs/RAILWAY_SCANNING.md`), and its output reaches Claude Code cloud sessions as run
+bundles, dealer-log blocks and a recipe mirror in the scan loop store (the Railway database)
+(`docs/scan_loop/README.md`, owner decision 2026-11-21). A cloud session does not fetch dealer
+sites: it reads those artifacts, proposes recipe fixes as request files and changes code through
+PRs into `dev`. Where a step below says "run" a command, that is Railway's job (or the owner's Mac
+for a one-off); the `workspace/dealer_logs/` paths are the layout on the volume and in the data
+repository, not a place a cloud VM may keep state.
+
 ## Goal
 
 We are shifting the scanning process from using headless browsers to collect data from
@@ -119,6 +130,14 @@ workspace/dealer_logs/
   in the triage). One attempt per dealer per day. Each step is a dated block in
   `discovery.md`, each failure a line in `_learning/errors_index.md`, and the dealers still
   failing are listed in `<out>/needs_discovery.txt` for the dealer-discovery workflow.
+- Launching a fleet on a Mac (any `dealer_pipeline` / `fleet_scan` / shard run): prefix it
+  with `caffeinate -dims` (e.g. `caffeinate -dims .venv/bin/python -m backend.scripts.dealer_pipeline ...`),
+  lid open. A Mac sleep froze the 2026-10-13 fleet for 21.7 h. The batch timeout
+  (`--scan-timeout`) now counts active time only (`pipeline/active_time.py`: a gap between
+  1 s polls is booked as paused, whatever the clock does in sleep), and each `scan  batch`
+  line prints `in <wall>s (active <n>s)`; `dealer_run_summary` and the scan log carry
+  `wall_seconds` beside `seconds` (= active) per dealer. A wall/active gap is a pause, not a
+  slow dealer.
 - `backend/scripts/discovery_probe.py` — the verbose discovery record for one dealership:
   redirect chain, status, size, title, challenge markers, every template's detect result,
   script hosts and API hints in the page, inventory-path probes, each synthesized

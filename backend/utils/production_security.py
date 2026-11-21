@@ -66,6 +66,14 @@ def assert_production_security_config() -> None:
 
     assert_credential_db_encryption_config()
 
+    from backend.auth.phone.config import assert_phone_login_config_for_production
+
+    assert_phone_login_config_for_production()
+
+    from backend.auth.phone.restore_guard import assert_identity_ids_within_users
+
+    assert_identity_ids_within_users()
+
     dev_console = (os.environ.get("DEV_CONSOLE") or "").strip().lower() in (
         "1",
         "true",
@@ -79,6 +87,10 @@ def assert_production_security_config() -> None:
             "Set a long random secret or disable DEV_CONSOLE."
         )
 
+    from backend.utils.device_id import assert_pepper_if_needed
+
+    assert_pepper_if_needed()
+
     if (os.environ.get("CAR_CHAT_WEB_RESEARCH_PUBLIC") or "").strip().lower() in (
         "1",
         "true",
@@ -90,19 +102,21 @@ def assert_production_security_config() -> None:
             "anonymous users (cost/abuse risk)."
         )
 
-    if (os.environ.get("BILLING_STRIPE_ENABLED") or "").strip().lower() not in (
+    if (os.environ.get("BILLING_STRIPE_ENABLED") or "").strip().lower() in (
         "1",
         "true",
         "yes",
         "on",
     ):
         _log.warning(
-            "BILLING_STRIPE_ENABLED is off in production; paid features use login gates only."
+            "BILLING_STRIPE_ENABLED is on in production: billing is dormant by owner decision "
+            "(the whole site is free). Unset it unless paid plans were deliberately brought back."
         )
 
-    if not (os.environ.get("RATE_LIMIT_SQLITE_PATH") or "").strip():
+    # unset means the entrypoint default (3 workers), so it warns too
+    if (os.environ.get("GUNICORN_WORKERS") or "3").strip() != "1":
         _log.warning(
-            "RATE_LIMIT_SQLITE_PATH unset in production; per-IP rate limits are per worker process."
+            "GUNICORN_WORKERS>1 in production; per-IP rate limits are per worker process."
         )
 
     if not (os.environ.get("DEV_IP_ALLOWLIST") or "").strip():

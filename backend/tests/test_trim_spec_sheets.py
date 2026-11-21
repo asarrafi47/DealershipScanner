@@ -644,3 +644,14 @@ def test_the_checkpoint_write_is_atomic(tmp_path) -> None:
     assert json.loads(path.read_text(encoding="utf-8"))["done"]["x.json"]["digest"] == "d"
     # no temp files left behind
     assert [p.name for p in tmp_path.iterdir()] == ["p.json"]
+
+
+def test_trim_in_text_is_whole_word():
+    """B-026: SE must not match SEL, LT must not match LTZ."""
+    from backend.enrichment.trim_spec_extractor import _trim_in_text
+
+    assert not _trim_in_text("SE", "2.5L engine standard on SEL")
+    assert not _trim_in_text("LT", "Equinox LTZ")
+    assert _trim_in_text("SE", "standard on the SE trim")
+    assert _trim_in_text("Grand Touring", "available on Grand Touring models")
+    assert not _trim_in_text("EX", "EX-L only")

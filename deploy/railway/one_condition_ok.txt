@@ -1,0 +1,7 @@
+# Dealers whose lot legitimately carries a single vehicle condition, so the
+# one-condition check is a note and not a failure. Tracked twin of
+# workspace/pipeline/one_condition_ok.txt, because workspace/ is not in the Railway
+# image; both files are read and unioned (backend/scanner/pipeline/assess.py,
+# backend/scanner/recipe_validation.py). One dealer_id per line; '#' starts a comment.
+quantumautosales-com  # used-only independent
+honestcardeal-com  # used-only independent (Supabase-backed lot)

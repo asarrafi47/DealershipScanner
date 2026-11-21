@@ -1,0 +1,16 @@
+[
+  {
+    "dealer_id": "quantumautosales-com",
+    "gate": "GF5",
+    "evidence": "Used-only lot (209 used, 0 new on 2026-09-26); the seed of the former one_condition_ok allowlist (GATES.md section 5).",
+    "approved": "2026-11-13",
+    "expires": "2027-02-11"
+  },
+  {
+    "dealer_id": "honestcardeal-com",
+    "gate": "GF5",
+    "evidence": "Used-only lot (97 cars captured, no new); the seed of the former one_condition_ok allowlist (GATES.md section 5).",
+    "approved": "2026-11-13",
+    "expires": "2027-02-11"
+  }
+]

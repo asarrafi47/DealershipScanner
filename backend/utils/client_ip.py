@@ -34,12 +34,15 @@ candidate for P16).
 
 from __future__ import annotations
 
+import hmac
 import ipaddress
 import logging
 import os
 from functools import lru_cache
 
 from flask import Request
+
+from backend.utils.runtime_env import is_production_env
 
 _UNKNOWN = "unknown"
 
@@ -282,3 +285,80 @@ def client_ip(request: Request) -> str:
         if candidate:
             return candidate
     return request.remote_addr or _UNKNOWN
+
+
+def canonical_ip(ip: str | None) -> str:
+    """The ONE canonical text counted for an address (also hashed by ``numbers.hash_ip``).
+
+    IPv4 as is; IPv6 reduced to the network address of its /64 (``2001:db8:1:2::``, one home or
+    phone gets a whole /64); an IPv4-mapped IPv6 address becomes its IPv4 form; junk comes back
+    stripped. Idempotent: the output of this function is its own fixed point.
+    """
+    text = (ip or "").strip()
+    try:
+        addr = ipaddress.ip_address(text)
+    except ValueError:
+        return text
+    if isinstance(addr, ipaddress.IPv6Address):
+        if addr.ipv4_mapped is not None:
+            return str(addr.ipv4_mapped)
+        return str(ipaddress.ip_network((addr, 64), strict=False).network_address)
+    return str(addr)
+
+
+def _came_through_cloudflare(request: Request) -> bool:
+    """True when the request's last trusted hop is a Cloudflare address.
+
+    Needs ``TRUST_PROXY_HEADERS`` and ``TRUSTED_PROXY_CIDRS`` (the same settings
+    :func:`client_ip` uses). With a proxy chain (Cloudflare -> Railway edge) the rightmost
+    X-Forwarded-For entry is the address the edge saw, so it must lie in the ranges; a
+    request sent straight to the origin has its own address there and fails the check.
+    Without the proxy switch the socket peer itself must lie in the ranges.
+    """
+    networks = trusted_proxy_cidrs()
+    if not networks:
+        return False
+    if trust_proxy_headers():
+        forwarded = request.headers.get("X-Forwarded-For") or ""
+        parts = [p for p in (piece.strip() for piece in forwarded.split(",")) if p]
+        if not parts:
+            return False
+        peer = _normalize_ip(parts[-1])
+    else:
+        peer = _normalize_ip(request.remote_addr or "")
+    return peer is not None and _in_networks(peer, networks)
+
+
+ORIGIN_SECRET_HEADER = "X-Origin-Secret"
+
+
+def _origin_secret_ok(request: Request) -> bool:
+    """True when the request carries the shared secret a Cloudflare Transform Rule adds.
+
+    ``CF_ORIGIN_SECRET`` (name only here) is compared in constant time. Unset: production never
+    trusts ``CF-Connecting-IP`` (any sender using Cloudflare's own servers can set that header);
+    outside production the Cloudflare-ranges check alone decides, so local runs need no secret.
+    """
+    expected = (os.environ.get("CF_ORIGIN_SECRET") or "").strip()
+    if not expected:
+        return not is_production_env()
+    sent = (request.headers.get(ORIGIN_SECRET_HEADER) or "").strip()
+    return hmac.compare_digest(sent.encode("utf-8"), expected.encode("utf-8"))
+
+
+def phone_client_ip(request: Request) -> str:
+    """The real client address for phone login and chat limits.
+
+    Returns ``CF-Connecting-IP`` only when the request came through Cloudflare's ranges
+    (:func:`_came_through_cloudflare`) **and** carries the ``CF_ORIGIN_SECRET`` header
+    (:func:`_origin_secret_ok`); anything else falls back to :func:`client_ip`, which a forged
+    ``X-Forwarded-For`` cannot move. IPv6 is returned as its /64 (:func:`canonical_ip`).
+    A direct hit on the Railway address can still forge headers until that address is
+    removed and the origin locked (see the module docstring); this function does not weaken
+    that and does not trust the header in that case.
+    """
+    if _came_through_cloudflare(request) and _origin_secret_ok(request):
+        header = _normalize_ip(request.headers.get("CF-Connecting-IP") or "")
+        if header:
+            return canonical_ip(header)
+    return canonical_ip(client_ip(request))

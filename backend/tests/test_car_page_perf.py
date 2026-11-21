@@ -58,6 +58,9 @@ from backend.vision.url_heuristics import (
     heuristic_listing_gallery_fluff_url,
 )
 
+# Card S10: these tests sign in with made-up user ids (see conftest.session_users_exist).
+pytestmark = pytest.mark.usefixtures("session_users_exist")
+
 # Realistic mix: dealer lot photos, a Carfax badge, an iPacket tile, duplicates.
 _GALLERY = [
     "https://cdn.dealerinspire.com/inv/2023/abc_001.jpg",

@@ -880,3 +880,22 @@ def test_every_rendered_row_says_where_it_came_from(monkeypatch) -> None:
         for row in sec["rows"]:
             assert row.get("source"), f"{sec['key']}/{row['label']} has no source"
             assert row["derived"] is False
+
+
+def test_ymmt_fallback_never_returns_a_sibling_trims_row(monkeypatch) -> None:
+    """No FK and no exact trim: the arbitrary family row must not feed this car's hp/torque."""
+    from backend.vehicle_facts import extended_specs as es
+
+    sibling = {c: None for c in es.COLUMNS}
+    sibling.update(horsepower=300, year=2021, make="Honda", model="Accord", trim="Touring", specs_json="{}")
+    monkeypatch.setattr(es, "row_by_ymmt", lambda y, mk, md, t="": dict(sibling))
+
+    monkeypatch.setattr(es, "family_trim_count", lambda y, mk, md: 3)
+    assert gss._extended_row_by_ymmt(2021, "Honda", "Accord", "Sport") is None
+    assert gss._extended_row_by_ymmt(2021, "Honda", "Accord", "") is None
+    monkeypatch.setattr(es, "family_trim_count", lambda y, mk, md: None)  # unreadable: no row
+    assert gss._extended_row_by_ymmt(2021, "Honda", "Accord", "Sport") is None
+    # exact trim match (any case) and a single-trim family still resolve
+    assert gss._extended_row_by_ymmt(2021, "Honda", "Accord", "touring")[0] == 300
+    monkeypatch.setattr(es, "family_trim_count", lambda y, mk, md: 1)
+    assert gss._extended_row_by_ymmt(2021, "Honda", "Accord", "Sport")[0] == 300

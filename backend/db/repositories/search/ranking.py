@@ -38,26 +38,32 @@ def rank_ids_by_distance(
     The distance test needs every candidate's dealer, not its row -- scan three
     narrow columns. Returns the ranked ids and each id's rounded distance.
     """
-    from backend.db.dealer_geo import load_dealer_geo_index, lookup_dealer_coords
+    from backend.db.dealer_geo import load_dealer_geo_index, load_registry_coords_map, lookup_car_coords
     from backend.db.geo import haversine
 
     # Plain connection: the index reader unpacks rows positionally, which
     # the name-keyed rows of the ``row_factory`` search connection do not allow.
     with open_conn() as _gc:
         dealer_geo = load_dealer_geo_index(_gc)
+        registry_coords = load_registry_coords_map(_gc)
     narrow = conn.execute(
-        f"SELECT id, price, dealer_url FROM cars WHERE {w.sql}", w.params
+        f"SELECT id, price, dealer_url, dealership_registry_id FROM cars WHERE {w.sql}", w.params
     ).fetchall()
-    dist_by_url: dict[str, float] = {}
+    dist_by_url: dict[tuple[str, int], float] = {}
     ranked: list[tuple[float, int, float, int]] = []
     for r in narrow:
         r = dict(r)  # Postgres compat rows are name-keyed, sqlite3.Row takes both
         du = str(r["dealer_url"] or "")
-        dist = dist_by_url.get(du)
+        # A store is its registry row; the URL host is shared by sister stores.
+        try:
+            rid = int(r["dealership_registry_id"] or 0)
+        except (TypeError, ValueError):
+            rid = 0
+        dist = dist_by_url.get((du, rid))
         if dist is None:
-            dest = lookup_dealer_coords(du, dealer_geo)
+            dest = lookup_car_coords({"dealer_url": du, "dealership_registry_id": rid}, dealer_geo, registry_coords)
             dist = haversine(origin[0], origin[1], dest[0], dest[1]) if dest else -1.0
-            dist_by_url[du] = dist
+            dist_by_url[(du, rid)] = dist
         if dist < 0 or dist > float(radius_miles):
             continue
         try:

@@ -48,3 +48,14 @@ def test_fixture_test_runs_as_module():
     )
     assert proc.returncode == 0, proc.stderr
     assert "all passed" in proc.stdout
+
+
+def test_adjudicate_and_org_validation_use_package_imports():
+    """B-007: lazy bare ``scraping.`` imports inside function bodies."""
+    for name in ("adjudicate_crawl.py", "org_validation.py"):
+        for module in _imported_modules(SCRAPING_DIR / name):
+            top = module.split(".")[0]
+            assert top not in {"scraping", "intelligence"}, f"{name}: bare import {module}"
+        for module in _imported_modules(SCRAPING_DIR / name):
+            if module.startswith("backend.scraping"):
+                importlib.import_module(module)

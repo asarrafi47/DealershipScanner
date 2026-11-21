@@ -28,7 +28,7 @@ def build_adjudicate_crawl_one(
       if homepage did not load (unless use_requests_only is True for the outer flow).
     - If no browser or use_requests_only: requests only.
     """
-    from scraping.crawler import process_site_playwright, process_site_requests
+    from backend.scraping.crawler import process_site_playwright, process_site_requests
 
     def crawl_one(url: str) -> SiteResult:
         if browser and not use_requests_only:

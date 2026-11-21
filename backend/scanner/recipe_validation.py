@@ -78,6 +78,8 @@ logger = logging.getLogger("scanner")
 ROOT = Path(__file__).resolve().parents[2]
 LOG_ROOT = Path(os.environ.get("DEALER_LOGS_ROOT") or (ROOT / "workspace" / "dealer_logs"))
 ONE_CONDITION_OK_PATH = ROOT / "workspace" / "pipeline" / "one_condition_ok.txt"
+# workspace/ is not in the Railway image, so the allowlist has a tracked twin; both are read.
+ONE_CONDITION_OK_TRACKED_PATH = ROOT / "deploy" / "railway" / "one_condition_ok.txt"
 
 # fetch(recipe, body, base_url, url) -> (status, parsed_json_or_html_or_None):
 # the signature of recipes._replay_request, which both the synth's validate walk
@@ -403,13 +405,19 @@ def other_side_recipe(recipe: EndpointRecipe, only: str) -> EndpointRecipe | Non
 
 
 def one_condition_ok_ids(path: Path | None = None) -> set[str]:
-    """Dealers whose lot legitimately carries a single condition (the pipeline's
-    workspace/pipeline/one_condition_ok.txt: one id per line, ``#`` comments)."""
-    try:
-        text = (path or ONE_CONDITION_OK_PATH).read_text(encoding="utf-8")
-    except OSError:
-        return set()
-    return {ln.split("#", 1)[0].strip() for ln in text.splitlines() if ln.split("#", 1)[0].strip()}
+    """Dealers whose lot legitimately carries a single condition: one id per line,
+    ``#`` comments. With no ``path`` the union of workspace/pipeline/one_condition_ok.txt
+    and its tracked twin deploy/railway/one_condition_ok.txt (the do_not_scan pattern of
+    manifest.py); an explicit ``path`` reads only that file."""
+    paths = (path,) if path is not None else (ONE_CONDITION_OK_PATH, ONE_CONDITION_OK_TRACKED_PATH)
+    out: set[str] = set()
+    for p in paths:
+        try:
+            text = p.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        out |= {ln.split("#", 1)[0].strip() for ln in text.splitlines() if ln.split("#", 1)[0].strip()}
+    return out
 
 
 # ── the site's own condition census (carscommerce only, today) ─────────────────

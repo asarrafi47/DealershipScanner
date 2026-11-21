@@ -1,8 +1,9 @@
 """The ``INSERT ... ON CONFLICT(vin) DO UPDATE`` that writes one ``cars`` row.
 
 ``UPSERT_CARS_SQL`` is the statement; :func:`upsert_params` binds a prepared
-row (:func:`prepare_row`) in column order. The two trailing parameters drive
-the VIN ownership guard's atomic backstop (the ``WHERE`` on the DO UPDATE).
+row (:func:`prepare_row`) in column order. The trailing parameters (user-row cutoff, guard flag,
+claim rank, pool lists, cutoff) drive the VIN ownership guard's atomic backstop (the ``WHERE`` on
+the DO UPDATE).
 """
 from __future__ import annotations
 
@@ -14,12 +15,37 @@ from typing import Any
 from backend.utils.field_clean import compute_data_quality_score
 from backend.utils.forced_induction import classify_forced_induction_from_car_row
 from backend.utils.interior_color_buckets import interior_color_buckets_json
+from backend.utils.price_floor import classify_price
 
 from backend.scanner.upsert import rows as _rows
 from backend.scanner.upsert import serialize as _ser
+from backend.utils.user_listings import DEALER_PORTAL_DEALER_ID_PREFIX, user_row_cutoff_iso
 
 # Same logger name as before the split so log routing and captures are unchanged.
 logger = logging.getLogger("backend.scanner.database")
+
+
+def _stored_junk_sql(col: str, *, color: bool = False) -> str:
+    """SQL twin of ``vdp_extras_parse.junk_text_value`` for a stored column (N6.5)."""
+    # No negative SUBSTR start: Postgres returns '' for substr(s, -1, 1), SQLite the last char.
+    # The option-code arm is looser than _OPTION_CODE_RE (any <=3 char value with a digit, so
+    # '1-2' counts here); the difference is negligible and LIKE has no portable char class.
+    t = f"TRIM({col})"
+    parts = [f"SUBSTR({t}, 1, 1) = '{{'", f"(SUBSTR({t}, 1, 1) = '[' AND {t} LIKE '%]')", f"LOWER({t}) IN ('null', 'none', 'undefined')"]
+    if color:
+        digits = " OR ".join(f"{t} LIKE '%{d}%'" for d in "0123456789")
+        parts.append(f"(LENGTH({t}) <= 3 AND ({digits}))")
+    return "(" + " OR ".join(parts) + ")"
+
+
+def _overwritable(col: str, *, color: bool = False) -> str:
+    """Keep-if-nonempty, except a stored junk value is dropped to NULL when the
+    incoming value is empty: a rescan heals the row or leaves an honest gap."""
+    inc = f"NULLIF(TRIM(excluded.{col}), '')"
+    return (f"CASE WHEN {inc} IS NOT NULL THEN {inc} "
+            f"WHEN {_stored_junk_sql('cars.' + col, color=color)} THEN NULL "
+            f"ELSE cars.{col} END")
+
 
 UPSERT_CARS_SQL = """
                 INSERT INTO cars (
@@ -33,8 +59,8 @@ UPSERT_CARS_SQL = """
                     packages,
                     listing_active, listing_removed_at, spec_source_json,
                     first_seen_at, last_price_change_at, forced_induction, price_provenance_json,
-                    spin_frames, interior_pano
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    spin_frames, interior_pano, rooftop_tier, rooftop_evidence
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(vin) DO UPDATE SET
                     title=CASE
                         WHEN NULLIF(TRIM(excluded.title),'') IS NOT NULL AND excluded.title != 'Unknown vehicle'
@@ -44,7 +70,7 @@ UPSERT_CARS_SQL = """
                     year=CASE WHEN IFNULL(excluded.year,0)!=0 THEN excluded.year ELSE COALESCE(cars.year,excluded.year) END,
                     make=COALESCE(NULLIF(TRIM(excluded.make),''), cars.make),
                     model=COALESCE(NULLIF(TRIM(excluded.model),''), cars.model),
-                    trim=COALESCE(excluded.trim, cars.trim),
+                    trim=__TRIM__,
                     price=CASE WHEN COALESCE(excluded.price, 0) > 0 THEN excluded.price ELSE cars.price END,
                     -- feed odometer > 0 wins; an explicit 0 keeps a prior real reading
                     -- (else 0: new cars are 0 mi); NULL (no odometer) keeps a prior
@@ -57,15 +83,25 @@ UPSERT_CARS_SQL = """
                         WHEN cars.image_url LIKE 'http%' THEN cars.image_url
                         ELSE excluded.image_url
                     END,
-                    dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
+                    dealer_name=excluded.dealer_name,
+                    -- An unstamped write (no registry id: the bare-host URL a roster rebuilt
+                    -- from a dealer_id slug) must not replace the store page URL of a store
+                    -- on a shared host (www.autosavvy.com/dealers/lindon-utah/ ->
+                    -- www.autosavvy.com): the bare host names no store (N8.14).
+                    dealer_url=CASE
+                        WHEN excluded.dealership_registry_id IS NULL
+                         AND cars.dealer_url LIKE RTRIM(excluded.dealer_url, '/') || '/_%'
+                        THEN cars.dealer_url
+                        ELSE excluded.dealer_url
+                    END,
                     dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
                     fuel_type=COALESCE(excluded.fuel_type, cars.fuel_type),
                     cylinders=COALESCE(excluded.cylinders, cars.cylinders),
                     transmission=COALESCE(excluded.transmission, cars.transmission),
                     transmission_type=COALESCE(excluded.transmission_type, cars.transmission_type),
                     drivetrain=COALESCE(excluded.drivetrain, cars.drivetrain),
-                    exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), cars.exterior_color),
-                    interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), cars.interior_color),
+                    exterior_color=__EXT__,
+                    interior_color=__INT__,
                     interior_color_buckets=CASE
                         WHEN NULLIF(TRIM(excluded.interior_color), '') IS NOT NULL THEN excluded.interior_color_buckets
                         ELSE cars.interior_color_buckets
@@ -115,8 +151,10 @@ UPSERT_CARS_SQL = """
                     is_cpo=COALESCE(excluded.is_cpo, cars.is_cpo),
                     model_full_raw=COALESCE(excluded.model_full_raw, cars.model_full_raw),
                     packages=COALESCE(NULLIF(TRIM(excluded.packages), ''), cars.packages),
-                    listing_active=1,
-                    listing_removed_at=NULL,
+                    -- A user listing hidden for review (front-running, card S20) stays
+                    -- hidden when its own seller re-syncs it; an admin clears the flag.
+                    listing_active=CASE WHEN __USER_HELD__ THEN cars.listing_active ELSE 1 END,
+                    listing_removed_at=CASE WHEN __USER_HELD__ THEN cars.listing_removed_at ELSE NULL END,
                     spec_source_json=CASE
                         WHEN excluded.spec_source_json IS NOT NULL AND length(trim(excluded.spec_source_json)) > 0
                         THEN excluded.spec_source_json
@@ -139,21 +177,79 @@ UPSERT_CARS_SQL = """
                         ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
                     END,
                     internal_notes=cars.internal_notes,
-                    marked_for_review=cars.marked_for_review,
+                    -- The review flag of a user listing does not pass to the dealer that
+                    -- takes the VIN once the user row is retired past the grace period.
+                    marked_for_review=CASE
+                        WHEN __IS_USER_ROW__ AND cars.dealer_id != excluded.dealer_id THEN 0
+                        ELSE cars.marked_for_review
+                    END,
                     forced_induction=COALESCE(excluded.forced_induction, cars.forced_induction),
                     price_provenance_json=COALESCE(excluded.price_provenance_json, cars.price_provenance_json),
                     spin_frames=COALESCE(NULLIF(NULLIF(TRIM(excluded.spin_frames), ''), '[]'), cars.spin_frames),
-                    interior_pano=COALESCE(NULLIF(TRIM(excluded.interior_pano), ''), cars.interior_pano)
+                    interior_pano=COALESCE(NULLIF(TRIM(excluded.interior_pano), ''), cars.interior_pano),
+                    -- Evidence persisted for the ownership guard (V028, N8.6). Under the
+                    -- same dealer the stronger of stored and incoming stands (a rescan of
+                    -- an unstamped page must not forget an earlier stamp); a new owner
+                    -- carries only its own evidence.
+                    rooftop_tier=CASE
+                        WHEN cars.dealer_id = excluded.dealer_id AND __RANK_CARS__ > __RANK_EXC__
+                        THEN cars.rooftop_tier ELSE excluded.rooftop_tier
+                    END,
+                    rooftop_evidence=CASE
+                        WHEN cars.dealer_id = excluded.dealer_id AND __RANK_CARS__ > __RANK_EXC__
+                        THEN cars.rooftop_evidence ELSE excluded.rooftop_evidence
+                    END
                 -- VIN ownership guard, atomic backstop for the prefetch check above
-                -- (a concurrent shard may have claimed the VIN since): never move an
-                -- active, fresh row to a different dealer_id.
-                WHERE ? = 0
+                -- (a concurrent shard may have claimed the VIN since). The same rules as
+                -- ownership.decide, whatever the window, bound as: claim rank (2 strong,
+                -- 1 weak, 0 none), ids that alias the claimant, ids the claimant may take
+                -- as primary of its pool, every id sharing a pool with the claimant (each
+                -- list as ',a,b,' and passed twice for the replace() membership test).
+                -- Only an evidence-less contest outside every pool falls to the window.
+                -- Card S20: the first group is ANDed around the whole list, so no branch
+                -- (not the guard flag, not an inactive owner) lets anyone but the user take
+                -- a car of a user that is live or was retired at or after the bound cutoff
+                -- (now minus USER_ROW_GRACE_DAYS); a re-sync by that same user still updates it.
+                WHERE (cars.dealer_id = excluded.dealer_id
+                       OR NOT __IS_USER_ROW__
+                       OR (COALESCE(cars.listing_active, 1) != 1
+                           AND SUBSTR(COALESCE(cars.listing_removed_at, ''), 1, 1) IN ('1', '2')
+                           AND REPLACE(cars.listing_removed_at, ' ', 'T') < ?))
+                  AND (? = 0
                    OR COALESCE(cars.dealer_id, '') = ''
                    OR cars.dealer_id = excluded.dealer_id
                    OR COALESCE(cars.listing_active, 1) != 1
-                   OR cars.scraped_at IS NULL
-                   OR cars.scraped_at < ?
+                   OR replace(?, ',' || cars.dealer_id || ',', '') != ?
+                   OR (? = 2 AND __RANK_CARS__ < 2)
+                   OR (__RANK_CARS__ < 2
+                       AND replace(?, ',' || cars.dealer_id || ',', '') != ?)
+                   OR (__RANK_CARS__ < 2
+                       AND replace(?, ',' || cars.dealer_id || ',', '') = ?
+                       AND (cars.scraped_at IS NULL OR cars.scraped_at < ?)))
                 """
+def _tier_rank_sql(col: str) -> str:
+    return f"(CASE {col} WHEN 'strong' THEN 2 WHEN 'weak' THEN 1 ELSE 0 END)"
+
+
+def _is_user_row_sql(col: str) -> str:
+    """SQL twin of ``is_dealer_portal_dealer_id`` (prefix compare; no LIKE, so no ``%``)."""
+    n = len(DEALER_PORTAL_DEALER_ID_PREFIX)
+    return f"(SUBSTR(COALESCE({col}, ''), 1, {n}) = '{DEALER_PORTAL_DEALER_ID_PREFIX}')"
+
+
+UPSERT_CARS_SQL = (
+    UPSERT_CARS_SQL.replace("__RANK_CARS__", _tier_rank_sql("cars.rooftop_tier"))
+    .replace("__RANK_EXC__", _tier_rank_sql("excluded.rooftop_tier"))
+    .replace("__TRIM__", _overwritable("trim"))
+    .replace("__EXT__", _overwritable("exterior_color", color=True))
+    .replace("__INT__", _overwritable("interior_color", color=True))
+    .replace("__IS_USER_ROW__", _is_user_row_sql("cars.dealer_id"))
+    .replace(
+        "__USER_HELD__",
+        "(cars.dealer_id = excluded.dealer_id AND COALESCE(cars.marked_for_review, 0) = 1 AND "
+        + _is_user_row_sql("cars.dealer_id") + ")",
+    )
+)
 
 
 @dataclass
@@ -185,6 +281,14 @@ def prepare_row(v: dict, prior_spec_src: str | None) -> PreparedRow | None:
         return None
     title = _rows.row_title(v)
     price = _rows.coerce_price(v.get("price"))
+    if price is None:
+        _note = classify_price(v.get("price"))[1]
+        if _note:
+            # Provenance note for a withheld price (N6.7, D-N14): the feed value is
+            # kept on the in-memory row and the info log only (no notes column exists); the
+            # column stays NULL. The repeated-value rule is repair-only (repair_junk_prices).
+            v["price_withheld_note"] = _note
+            logger.info("price withheld vin=%s %s", vin, _note)
     mileage = _rows.coerce_mileage(v.get("mileage"))
     msrp = _rows.coerce_msrp(v.get("msrp"))
     gallery_json = _ser.gallery_json(v.get("gallery"))
@@ -242,9 +346,18 @@ def upsert_params(
     price_history_json: str | None,
     guard_on: bool,
     guard_cutoff_iso: str,
+    rooftop_tier: str = "none",
+    rooftop_evidence: str | None = None,
+    pool_lists: tuple[str, str, str] = ("", "", ""),
+    user_cutoff_iso: str | None = None,
 ) -> tuple:
-    """Bind parameters for :data:`UPSERT_CARS_SQL`, in column order."""
+    """Bind parameters for :data:`UPSERT_CARS_SQL`, in column order.
+
+    ``user_cutoff_iso``: a retired user row older than this may be taken (card S20);
+    default now minus ``USER_ROW_GRACE_DAYS``.
+    """
     v = row.v
+    alias_csv, takes_csv, covered_csv = pool_lists
     return (
         row.vin,
         row.title,
@@ -294,7 +407,17 @@ def upsert_params(
         price_history_json,
         row.spin_frames_json,
         row.interior_pano,
+        rooftop_tier,
+        rooftop_evidence,
+        user_cutoff_iso or user_row_cutoff_iso(),
         1 if guard_on else 0,
+        alias_csv,
+        alias_csv,
+        {"strong": 2, "weak": 1}.get(rooftop_tier, 0),
+        takes_csv,
+        takes_csv,
+        covered_csv,
+        covered_csv,
         guard_cutoff_iso,
     )
 

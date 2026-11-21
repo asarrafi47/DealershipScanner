@@ -100,8 +100,15 @@ def _fetch_dealership_by_id(dealership_id: int) -> dict | None:
 
 
 def _find_dealership_by_dealer_id(dealer_id: str) -> dict | None:
-    """Match a dealerships row to a cars.dealer_id via website_url host."""
+    """Match a dealerships row to a cars.dealer_id.
+
+    A host that one registry row sits on resolves by that host. A host shared by several
+    rows (all AutoSavvy stores on www.autosavvy.com) names no store, so the row is the one
+    this dealer_id's cars are stamped with, else the host's lowest id for the plain
+    host dealer_id, else the row whose town-derived id this is; never an arbitrary sister.
+    """
     from backend.db.inventory_db import get_conn
+    from backend.listings.dealer_registry_match import shared_host_dealer_id
 
     conn = get_conn()
     try:
@@ -115,12 +122,35 @@ def _find_dealership_by_dealer_id(dealer_id: str) -> dict | None:
                    latitude, longitude, phone
             FROM dealerships
             WHERE website_url IS NOT NULL AND website_url <> ''
+            ORDER BY id
             """
         )
-        for row in cur.fetchall():
-            if _host_to_dealer_id(row["website_url"]) == dealer_id:
-                return dict(row)
-        return None
+        rows = [dict(row) for row in cur.fetchall()]
+        hits = [r for r in rows if _host_to_dealer_id(r["website_url"]) == dealer_id]
+        if len(hits) == 1:
+            return hits[0]
+        # Only rows on a host that several rows share can be told apart this way.
+        host_count: dict[str, int] = {}
+        for r in rows:
+            host_count[_host_to_dealer_id(r["website_url"]) or ""] = host_count.get(_host_to_dealer_id(r["website_url"]) or "", 0) + 1
+        pool = [r for r in rows if host_count.get(_host_to_dealer_id(r["website_url"]) or "", 0) > 1]
+        cur.execute(
+            "SELECT dealership_registry_id FROM cars WHERE dealer_id = ? "
+            "AND dealership_registry_id IS NOT NULL GROUP BY dealership_registry_id "
+            "ORDER BY COUNT(*) DESC LIMIT 1",
+            (dealer_id,),
+        )
+        got = cur.fetchone()
+        stamped = int(got[0]) if got and got[0] is not None else 0
+        for r in pool:
+            if int(r["id"]) == stamped:
+                return r
+        for r in pool:
+            base = _host_to_dealer_id(r["website_url"]) or ""
+            if shared_host_dealer_id(base, r.get("city") or "", r.get("state") or "", int(r["id"])) == dealer_id:
+                return r
+        # the plain host id of a shared host: its lowest registry id (the roster's rule)
+        return hits[0] if hits else None
     finally:
         conn.close()
 
@@ -466,6 +496,40 @@ def _dealer_inventory(dealer_id: str) -> dict:
     }
 
 
+def _dealer_id_for_registry_row(row: dict) -> str | None:
+    """The ``cars.dealer_id`` of one registry row: its website host's id, except for a
+    store on a host shared with sister stores, which is the dealer_id its own cars carry
+    (else host + town + state). The plain host id would show a sister's whole lot."""
+    base = _host_to_dealer_id(row.get("website_url"))
+    if not base:
+        return base
+    try:
+        from backend.db.inventory_db import get_conn
+        from backend.listings.dealer_registry_match import (
+            registry_dealer_ids,
+            registry_ids_by_host,
+            shared_host_dealer_id,
+        )
+        from backend.db.dealer_geo import normalize_dealer_host
+
+        rid = int(row["id"])
+        conn = get_conn()
+        try:
+            ids = registry_ids_by_host(conn).get(normalize_dealer_host(str(row.get("website_url") or "")), [])
+            if len(ids) <= 1:
+                return base
+            carried = registry_dealer_ids(conn).get(rid)
+        finally:
+            conn.close()
+        if carried:
+            return carried
+        # unscanned store: the lowest id of the host keeps the plain id (as the roster does)
+        return base if rid == min(ids) else shared_host_dealer_id(
+            base, row.get("city") or "", row.get("state") or "", rid)
+    except Exception:  # noqa: BLE001 - a lookup failure falls back to the host id as before
+        return base
+
+
 def _resolve_dealer(dealer_key: str) -> tuple[dict | None, str | None]:
     """(dealership_row | None, dealer_id | None) from a numeric id or a dealer_id string."""
     key = _clean_dealer_key(dealer_key)
@@ -478,7 +542,7 @@ def _resolve_dealer(dealer_key: str) -> tuple[dict | None, str | None]:
             return None, None
         if not row:
             return None, None
-        return row, _host_to_dealer_id(row.get("website_url"))
+        return row, _dealer_id_for_registry_row(row)
     # Treat as cars.dealer_id (hostname-derived); find its dealerships row by host.
     return _find_dealership_by_dealer_id(key), key
 
@@ -498,7 +562,7 @@ def _dealer_id_for_key(dealer_key: str) -> str | None:
             row = _fetch_dealership_by_id(int(key))
         except (TypeError, ValueError, OverflowError):
             return None
-        return _host_to_dealer_id(row.get("website_url")) if row else None
+        return _dealer_id_for_registry_row(row) if row else None
     return key
 
 

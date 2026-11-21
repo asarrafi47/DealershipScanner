@@ -439,7 +439,16 @@ def _extended_row_by_ymmt(
 ) -> tuple[Any, ...] | None:
     from backend.vehicle_facts import extended_specs
 
-    return _as_row_tuple(extended_specs.row_by_ymmt(year, make, model, trim))
+    row = extended_specs.row_by_ymmt(year, make, model, trim)
+    if row is None:
+        return None
+    if str(row.get("trim") or "").strip().lower() != trim.strip().lower():
+        # Not this car's trim: the (year, make, model) fallback returns an arbitrary
+        # sibling, whose hp/torque would print under this trim. Only a family with a
+        # single trim has an unambiguous row; unknown or several trims prints nothing.
+        if extended_specs.family_trim_count(year, make, model) != 1:
+            return None
+    return _as_row_tuple(row)
 
 
 def _fields_shared_across_trims(year: int, make: str, model: str) -> frozenset[str]:

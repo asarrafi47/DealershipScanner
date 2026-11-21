@@ -153,6 +153,7 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
         normalize_registration_username,
         username_format_error,
     )
+    from backend.utils.roles import REGISTRATION_ADMIN_BLOCKED_MSG
 
     try:
         uid = int(user_id)
@@ -186,6 +187,14 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
         if fmt_err:
             conn.close()
             return fmt_err
+    # Env-admin identities (APP_ADMIN_*) are reserved: moving onto one would make
+    # sync_env_admin_user_row grant admin and clear TOTP (SEC-A-001). An identity
+    # the account already holds is left alone.
+    from backend.utils.roles import email_is_admin, username_is_admin
+
+    if (username_changed and username_is_admin(uname)) or (email_changed and email_is_admin(em)):
+        conn.close()
+        return REGISTRATION_ADMIN_BLOCKED_MSG
     cursor.execute(
         "SELECT id FROM users WHERE lower(username) = lower(?) AND id != ?",
         (uname, uid),
@@ -306,6 +315,24 @@ def submitted_password_attempts(raw_password: str | None) -> list[str]:
     if not stripped:
         return []
     return [stripped] if raw == stripped else [stripped, raw]
+
+
+def resolve_login_account_id(login_input: str) -> int | None:
+    """Id of the account a login string (username or email) names, or None. No password check."""
+    li = (login_input or "").strip()
+    if not li:
+        return None
+    conn = get_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id FROM users WHERE lower(username) = lower(?) OR lower(email) = lower(?)",
+            (li, li),
+        )
+        row = cursor.fetchone()
+    finally:
+        conn.close()
+    return int(row[0]) if row else None
 
 
 def authenticate_app_user(login_input: str, password: str) -> dict | None:

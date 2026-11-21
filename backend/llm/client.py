@@ -41,6 +41,7 @@ Env knobs:
 """
 from __future__ import annotations
 
+import contextvars
 import logging
 import os
 import random
@@ -125,6 +126,41 @@ class LLMResult:
         if self.truncated:
             raise LLMTruncated(f"{self.role} output truncated at max_tokens ({self.model})", self)
         return self
+
+
+# ---------------------------------------------------------------------------
+# Usage hook (chat budget, card C2)
+# ---------------------------------------------------------------------------
+
+# While a chat guard is active (``backend.chat_budget.guard``) it installs a callable here;
+# ``complete()`` hands it every finished :class:`LLMResult` so the real token counts of all
+# model calls inside one request add up. With no sink installed (the default, and every
+# non-chat caller) nothing happens. The sink can never break a model call: errors are
+# swallowed. It is a context variable, so it follows the request's thread of execution.
+_usage_sink: contextvars.ContextVar[Callable[["LLMResult"], None] | None] = contextvars.ContextVar(
+    "llm_usage_sink", default=None
+)
+
+
+def set_usage_sink(sink: Callable[["LLMResult"], None] | None) -> contextvars.Token:
+    return _usage_sink.set(sink)
+
+
+def reset_usage_sink(token: contextvars.Token) -> None:
+    try:
+        _usage_sink.reset(token)
+    except ValueError:  # token from another context: just clear it
+        _usage_sink.set(None)
+
+
+def _report_usage(result: "LLMResult") -> None:
+    sink = _usage_sink.get()
+    if sink is None:
+        return
+    try:
+        sink(result)
+    except Exception:  # never raise into the model call
+        logger.debug("usage sink failed", exc_info=True)
 
 
 # ---------------------------------------------------------------------------
@@ -512,4 +548,5 @@ def complete(
         logger.warning(
             "anthropic[%s] output truncated at max_tokens=%s (%s)", model_role, max_tokens, resolved_model
         )
+    _report_usage(result)
     return result

@@ -9,7 +9,12 @@ from typing import Any
 
 from backend.billing.catalog import LEGACY_PREMIUM_PLAN_ID, get_plan, stripe_price_id_for_plan
 from backend.billing.discounts import checkout_discount_kwargs, resolve_discount
-from backend.billing.stripe_billing import base_url_from_request, billing_enabled, stripe_secret_key
+from backend.billing.stripe_billing import (
+    base_url_from_request,
+    billing_enabled,
+    checkout_session_subscription_active,
+    stripe_secret_key,
+)
 
 
 def create_plan_checkout_session(
@@ -82,7 +87,7 @@ def verify_plan_checkout_session(*, session_id: str, user_id: int, plan_id: str)
     import stripe  # type: ignore
 
     stripe.api_key = stripe_secret_key()
-    cs = stripe.checkout.Session.retrieve(sid)
+    cs = stripe.checkout.Session.retrieve(sid, expand=["subscription"])
     if not isinstance(cs, dict):
         cs = dict(cs)
     if (cs.get("status") or "").strip().lower() != "complete":
@@ -98,4 +103,4 @@ def verify_plan_checkout_session(*, session_id: str, user_id: int, plan_id: str)
         return False
     if str(md.get("plan_id") or "").strip().lower() != pid:
         return False
-    return True
+    return checkout_session_subscription_active(cs)

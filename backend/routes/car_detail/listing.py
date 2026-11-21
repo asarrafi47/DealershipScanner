@@ -44,6 +44,16 @@ def registry_dealer_info(car_raw: dict) -> dict | None:
     return dealer_info
 
 
+def details_pending(car_id: int) -> bool:
+    """N6.4 (D-N13): True for a new arrival whose price/photos are still due (index flag)."""
+    try:
+        from backend.db.incomplete_listings_db import is_car_pending
+
+        return is_car_pending(car_id)
+    except Exception:
+        return False
+
+
 def inventory_last_checked(car_raw: dict) -> str | None:
     """The dealer's "Inventory last checked <date>" (N3.11), or ``None`` to hide it.
 

@@ -44,6 +44,7 @@
                     <dt>Account type</dt>
                     <dd>{{ role_label }}</dd>
                 </div>
+                {% if billing_on %}
                 {% if is_premium %}
                 <div class="account-profile__meta-row">
                     <dt>Plan</dt>
@@ -54,6 +55,7 @@
                     <dt>Billing</dt>
                     <dd><a href="{{ url_for('account_billing_page') }}">Plans &amp; subscription</a></dd>
                 </div>
+                {% endif %}
                 {% endif %}
             </dl>
 
@@ -91,6 +93,22 @@
                 {{ password_field('new_password', id='new-password', label='New password', autocomplete='new-password', minlength=min_password_len) }}
                 {{ password_field('confirm_password', id='confirm-password', label='Confirm new password', autocomplete='new-password', minlength=min_password_len) }}
                 <button type="submit" class="primary-button">Save new password</button>
+            </form>
+        </section>
+
+        <section class="hub-section db-reveal" id="sign-out-everywhere" aria-labelledby="profile-signout-heading">
+            <h2 id="profile-signout-heading" class="hub-section__title">Sign out everywhere</h2>
+            <p class="hub-section__sub">Signs you out on every other phone and computer. This browser stays signed in.</p>
+            {% if signout_success %}
+            <p class="account-profile__ok" role="status">Done. Every other browser is signed out.</p>
+            {% endif %}
+            {% if signout_error %}
+            <p role="alert">We could not sign out your other browsers just now. Please try again in a minute.</p>
+            {% endif %}
+            <form method="POST" action="{{ url_for('account_profile_page') }}" class="account-profile__form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="form_action" value="sign_out_everywhere">
+                <button type="submit" class="primary-button">Sign out everywhere</button>
             </form>
         </section>
 

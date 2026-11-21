@@ -1,0 +1,102 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Chat usage{% endblock %}
+{% block body_class %} admin-page--chat-usage{% endblock %}
+{% block content %}
+<div class="chat-usage">
+    <h1 class="db-section-title">Chat usage</h1>
+    <p>Figures come from the site's own counters. They hold account ids and usernames only: no phone number and no message text. Site administrators skip the per-subject limits (account, listing, phone, device, address); they never skip the site budget.</p>
+
+    <h2>Switches</h2>
+    <p>
+        Chat is <strong>{{ "on" if chat_on else "paused" }}</strong>.
+        Text messages are <strong>{{ "paused" if texts_paused else "on" }}</strong>.
+    </p>
+    <form method="post" action="{{ url_for('store_admin.admin_chat_usage_hub') }}" class="chat-usage__form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        {% if chat_on %}
+        <button type="submit" name="action" value="pause_chat" class="primary-button">Pause chat now</button>
+        {% else %}
+        <button type="submit" name="action" value="resume_chat" class="primary-button">Turn chat back on</button>
+        {% endif %}
+        {% if texts_paused %}
+        <button type="submit" name="action" value="resume_texts" class="primary-button">Turn text messages back on</button>
+        {% else %}
+        <button type="submit" name="action" value="pause_texts" class="primary-button">Pause text messages</button>
+        {% endif %}
+    </form>
+
+    <h2>Today so far</h2>
+    {% if usage.error %}
+    <p>{{ usage.error }}</p>
+    {% else %}
+    <table class="chat-usage__table">
+        <tbody>
+            <tr><th scope="row">Chat is</th><td>{{ usage.status }}</td></tr>
+            <tr><th scope="row">Messages</th><td>{{ usage.messages }}</td></tr>
+            <tr><th scope="row">Tokens in / out</th><td>{{ usage.tokens_in }} / {{ usage.tokens_out }}</td></tr>
+            <tr><th scope="row">Estimated cost</th><td>${{ "%.2f"|format(usage.dollars) }} of ${{ "%.2f"|format(usage.budget_dollars) }} ({{ usage.dollars_pct }} percent)</td></tr>
+            <tr><th scope="row">Tokens against the budget</th><td>{{ usage.tokens_pct }} percent of {{ usage.budget_tokens }}</td></tr>
+            <tr><th scope="row">Next reset</th><td>{{ usage.next_reset }}</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Refusals today, by kind</h2>
+    <table class="chat-usage__table">
+        <thead><tr><th scope="col">Kind</th><th scope="col">Refusals</th></tr></thead>
+        <tbody>
+            {% for d in usage.denied %}
+            <tr><td>{{ d.label }}</td><td>{{ d.count }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Busiest accounts today</h2>
+    {% if usage.top %}
+    <table class="chat-usage__table">
+        <thead><tr><th scope="col">Account</th><th scope="col">Username</th><th scope="col">Messages</th></tr></thead>
+        <tbody>
+            {% for t in usage.top %}
+            <tr><td>{{ t.id }}</td><td>{{ t.username }}</td><td>{{ t.messages }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No account has used the chat yet today.</p>
+    {% endif %}
+
+    <h2>Last 14 days</h2>
+    <table class="chat-usage__table">
+        <thead><tr><th scope="col">Day</th><th scope="col">Messages</th><th scope="col">Tokens</th><th scope="col">Cost</th><th scope="col">Refusals</th></tr></thead>
+        <tbody>
+            {% for d in usage.days %}
+            <tr><td>{{ d.day }}</td><td>{{ d.messages }}</td><td>{{ d.tokens }}</td><td>${{ "%.2f"|format(d.dollars) }}</td><td>{{ d.refusals }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <h2>Settings</h2>
+    <p>A value comes from a settings row first, then the server's environment, then the default. A change takes effect within about a minute. A limit of 0 for an account, listing, phone, device or address means no limit, so those rows have an "unlimited" tick. A budget of 0 stops the chat. Money and token budgets cannot go above the maximum set in the server's environment.</p>
+    <form method="post" action="{{ url_for('store_admin.admin_chat_usage_hub') }}" class="chat-usage__form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="action" value="save">
+        <table class="chat-usage__table">
+            <thead>
+                <tr><th scope="col">Setting</th><th scope="col">Value</th><th scope="col">Comes from</th><th scope="col">Unlimited</th><th scope="col">Environment name</th></tr>
+            </thead>
+            <tbody>
+                {% for r in rows %}
+                <tr>
+                    <th scope="row"><label for="{{ r.field }}">{{ r.key }}</label></th>
+                    <td><input id="{{ r.field }}" type="text" name="{{ r.field }}" value="{{ r.text }}" autocomplete="off">{% if r.ceiling %} <span>(at most {{ r.ceiling }})</span>{% endif %}</td>
+                    <td>{{ r.source }}</td>
+                    <td>{% if r.per_subject %}<input type="checkbox" name="{{ r.unlimited_field }}" value="1" aria-label="Unlimited {{ r.key }}"{% if r.unlimited_now %} checked{% endif %}>{% endif %}</td>
+                    <td>{{ r.env }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="primary-button">Save settings</button>
+    </form>
+</div>
+{% endblock %}

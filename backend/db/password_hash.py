@@ -11,13 +11,19 @@ _BCRYPT_MAX_BYTES = 72
 
 
 def bcrypt_rounds() -> int:
-    """Work factor for new hashes (default 13). Tunable via BCRYPT_ROUNDS (12–15)."""
+    """Work factor for new hashes (default 13). Tunable via BCRYPT_ROUNDS (12–15).
+
+    The test suite alone sets BCRYPT_TEST_LOW_COST=1 (root conftest.py), which
+    lowers the floor to 4 so hashing costs ~1 ms instead of ~586 ms. Production
+    never sets it, so the 12 floor and the default of 13 are unchanged.
+    """
     raw = (os.environ.get("BCRYPT_ROUNDS") or "13").strip()
     try:
         n = int(raw)
     except ValueError:
         n = 13
-    return max(12, min(n, 15))
+    floor = 4 if os.environ.get("BCRYPT_TEST_LOW_COST") == "1" else 12
+    return max(floor, min(n, 15))
 
 
 def _bcrypt_input(plain: str) -> bytes:

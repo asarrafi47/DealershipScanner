@@ -41,6 +41,7 @@ def _account_profile_context(uid: int, **extra):
         "role": role,
         "role_label": role_labels.get(role, role.replace("_", " ").title()),
         "is_premium": bool(u.get("is_premium")),
+        "billing_on": Config.billing_stripe_enabled(),
         "min_password_len": Config.MIN_PASSWORD_LENGTH,
         "hidden_dealers": _hidden_dealers_for_profile(uid),
         "recent_searches": _recent_searches_for_profile(uid),
@@ -105,6 +106,18 @@ def account_profile_page():
 
     if request.method == "POST":
         action = (request.form.get("form_action") or "profile").strip().lower()
+        if action == "sign_out_everywhere":
+            from backend.auth.session import sign_out_everywhere
+
+            if sign_out_everywhere(uid):
+                return render_template(
+                    "account_profile.html",
+                    **_account_profile_context(uid, signout_success=True),
+                )
+            return render_template(
+                "account_profile.html",
+                **_account_profile_context(uid, signout_error=True),
+            )
         if action == "password":
             current_pw = (request.form.get("current_password") or "").strip()
             new_pw = (request.form.get("new_password") or "").strip()
@@ -134,6 +147,11 @@ def account_profile_page():
                     "account_profile.html",
                     **_account_profile_context(uid, password_error=err),
                 )
+            # Card S10: a new password signs out every other browser; this one keeps a fresh session.
+            from backend.auth.phone.session_epoch import REASON_PASSWORD_CHANGE
+            from backend.auth.session import sign_out_everywhere
+
+            sign_out_everywhere(uid, reason=REASON_PASSWORD_CHANGE)
             return render_template(
                 "account_profile.html",
                 **_account_profile_context(uid, password_success=True),
@@ -171,9 +189,13 @@ def account_billing_page():
     if not uid:
         return redirect(url_for("login_page", next="/account/billing"))
     uid = int(uid)
+    from backend.billing.stripe_billing import billing_enabled
+
+    if not billing_enabled():
+        # The site is free: no plan, price or portal to show. (Everything below is for billing on.)
+        return redirect(url_for("account_profile_page"))
     from backend.billing.catalog import get_plan
     from backend.billing.entitlements import FEATURE_LABELS
-    from backend.billing.stripe_billing import billing_enabled
     from backend.db.users_db import get_user_billing_snapshot
 
     billing = get_user_billing_snapshot(uid) or {}
