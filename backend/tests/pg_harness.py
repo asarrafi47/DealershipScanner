@@ -227,8 +227,16 @@ def build_template(admin: str) -> Template:
 
 
 def _connections(conn: Any, dbname: str) -> int:
+    """Backends of *dbname* that would make ``CREATE DATABASE ... TEMPLATE`` fail.
+
+    An autovacuum worker does not count: it visits a freshly built template on its own
+    (catalog tables churn while a chain is applied) and Postgres itself terminates it when
+    the template is copied. Counting it made a clone fail on a busy runner for as long as a
+    worker was inside (CI, 2026-11-25).
+    """
     return conn.execute(
-        "SELECT count(*) FROM pg_stat_activity WHERE datname = %s AND pid <> pg_backend_pid()",
+        "SELECT count(*) FROM pg_stat_activity"
+        " WHERE datname = %s AND pid <> pg_backend_pid() AND backend_type <> 'autovacuum worker'",
         (dbname,),
     ).fetchone()[0]
 

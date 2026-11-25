@@ -237,7 +237,7 @@ def populated_v026(pg_admin) -> Iterator[pgh.Template]:
         with _connect(dsn, autocommit=True) as c:
             c.execute(_POPULATE_CARS.replace("__ROWS__", str(ROWS)))  # no params: the SQL has literal %
             c.execute(_POPULATE_INCOMPLETE.replace("__EVERY__", str(INCOMPLETE_EVERY)))
-            c.execute("VACUUM (ANALYZE) public.cars")  # settles autovacuum's insert trigger before the clones
+            c.execute("VACUUM (ANALYZE)")  # every table, catalogs too: leaves autovacuum little reason to visit the template
         assert _one(dsn, "SELECT count(*) FROM public.cars")[0] == ROWS
         yield pgh.Template(pg_admin, name, dsn, 26)
     finally:
@@ -498,13 +498,18 @@ def test_a_waiting_v028_queues_new_readers_behind_it_until_the_holder_ends(v027)
 
 
 @pytest.fixture()
-def scanner_env(monkeypatch):
-    """The scanner write path pointed at a scratch DSN; network post-write steps stubbed, as test_upsert_pg does."""
+def scanner_env(monkeypatch, pg_db):
+    """The scanner write path pointed at a scratch DSN; network post-write steps stubbed, as test_upsert_pg does.
+
+    ``pg_db`` (conftest) puts the process in Postgres mode: the root fixture's SQLite escape hatch is
+    switched off and the cache flags are reset. Only the DSN and the schema check differ here, so the
+    pg_db clone itself stays unused. (CI's SQLite allowlist only shrinks, so this file does not name
+    that switch itself.)
+    """
 
     def point_at(dsn: str, schema_check: str = "strict") -> None:
         monkeypatch.setenv("INVENTORY_DATABASE_URL", dsn)
         monkeypatch.setenv("DATABASE_URL", "")
-        monkeypatch.setenv("INVENTORY_SQLITE_TESTS", "")
         monkeypatch.setenv("INVENTORY_SCHEMA_CHECK", schema_check)
         monkeypatch.setenv("INVENTORY_AUTO_MIGRATE", "")
         pgh.reset_pg_process_caches()

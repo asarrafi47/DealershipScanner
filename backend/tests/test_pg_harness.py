@@ -366,6 +366,56 @@ def test_clone_refuses_a_template_with_open_connections(pg_template):
 
 
 @pytest.mark.pg
+def test_clone_is_not_stopped_by_an_autovacuum_worker_in_the_template(pg_template):
+    """A worker inside the template is not "someone holding it": Postgres terminates it itself.
+
+    CI failed on 2026-11-25 ("template ... has 1 open connection(s)") because the pre-check
+    counted an autovacuum worker that had come to a freshly built template. Here a worker is
+    made to sit in a private template (one table with dead rows and a very slow cost delay, a
+    1 s naptime for the length of the test) while the clone is taken.
+    """
+    admin = pg_template.admin
+    name = pgh.new_name("tmpl")
+    conn = pgh.connect_admin(admin)
+    clone_name = None
+    try:
+        if conn.execute("SHOW autovacuum").fetchone()[0] != "on":
+            pytest.skip("autovacuum is off on this server, so no worker can visit a template")
+        conn.execute(f'CREATE DATABASE "{name}" TEMPLATE template0')
+        import psycopg
+
+        with psycopg.connect(pgh.dsn_for(admin, name), autocommit=True) as c:
+            c.execute("CREATE TABLE t AS SELECT g AS id, repeat('x', 200) AS pad FROM generate_series(1, 50000) g")
+            c.execute(
+                "ALTER TABLE t SET (autovacuum_vacuum_cost_delay = 20, autovacuum_vacuum_cost_limit = 1,"
+                " autovacuum_vacuum_scale_factor = 0, autovacuum_vacuum_threshold = 10)"
+            )
+            c.execute("DELETE FROM t WHERE id % 2 = 0")
+        conn.execute("ALTER SYSTEM SET autovacuum_naptime = '1s'")
+        conn.execute("SELECT pg_reload_conf()")
+        workers_sql = (
+            "SELECT count(*) FROM pg_stat_activity WHERE datname = %s AND backend_type = 'autovacuum worker'"
+        )
+        deadline = time.monotonic() + 30
+        while not conn.execute(workers_sql, (name,)).fetchone()[0]:
+            assert time.monotonic() < deadline, "no autovacuum worker came to the template within 30 s"
+            time.sleep(0.05)
+        assert conn.execute(workers_sql, (name,)).fetchone()[0] == 1
+        assert pgh._connections(conn, name) == 0  # the worker is not counted
+        clone_name, _dsn = pgh.clone(pgh.Template(admin, name, pgh.dsn_for(admin, name), 0))
+        assert clone_name in pgh.leftover_databases(admin)
+    finally:
+        try:
+            conn.execute("ALTER SYSTEM RESET autovacuum_naptime")
+            conn.execute("SELECT pg_reload_conf()")
+        finally:
+            conn.close()
+        if clone_name:
+            pgh.drop(admin, clone_name)
+        pgh.drop(admin, name)
+
+
+@pytest.mark.pg
 def test_clone_and_drop_leave_nothing_behind_and_are_fast(pg_template):
     admin = pg_template.admin
     before = set(pgh.leftover_databases(admin))
