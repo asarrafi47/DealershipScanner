@@ -34,7 +34,7 @@ def test_mobile_endpoint_name(route: MobileRoute, monkeypatch, tmp_path, app_fac
 
 def test_contract_matches_ios_doc_route_count() -> None:
     """Guardrail: ios/docs/API_CONTRACT.md table should list the same routes."""
-    assert len(MOBILE_API_ROUTES) == 15
+    assert len(MOBILE_API_ROUTES) == 18
 
 
 # ── area-scoped listings (contract v2) ──────────────────────────────────

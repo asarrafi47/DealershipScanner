@@ -48,6 +48,27 @@ MOBILE_API_ROUTES: tuple[MobileRoute, ...] = (
         notes="SEC-077",
     ),
     MobileRoute(
+        "POST",
+        "/api/auth/phone/start",
+        "api_auth_phone_start",
+        auth="session_csrf",
+        notes="S8; 404 unless AUTH_PHONE_LOGIN_ENABLED; texts a code",
+    ),
+    MobileRoute(
+        "POST",
+        "/api/auth/phone/verify",
+        "api_auth_phone_verify",
+        auth="session_csrf",
+        notes="S8; 404 unless AUTH_PHONE_LOGIN_ENABLED; checks the code and signs in",
+    ),
+    MobileRoute(
+        "POST",
+        "/api/auth/phone/resend",
+        "api_auth_phone_resend",
+        auth="session_csrf",
+        notes="S8; 404 unless AUTH_PHONE_LOGIN_ENABLED; texts a fresh code",
+    ),
+    MobileRoute(
         "GET",
         "/api/listings/cars",
         "api_listings_cars",

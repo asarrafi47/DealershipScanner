@@ -13,12 +13,18 @@ from __future__ import annotations
 import inspect
 import secrets
 
-from flask import Flask, g, redirect, request, session, url_for
+from flask import Flask, abort, g, redirect, request, session, url_for
 
 from backend.auth.session import (
     billing_enabled as _billing_enabled,
     require_paid_org_session as _require_paid_org_session,
     session_belongs_to_paid_org as _session_belongs_to_paid_org,
+)
+from backend.auth.phone import config as _phone_config
+from backend.auth.phone.endpoints import (
+    PHONE_FLAG_ENDPOINTS,
+    PHONE_FORM_POST_ENDPOINTS,
+    PHONE_HEADER_POST_ENDPOINTS,
 )
 from backend.billing import access as paid_access
 from backend.config import Config
@@ -49,6 +55,17 @@ def use_nonce_free_csp() -> None:
     g.csp_nonce_free = True
 
 
+def allow_turnstile_csp() -> None:
+    """Let this response load the Cloudflare Turnstile widget (card S8: the phone sign-in pages).
+
+    Call from a view BEFORE it returns. The phone page is also served at ``/login`` (endpoint
+    ``login_page``) while phone sign-in is on, so the origin cannot be tied to an endpoint name
+    without loosening ``/login`` while the flag is off; a request-scoped marker (read by
+    ``_csp_headers``) keeps the strict policy everywhere the view did not ask for the widget.
+    """
+    g.csp_turnstile = True
+
+
 # State-changing JSON routes served on DELETE. The browser clients already send
 # X-CSRF-Token on these; SameSite=Lax and the absence of CORS kept them safe,
 # this makes the token mandatory too (security review 2026-09-28).
@@ -75,6 +92,8 @@ _CSRF_FORM_POST_ENDPOINTS = (
     "dev.admin_logout",
     "dealership_submit_review",
     "dealership_report_review",
+    # Phone sign-in (card S8) and the old password form's new address while it is on.
+    *PHONE_FORM_POST_ENDPOINTS,
 )
 
 # POST endpoints called from JS with the X-CSRF-Token header.
@@ -92,6 +111,7 @@ _CSRF_HEADER_POST_ENDPOINTS = (
     "api_auth_login",
     "api_auth_register",
     "api_auth_logout",
+    *PHONE_HEADER_POST_ENDPOINTS,
     "api_admin_dealer_onboard",
     "api_admin_dealer_job_retry",
     "api_admin_dealer_job_smart_retry",
@@ -129,6 +149,10 @@ def _csrf_mutating_requests():
         return None
     if request.method != "POST":
         return None
+    if ep in PHONE_FLAG_ENDPOINTS and not _phone_config.enabled():
+        # Phone sign-in is off: these routes do not exist. Decide that before the token check, or a
+        # POST without a token would be answered with a redirect or a 403 and so reveal them.
+        abort(404)
     if ep in _CSRF_FORM_POST_ENDPOINTS or ep.startswith(_CSRF_FORM_POST_PREFIXES):
         csrf_resp = validate_csrf_form()
         if csrf_resp is not None:
@@ -234,7 +258,8 @@ def _csp_headers(response):
         if (nonce or nonce_free) and not response.headers.get("Content-Security-Policy"):
             response.headers["Content-Security-Policy"] = _csp_header_value_enforced(
                 None if nonce_free else nonce,
-                turnstile=(request.endpoint or "") in TURNSTILE_PAGE_ENDPOINTS,
+                turnstile=(request.endpoint or "") in TURNSTILE_PAGE_ENDPOINTS
+                or bool(getattr(g, "csp_turnstile", False)),
             )
         return response
     if Config.csp_report_only_enabled():

@@ -112,7 +112,13 @@ def test_no_template_or_static_script_loads_a_cross_origin_script():
     # Card S19: the one allowed cross-origin script is Cloudflare Turnstile on the dealer sign-up
     # page; security.TURNSTILE_PAGE_ENDPOINTS adds its origin to that page's policy only.
     turnstile_tag = '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"'
-    allowed = {"dealer_register.html": turnstile_tag}
+    # Card S8: the two phone sign-in pages carry the same widget; they send the origin only while
+    # AUTH_PHONE_LOGIN_ENABLED is on (see test_turnstile_origin_on_phone_pages_only_with_the_flag).
+    allowed = {
+        "dealer_register.html": turnstile_tag,
+        "login_phone.html": turnstile_tag,
+        "login_phone_code.html": turnstile_tag,
+    }
     tag_hits = []
     for p in (FRONTEND / "templates").rglob("*.html"):
         text = p.read_text(encoding="utf-8", errors="ignore")
@@ -130,3 +136,38 @@ def test_no_template_or_static_script_loads_a_cross_origin_script():
     ]
     assert tag_hits == []
     assert import_hits == []
+
+
+def test_turnstile_origin_on_phone_pages_only_with_the_flag(app_factory):
+    """Card S8: flag on, the phone pages (and /login, which is the phone page then) allow the
+    Turnstile origin; flag off, /login and /staff/login keep the plain policy."""
+    on = app_factory(
+        CSP_ENFORCE="1",
+        CSP_REPORT_ONLY="",
+        AUTH_PHONE_LOGIN_ENABLED="1",
+        TURNSTILE_SITE_KEY="site-key-1",
+    ).app
+    with on.test_client() as c:
+        for path in ("/login", "/login/phone"):
+            rv = c.get(path)
+            assert rv.status_code == 200, path
+            d = _directives(rv.headers["Content-Security-Policy"])
+            assert d["script-src"][-1] == "https://challenges.cloudflare.com", path
+            assert d["frame-src"] == ["'self'", "https://challenges.cloudflare.com"], path
+            assert d["connect-src"] == ["'self'", "https://tile.openstreetmap.org"], path
+        # the staff password page is a normal page: no Turnstile origin
+        rv = c.get("/staff/login")
+        assert rv.status_code == 200
+        assert "challenges.cloudflare.com" not in rv.headers["Content-Security-Policy"]
+
+
+def test_turnstile_origin_is_not_on_login_while_the_phone_flag_is_off(app_factory):
+    off = app_factory(
+        CSP_ENFORCE="1", CSP_REPORT_ONLY="", AUTH_PHONE_LOGIN_ENABLED="", TURNSTILE_SITE_KEY="site-key-1"
+    ).app
+    with off.test_client() as c:
+        rv = c.get("/login")
+        assert rv.status_code == 200
+        assert "challenges.cloudflare.com" not in rv.headers["Content-Security-Policy"]
+        assert c.get("/login/phone").status_code == 404
+        assert c.get("/staff/login").status_code == 404

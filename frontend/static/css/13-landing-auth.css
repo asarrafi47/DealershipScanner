@@ -385,3 +385,204 @@
 .lps-foot-links .lp-footer-copy {
     color: inherit;
 }
+
+
+/* ============================================================
+   Phone sign-in (card S8): /login/phone and /login/phone/code.
+   A plain heading, one underline field, one flat button, text
+   links and sentences for states. No cards, boxes or badges.
+   Namespaced ph-.
+   ============================================================ */
+
+.ph-page {
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 56px 24px 72px;
+}
+
+.ph-heading {
+    margin: 0 0 12px;
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--text);
+}
+
+.ph-lede {
+    margin: 0 0 28px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.ph-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+}
+
+.ph-line {
+    position: relative;
+    border-bottom: 1px solid var(--border-medium);
+}
+
+.ph-line::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background: var(--wood-trim);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ph-line:focus-within::after {
+    transform: scaleX(1);
+}
+
+.ph-line input {
+    width: 100%;
+    padding: 10px 0 12px;
+    font: inherit;
+    font-size: 18px;
+    color: var(--text);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+}
+
+.ph-error {
+    margin: 8px 0 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #b3261e;
+}
+
+.ph-error:empty {
+    margin: 0;
+}
+
+.ph-error[hidden] {
+    display: none;
+}
+
+.ph-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 20px 0 8px;
+}
+
+.ph-consent input[type="checkbox"] {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin: 2px 0 0;
+    accent-color: var(--navy);
+}
+
+.ph-consent label {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.ph-consent label a,
+.ph-links a {
+    color: var(--navy);
+    text-decoration: underline;
+}
+
+.ph-submit {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 28px;
+    padding: 15px 30px;
+    font: inherit;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: #fffcf8;
+    background: var(--navy);
+    border: 0;
+    border-radius: var(--main-radius);
+    box-shadow: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.ph-submit:hover {
+    background: var(--navy-deep);
+}
+
+.ph-submit:focus-visible {
+    background: var(--navy-deep);
+    outline: 2px solid var(--navy);
+    outline-offset: 3px;
+}
+
+.ph-submit[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.ph-hint {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: var(--text-faint);
+}
+
+.ph-hint[hidden] {
+    display: none;
+}
+
+.ph-links {
+    margin: 28px 0 0;
+    font-size: 14px;
+}
+
+.ph-form-again {
+    margin-top: 24px;
+}
+
+.ph-link {
+    padding: 0;
+    font: inherit;
+    font-size: 14px;
+    color: var(--navy);
+    text-decoration: underline;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.ph-link[aria-disabled="true"] {
+    color: var(--text-faint);
+    text-decoration: none;
+    cursor: not-allowed;
+}
+
+.ph-form-again .ph-hint {
+    margin-left: 8px;
+}
+
+/* Read by screen readers only: the resend countdown announced at its start and when it is ready. */
+.ph-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}

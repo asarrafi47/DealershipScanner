@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in</title>
+    {% include "_head_css.html" %}
+    {% include "_head_meta.html" %}
+    {% include "_head_perf.html" %}
+</head>
+<body class="lp-body">
+
+    <div class="page">
+
+        {% set nav_active = "login" %}
+        {% include "_nav_public.html" %}
+
+        <main class="ph-page">
+            <h1 class="ph-heading">Sign in</h1>
+            <p class="ph-lede">Enter your mobile number and we will text you a code. If you are new, the same steps make your account.</p>
+
+            <form method="POST" action="/login/phone" class="ph-form" id="ph-start-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <label class="ph-label" for="ph-phone">Mobile phone number</label>
+                <div class="ph-line">
+                    <input id="ph-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="32" required aria-describedby="ph-status">
+                </div>
+                <p id="ph-status" class="ph-error" aria-live="polite">{{ error or "" }}</p>
+
+                {% if turnstile_site_key %}
+                <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}" data-size="compact"></div>
+                <p id="ph-check-missing" class="ph-error" hidden>The check that you are a person did not load. Reload the page{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p>
+                {% else %}
+                <p class="ph-error">The check that you are a person is not available right now. Please try again later{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p>
+                {% endif %}
+
+                <div class="ph-consent">
+                    <input id="ph-consent" type="checkbox" name="consent" value="1">
+                    <label for="ph-consent">{{ consent_lead }}<a href="{{ terms_path }}">{{ consent_terms }}</a>{{ consent_and }}<a href="{{ privacy_path }}">{{ consent_privacy }}</a>{{ consent_tail }}{% if support_contact %} For help, contact {{ support_contact }}.{% endif %}</label>
+                </div>
+
+                <button type="submit" class="ph-submit" id="ph-send" aria-disabled="true" aria-describedby="ph-consent-hint">Text me a code</button>
+                <p id="ph-consent-hint" class="ph-hint">Tick the box to continue</p>
+            </form>
+
+            <p class="ph-links"><a href="{{ staff_login_url }}">Use email and password instead</a></p>
+        </main>
+
+    </div>
+
+    {% if turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer nonce="{{ csp_nonce }}"></script>
+    {% endif %}
+    <script src="{{ url_for('static', filename='phone_login.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+{% include "_footer_version.html" %}
+</body>
+</html>
