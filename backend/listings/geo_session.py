@@ -33,8 +33,13 @@ def apply_listings_geo_to_session(session_obj: object, zip_code: str, radius_mi:
     if zip_to_coords(z) is None:
         return False
     sess = session_obj
-    sess[LISTINGS_GEO_ZIP_SESSION_KEY] = z
-    sess[LISTINGS_GEO_RADIUS_SESSION_KEY] = rm
+    # Assign only on a change: a Flask session marks itself modified on every assignment, even of
+    # an equal value, and a modified session re-sends Set-Cookie (+ ``Vary: Cookie``) on a page
+    # the visitor reloads with the same ZIP and radius.
+    if sess.get(LISTINGS_GEO_ZIP_SESSION_KEY) != z:
+        sess[LISTINGS_GEO_ZIP_SESSION_KEY] = z
+    if sess.get(LISTINGS_GEO_RADIUS_SESSION_KEY) != rm:
+        sess[LISTINGS_GEO_RADIUS_SESSION_KEY] = rm
     return True
 
 

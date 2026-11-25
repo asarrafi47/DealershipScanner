@@ -281,3 +281,67 @@ def test_public_count_reads_the_fingerprint_once_per_floor(monkeypatch):
     assert reads["n"] == 2
     listings_repo.public_listings_count()
     assert reads["n"] == 2
+
+
+# --- static files never touch the session (slow-site fixes, 2026-11-25) ---------------------
+
+
+def test_signed_in_static_files_keep_their_immutable_cache_headers(app):
+    """A signed-in browser holds a permanent session, which Flask re-signs on every response.
+    On /static that meant Set-Cookie + ``Vary: Cookie`` and the year-long ``immutable`` header
+    downgraded to ``private, no-cache``: every CSS/JS file revalidated on every page view."""
+    anon = app.test_client().get("/static/main.js?v=1")
+    assert anon.status_code == 200
+    assert "immutable" in anon.headers["Cache-Control"]
+
+    c = _login(app, "alice_edge")
+    first = c.get("/static/main.js?v=1")
+    assert first.status_code == 200
+    assert not _set_cookies(first)
+    assert first.headers["Cache-Control"] == anon.headers["Cache-Control"]
+    assert "cookie" not in first.headers.get("Vary", "").lower()
+
+    # The conditional request (what a browser sends after the first load) is the same.
+    etag = first.headers.get("ETag")
+    assert etag
+    again = c.get("/static/main.js?v=1", headers={"If-None-Match": etag})
+    assert again.status_code == 304
+    assert not _set_cookies(again)
+    assert "cookie" not in again.headers.get("Vary", "").lower()
+
+
+def test_signed_in_pages_still_refresh_the_session_cookie(app):
+    """The skip is for static endpoints only: a signed-in page view keeps the rolling cookie."""
+    c = _login(app, "alice_edge")
+    r = c.get("/home")
+    assert r.status_code == 200
+    assert any(h.startswith("session=") for h in _set_cookies(r))
+
+
+def test_listings_geo_assignment_is_a_noop_when_nothing_changed():
+    """Re-applying the same ZIP/radius must not mark the session modified (a modified
+    session re-sends Set-Cookie on a page the visitor merely reloaded)."""
+    from backend.listings import geo_session as gs
+
+    class Tracking(dict):
+        writes = 0
+
+        def __setitem__(self, k, v):
+            type(self).writes += 1
+            super().__setitem__(k, v)
+
+    import backend.db.geo as geo
+
+    orig = geo.zip_to_coords
+    geo.zip_to_coords = lambda z: (35.0, -80.0)
+    try:
+        s = Tracking()
+        assert gs.apply_listings_geo_to_session(s, "28202", 25.0) is True
+        assert Tracking.writes == 2
+        assert gs.apply_listings_geo_to_session(s, "28202", 25.0) is True
+        assert Tracking.writes == 2, "same ZIP and radius must not write the session again"
+        assert gs.apply_listings_geo_to_session(s, "28202", 50.0) is True
+        assert Tracking.writes == 3
+        assert s[gs.LISTINGS_GEO_RADIUS_SESSION_KEY] == 50.0
+    finally:
+        geo.zip_to_coords = orig

@@ -234,6 +234,51 @@ def _registry_backfill_flag_module():
     return facade if facade is not None else sys.modules[__name__]
 
 
+_LIKE_SPECIALS = frozenset("%_\\")
+
+
+def _hosts_named_by_unstamped_cars(cursor) -> set[str]:
+    """Hosts that appear after ``//`` in the ``dealer_url`` of an active, unstamped car.
+
+    A token is the text between a ``//`` and the next ``/`` (or the end), with and without a
+    leading ``www.``. Every pattern from :func:`dealer_url_like_patterns` (``%//h``, ``%//h/%``,
+    ``%//www.h``, ``%//www.h/%``) can only match a URL that has such a token equal to ``h`` or
+    ``www.h``, so a host missing from this set cannot match any unstamped car.
+    """
+    cursor.execute(
+        """
+        SELECT DISTINCT LOWER(COALESCE(dealer_url, '')) AS u
+        FROM cars
+        WHERE (COALESCE(listing_active, 1) = 1)
+          AND (dealership_registry_id IS NULL
+               OR CAST(dealership_registry_id AS INTEGER) <= 0)
+        """
+    )
+    named: set[str] = set()
+    for row in cursor.fetchall():
+        url = row.get("u") if isinstance(row, dict) else row[0]
+        url = str(url or "")
+        i = url.find("//")
+        while i != -1:
+            start = i + 2
+            end = url.find("/", start)
+            token = url[start : end if end != -1 else len(url)]
+            if token:
+                named.add(token)
+                if token.startswith("www."):
+                    named.add(token[4:])
+            i = url.find("//", i + 1)
+    return named
+
+
+def _host_may_match(host: str, named_hosts: set[str]) -> bool:
+    """False only when the host's LIKE patterns provably match no unstamped car."""
+    h = (host or "").strip().lower()
+    if any(ch in _LIKE_SPECIALS for ch in h):
+        return True  # a wildcard or escape in the host: let SQL decide, as before
+    return h in named_hosts
+
+
 def backfill_dealership_registry_ids(*, conn=None) -> int:
     """
     Set ``dealership_registry_id`` on active cars where host matches registry URLs.
@@ -249,9 +294,17 @@ def backfill_dealership_registry_ids(*, conn=None) -> int:
     if conn is not None:
         host_to_reg = registry_id_by_dealer_host(conn)
         cursor = conn.cursor()
+        # One pass over ``cars`` to learn which hosts the still-unstamped rows name. Each
+        # per-host UPDATE below is a full scan of ``cars`` (``LOWER(dealer_url) LIKE '%//host'``
+        # cannot use an index), and ~620 of them ran on every worker start even when nothing was
+        # left to stamp -- minutes of sequential scans on the shared database after each
+        # deploy. A host no unstamped URL names matches zero rows, so its UPDATE is skipped.
+        named_hosts = _hosts_named_by_unstamped_cars(cursor)
         for host, reg_id in host_to_reg.items():
             patterns = dealer_url_like_patterns(host)
             if not patterns:
+                continue
+            if not _host_may_match(host, named_hosts):
                 continue
             # Anchored, not a bare ``%host%`` substring: registry id 170 is "Subaru of
             # America" at subaru.com, and the substring form stamped every *subaru.com

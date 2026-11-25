@@ -158,13 +158,43 @@ logger = logging.getLogger(__name__)
 _MIN_PASSWORD_LEN = Config.MIN_PASSWORD_LENGTH
 _DEV_LOGIN_RPM = int(os.environ.get("RATE_LIMIT_DEV_LOGIN_PER_MIN", "20"))
 _DEV_REGISTER_RPM = int(os.environ.get("RATE_LIMIT_DEV_REGISTER_PER_MIN", "5"))
-def _vector_reindex_background() -> None:
-    try:
-        from backend.vector.pgvector_service import reindex_all
+# One full-fleet reindex at a time. ``reindex_all`` loads every car row (~200k+) and re-embeds
+# them on CPU inside the web worker, so overlapping runs (one per dealer of a bulk import, or
+# two scans finishing together) multiply memory, fight over the TRUNCATE and starve requests.
+# A request that arrives while a run is in flight does not start a second one: it marks the
+# run "dirty" and the running thread goes round once more, so cars added meanwhile are still
+# embedded. N requests therefore cost at most one run in flight plus one follow-up, never N at once.
+_vector_reindex_state_lock = threading.Lock()
+_vector_reindex_running = False
+_vector_reindex_again = False
 
-        reindex_all()
-    except Exception:
-        logger.exception("pgvector reindex failed after scanner job")
+
+def _vector_reindex_background() -> None:
+    global _vector_reindex_running, _vector_reindex_again
+    with _vector_reindex_state_lock:
+        if _vector_reindex_running:
+            _vector_reindex_again = True
+            logger.info("pgvector reindex already running; will run once more when it finishes")
+            return
+        _vector_reindex_running = True
+        _vector_reindex_again = False
+    try:
+        while True:
+            try:
+                from backend.vector.pgvector_service import reindex_all
+
+                reindex_all()
+            except Exception:
+                logger.exception("pgvector reindex failed after scanner job")
+            with _vector_reindex_state_lock:
+                if not _vector_reindex_again:
+                    _vector_reindex_running = False
+                    return
+                _vector_reindex_again = False
+    except BaseException:
+        with _vector_reindex_state_lock:
+            _vector_reindex_running = False
+        raise
 
 
 def _spawn_vector_reindex_background() -> None:

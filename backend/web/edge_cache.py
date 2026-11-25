@@ -107,6 +107,11 @@ def _is_shared_cacheable(cache_control: str) -> bool:
     return "public" in cc or "s-maxage" in cc
 
 
+# Endpoints whose responses never depend on, or change, the session. ``save_session`` returns
+# early for them: no cookie, no ``Vary: Cookie``, and their own Cache-Control stands.
+SESSION_FREE_ENDPOINTS = frozenset({"static", "favicon", "serve_car_image"})
+
+
 class EdgeSafeSessionInterface(SecureCookieSessionInterface):
     """The default signed-cookie session, plus one guard after it is saved.
 
@@ -118,6 +123,13 @@ class EdgeSafeSessionInterface(SecureCookieSessionInterface):
     """
 
     def save_session(self, app, session, response) -> None:  # type: ignore[override]
+        if request.endpoint in SESSION_FREE_ENDPOINTS:
+            # Static files never read or write the session. With SESSION_REFRESH_EACH_REQUEST a
+            # signed-in browser (permanent session) would get a fresh Set-Cookie and
+            # ``Vary: Cookie`` on every one of them, and the guard below would then turn their
+            # year-long ``immutable`` header into ``private, no-cache``: every CSS/JS file
+            # revalidated through the single worker on every page view.
+            return
         super().save_session(app, session, response)
         if "Set-Cookie" in response.headers and _is_shared_cacheable(
             response.headers.get("Cache-Control", "")

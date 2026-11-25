@@ -21,6 +21,24 @@ from backend.enrichment.nhtsa_vpic import (
 
 log = logging.getLogger(__name__)
 
+# Every caller of the functions below is a web request thread (the public /nhtsa-recalls pages and
+# JSON APIs, the car page, the premium history route), and the site runs 4 request threads. A
+# 20 s read on each of two upstream calls (vPIC decode, then recalls) could hold a thread for 40 s
+# whenever NHTSA is slow, so a handful of visitors filled the pool and the whole site stalled.
+# NHTSA answers in about a second when healthy; 8 s per call keeps a slow upstream from costing
+# more than one slow response. Override with NHTSA_REQUEST_TIMEOUT_S.
+def _request_timeout_s() -> float:
+    import os
+
+    try:
+        v = float(os.environ.get("NHTSA_REQUEST_TIMEOUT_S", "8"))
+    except ValueError:
+        return 8.0
+    return v if 1.0 <= v <= 60.0 else 8.0
+
+
+NHTSA_REQUEST_TIMEOUT_S = _request_timeout_s()
+
 _RECALLS_YMM_URL = (
     "https://api.nhtsa.gov/recalls/recallsByVehicle"
     "?make={make}&model={model}&modelYear={year}&format=json"
@@ -79,7 +97,7 @@ def _fetch_recalls_by_ymm(
     model: str,
     year: int | str,
     *,
-    timeout_s: float = 20.0,
+    timeout_s: float = NHTSA_REQUEST_TIMEOUT_S,
 ) -> tuple[list[dict[str, Any]], str | None]:
     mk = (make or "").strip()
     md = (model or "").strip()
@@ -125,7 +143,7 @@ def fetch_nhtsa_recalls(
     make: str | None = None,
     model: str | None = None,
     year: int | str | None = None,
-    timeout_s: float = 20.0,
+    timeout_s: float = NHTSA_REQUEST_TIMEOUT_S,
 ) -> tuple[list[dict[str, Any]], str | None]:
     """NHTSA recalls for this vehicle configuration (make/model/year).
 
@@ -220,7 +238,7 @@ def build_vehicle_history_intelligence(car: dict[str, Any]) -> dict[str, Any]:
     recalls, recall_err = fetch_nhtsa_recalls(vin)
     out["recalls"] = recalls
 
-    _, vpic_flat, vpic_err = fetch_decode_vin_values_extended(vin)
+    _, vpic_flat, vpic_err = fetch_decode_vin_values_extended(vin, timeout_s=NHTSA_REQUEST_TIMEOUT_S)
     verified = merge_verified_specs(car)
     regex = decode_trim_logic(
         car.get("make"),
