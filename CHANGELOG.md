@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- test only, no migration and no runtime change: `backend/tests/test_upgrade_v026_to_v032_pg.py` (pg tier, about 10 s) rehearses the 1.6.0 upgrade on a populated database. It builds V001 to V026 with the real runner, loads synthetic cars (`UPGRADE_REHEARSAL_ROWS`, default 20000), applies V027 to V032 and checks that no row moved or changed, that legacy rows get the column defaults, that `cars` and `incomplete_listings` are not rewritten (same file, same row placement and writers), that the schema diff against V026 is exactly the six new columns and ten new tables, that the result equals a fresh V032 build and that a second run is a no-op. It also pins what V028's ACCESS EXCLUSIVE lock on `cars` does in use: any open transaction that touched `cars` (reader or writer) makes it wait, new readers queue behind the waiting ALTER, `--lock-timeout` makes it fail with nothing recorded, and a retry once the holder ends succeeds. The real 1.6.0 scanner write path is run against the upgraded database, and against a V027-only one, where it is refused (strict) or rejected by Postgres on `rooftop_tier` (warn): migrate first, then deploy the scanner image. Measured once outside CI on a 1,000,000-row, 1.2 GB `cars`: V027 to V032 apply in 27 ms with no rewrite.
+
 ## [1.5.57] - 2026-11-28
 
 - **Slow-site fixes found while investigating "the site is slow again" (2026-11-25).** Production still runs 1.5.11, so none of the 1.5.4x speed work is live yet; these are the code-side leftovers found on dev, none of them a route, endpoint or signature change.
