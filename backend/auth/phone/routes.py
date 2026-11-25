@@ -47,11 +47,18 @@ from flask import abort, jsonify, make_response, redirect, render_template, requ
 from backend.auth.phone import config as phone_config
 from backend.auth.phone import consent, numbers, registry, turnstile
 from backend.auth.phone import service as ps
+from backend.auth.phone.endpoints import PHONE_FLAG_ENDPOINTS
+from backend.config import Config
 from backend.utils.client_ip import phone_client_ip
 from backend.utils.device_id import read_device_id
+from backend.utils.ip_rate_limit import allow_request
+from backend.web.request_scope import NO_SERVER_TIMING_KEY
 from backend.web.security import allow_turnstile_csp
 
 _log = logging.getLogger("auth_phone")
+
+# The phone answers carry no Server-Timing header (the staff form keeps it).
+_NO_TIMING_ENDPOINTS = PHONE_FLAG_ENDPOINTS - {"staff_login_page"}
 
 # Flask session keys (a cookie: signed, not encrypted, so nothing sensitive goes in).
 _K_CID = "phone_cid"  # the open challenge's public id
@@ -165,6 +172,16 @@ def _guard(call):
         return None, ps.UNAVAILABLE
 
 
+def _ip_throttled() -> bool:
+    """A cheap per-address request limit in front of the Turnstile call and the database work, like the
+    password form has (``RATE_LIMIT_LOGIN_PER_MIN`` per minute, one bucket for start, resend and check).
+    It is in-process (and in Redis when ``REDIS_URL`` is set), so a flood of unsolved or made-up
+    requests is turned away before it costs a Cloudflare call or a database row."""
+    return not allow_request(
+        f"phone:{phone_client_ip(request)}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0
+    )
+
+
 def _device_hash() -> str | None:
     """Hash of the device id in a valid ``sc_dev`` cookie the request really carried, else None."""
     device_id = read_device_id(request)
@@ -231,6 +248,8 @@ class _Result:
 
 
 def _do_start(phone: str, consent_ok: bool, token: str) -> _Result:
+    if _ip_throttled():
+        return _Result(False, ps.TRY_AGAIN, phone_page=True)
     nonce = _browser_nonce()
     out, err = _guard(
         lambda: get_service().start(
@@ -243,10 +262,11 @@ def _do_start(phone: str, consent_ok: bool, token: str) -> _Result:
             purpose="login",
         )
     )
+    # No challenge exists after a refused start, so every failure shows the number page again.
     if err:
-        return _Result(False, err)
+        return _Result(False, err, phone_page=True)
     if not out.ok or not out.public_id:
-        return _Result(False, out.sentence or ps.UNAVAILABLE)
+        return _Result(False, out.sentence or ps.UNAVAILABLE, phone_page=True)
     _remember_challenge(out, nonce)
     return _Result(True, out.sentence)
 
@@ -255,6 +275,8 @@ def _do_resend(token: str) -> _Result:
     cid, nonce = _challenge_ids()
     if not cid:
         return _Result(False, ps.START_AGAIN, phone_page=True, drop=True)
+    if _ip_throttled():
+        return _Result(False, ps.TRY_AGAIN)
     out, err = _guard(
         lambda: get_service().resend(
             cid, nonce, turnstile_token=token[:4096], ip=phone_client_ip(request), device_hash=_device_hash()
@@ -274,6 +296,8 @@ def _do_verify(code: str) -> _Result:
     cid, nonce = _challenge_ids()
     if not cid:
         return _Result(False, ps.START_AGAIN, phone_page=True, drop=True)
+    if _ip_throttled():
+        return _Result(False, ps.TRY_AGAIN)
     approved, err = _guard(
         lambda: get_service().check(
             cid, nonce, code[:32], device_hash=_device_hash(), ip=phone_client_ip(request)
@@ -294,7 +318,7 @@ def _refuse(reason: str, sentence: str) -> _Result:
 
 
 def _finish_login(approved: Any) -> _Result:
-    from backend.auth.phone.accounts import PhoneAccounts, is_phone_eligible
+    from backend.auth.phone.accounts import PhoneAccounts, is_phone_eligible, purge_phone_identity
     from backend.auth.session import finalize_app_session
     from backend.db.users_db import _user_row_is_active, get_user_profile
 
@@ -321,7 +345,21 @@ def _finish_login(approved: Any) -> _Result:
     if err:
         return _Result(False, err, drop=True)
     if row is None:
-        return _refuse("finalize_failed", ps.CODE_FAILED)
+        # The number still points at an account that no longer exists (the purge after an admin delete
+        # failed, or the process died between the two steps). Users.id is never reused, so the dead id
+        # cannot belong to anyone else: release the stale identity and make a fresh account, once.
+        _log.warning("event=identity_orphan_healed")
+        purge_phone_identity(int(out.user_id))
+        out, err = _guard(_sign_in)
+        if err:
+            return _Result(False, err, drop=True)
+        if not out.ok or not out.user_id:
+            return _refuse("retry_exhausted", ps.TRY_AGAIN)
+        row, err = _guard(lambda: get_user_profile(int(out.user_id)))
+        if err:
+            return _Result(False, err, drop=True)
+        if row is None:
+            return _refuse("finalize_failed", ps.CODE_FAILED)
     if not _user_row_is_active(row):
         return _refuse("inactive", ps.CODE_FAILED)
     if not is_phone_eligible(row):
@@ -528,8 +566,17 @@ def api_auth_phone_resend():
     )
 
 
+def _no_server_timing() -> None:
+    """Keep ``Server-Timing`` off the phone answers. Its ``db_connect`` count differs between a number
+    that has an account (no Lookup, no lookup-cache rows) and one that has not, which would tell a
+    visitor which numbers are registered (DESIGN.md section 14)."""
+    if (request.endpoint or "") in _NO_TIMING_ENDPOINTS:
+        request.environ[NO_SERVER_TIMING_KEY] = True
+
+
 def register(app) -> None:
     """Attach the routes with bare endpoint names (the CSRF lists in ``backend/web/security.py`` match them)."""
+    app.before_request(_no_server_timing)
     add = app.add_url_rule
     add("/login/phone", endpoint="login_phone_page", view_func=login_phone_page, methods=["GET"])
     add("/login/phone", endpoint="login_phone_start", view_func=login_phone_start, methods=["POST"])

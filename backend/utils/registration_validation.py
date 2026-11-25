@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from backend.utils.phone_placeholder import is_placeholder_email
+
 MAX_USERNAME_LEN = 128
 MAX_EMAIL_LEN = 254
 MAX_PASSWORD_LEN = 128
@@ -43,8 +45,8 @@ def registration_form_error(
         return "Username must be at least 2 characters."
     if len(u) > MAX_USERNAME_LEN:
         return f"Username must be at most {MAX_USERNAME_LEN} characters."
-    if len(e) < 3 or "@" not in e:
-        return "Enter a valid email address."
+    if len(e) < 3 or "@" not in e or is_placeholder_email(e):
+        return "Enter a valid email address."  # the .invalid domain is reserved for phone accounts
     if len(e) > MAX_EMAIL_LEN:
         return f"Email must be at most {MAX_EMAIL_LEN} characters."
     if len(p) < min_password_len:

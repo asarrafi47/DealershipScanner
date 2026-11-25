@@ -596,6 +596,12 @@ class AuthPhoneService:
             return CheckOutcome(False, R_BUSY, TRY_AGAIN)
         attempt = self.repo.reserve_attempt(public_id, session_nonce, now=now, max_attempts=self.config.max_wrong_tries)
         if attempt is None:
+            # Either the attempts are used up, or a second request for this challenge (a double
+            # submit) closed it between our read and now: that is not a wrong-code lock.
+            again = self.repo.fetch_challenge(public_id, session_nonce)
+            if again is None or again.status != "open":
+                _event("check_expired", reason="closed_meanwhile")
+                return CheckOutcome(False, R_NO_CHALLENGE, START_AGAIN)
             self.repo.finish_challenge(public_id, "failed", now=now, session_nonce=session_nonce)
             _event("check_locked", purpose=ch.purpose, why="attempts", h=_h6(ch.phone_hash))
             return CheckOutcome(False, R_TOO_MANY, CODE_LOCKED)

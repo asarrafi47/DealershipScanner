@@ -1564,7 +1564,8 @@
     "_per_request_csp_nonce",
     "_csrf_mutating_requests",
     "_billing_gate_paid_routes",
-    "_device_cookie_before"
+    "_device_cookie_before",
+    "_no_server_timing"
    ]
   },
   "after_request_funcs": {

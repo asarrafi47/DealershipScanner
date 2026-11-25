@@ -210,6 +210,12 @@ def twilio_ready() -> bool:
     return twilio_credentials() is not None and bool(twilio_verify_service_sid())
 
 
+def support_contact() -> str:
+    """``SUPPORT_CONTACT``: where a person can get help (an address or a link), shown beside the consent text
+    and the person-check message. CTIA asks for a HELP contact, so production refuses the flag without it."""
+    return _env("SUPPORT_CONTACT")[:200]
+
+
 def missing_for_production() -> list[str]:
     """Names (never values) of what a production start with the flag on is missing or has wrong."""
     if not enabled():
@@ -228,6 +234,8 @@ def missing_for_production() -> list[str]:
         problems.append("TURNSTILE_SECRET_KEY")
     if not turnstile_site_key():
         problems.append("TURNSTILE_SITE_KEY")
+    if not support_contact():
+        problems.append("SUPPORT_CONTACT (the HELP contact shown beside the consent text)")
     if provider == PROVIDER_TWILIO:
         if twilio_credentials() is None:
             problems.append(

@@ -152,9 +152,18 @@ def users(app_factory):
     app_factory()
 
 
-def test_adopt_or_create_makes_a_shopper_with_an_unusable_password(users):
+def test_adopt_or_create_makes_a_shopper_with_an_unusable_password(users, monkeypatch):
+    from backend.db import users_db
     from backend.db.users_db import authenticate_app_user, get_user_by_login
 
+    real_save = users_db.save_user
+    handed = []  # the password each account is created with, as save_user receives it
+
+    def spy(*args, **kwargs):
+        handed.append(kwargs["password"] if "password" in kwargs else args[2])
+        return real_save(*args, **kwargs)
+
+    monkeypatch.setattr(users_db, "save_user", spy)
     uid = PhoneAccounts().adopt_or_create(email=PLACEHOLDER, username=USERNAME)
     assert isinstance(uid, int) and uid > 0
     row = get_user_by_login(PLACEHOLDER)
@@ -166,6 +175,17 @@ def test_adopt_or_create_makes_a_shopper_with_an_unusable_password(users):
     for guess in ("", USERNAME, PLACEHOLDER, "password", "long-enough-password-1"):
         assert authenticate_app_user(USERNAME, guess) is None
         assert authenticate_app_user(PLACEHOLDER, guess) is None
+
+    # Every adoption draws its own long random secret: no shared or fixed password to find out.
+    other_email, other_name = "p-13-4e5f6a7b@phone.invalid", "user-13-4e5f"
+    PhoneAccounts().adopt_or_create(email=other_email, username=other_name)
+    assert len(handed) == 2
+    assert handed[0] != handed[1]
+    assert all(isinstance(pw, str) and len(pw) >= 32 for pw in handed)
+    for guess in ("", other_name, other_email, "password", handed[0]):
+        assert authenticate_app_user(other_name, guess) is None
+        assert authenticate_app_user(other_email, guess) is None
+    assert authenticate_app_user(USERNAME, handed[0]) is not None  # the control: the real secret does open it
 
 
 def test_adopt_or_create_is_idempotent_by_email(users):
@@ -408,11 +428,108 @@ def test_purge_phone_identity_is_quiet_when_there_is_no_postgres(monkeypatch, ca
     assert not [r for r in caplog.records if "identity_purge_failed" in r.getMessage()]
 
 
-def test_the_admin_delete_actions_purge_the_phone_identity():
-    """Both delete branches of the users hub call the purge (a source check keeps the two in step)."""
-    src = Path("backend/dealer/admin/users_hub.py").read_text(encoding="utf-8")
-    assert src.count('_revoke_sessions(target_id, "delete")\n                    _purge_phone_identity(target_id)') == 1
-    assert src.count('_revoke_sessions(user_id, "delete")\n                    _purge_phone_identity(user_id)') == 1
+_ADMIN_PW = "long-enough-password"
+_CSRF = "t" * 32
+
+
+@pytest.fixture
+def admin_hub(app_factory, monkeypatch, tmp_path):
+    """A client signed in as a site admin through the real /login route, plus the users hub module.
+
+    Returns ``(client, hub)``; ``hub`` is the module object, so tests patch ``hub.delete_user_by_id``
+    the way the routes look it up.
+    """
+    from backend.db import inventory_db as inv_db
+
+    # inventory_db.DB_PATH is resolved at import time, so the env var alone does not move it.
+    inventory_file = str(tmp_path / "inventory-for-admin-hub")
+    monkeypatch.setattr(inv_db, "DB_PATH", inventory_file)
+    main = app_factory(INVENTORY_DB_PATH=inventory_file)
+    from backend.dealer.admin import users_hub
+    from backend.db.users_db import save_user
+    from backend.utils.roles import ROLE_ADMIN
+
+    save_user("hubadmin", "hubadmin@example.com", _ADMIN_PW, role=ROLE_ADMIN)
+    client = main.app.test_client()
+    client.get("/login")
+    with client.session_transaction() as sess:
+        sess["_csrf_token"] = _CSRF
+    client.post("/login", data={"csrf_token": _CSRF, "login": "hubadmin@example.com", "password": _ADMIN_PW})
+    assert client.get("/admin/users").status_code == 200  # really an admin: the hub answers
+    with client.session_transaction() as sess:
+        sess["_csrf_token"] = _CSRF  # signing in rotates the session: put a known token back for the posts
+    return client, users_hub
+
+
+def _delete_from_list(client, uid):
+    return client.post("/admin/users", data={"csrf_token": _CSRF, "action": "delete", "user_id": str(uid)})
+
+
+def _delete_from_edit_page(client, uid):
+    return client.post(f"/admin/users/{uid}/edit", data={"csrf_token": _CSRF, "action": "delete"})
+
+
+_DELETE_BRANCHES = pytest.mark.parametrize(
+    "delete_action", [_delete_from_list, _delete_from_edit_page], ids=["list_page", "edit_page"]
+)
+
+
+def _shopper(name="shopper-to-delete"):
+    from backend.db.users_db import save_user
+
+    return int(save_user(name, PLACEHOLDER, "x" * 30, role="general_user", org_id=None))
+
+
+@pytest.fixture
+def purge_calls(monkeypatch):
+    """Records every phone-identity purge as (user_id, account_still_exists_at_that_moment)."""
+    from backend.db.users_db import get_user_admin_record
+
+    calls = []
+    monkeypatch.setattr(
+        accounts, "purge_phone_identity", lambda uid: calls.append((uid, get_user_admin_record(uid) is not None))
+    )
+    return calls
+
+
+@_DELETE_BRANCHES
+def test_deleting_an_account_from_the_admin_hub_purges_its_phone_identity_once_after_the_delete(
+    admin_hub, purge_calls, delete_action
+):
+    from backend.db.users_db import get_user_admin_record
+
+    client, _hub = admin_hub
+    uid = _shopper()
+    resp = delete_action(client, uid)
+    assert resp.status_code in (302, 303)
+    assert get_user_admin_record(uid) is None
+    assert purge_calls == [(uid, False)]  # once, for this id, and the users row was already gone
+
+
+@_DELETE_BRANCHES
+def test_a_refused_delete_from_the_admin_hub_does_not_purge_the_phone_identity(
+    admin_hub, purge_calls, monkeypatch, delete_action
+):
+    from backend.db.users_db import get_user_admin_record
+
+    client, hub = admin_hub
+    uid = _shopper()
+    monkeypatch.setattr(hub, "delete_user_by_id", lambda user_id: (False, "blocked"))
+    resp = delete_action(client, uid)
+    assert resp.status_code in (302, 303)
+    assert purge_calls == []  # the account is still there, so its number must stay tied to it
+    assert get_user_admin_record(uid) is not None
+
+
+@_DELETE_BRANCHES
+def test_an_admin_cannot_delete_their_own_account_and_nothing_is_purged(admin_hub, purge_calls, delete_action):
+    from backend.db.users_db import get_user_by_login
+
+    client, _hub = admin_hub
+    own_id = int(get_user_by_login("hubadmin@example.com")["id"])
+    assert delete_action(client, own_id).status_code in (302, 303)
+    assert purge_calls == []
+    assert get_user_by_login("hubadmin@example.com") is not None
 
 
 # ----------------------------------------------------------------- this module stays free of SQL

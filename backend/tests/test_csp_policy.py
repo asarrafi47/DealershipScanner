@@ -12,6 +12,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
 FRONTEND = Path(__file__).resolve().parents[2] / "frontend"
 
 
@@ -171,3 +173,138 @@ def test_turnstile_origin_is_not_on_login_while_the_phone_flag_is_off(app_factor
         assert "challenges.cloudflare.com" not in rv.headers["Content-Security-Policy"]
         assert c.get("/login/phone").status_code == 404
         assert c.get("/staff/login").status_code == 404
+
+
+# ---------------------------------------------------------------- every phone page, not just the first one
+
+TURNSTILE_ORIGIN = "https://challenges.cloudflare.com"
+_TOKEN = "t" * 40
+
+
+class _PhoneStub:
+    """Just enough of ``AuthPhoneService`` to reach each phone page: a start that opens a challenge
+    (or refuses an unticked box), a check that is always a wrong code and a resend that is too soon."""
+
+    def start(self, raw_phone, *, consent, session_nonce=None, **_kw):
+        from backend.auth.phone import service as ps
+
+        if consent is not True:
+            return ps.StartOutcome(False, ps.R_CONSENT, ps.CONSENT_REQUIRED)
+        return ps.StartOutcome(
+            True, ps.R_SENT, ps.SENT_TEMPLATE.format(masked="ending 23"), public_id="cid-1", session_nonce=session_nonce
+        )
+
+    def check(self, *_a, **_kw):
+        from backend.auth.phone import service as ps
+
+        return ps.CheckOutcome(False, ps.R_WRONG, ps.CODE_FAILED)
+
+    def resend(self, *_a, **_kw):
+        from backend.auth.phone import service as ps
+
+        return ps.StartOutcome(False, ps.R_TOO_SOON, ps.RESEND_TOO_SOON)
+
+
+@pytest.fixture
+def phone_stub():
+    from backend.auth.phone import registry, routes
+    from backend.utils.ip_rate_limit import clear_rate_limit_state
+
+    clear_rate_limit_state()  # the per-address phone bucket must not carry over from another test
+    routes.set_service(_PhoneStub())
+    yield
+    routes.reset_service()
+    registry.reset()
+    clear_rate_limit_state()
+
+
+def _post_form(client, url, data=None):
+    from backend.utils.csrf import _SESSION_KEY
+
+    with client.session_transaction() as sess:
+        sess[_SESSION_KEY] = _TOKEN
+    return client.post(url, data={"csrf_token": _TOKEN, **(data or {})})
+
+
+def _assert_turnstile_allowed(rv, what: str) -> None:
+    d = _directives(rv.headers["Content-Security-Policy"])
+    assert d["script-src"][-1] == TURNSTILE_ORIGIN, what
+    assert d["frame-src"] == ["'self'", TURNSTILE_ORIGIN], what
+    assert d["connect-src"] == ["'self'", "https://tile.openstreetmap.org"], what
+
+
+def test_turnstile_origin_is_on_every_phone_page_that_shows_the_widget(app_factory, phone_stub):
+    """The widget sits on the number page and on the code page, and each page can be rendered in
+    more than one way (first visit, refused start, wrong code, resend refused). Every one of them
+    must send the origin: a page without it loads the widget as a blocked script and a blank frame,
+    and the person can never solve the check."""
+    app = app_factory(
+        CSP_ENFORCE="1",
+        CSP_REPORT_ONLY="",
+        AUTH_PHONE_LOGIN_ENABLED="1",
+        TURNSTILE_SITE_KEY="site-key-1",
+    ).app
+    with app.test_client() as c:
+        # the number page, refused start (box not ticked): _render_phone_page after a POST
+        rv = _post_form(c, "/login/phone", {"phone": "(202) 555-0123", "cf-turnstile-response": "pass"})
+        assert rv.status_code == 200 and 'id="ph-start-form"' in rv.get_data(as_text=True)
+        _assert_turnstile_allowed(rv, "number page after a refused start")
+
+        # a started challenge: the code page, first view (the open challenge is in the session)
+        rv = _post_form(
+            c, "/login/phone", {"phone": "(202) 555-0123", "consent": "1", "cf-turnstile-response": "pass"}
+        )
+        assert rv.status_code == 303 and rv.headers["Location"].endswith("/login/phone/code")
+        rv = c.get("/login/phone/code")
+        assert rv.status_code == 200 and 'id="ph-code-form"' in rv.get_data(as_text=True)
+        _assert_turnstile_allowed(rv, "code page with an open challenge")
+
+        # the failed-code page: wrong code, the code page again with the service's sentence
+        rv = _post_form(c, "/login/phone/code", {"code": "111111"})
+        html = rv.get_data(as_text=True)
+        assert rv.status_code == 200 and 'id="ph-code-form"' in html and "That code did not work" in html
+        _assert_turnstile_allowed(rv, "code page after a wrong code")
+
+        # the resend-failure page: too soon, the code page again (HTTP 429)
+        rv = _post_form(c, "/login/phone/resend", {"cf-turnstile-response": "pass-2"})
+        html = rv.get_data(as_text=True)
+        assert rv.status_code == 429 and 'id="ph-code-form"' in html and "wait a minute" in html
+        _assert_turnstile_allowed(rv, "code page after a refused resend")
+
+        # the staff password page stays a normal page
+        rv = c.get("/staff/login")
+        assert rv.status_code == 200
+        assert TURNSTILE_ORIGIN not in rv.headers["Content-Security-Policy"]
+
+
+def test_no_phone_page_sends_the_turnstile_origin_while_the_flag_is_off(app_factory, phone_stub):
+    off = app_factory(
+        CSP_ENFORCE="1", CSP_REPORT_ONLY="", AUTH_PHONE_LOGIN_ENABLED="", TURNSTILE_SITE_KEY="site-key-1"
+    ).app
+    with off.test_client() as c:
+        for path in ("/login", "/login/phone", "/login/phone/code", "/staff/login"):
+            rv = c.get(path)
+            assert TURNSTILE_ORIGIN not in rv.headers.get("Content-Security-Policy", ""), path
+            assert TURNSTILE_ORIGIN not in rv.get_data(as_text=True), path
+        assert [c.get(p).status_code for p in ("/login/phone", "/login/phone/code", "/staff/login")] == [404] * 3
+        # a form post is refused with the same 404 and no origin either
+        rv = _post_form(c, "/login/phone", {"phone": "(202) 555-0123", "consent": "1"})
+        assert rv.status_code == 404
+        assert TURNSTILE_ORIGIN not in rv.headers.get("Content-Security-Policy", "")
+
+
+@pytest.mark.parametrize("page", ["/login/phone", "/login/phone/code"])
+def test_phone_pages_with_a_site_key_tell_a_script_less_browser_the_check_needs_javascript(
+    app_factory, phone_stub, page
+):
+    """Without JavaScript Cloudflare's widget cannot appear. The <noscript> note says so, instead of
+    leaving a form that can never pass the person check (the "did not load" notice needs the script)."""
+    app = app_factory(AUTH_PHONE_LOGIN_ENABLED="1", TURNSTILE_SITE_KEY="site-key-1").app
+    with app.test_client() as c:
+        _post_form(c, "/login/phone", {"phone": "(202) 555-0123", "consent": "1", "cf-turnstile-response": "pass"})
+        html = c.get(page).get_data(as_text=True)
+    assert re.search(r"<noscript>[^<]*<p[^>]*>[^<]*needs JavaScript[^<]*</p></noscript>", html), page
+    # the note does not read the same on the page that has no widget at all
+    no_key = app_factory(AUTH_PHONE_LOGIN_ENABLED="1", TURNSTILE_SITE_KEY=None).app
+    with no_key.test_client() as c:
+        assert "needs JavaScript" not in c.get("/login/phone").get_data(as_text=True)

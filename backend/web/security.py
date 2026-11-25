@@ -22,13 +22,14 @@ from backend.auth.session import (
 )
 from backend.auth.phone import config as _phone_config
 from backend.auth.phone.endpoints import (
-    PHONE_FLAG_ENDPOINTS,
+    PHONE_FLAG_PATHS,
     PHONE_FORM_POST_ENDPOINTS,
     PHONE_HEADER_POST_ENDPOINTS,
 )
 from backend.billing import access as paid_access
 from backend.config import Config
 from backend.utils.csrf import validate_csrf_form, validate_csrf_header
+from backend.utils.device_id import ensure_device_cookie, wants_device_cookie
 from backend.utils.runtime_env import is_production_env, session_cookie_secure_default
 
 if not (validate_csrf_header.__code__.co_flags & inspect.CO_VARARGS):
@@ -140,6 +141,14 @@ _CSRF_HEADER_PREFIXES = ("api_admin_operator_",)
 
 def _csrf_mutating_requests():
     ep = request.endpoint or ""
+    if request.path in PHONE_FLAG_PATHS and not _phone_config.enabled():
+        # Phone sign-in is off: these paths do not exist, for any method, and the answer is decided
+        # before the token check, so a POST without a token cannot be told from one to a missing page.
+        # Werkzeug would otherwise answer a wrong method with 405 and OPTIONS with 200 (this hook runs
+        # before that is raised). The device cookie is still set, as for any other 404 on these paths.
+        if wants_device_cookie(request.path):
+            ensure_device_cookie(request)
+        abort(404)
     if request.method == "DELETE":
         # Only a logged-in session can be forged cross-site; anonymous callers
         # get the view's own 401/403 rather than a 403 about a token they lack.
@@ -149,10 +158,6 @@ def _csrf_mutating_requests():
         return None
     if request.method != "POST":
         return None
-    if ep in PHONE_FLAG_ENDPOINTS and not _phone_config.enabled():
-        # Phone sign-in is off: these routes do not exist. Decide that before the token check, or a
-        # POST without a token would be answered with a redirect or a 403 and so reveal them.
-        abort(404)
     if ep in _CSRF_FORM_POST_ENDPOINTS or ep.startswith(_CSRF_FORM_POST_PREFIXES):
         csrf_resp = validate_csrf_form()
         if csrf_resp is not None:

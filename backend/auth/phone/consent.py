@@ -13,7 +13,7 @@ is an address, not wording, and is not part of the pinned text.
 
 from __future__ import annotations
 
-import os
+from backend.auth.phone import config
 
 CONSENT_LEAD = (
     "I agree to receive one-time login codes by text message from Sarrafi Cars at the number above. "
@@ -37,6 +37,7 @@ PRIVACY_PATH = "/privacy"
 
 
 def support_contact() -> str:
-    """``SUPPORT_CONTACT``: where a person can get help (an address or a link). Empty when unset:
-    the page then shows no contact line and never invents one."""
-    return (os.environ.get("SUPPORT_CONTACT") or "").strip()[:200]
+    """``SUPPORT_CONTACT``: where a person can get help (an address or a link). Empty when unset: the
+    page then shows no contact line and never invents one (production refuses the flag without it,
+    see ``config.missing_for_production``)."""
+    return config.support_contact()

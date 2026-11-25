@@ -30,7 +30,8 @@
 
                 {% if turnstile_site_key %}
                 <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}" data-size="compact"></div>
-                <p id="ph-check-missing" class="ph-error" hidden>The check that you are a person did not load. Reload the page{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p>
+                <p id="ph-check-missing" class="ph-error" role="status" hidden>The check that you are a person did not load. Reload the page{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p>
+                <noscript><p class="ph-error">The check that you are a person needs JavaScript. Please turn it on{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p></noscript>
                 {% else %}
                 <p class="ph-error">The check that you are a person is not available right now. Please try again later{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p>
                 {% endif %}

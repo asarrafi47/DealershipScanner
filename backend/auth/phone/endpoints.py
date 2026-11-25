@@ -28,6 +28,21 @@ PHONE_FLAG_ENDPOINTS: frozenset[str] = frozenset(
     }
 )
 
+# The URL paths of those endpoints. ``security._csrf_mutating_requests`` answers 404 for any method on
+# them while the flag is off, so a wrong method (405) or OPTIONS (200) cannot reveal that a route exists.
+PHONE_FLAG_PATHS: frozenset[str] = frozenset(
+    {
+        "/login/phone",
+        "/login/phone/code",
+        "/login/phone/resend",
+        "/login/phone/change",
+        "/staff/login",
+        "/api/auth/phone/start",
+        "/api/auth/phone/verify",
+        "/api/auth/phone/resend",
+    }
+)
+
 # The POST subset that carries an HTML form with the csrf_token field, and the JSON subset that
 # sends X-CSRF-Token. ``security.py`` adds them to its two lists.
 PHONE_FORM_POST_ENDPOINTS: tuple[str, ...] = (

@@ -3,7 +3,12 @@
 Offline tier: the routes are driven through a stub service (``routes.set_service``) that returns
 the service's own outcome objects, so these tests cover the routes, the templates, the session and
 the account handling without Postgres. The real service end to end (fake provider, fake Turnstile,
-a new number signing up and signing in again) is the Postgres-tier test ``test_auth_phone_routes_pg.py``.
+a new number signing up and signing in again) is the Postgres-tier test ``test_auth_phone_login_e2e.py``.
+
+ELIGIBILITY: who may sign in by phone is decided by ``is_phone_eligible`` on the row that
+``get_user_profile`` returns. A stored NULL role is refused too, because ``get_user_profile`` maps a
+missing role to ``dealer_staff``, which is not a shopper role; the rows in ``ELIGIBILITY_ROWS`` are
+therefore the whole refusal list (a NULL role is the ``dealer_staff`` row).
 
 Test numbers are the fictional +1 202 555 01xx range. No test sends anything anywhere.
 """
@@ -15,14 +20,22 @@ import hashlib
 import json
 import re
 import time
+import types
+from html import unescape
 from pathlib import Path
 
 import pytest
+from werkzeug.exceptions import NotFound
 
+from backend.auth import pages as _pages
+from backend.auth import session as _auth_session
+from backend.auth.phone import accounts as _phone_accounts
 from backend.auth.phone import consent, registry, routes
 from backend.auth.phone import service as ps
 from backend.auth.phone.accounts import PhoneAccounts
 from backend.auth.phone.config import CONSENT_TEXT_VERSION
+from backend.auth.phone.endpoints import PHONE_FLAG_ENDPOINTS
+from backend.db import users_db as _users_db
 
 FRONTEND = Path(__file__).resolve().parents[2] / "frontend"
 NUMBER = "(202) 555-0123"
@@ -34,6 +47,17 @@ PASSWORD = "long-enough-password"
 FORM_POSTS = ("/login/phone", "/login/phone/code", "/login/phone/resend", "/login/phone/change", "/staff/login")
 JSON_POSTS = ("/api/auth/phone/start", "/api/auth/phone/verify", "/api/auth/phone/resend")
 GETS = ("/login/phone", "/login/phone/code", "/staff/login")
+
+# The eight paths that do not exist while the flag is off, and every method a client may try on them.
+FLAG_PATHS = (
+    "/login/phone", "/login/phone/code", "/login/phone/resend", "/login/phone/change", "/staff/login",
+    "/api/auth/phone/start", "/api/auth/phone/verify", "/api/auth/phone/resend",
+)
+ALL_METHODS = ("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+
+# What a typed number looks like in every place it must never reach.
+TYPED_PIECES = (NUMBER, "555-0123", "(202)")
+DIGITS = "2025550123"
 
 BOX_WORDS = ("card", "box", "pill", "badge", "chip", "panel", "tag", "banner", "callout", "alert")
 
@@ -125,23 +149,81 @@ def off(app_factory):
     return app_factory(AUTH_PHONE_LOGIN_ENABLED=None, TURNSTILE_SITE_KEY="site-key-1").app
 
 
-def post_form(client, url, data=None, *, token=TOKEN):
+def post_form(client, url, data=None, *, token=TOKEN, **kw):
     from backend.utils.csrf import _SESSION_KEY
 
     with client.session_transaction() as sess:
         sess[_SESSION_KEY] = token
-    return client.post(url, data={"csrf_token": token, **(data or {})})
+    return client.post(url, data={"csrf_token": token, **(data or {})}, **kw)
 
 
-def post_json(client, url, body=None, *, token=TOKEN, raw=None):
+def post_json(client, url, body=None, *, token=TOKEN, raw=None, **kw):
     from backend.utils.csrf import _SESSION_KEY
 
     with client.session_transaction() as sess:
         sess[_SESSION_KEY] = token
     headers = {"X-CSRF-Token": token}
     if raw is not None:
-        return client.post(url, data=raw, headers=headers, content_type="application/json")
-    return client.post(url, json=body if body is not None else {}, headers=headers)
+        return client.post(url, data=raw, headers=headers, content_type="application/json", **kw)
+    return client.post(url, json=body if body is not None else {}, headers=headers, **kw)
+
+
+START_FORM = {"phone": NUMBER, "consent": "1", "cf-turnstile-response": "pass"}
+START_JSON = {"phone": NUMBER, "consent": True, "turnstile_token": "pass"}
+
+
+def open_challenge(client, cid="cid-1") -> None:
+    """An open challenge in the session without a start: no request, so no device cookie and no rate-limit event."""
+    with client.session_transaction() as sess:
+        sess["phone_cid"] = cid
+        sess["phone_nonce"] = "n" * 18
+        sess["phone_sent_msg"] = "We sent a 6-digit code to the number ending 23."
+        sess["phone_sent_at"] = time.time() - 500
+
+
+def is_number_page(html: str) -> bool:
+    return 'id="ph-start-form"' in html and 'name="phone"' in html and "Text me a code" in html and 'href="/staff/login"' in html
+
+
+def is_code_page(html: str) -> bool:
+    return 'id="ph-code-form"' in html and "Enter your code" in html
+
+
+def assert_number_page(html: str) -> None:
+    """The page that asks for a number, and not the one that asks for a code."""
+    assert is_number_page(html), "the number page (form, phone field, button, staff link) is missing"
+    assert 'id="ph-code-form"' not in html and "Enter your code" not in html
+
+
+def assert_code_page(html: str) -> None:
+    assert is_code_page(html), "the code page is missing"
+    assert 'id="ph-start-form"' not in html and "Text me a code" not in html
+
+
+def assert_number_absent(rv, client, caplog=None) -> None:
+    """The number the person typed is in no log line, response body, header or session cookie.
+
+    A log line is also checked for the other things the feature never logs: a run of 7 or more digits
+    and a 64-hex string (a device or number hash).
+    """
+    places = {
+        "body": rv.get_data(as_text=True),
+        "Location": rv.headers.get("Location", ""),
+        "Set-Cookie": " ".join(rv.headers.getlist("Set-Cookie")),
+        "session": json.dumps(session_dump(client), default=str),
+    }
+    for where, text in places.items():
+        for piece in (*TYPED_PIECES, DIGITS, E164):
+            assert piece not in text, (where, piece)
+    if caplog is None:
+        return
+    for rec in caplog.records:
+        msg = rec.getMessage()
+        for piece in (*TYPED_PIECES, E164):
+            assert piece not in msg, (rec.name, piece, msg)
+        assert DIGITS not in re.sub(r"\D", "", msg), (rec.name, msg)
+        assert not re.search(r"\d{7,}", msg), (rec.name, msg)
+        assert not re.search(r"\b[0-9a-f]{64}\b", msg), (rec.name, msg)
 
 
 def norm(html: str) -> str:
@@ -196,6 +278,74 @@ def test_json_twins_are_404_with_the_flag_off(off, stub, path, with_token):
         rv = post_json(c, path, {"phone": NUMBER, "consent": True}) if with_token else c.post(path, json={"phone": NUMBER})
     assert rv.status_code == 404
     assert (rv.get_json() or {}).get("error") == "not_found"
+    assert stub.calls == []
+
+
+def _phone_rule_paths(app) -> dict[str, set[str]]:
+    """Every URL path a phone endpoint is registered on, with the methods it accepts (HEAD and OPTIONS are implicit)."""
+    paths: dict[str, set[str]] = {}
+    for rule in app.url_map.iter_rules():
+        if rule.endpoint in PHONE_FLAG_ENDPOINTS:
+            paths.setdefault(rule.rule, set()).update((rule.methods or set()) - {"HEAD", "OPTIONS"})
+    return paths
+
+
+@pytest.mark.parametrize("flag", [None, "0"], ids=["unset", "zero"])
+def test_every_method_on_every_phone_path_is_404_with_the_flag_off(app_factory, stub, flag):
+    """Not only GET and POST: a wrong method (Werkzeug's 405) or OPTIONS (its automatic 200) would show the route exists."""
+    app = app_factory(AUTH_PHONE_LOGIN_ENABLED=flag, TURNSTILE_SITE_KEY="site-key-1").app
+    registered = _phone_rule_paths(app)
+    assert set(registered) == set(FLAG_PATHS), "the sweep must cover every path a phone endpoint is registered on"
+    answers: dict[tuple[str, str], int] = {}
+    with app.test_client() as c:
+        for path in sorted(registered):
+            for method in ALL_METHODS:
+                answers[(method, path)] = c.open(path, method=method).status_code
+    assert len(answers) == len(FLAG_PATHS) * len(ALL_METHODS)
+    assert {key: code for key, code in answers.items() if code != 404} == {}
+    assert stub.calls == []
+
+
+def test_a_wrong_method_on_a_post_only_phone_path_is_405_with_the_flag_on(on, stub):
+    """The control of the sweep above: with the flag on the same requests are not 404, so the sweep is not vacuous."""
+    post_only = sorted(path for path, methods in _phone_rule_paths(on).items() if methods == {"POST"})
+    assert "/api/auth/phone/start" in post_only and "/login/phone/resend" in post_only
+    answers: dict[tuple[str, str], int] = {}
+    with on.test_client() as c:
+        for path in post_only:
+            for method in ("GET", "HEAD", "PUT", "PATCH", "DELETE"):
+                answers[(method, path)] = c.open(path, method=method).status_code
+    assert {key: code for key, code in answers.items() if code != 405} == {}
+    assert stub.calls == []
+
+
+_GUARDED_VIEWS = (
+    ("login_phone_start", "POST", "/login/phone"),
+    ("login_phone_code_verify", "POST", "/login/phone/code"),
+    ("login_phone_resend", "POST", "/login/phone/resend"),
+    ("login_phone_change", "POST", "/login/phone/change"),
+    ("api_auth_phone_start", "POST", "/api/auth/phone/start"),
+    ("api_auth_phone_verify", "POST", "/api/auth/phone/verify"),
+    ("api_auth_phone_resend", "POST", "/api/auth/phone/resend"),
+    ("login_phone_page", "GET", "/login/phone"),
+    ("login_phone_code_page", "GET", "/login/phone/code"),
+)
+
+
+def test_each_phone_view_checks_the_flag_itself(off, stub):
+    """The security hook already answers 404; the view's own guard is the second lock. Calling the view inside a
+    bare request context skips the hook, so deleting the guard from one view puts exactly that view in the list."""
+    assert {endpoint for endpoint, _m, _p in _GUARDED_VIEWS} <= set(off.view_functions)
+    unguarded = []
+    for endpoint, method, path in _GUARDED_VIEWS:
+        kw = {"json": {"phone": NUMBER}} if method == "POST" else {}
+        with off.test_request_context(path, method=method, **kw):
+            try:
+                off.view_functions[endpoint]()
+            except NotFound:
+                continue
+        unguarded.append(endpoint)
+    assert unguarded == []
     assert stub.calls == []
 
 
@@ -280,6 +430,63 @@ def test_staff_login_bad_password_gets_the_same_sentence_as_before(on):
     assert rv.status_code == 200
     html = rv.get_data(as_text=True)
     assert "Invalid username/email or password." in html and 'action="/staff/login"' in html
+
+
+def _staff_empty(c, monkeypatch):
+    return post_form(c, "/staff/login", {"login": "", "password": ""}), 200, "Enter username/email and password."
+
+
+def _staff_bad_password(c, monkeypatch):
+    make_user("pwuser", "pw@example.com")
+    return post_form(c, "/staff/login", {"login": "pwuser", "password": "wrong-password-123"}), 200, "Invalid username/email or password."
+
+
+def _staff_ip_limited(c, monkeypatch):
+    monkeypatch.setattr(routes.Config, "RATE_LIMIT_LOGIN_PER_MIN", 1)
+    assert post_form(c, "/staff/login", {"login": "", "password": ""}).status_code == 200
+    return post_form(c, "/staff/login", {"login": "", "password": ""}), 429, "Too many login attempts. Try again in a minute."
+
+
+def _staff_account_locked(c, monkeypatch):
+    make_user("pwuser", "pw@example.com")
+    monkeypatch.setattr(_pages, "_ACCT_FAIL_MAX", 1)
+    bad = {"login": "pwuser", "password": "wrong-password-123"}
+    assert post_form(c, "/staff/login", bad).status_code == 200
+    return post_form(c, "/staff/login", bad), 429, "Too many failed attempts. Try again in 15 minutes."
+
+
+def _staff_session_expired(c, monkeypatch):
+    return c.get("/staff/login?_error=session_expired"), 200, "Your session expired"
+
+
+def _staff_oauth_error(c, monkeypatch):
+    with c.session_transaction() as sess:
+        sess["oauth_error"] = "Google sign-in was cancelled."
+    return c.get("/staff/login"), 200, "Google sign-in was cancelled."
+
+
+def _staff_finalize_failed(c, monkeypatch):
+    make_user("pwuser", "pw@example.com")
+    monkeypatch.setattr(_pages, "_finalize_app_session", lambda *a, **k: False)
+    return post_form(c, "/staff/login", {"login": "pwuser", "password": PASSWORD}), 200, "Login failed. Try again."
+
+
+@pytest.mark.parametrize(
+    "case",
+    [_staff_empty, _staff_bad_password, _staff_ip_limited, _staff_account_locked, _staff_session_expired, _staff_oauth_error,
+     _staff_finalize_failed],
+    ids=lambda f: f.__name__.removeprefix("_staff_"),
+)
+def test_every_staff_login_rerender_keeps_the_staff_form_and_the_phone_link(on, monkeypatch, case):
+    """An error page of /staff/login posts back to /staff/login (not /login, which is the phone page now) and
+    still offers the way back to the phone page."""
+    with on.test_client() as c:
+        rv, status, sentence = case(c, monkeypatch)
+        assert "user_id" not in session_dump(c), "none of these answers is a sign-in"
+    html = rv.get_data(as_text=True)
+    assert rv.status_code == status and sentence in html
+    assert 'action="/staff/login"' in html and 'action="/login"' not in html
+    assert 'href="/login">Sign in with your phone number instead</a>' in html
 
 
 def test_logout_returns_to_the_phone_page(on):
@@ -461,11 +668,37 @@ def test_start_sends_the_form_to_the_service_and_goes_to_the_code_page(on, stub,
     assert "2025550123" not in caplog.text and not re.search(r"\d{7,}", caplog.text)
 
 
-def test_start_without_a_cookie_passes_no_device_hash(on, stub):
+@pytest.mark.parametrize(
+    ("step", "path", "data"),
+    [
+        ("start", "/login/phone", START_FORM),
+        ("resend", "/login/phone/resend", {"cf-turnstile-response": "pass-2"}),
+        ("check", "/login/phone/code", {"code": "000000"}),
+    ],
+)
+def test_without_a_device_cookie_every_step_passes_no_device_hash(on, stub, step, path, data):
     """A cookie minted by this very response is not a presented cookie: the service counts it as none."""
     with on.test_client() as c:
-        post_form(c, "/login/phone", {"phone": NUMBER, "consent": "1", "cf-turnstile-response": "pass"})
-    assert stub.kwargs("start")["device"] is None
+        open_challenge(c)  # a challenge in the session, but this browser never fetched a page: no sc_dev
+        assert c.get_cookie("sc_dev") is None
+        post_form(c, path, data)
+    assert stub.kwargs(step)["device"] is None
+
+
+def test_start_resend_and_check_share_the_device_hash_the_nonce_and_the_address(on, stub):
+    """The three steps are derived the same way: one device hash, the nonce that start minted, the client address."""
+    with on.test_client() as c:
+        c.environ_base["REMOTE_ADDR"] = "198.51.100.9"
+        start_challenge(c, stub)
+        post_form(c, "/login/phone/resend", {"cf-turnstile-response": "pass-2"})
+        post_form(c, "/login/phone/code", {"code": "000000"})
+        minted = session_dump(c)["phone_nonce"]
+    start, resend, check = stub.kwargs("start"), stub.kwargs("resend"), stub.kwargs("check")
+    assert re.fullmatch(r"[0-9a-f]{64}", start["device"] or ""), "a valid sc_dev cookie was presented"
+    assert resend["device"] == start["device"] and check["device"] == start["device"]
+    assert start["nonce"] == minted and resend["nonce"] == minted and check["nonce"] == minted
+    assert start["ip"] == resend["ip"] == check["ip"] == "198.51.100.9"
+    assert resend["cid"] == check["cid"] == "cid-1"
 
 
 def test_the_nonce_is_minted_once_and_reused_by_a_second_start(on, stub):
@@ -503,24 +736,74 @@ def test_the_on_value_of_a_checkbox_counts_as_consent(on, stub):
     assert stub.kwargs("start")["consent"] is True
 
 
-@pytest.mark.parametrize(
-    ("sentence", "status"),
-    [
-        (ps.COULD_NOT_SEND, 200),
-        (ps.NOT_A_PERSON, 200),
-        (ps.RELOAD, 200),
-        (ps.BUSY, 429),
-        (ps.UNAVAILABLE, 503),
-        (ps.OPTED_OUT, 503),
-    ],
-)
-def test_start_failures_show_the_services_sentence_and_its_status(on, stub, sentence, status):
-    stub.start_outcome = ps.StartOutcome(False, ps.R_LIMIT, sentence)
+def _sent(stub, monkeypatch):
+    return dict(START_FORM)
+
+
+def _refused(reason, sentence):
+    def setup(stub, monkeypatch):
+        stub.start_outcome = ps.StartOutcome(False, reason, sentence)
+        return dict(START_FORM)
+
+    return setup
+
+
+def _consent_unticked(stub, monkeypatch):
+    return {k: v for k, v in START_FORM.items() if k != "consent"}
+
+
+def _service_raises(stub, monkeypatch):
+    stub.raise_on = "start"
+    return dict(START_FORM)
+
+
+def _address_throttled(stub, monkeypatch):
+    monkeypatch.setattr(routes.Config, "RATE_LIMIT_LOGIN_PER_MIN", 0)
+    return dict(START_FORM)
+
+
+# (id, how the case is set up and what form it posts, HTML status, the sentence the page shows)
+START_CASES = [
+    ("sent", _sent, 303, None),
+    ("invalid_number", _refused(ps.R_INVALID, ps.COULD_NOT_SEND), 200, ps.COULD_NOT_SEND),
+    ("consent_unticked", _consent_unticked, 200, ps.CONSENT_REQUIRED),
+    ("not_a_person", _refused(ps.R_TURNSTILE, ps.NOT_A_PERSON), 200, ps.NOT_A_PERSON),
+    ("reload", _refused(ps.R_LIMIT, ps.RELOAD), 200, ps.RELOAD),
+    ("busy", _refused(ps.R_BUSY, ps.BUSY), 429, ps.BUSY),
+    ("unavailable", _refused(ps.R_UNAVAILABLE, ps.UNAVAILABLE), 503, ps.UNAVAILABLE),
+    ("opted_out", _refused(ps.R_OPTED_OUT, ps.OPTED_OUT), 503, ps.OPTED_OUT),
+    ("service_raises", _service_raises, 503, ps.UNAVAILABLE),
+    ("address_throttled", _address_throttled, 429, "Please try again in a minute."),
+]
+START_ALL = [pytest.param(*case[1:], id=case[0]) for case in START_CASES]
+START_REFUSALS = [pytest.param(*case[1:], id=case[0]) for case in START_CASES if case[0] != "sent"]
+
+
+@pytest.mark.parametrize(("setup", "status", "sentence"), START_REFUSALS)
+def test_a_refused_start_shows_the_number_page_again_with_the_sentence_and_its_status(on, stub, monkeypatch, setup, status, sentence):
+    """No challenge exists after a refused start, so the person is never sent to a code page that has nothing to check."""
+    form = setup(stub, monkeypatch)
     with on.test_client() as c:
-        rv = post_form(c, "/login/phone", {"phone": NUMBER, "consent": "1", "cf-turnstile-response": "pass"})
-        assert rv.status_code == status
-        assert sentence.replace("'", "&#39;") in rv.get_data(as_text=True) or sentence in rv.get_data(as_text=True)
+        rv = post_form(c, "/login/phone", form)
         assert "phone_cid" not in session_dump(c)
+    html = rv.get_data(as_text=True)
+    assert rv.status_code == status
+    assert_number_page(html)
+    assert re.search(r'<p id="ph-status"[^>]*>%s</p>' % re.escape(sentence), unescape(html))
+
+
+@pytest.mark.parametrize(("setup", "status", "sentence"), START_ALL)
+def test_no_start_outcome_puts_the_typed_number_anywhere(on, stub, monkeypatch, caplog, setup, status, sentence):
+    """Sent, refused, failed or throttled: the number is in no log line, body, header or session cookie."""
+    caplog.set_level("DEBUG")
+    form = setup(stub, monkeypatch)
+    with on.test_client() as c:
+        c.get("/login/phone")
+        rv = post_form(c, "/login/phone", form)
+        assert rv.status_code == status
+        assert_number_absent(rv, c, caplog)
+        if rv.status_code == 303:
+            assert_number_absent(c.get(rv.headers["Location"]), c, caplog)
 
 
 def test_long_input_is_cut_before_it_reaches_the_service(on, stub):
@@ -530,6 +813,66 @@ def test_long_input_is_cut_before_it_reaches_the_service(on, stub):
     assert len(kw["raw"]) == 64 and len(kw["token"]) == 4096
 
 
+# ---------------------------------------------------------------- the per-address request limit
+
+# step -> (form path, form data, the service call it makes, JSON path, JSON body)
+THROTTLE_STEPS = {
+    "start": ("/login/phone", START_FORM, "start", "/api/auth/phone/start", START_JSON),
+    "resend": ("/login/phone/resend", {"cf-turnstile-response": "pass-2"}, "resend", "/api/auth/phone/resend", {"turnstile_token": "pass-2"}),
+    "verify": ("/login/phone/code", {"code": "111111"}, "check", "/api/auth/phone/verify", {"code": "111111"}),
+}
+OTHER_ADDRESS = {"REMOTE_ADDR": "198.51.100.7"}
+
+
+@pytest.mark.parametrize("step", sorted(THROTTLE_STEPS))
+def test_the_fourth_form_request_in_a_minute_from_one_address_never_reaches_the_service(on, stub, monkeypatch, step):
+    monkeypatch.setattr(routes.Config, "RATE_LIMIT_LOGIN_PER_MIN", 3)
+    path, data, call, _json_path, _json_body = THROTTLE_STEPS[step]
+    with on.test_client() as c:
+        open_challenge(c)
+        for _ in range(3):
+            assert post_form(c, path, data).status_code != 429
+        assert stub.names().count(call) == 3
+        rv = post_form(c, path, data)
+        html = rv.get_data(as_text=True)
+        assert rv.status_code == 429 and "Please try again in a minute." in html
+        # start has no challenge to show, so it asks for a number again; the other two stay on the code page
+        (assert_number_page if step == "start" else assert_code_page)(html)
+        assert stub.names().count(call) == 3, "a throttled request is answered before the service (and Turnstile) is asked"
+        assert session_dump(c)["phone_cid"] == "cid-1", "being throttled does not end the person's open challenge"
+        # the limit is per address
+        assert post_form(c, path, data, environ_overrides=OTHER_ADDRESS).status_code != 429
+    assert stub.names().count(call) == 4
+
+
+@pytest.mark.parametrize("step", sorted(THROTTLE_STEPS))
+def test_the_fourth_json_request_in_a_minute_from_one_address_is_try_again(on, stub, monkeypatch, step):
+    monkeypatch.setattr(routes.Config, "RATE_LIMIT_LOGIN_PER_MIN", 3)
+    _path, _data, call, json_path, json_body = THROTTLE_STEPS[step]
+    with on.test_client() as c:
+        open_challenge(c)
+        for _ in range(3):
+            assert post_json(c, json_path, json_body).status_code != 429
+        rv = post_json(c, json_path, json_body)
+        assert rv.status_code == 429
+        assert rv.get_json() == {"ok": False, "error": "try_again", "message": "Please try again in a minute."}
+        assert rv.headers["Cache-Control"] == "no-store"
+        assert stub.names().count(call) == 3
+        assert session_dump(c)["phone_cid"] == "cid-1"
+        assert post_json(c, json_path, json_body, environ_overrides=OTHER_ADDRESS).status_code != 429
+    assert stub.names().count(call) == 4
+
+
+def test_start_resend_and_check_draw_on_one_bucket_per_address(on, stub, monkeypatch):
+    monkeypatch.setattr(routes.Config, "RATE_LIMIT_LOGIN_PER_MIN", 3)
+    with on.test_client() as c:
+        assert post_form(c, "/login/phone", START_FORM).status_code == 303
+        assert post_form(c, "/login/phone/resend", {"cf-turnstile-response": "pass-2"}).status_code == 303
+        assert post_form(c, "/login/phone/code", {"code": "111111"}).status_code == 200
+        assert post_form(c, "/login/phone/code", {"code": "111111"}).status_code == 429
+    assert stub.names() == ["start", "resend", "check"]
+
+
 # ---------------------------------------------------------------- verify: the session and the refusals
 
 
@@ -537,7 +880,7 @@ def test_a_good_code_signs_in_as_a_phone_session(on, stub, caplog):
     caplog.set_level("DEBUG")
     uid = PhoneAccounts().adopt_or_create(email="p-7-abcd1234@phone.invalid", username="user-7-abcd")
     stub.check_outcome = approved()
-    stub.sign_ins = [ps.SignInOutcome(True, ps.R_SENT if False else "signed_up", user_id=uid, identity_id=7)]
+    stub.sign_ins = [ps.SignInOutcome(True, "signed_up", user_id=uid, identity_id=7)]
     with on.test_client() as c:
         start_challenge(c, stub)
         rv = post_form(c, "/login/phone/code", {"code": "482913"})
@@ -556,7 +899,9 @@ def test_the_check_uses_the_same_device_hash_as_the_start(on, stub):
     with on.test_client() as c:
         start_challenge(c, stub)
         post_form(c, "/login/phone/code", {"code": "000000"})
-    assert stub.kwargs("check")["device"] == stub.kwargs("start")["device"] is not None or stub.kwargs("check")["device"] is not None
+    start_device = stub.kwargs("start")["device"]
+    assert re.fullmatch(r"[0-9a-f]{64}", start_device or ""), "the start was made with the sc_dev cookie the page set"
+    assert stub.kwargs("check")["device"] == start_device
 
 
 def test_a_wrong_code_keeps_the_challenge_and_shows_the_services_sentence(on, stub):
@@ -576,7 +921,8 @@ def test_a_finished_challenge_returns_to_the_number_page(on, stub, reason):
         start_challenge(c, stub)
         rv = post_form(c, "/login/phone/code", {"code": "111111"})
         html = rv.get_data(as_text=True)
-        assert ps.START_AGAIN in html and 'id="ph-start-form"' in html
+        assert ps.START_AGAIN in html
+        assert_number_page(html)
         assert "phone_cid" not in session_dump(c)
 
 
@@ -605,6 +951,8 @@ def test_an_approval_for_another_purpose_never_signs_anyone_in(on, stub):
     assert "sign_in" not in stub.names()
 
 
+# Rows ``get_user_profile`` can return for an account that must NOT get a phone session. A stored NULL role is
+# one of them: ``get_user_profile`` reads a missing role as ``dealer_staff`` (the "dealer_staff" row below).
 ELIGIBILITY_ROWS = {
     "admin": {"role": "admin"},
     "dealership_owner": {"role": "dealership_owner"},
@@ -628,8 +976,11 @@ def _row(**kw) -> dict:
 
 @pytest.mark.parametrize("case", sorted(ELIGIBILITY_ROWS))
 def test_an_ineligible_account_gets_the_wrong_code_answer_and_no_session(on, stub, monkeypatch, caplog, case):
+    # The code page prints the resend countdown (data-wait, "in N seconds"). Freeze the routes' clock so the two
+    # renderings below cannot differ by a second boundary on a slow machine.
+    monkeypatch.setattr(routes, "time", types.SimpleNamespace(time=lambda: 1_700_000_000.0))
     monkeypatch.setenv("APP_ADMIN_EMAILS", "boss@example.com")
-    monkeypatch.setattr("backend.db.users_db.get_user_profile", lambda uid: _row(**ELIGIBILITY_ROWS[case]))
+    monkeypatch.setattr(_users_db, "get_user_profile", lambda uid: _row(**ELIGIBILITY_ROWS[case]))
     stub.check_outcome = approved()
     stub.sign_ins = [ps.SignInOutcome(True, "signed_in", user_id=41, identity_id=9)]
     with on.test_client() as c:
@@ -655,24 +1006,78 @@ def test_an_ineligible_account_gets_the_wrong_code_answer_and_no_session(on, stu
     assert "41" not in refused[0] and "phone.invalid" not in refused[0]
 
 
-def test_an_orphan_identity_whose_account_is_gone_gets_the_same_answer(on, stub, monkeypatch, caplog):
-    monkeypatch.setattr("backend.db.users_db.get_user_profile", lambda uid: None)
+def _orphan_setup(stub, monkeypatch, *, dead, fresh=None):
+    """The number's identity points at ``dead``, an account that no longer exists; a second sign_in answers with
+    ``fresh`` (a real account id) or, when None, with another id that does not exist either. Returns the list
+    of ids the purge seam was called with."""
+    real = _users_db.get_user_profile
+    monkeypatch.setattr(_users_db, "get_user_profile", lambda uid: real(uid) if fresh and int(uid) == fresh else None)
+    purged: list[int] = []
+    monkeypatch.setattr(_phone_accounts, "purge_phone_identity", purged.append)
     stub.check_outcome = approved()
-    stub.sign_ins = [ps.SignInOutcome(True, "signed_in", user_id=99, identity_id=9)]
+    stub.sign_ins = [
+        ps.SignInOutcome(True, "signed_in", user_id=dead, identity_id=9),
+        ps.SignInOutcome(True, "signed_up", user_id=fresh or dead + 1, identity_id=10),
+    ]
+    return purged
+
+
+def test_an_orphan_identity_is_released_and_the_person_signs_in_to_a_fresh_account(on, stub, monkeypatch, caplog):
+    caplog.set_level("DEBUG")
+    fresh = make_user("fresh", "p-8-fresh1234@phone.invalid")
+    purged = _orphan_setup(stub, monkeypatch, dead=4242, fresh=fresh)
+    with on.test_client() as c:
+        start_challenge(c, stub)
+        rv = post_form(c, "/login/phone/code", {"code": "482913"})
+        assert rv.status_code == 302 and rv.headers["Location"].endswith("/home")
+        sess = session_dump(c)
+        assert sess["user_id"] == fresh and sess["auth_method"] == "phone"
+        assert not [k for k in sess if k.startswith("phone_")], "the challenge is gone after sign-in"
+    assert purged == [4242], "the dead account's identity is purged exactly once, by its dead id"
+    assert stub.names().count("sign_in") == 2
+    messages = [r.getMessage() for r in caplog.records if r.name == "auth_phone"]
+    assert messages.count("event=identity_orphan_healed") == 1
+    assert "event=login_refused" not in " ".join(messages)
+    assert "482913" not in caplog.text and not re.search(r"\d{7,}", caplog.text) and "4242" not in caplog.text
+    assert_number_absent(rv, c, caplog)
+
+
+def test_an_orphan_that_is_still_gone_after_the_heal_gets_the_wrong_code_answer(on, stub, monkeypatch, caplog):
+    purged = _orphan_setup(stub, monkeypatch, dead=99)
     with on.test_client() as c:
         start_challenge(c, stub)
         with caplog.at_level("WARNING", logger="auth_phone"):
             rv = post_form(c, "/login/phone/code", {"code": "482913"})
-        assert rv.status_code == 200 and ps.CODE_FAILED in rv.get_data(as_text=True)
-        assert "user_id" not in session_dump(c)
+        html = rv.get_data(as_text=True)
+        assert rv.status_code == 200 and ps.CODE_FAILED in html and 'id="ph-code"' in html
+        sess = session_dump(c)
+        assert "user_id" not in sess and "phone_cid" not in sess, "no session, and the spent challenge is dropped"
+    assert purged == [99], "only the first dead id is purged; a second miss gives up instead of looping"
+    assert stub.names().count("sign_in") == 2
+    assert "event=identity_orphan_healed" in caplog.text
     assert "event=login_refused reason=finalize_failed purpose=login" in caplog.text
 
 
-def test_sign_in_retries_three_times_then_asks_for_a_new_code(on, stub, caplog, monkeypatch):
+def test_a_live_account_triggers_no_heal_and_no_purge(on, stub, monkeypatch, caplog):
+    fresh = make_user("alive", "p-3-alive1234@phone.invalid")
+    stub.check_outcome = approved()
+    stub.sign_ins = [ps.SignInOutcome(True, "signed_in", user_id=fresh, identity_id=3)]
+    purged: list[int] = []
+    monkeypatch.setattr(_phone_accounts, "purge_phone_identity", purged.append)
+    with on.test_client() as c:
+        start_challenge(c, stub)
+        with caplog.at_level("WARNING", logger="auth_phone"):
+            rv = post_form(c, "/login/phone/code", {"code": "482913"})
+        assert rv.status_code == 302 and session_dump(c)["user_id"] == fresh
+    assert purged == [] and stub.names().count("sign_in") == 1
+    assert "identity_orphan_healed" not in caplog.text
+
+
+def test_sign_in_is_tried_sign_in_tries_times_then_asks_for_a_new_code(on, stub, caplog, monkeypatch):
     pauses: list[float] = []
     monkeypatch.setattr(routes, "_sleep", pauses.append)
     stub.check_outcome = approved()
-    stub.sign_ins = [ps.SignInOutcome(False, ps.R_RETRY)] * 3
+    stub.sign_ins = [ps.SignInOutcome(False, ps.R_RETRY)] * routes._SIGN_IN_TRIES
     with on.test_client() as c:
         start_challenge(c, stub)
         with caplog.at_level("WARNING", logger="auth_phone"):
@@ -716,7 +1121,10 @@ def test_a_service_exception_is_a_503_sentence_never_a_500(on, stub, caplog, nam
         data = {"phone": NUMBER, "consent": "1", "code": "482913", "cf-turnstile-response": "pass"}
         with caplog.at_level("WARNING", logger="auth_phone"):
             rv = post_form(c, path, data)
-        assert rv.status_code == 503 and ps.UNAVAILABLE in rv.get_data(as_text=True)
+        html = rv.get_data(as_text=True)
+        assert rv.status_code == 503 and ps.UNAVAILABLE in html
+        # a start that failed has no challenge: the number page; resend and check keep the person on the code page
+        (assert_number_page if name == "start" else assert_code_page)(html)
     assert "event=route_error reason=RuntimeError" in caplog.text
     assert "2025550123" not in caplog.text and "exploded" not in caplog.text
 
@@ -731,6 +1139,7 @@ def test_a_provider_that_is_not_configured_is_a_503_sentence(app_factory, caplog
         with caplog.at_level("WARNING", logger="auth_phone"):
             rv = post_form(c, "/login/phone", {"phone": NUMBER, "consent": "1", "cf-turnstile-response": "pass"})
     assert rv.status_code == 503 and ps.UNAVAILABLE in rv.get_data(as_text=True)
+    assert_number_page(rv.get_data(as_text=True))
     assert "event=route_error reason=ProviderUnavailable" in caplog.text
     assert routes._svc is None, "a failure to build the service is not cached"
 
@@ -814,13 +1223,18 @@ def test_a_form_post_without_a_token_goes_back_to_login_with_the_expired_message
 
 @pytest.mark.parametrize("path", JSON_POSTS)
 def test_a_json_post_without_the_header_is_403(on, stub, path):
+    from backend.utils.csrf import _SESSION_KEY
+
     with on.test_client() as c:
+        # the two rejected posts first: neither may reach the service
         assert c.post(path, json={"phone": NUMBER}).status_code == 403
-        assert post_json(c, path, token=TOKEN).status_code != 403
         with c.session_transaction() as sess:
-            sess["_csrf_token"] = TOKEN
+            sess[_SESSION_KEY] = TOKEN
         assert c.post(path, json={}, headers={"X-CSRF-Token": "x" * 40}).status_code == 403
-    assert stub.calls == [] or stub.names() == ["resend"] or True
+        assert stub.calls == []
+        # the right header gets through to the view (only start has anything to ask the service without a challenge)
+        assert post_json(c, path, token=TOKEN).status_code != 403
+    assert stub.names() == (["start"] if path.endswith("/start") else [])
 
 
 # ---------------------------------------------------------------- JSON twins
@@ -928,15 +1342,85 @@ def test_json_verify_without_a_challenge_says_start_again(on, stub):
     assert stub.calls == []
 
 
-def test_json_refused_account_looks_like_a_wrong_code(on, stub, monkeypatch):
-    monkeypatch.setattr("backend.db.users_db.get_user_profile", lambda uid: _row(role="admin"))
+def _verify_ineligible(stub, monkeypatch):
+    monkeypatch.setattr(_users_db, "get_user_profile", lambda uid: _row(role="admin"))
     stub.check_outcome = approved()
     stub.sign_ins = [ps.SignInOutcome(True, "signed_in", user_id=41, identity_id=9)]
+    return 400, "code_failed", ps.CODE_FAILED, 200
+
+
+def _verify_ended(stub, monkeypatch):
+    stub.check_outcome = ps.CheckOutcome(False, ps.R_EXPIRED, ps.START_AGAIN)
+    return 400, "start_again", ps.START_AGAIN, 200
+
+
+def _verify_profile_raises(stub, monkeypatch):
+    def boom(uid):
+        raise RuntimeError(f"users database exploded for {E164}")
+
+    monkeypatch.setattr(_users_db, "get_user_profile", boom)
+    stub.check_outcome = approved()
+    stub.sign_ins = [ps.SignInOutcome(True, "signed_in", user_id=41, identity_id=9)]
+    return 503, "unavailable", ps.UNAVAILABLE, 503
+
+
+def _verify_finalize_fails(stub, monkeypatch):
+    monkeypatch.setattr(_users_db, "get_user_profile", lambda uid: _row())
+    monkeypatch.setattr(_auth_session, "finalize_app_session", lambda *a, **k: False)
+    stub.check_outcome = approved()
+    stub.sign_ins = [ps.SignInOutcome(True, "signed_in", user_id=41, identity_id=9)]
+    return 400, "code_failed", ps.CODE_FAILED, 200
+
+
+# (channel, how the verify fails -> JSON status, JSON error word, sentence, HTML status)
+VERIFY_ENDINGS = [
+    pytest.param("json", _verify_ineligible, id="json-ineligible_account"),
+    pytest.param("json", _verify_ended, id="json-ended_challenge"),
+    pytest.param("json", _verify_profile_raises, id="json-profile_lookup_raises"),
+    pytest.param("json", _verify_finalize_fails, id="json-finalize_fails"),
+    pytest.param("html", _verify_profile_raises, id="html-profile_lookup_raises"),
+    pytest.param("html", _verify_finalize_fails, id="html-finalize_fails"),
+]
+
+
+@pytest.mark.parametrize(("channel", "setup"), VERIFY_ENDINGS)
+def test_a_verify_that_cannot_sign_in_ends_the_challenge_and_leaves_no_session(on, stub, monkeypatch, caplog, channel, setup):
+    json_status, json_error, sentence, html_status = setup(stub, monkeypatch)
+    caplog.set_level("DEBUG")
     with on.test_client() as c:
         start_challenge(c, stub)
-        rv = post_json(c, "/api/auth/phone/verify", {"code": "482913"})
-        assert rv.status_code == 400 and rv.get_json() == {"ok": False, "error": "code_failed", "message": ps.CODE_FAILED}
-        assert "user_id" not in session_dump(c)
+        if channel == "json":
+            rv = post_json(c, "/api/auth/phone/verify", {"code": "482913"})
+            assert rv.status_code == json_status
+            assert rv.get_json() == {"ok": False, "error": json_error, "message": sentence}
+        else:
+            rv = post_form(c, "/login/phone/code", {"code": "482913"})
+            assert rv.status_code == html_status and sentence in unescape(rv.get_data(as_text=True))
+        sess = session_dump(c)
+        assert "phone_cid" not in sess, "the spent challenge is dropped"
+        assert "user_id" not in sess and "auth_method" not in sess
+        assert not [k for k in sess if k in ("phone_sent_msg", "phone_sent_at")]
+    assert "482913" not in caplog.text and "exploded" not in caplog.text and E164 not in caplog.text
+    assert not re.search(r"\d{7,}", caplog.text)
+
+
+def test_a_profile_lookup_that_raises_is_logged_by_class_only(on, stub, monkeypatch, caplog):
+    _verify_profile_raises(stub, monkeypatch)
+    with on.test_client() as c:
+        start_challenge(c, stub)
+        with caplog.at_level("WARNING", logger="auth_phone"):
+            post_json(c, "/api/auth/phone/verify", {"code": "482913"})
+    assert "event=route_error reason=RuntimeError" in caplog.text
+
+
+def test_a_failed_finalize_is_logged_as_a_refusal_and_no_session_is_started(on, stub, monkeypatch, caplog):
+    _verify_finalize_fails(stub, monkeypatch)
+    with on.test_client() as c:
+        start_challenge(c, stub)
+        with caplog.at_level("WARNING", logger="auth_phone"):
+            rv = post_form(c, "/login/phone/code", {"code": "482913"})
+    assert rv.status_code == 200
+    assert "event=login_refused reason=finalize_failed purpose=login" in caplog.text
 
 
 def test_json_resend_success_and_failure(on, stub):
@@ -950,20 +1434,79 @@ def test_json_resend_success_and_failure(on, stub):
         assert rv.status_code == 429 and rv.get_json()["error"] == "too_soon"
 
 
-def test_json_exception_is_a_503(on, stub):
+def test_json_exception_is_a_503(on, stub, caplog):
+    caplog.set_level("DEBUG")
     stub.raise_on = "start"
     with on.test_client() as c:
         rv = post_json(c, "/api/auth/phone/start", {"phone": NUMBER, "consent": True, "turnstile_token": "pass"})
+        assert_number_absent(rv, c, caplog)
     assert rv.status_code == 503 and rv.get_json()["error"] == "unavailable"
-    assert "exploded" not in rv.get_data(as_text=True)
+    assert "exploded" not in rv.get_data(as_text=True) and "exploded" not in caplog.text
+    assert "event=route_error reason=RuntimeError" in caplog.text
+
+
+# ---------------------------------------------------------------- headers and cookies
+
+
+def test_the_nine_phone_answers_carry_no_server_timing_while_other_pages_do(on, stub, monkeypatch):
+    """Its db_connect count would tell a number that has an account from one that has not. The staff form and a JSON
+    page outside the feature are the controls: they carry the header in this very app, so the test cannot pass
+    just because timing is off."""
+    monkeypatch.setattr(routes.Config, "RATE_LIMIT_LOGIN_PER_MIN", 1000)
+    answers = {}
+    with on.test_client() as c:
+        controls = {"GET /staff/login": c.get("/staff/login"), "GET /api/auth/csrf": c.get("/api/auth/csrf")}
+        answers["GET /login/phone"] = c.get("/login/phone")
+        answers["POST /login/phone"] = post_form(c, "/login/phone", START_FORM)
+        answers["GET /login/phone/code"] = c.get("/login/phone/code")
+        answers["POST /login/phone/code"] = post_form(c, "/login/phone/code", {"code": "111111"})
+        answers["POST /login/phone/resend"] = post_form(c, "/login/phone/resend", {"cf-turnstile-response": "pass-2"})
+        answers["POST /login/phone/change"] = post_form(c, "/login/phone/change")
+        answers["POST /api/auth/phone/start"] = post_json(c, "/api/auth/phone/start", START_JSON)
+        answers["POST /api/auth/phone/verify"] = post_json(c, "/api/auth/phone/verify", {"code": "111111"})
+        answers["POST /api/auth/phone/resend"] = post_json(c, "/api/auth/phone/resend", {"turnstile_token": "pass-2"})
+    for label, rv in controls.items():
+        assert rv.status_code == 200 and "Server-Timing" in rv.headers, f"control {label}: timing is off in this app"
+    assert len(answers) == 9
+    assert [label for label, rv in answers.items() if rv.status_code >= 500] == []
+    assert [label for label, rv in answers.items() if "Server-Timing" in rv.headers] == []
+
+
+def test_the_phone_pages_and_the_failed_code_answer_are_never_cached(on, stub):
+    pages = {}
+    with on.test_client() as c:
+        pages["GET /login"] = c.get("/login")
+        pages["GET /login/phone"] = c.get("/login/phone")
+        pages["POST /login/phone (sent)"] = post_form(c, "/login/phone", START_FORM)
+        pages["GET /login/phone/code"] = c.get("/login/phone/code")
+        pages["POST /login/phone/code (wrong code)"] = post_form(c, "/login/phone/code", {"code": "111111"})
+        pages["POST /login/phone (refused)"] = post_form(c, "/login/phone", {"phone": NUMBER})
+    assert pages["GET /login/phone/code"].status_code == 200 and pages["POST /login/phone/code (wrong code)"].status_code == 200
+    assert {label: rv.headers.get("Cache-Control") for label, rv in pages.items()} == {label: "no-store" for label in pages}
+
+
+def test_a_started_challenge_keeps_its_session_cookie_for_a_while(on, stub):
+    """The person leaves the browser to read the text: the session cookie of a start carries an expiry
+    (``session.permanent``). A refused start, which keeps no challenge, sets only a browser-session cookie."""
+
+    def session_cookie(rv) -> str:
+        cookies = [h for h in rv.headers.getlist("Set-Cookie") if h.startswith("session=")]
+        assert len(cookies) == 1, rv.headers.getlist("Set-Cookie")
+        return cookies[0]
+
+    with on.test_client() as c:
+        sent = session_cookie(post_form(c, "/login/phone", START_FORM))
+    assert re.search(r"expires=", sent, re.I) or re.search(r"max-age=", sent, re.I)
+    stub.start_outcome = ps.StartOutcome(False, ps.R_LIMIT, ps.COULD_NOT_SEND)
+    with on.test_client() as c:
+        refused = session_cookie(post_form(c, "/login/phone", START_FORM))
+    assert not re.search(r"expires=|max-age=", refused, re.I), "the control: only a stored challenge makes the session last"
 
 
 # ---------------------------------------------------------------- the surface other tests pin
 
 
 def test_the_endpoints_exist_with_the_names_the_csrf_lists_use(on):
-    from backend.auth.phone.endpoints import PHONE_FLAG_ENDPOINTS
-
     names = {r.endpoint for r in on.url_map.iter_rules()}
     assert PHONE_FLAG_ENDPOINTS <= names
     rules = {(r.rule, m) for r in on.url_map.iter_rules() if r.endpoint in PHONE_FLAG_ENDPOINTS for m in r.methods - {"HEAD", "OPTIONS"}}
@@ -973,8 +1516,9 @@ def test_the_endpoints_exist_with_the_names_the_csrf_lists_use(on):
         ("/api/auth/phone/start", "POST"), ("/api/auth/phone/verify", "POST"), ("/api/auth/phone/resend", "POST"),
     }
     # the form routes keep "login" in their names: a bad token redirects to /login, not a bare 403
-    for ep in ("login_phone_start", "login_phone_code_verify", "login_phone_resend", "login_phone_change", "staff_login_page"):
-        assert "login" in ep
+    form_posts = {r.endpoint for r in on.url_map.iter_rules() if "POST" in (r.methods or ()) and r.rule in FORM_POSTS}
+    assert len(form_posts) == len(FORM_POSTS), "every form POST path has an endpoint"
+    assert [ep for ep in sorted(form_posts) if "login" not in ep] == []
 
 
 def test_module_state_does_not_trip_the_pg_harness_sweep():

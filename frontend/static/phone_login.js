@@ -19,7 +19,12 @@
         var syncConsent = function () {
             if (!box || !send) return;
             send.setAttribute("aria-disabled", box.checked ? "false" : "true");
-            if (hint) hint.hidden = box.checked;
+            if (hint) {
+                hint.hidden = box.checked;
+                // A hidden hint still counts as a description, so drop the reference with the text.
+                if (box.checked) send.removeAttribute("aria-describedby");
+                else send.setAttribute("aria-describedby", hint.id);
+            }
         };
         if (box) box.addEventListener("change", syncConsent);
         syncConsent();
@@ -44,11 +49,27 @@
     }
 
     // ---- the person-check did not load (both pages) -----------------------------------------
+    // Cloudflare's script defines window.turnstile once it has loaded; the widget adds an iframe and a
+    // hidden response field. Any of the three means the check is there. The notice shows after 8 seconds
+    // without one and goes away if the script arrives late.
     var missing = byId("ph-check-missing");
     if (missing && document.querySelector(".cf-turnstile")) {
-        window.setTimeout(function () {
-            if (!document.querySelector(".cf-turnstile iframe")) missing.hidden = false;
-        }, 8000);
+        var waited = 0;
+        var checkLoaded = function () {
+            return !!(window.turnstile ||
+                document.querySelector(".cf-turnstile iframe") ||
+                document.querySelector('input[name="cf-turnstile-response"]'));
+        };
+        var watch = window.setInterval(function () {
+            waited += 1;
+            if (checkLoaded()) {
+                missing.hidden = true;
+                window.clearInterval(watch);
+            } else if (waited >= 8) {
+                missing.hidden = false;
+                if (waited >= 120) window.clearInterval(watch);
+            }
+        }, 1000);
     }
 
     // ---- code page ------------------------------------------------------------------------
@@ -100,17 +121,23 @@
 
         if (left > 0) {
             // Announce once at the start and once when ready; the visible count ticks silently.
+            // The count comes from a deadline, not from counting ticks: a phone that is locked or in
+            // another app (reading the text) stops the timer, and the wait must still end on time.
             say("You can ask for another code in " + left + " seconds.");
-            var timer = window.setInterval(function () {
-                left -= 1;
+            var deadline = Date.now() + left * 1000;
+            var timer = 0;
+            var tick = function () {
+                left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
                 if (left <= 0) {
                     window.clearInterval(timer);
-                    left = 0;
                     ready();
                 } else {
                     paint();
                 }
-            }, 1000);
+            };
+            timer = window.setInterval(tick, 1000);
+            document.addEventListener("visibilitychange", function () { if (!document.hidden) tick(); });
+            window.addEventListener("pageshow", tick);
         }
     }
 })();

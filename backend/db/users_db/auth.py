@@ -1,4 +1,5 @@
 from backend.db.password_hash import hash_password, password_needs_rehash, verify_or_legacy
+from backend.utils.phone_placeholder import is_placeholder_email
 
 from ._common import (
     _schedule_password_rehash,
@@ -182,6 +183,9 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
         return "Account not found."
     username_changed = uname.lower() != str(current[0] or "").strip().lower()
     email_changed = em.lower() != str(current[1] or "").strip().lower()
+    if email_changed and is_placeholder_email(em):
+        conn.close()
+        return "Enter a valid email address."  # the .invalid domain is reserved for phone accounts
     if username_changed:
         fmt_err = username_format_error(uname)
         if fmt_err:

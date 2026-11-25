@@ -18,21 +18,13 @@ import secrets
 from collections.abc import Mapping
 from typing import Any
 
+from backend.utils.phone_placeholder import PLACEHOLDER_DOMAIN, is_placeholder_email  # noqa: F401 (re-exported)
 from backend.utils.roles import ROLE_GENERAL, account_has_env_admin_privilege
 
 _log = logging.getLogger("auth_phone")
 
-PLACEHOLDER_DOMAIN = "phone.invalid"
-_PLACEHOLDER_SUFFIX = "@" + PLACEHOLDER_DOMAIN
-
-
-def is_placeholder_email(email: Any) -> bool:
-    """True for the address ``AuthPhoneService`` stores for an account that has no email.
-
-    A suffix test, so the shape the service builds today and any later shape on the same reserved
-    ``.invalid`` domain (RFC 2606, it can never receive mail) are both covered.
-    """
-    return isinstance(email, str) and email.strip().lower().endswith(_PLACEHOLDER_SUFFIX)
+# ``PLACEHOLDER_DOMAIN`` and ``is_placeholder_email`` live in ``backend/utils/phone_placeholder.py`` (a leaf
+# module), so the registration form and the users database can reserve the domain without importing this.
 
 
 def public_email(email: Any) -> str:
