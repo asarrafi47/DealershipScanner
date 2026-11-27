@@ -104,6 +104,8 @@ class ServiceConfig:
     est_lookup_cents: int = 1
     dormant_days: int = 180
     allowed_numbers: frozenset[str] = frozenset()
+    # True when AUTH_PHONE_ALLOWED_NUMBERS is set: the list then restricts even if no entry parsed.
+    allow_list_active: bool = False
     consent_text_version: str = phone_config.CONSENT_TEXT_VERSION
     locale: str = "en"
 
@@ -122,6 +124,7 @@ class ServiceConfig:
             est_lookup_cents=phone_config.est_lookup_cents(),
             dormant_days=dormant_days(),
             allowed_numbers=allowed,
+            allow_list_active=phone_config.allow_list_set(),
         )
 
 
@@ -358,7 +361,8 @@ class AuthPhoneService:
             self._record_refusal(row, "blocked_country", now)
             _event("blocked_country", purpose=purpose, h=_h6(phone_hash))
             return StartOutcome(False, R_COUNTRY, COULD_NOT_SEND)
-        if self.config.allowed_numbers and e164 not in self.config.allowed_numbers:
+        allow_list_on = self.config.allow_list_active or bool(self.config.allowed_numbers)
+        if allow_list_on and e164 not in self.config.allowed_numbers:
             _event("blocked_allow_list", purpose=purpose, h=_h6(phone_hash))
             return StartOutcome(False, R_NOT_ALLOWED, COULD_NOT_SEND)
         if self._sends_paused():

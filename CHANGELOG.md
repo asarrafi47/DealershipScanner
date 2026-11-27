@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - **Phone login: Twilio error shapes pinned (tests only).** `test_auth_phone_twilio_error_shapes.py` raises every Twilio failure shape (21608, 20003/401, 8021, 60200, 60202, 60203, 60212, 20404, bare 429, an HTML body with no status or code, timeouts, connection errors, OSError) through a fake client and pins the reason code, the one log line (op, reason, integer status, vendor code; never the number, vendor text, service SID or credentials), the shopper sentence (generic and the same for known and unknown numbers) and that nothing which may have sent a text is retried.
+- **Phone sign-in allow-list fails closed.** `AUTH_PHONE_ALLOWED_NUMBERS` with an entry that is not a valid number used to drop that entry, and a list where nothing parsed meant no restriction at all, so a typo during the first test days opened sign-in to every number. A set list now always restricts (nothing parsed means nobody may start), and a production start with the flag on refuses an unparsable entry (the boot message names the variable, never the value).
 
 ## [1.5.53] - 2026-11-21
 

@@ -284,6 +284,22 @@ def test_allow_list_limits_who_may_sign_in(env):
     assert len(prov.outbox) == 1
 
 
+def test_allow_list_that_parsed_to_nothing_refuses_everyone(env):
+    # AUTH_PHONE_ALLOWED_NUMBERS set but no entry parsed: closed, not open to every number.
+    s, prov, clock = make(allowed_numbers=frozenset(), allow_list_active=True)
+    assert start(s, 15).reason == svc_mod.R_NOT_ALLOWED
+    assert start(s, 16).reason == svc_mod.R_NOT_ALLOWED
+    assert prov.outbox == []
+
+
+def test_service_config_from_env_keeps_a_malformed_allow_list_closed(monkeypatch):
+    monkeypatch.setenv("AUTH_PHONE_ALLOWED_NUMBERS", "notanumber")
+    cfg = svc_mod.ServiceConfig.from_env()
+    assert cfg.allow_list_active is True and cfg.allowed_numbers == frozenset()
+    monkeypatch.delenv("AUTH_PHONE_ALLOWED_NUMBERS")
+    assert svc_mod.ServiceConfig.from_env().allow_list_active is False
+
+
 # ------------------------------------------------------------ limits and caps
 
 
