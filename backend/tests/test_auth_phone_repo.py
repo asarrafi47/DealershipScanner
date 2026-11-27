@@ -324,6 +324,54 @@ def test_detach_dormant_keeps_the_old_account_and_frees_the_number(pg_db):
 
 
 @pg
+def test_delete_identity_for_user_frees_the_number_and_ends_open_codes(pg_db):
+    """Card S7: deleting an account gives its number back, so it can sign in or sign up again."""
+    ident = _identity(user_id=7, state="active")
+    open_ch = _challenge()
+    other_ch = _challenge(phone_e164=PHONE_B, phone_hash=HASH_B)
+    assert repo.delete_identity_for_user(7, now=T0) is True
+    assert repo.find_identity_by_phone(PHONE_A) is None
+    assert repo.find_identity_by_user(7) is None
+    with pg_db.connect() as conn:
+        assert conn.execute(
+            "SELECT status, phone_e164 FROM auth_phone_challenges WHERE public_id = %s", (open_ch.public_id,)
+        ).fetchone() == ("cancelled", None)
+        assert conn.execute(
+            "SELECT status, phone_e164 FROM auth_phone_challenges WHERE public_id = %s", (other_ch.public_id,)
+        ).fetchone() == ("open", PHONE_B)  # another number's code is not touched
+    # the number can be claimed again by a new account
+    again = _identity(user_id=8, state="active")
+    assert again.id != ident.id and again.user_id == 8
+
+
+@pg
+def test_delete_identity_for_user_with_no_identity_is_a_quiet_no(pg_db):
+    assert repo.delete_identity_for_user(404) is False
+
+
+@pg
+def test_delete_identity_for_user_leaves_a_number_that_moved_to_a_newer_account(pg_db):
+    """A number that went dormant and was handed to account 50 stays with 50 when account 7 is deleted."""
+    ident = _identity(user_id=7, state="active")
+    repo.detach_dormant(ident.id, now=T0)
+    repo.activate_identity(ident.id, 50, now=T0)
+    assert repo.delete_identity_for_user(7, now=T0) is False
+    row = repo.find_identity_by_phone(PHONE_A)
+    assert (row.user_id, row.state) == (50, "active")
+    assert row.dormant_user_id is None  # the link to the deleted account is cleared
+
+
+@pg
+def test_delete_identity_for_user_clears_a_dormant_link_to_the_deleted_account(pg_db):
+    ident = _identity(user_id=7, state="active")
+    repo.detach_dormant(ident.id, now=T0)
+    assert repo.delete_identity_for_user(7, now=T0) is False
+    row = repo.find_identity_by_phone(PHONE_A)
+    assert (row.user_id, row.dormant_user_id, row.state) == (None, None, "reserving")
+    assert repo.max_identity_user_id() == 0
+
+
+@pg
 def test_max_identity_user_id_counts_dormant_accounts(pg_db):
     assert repo.max_identity_user_id() == 0
     ident = _identity(user_id=90, state="active")

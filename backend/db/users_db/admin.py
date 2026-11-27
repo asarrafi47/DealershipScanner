@@ -1,3 +1,5 @@
+from backend.utils.phone_placeholder import is_placeholder_email
+
 from ._common import _users_select_columns, get_conn
 from .accounts import delete_user_by_email, save_user, user_exists_by_username
 from .auth import clear_user_password_reset_token, reset_user_password
@@ -383,6 +385,9 @@ def admin_update_user(
         return "User not found."
     username_changed = uname.lower() != str(current[0] or "").strip().lower()
     email_changed = em.lower() != str(current[1] or "").strip().lower()
+    if email_changed and is_placeholder_email(em):
+        conn.close()
+        return "Enter a valid email address."  # the .invalid domain is reserved for phone accounts
     if username_changed:
         fmt_err = username_format_error(uname)
         if fmt_err:

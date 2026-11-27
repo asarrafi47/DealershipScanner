@@ -15,6 +15,7 @@ import time
 
 from flask import current_app, g, redirect, request, session, url_for
 
+from backend.auth.phone.accounts import public_email
 from backend.billing import access as paid_access
 from backend.billing.entitlements import entitlements_from_session
 from backend.config import Config
@@ -88,7 +89,7 @@ def finalize_app_session(user_id: int, auth_method: str = "password") -> bool:
     session.permanent = True
     session["user_id"] = int(u["id"])
     session["username"] = u["username"]
-    session["user_email"] = (u.get("email") or "").strip()
+    session["user_email"] = public_email((u.get("email") or "").strip())
     session["user_role"] = normalize_role(u.get("role"))
     session["user_dealer_id"] = (u.get("dealer_id") or "").strip()
     rid = u.get("dealership_registry_id")

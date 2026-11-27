@@ -131,6 +131,10 @@ def classify(app, monkeypatch) -> tuple[dict[str, list[tuple[str, str, str]]], l
     seen: dict[str, list[tuple[str, str, str]]] = {"hook": [], "in_view": [], "exempt": [], "mfa_stub": []}
     unclassified: list[tuple[str, str, str]] = []
     with monkeypatch.context() as mp:
+        # Phone sign-in routes answer 404 before any token check while AUTH_PHONE_LOGIN_ENABLED is off
+        # (card S8; test_auth_phone_routes proves that). Turn the flag on here so the classifier sees
+        # the validator they reach once the routes exist.
+        mp.setenv("AUTH_PHONE_LOGIN_ENABLED", "1")
         # The /dev hook imports the validators at call time; security.py at import time.
         for name in _VALIDATORS:
             mp.setattr(csrf_mod, name, _checked)

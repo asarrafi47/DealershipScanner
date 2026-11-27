@@ -365,6 +365,27 @@
    ]
   ],
   [
+   "/api/auth/phone/resend",
+   "api_auth_phone_resend",
+   [
+    "POST"
+   ]
+  ],
+  [
+   "/api/auth/phone/start",
+   "api_auth_phone_start",
+   [
+    "POST"
+   ]
+  ],
+  [
+   "/api/auth/phone/verify",
+   "api_auth_phone_verify",
+   [
+    "POST"
+   ]
+  ],
+  [
    "/api/auth/register",
    "api_auth_register",
    [
@@ -1342,6 +1363,48 @@
    ]
   ],
   [
+   "/login/phone",
+   "login_phone_page",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/login/phone",
+   "login_phone_start",
+   [
+    "POST"
+   ]
+  ],
+  [
+   "/login/phone/change",
+   "login_phone_change",
+   [
+    "POST"
+   ]
+  ],
+  [
+   "/login/phone/code",
+   "login_phone_code_page",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/login/phone/code",
+   "login_phone_code_verify",
+   [
+    "POST"
+   ]
+  ],
+  [
+   "/login/phone/resend",
+   "login_phone_resend",
+   [
+    "POST"
+   ]
+  ],
+  [
    "/logout",
    "logout_page",
    [
@@ -1456,6 +1519,14 @@
    ]
   ],
   [
+   "/staff/login",
+   "staff_login_page",
+   [
+    "GET",
+    "POST"
+   ]
+  ],
+  [
    "/static/<path:filename>",
    "static",
    [
@@ -1493,7 +1564,8 @@
     "_per_request_csp_nonce",
     "_csrf_mutating_requests",
     "_billing_gate_paid_routes",
-    "_device_cookie_before"
+    "_device_cookie_before",
+    "_no_server_timing"
    ]
   },
   "after_request_funcs": {

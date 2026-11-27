@@ -14,7 +14,7 @@ _NAMES = (
     "PHONE_HASH_PEPPER", "TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY", "TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN",
     "TWILIO_API_KEY_SID", "TWILIO_API_KEY_SECRET", "TWILIO_VERIFY_SERVICE_SID", "FLASK_ENV", "ENV",
     "RAILWAY_PROJECT_ID", "RAILWAY_ENVIRONMENT_NAME", "RAILWAY_ENVIRONMENT", "LEGAL_PAGES_APPROVED_VERSION",
-    "ALLOW_DEV_PHONE_PEPPER", "TWILIO_WEBHOOK_ENABLED",
+    "ALLOW_DEV_PHONE_PEPPER", "TWILIO_WEBHOOK_ENABLED", "SUPPORT_CONTACT",
 )
 
 
@@ -38,6 +38,7 @@ def _full_production(mp, **override):
         "TWILIO_API_KEY_SID": "SKtest",
         "TWILIO_API_KEY_SECRET": "keysecret-test",
         "TWILIO_VERIFY_SERVICE_SID": "VAtest",
+        "SUPPORT_CONTACT": "help@sarraficars.example",
     }
     values.update(override)
     for k, v in values.items():
@@ -178,6 +179,9 @@ def test_boot_check_refuses_flag_on_with_the_fake_provider(prod):
         ("TWILIO_VERIFY_SERVICE_SID", {"TWILIO_VERIFY_SERVICE_SID": None}),
         ("TWILIO_ACCOUNT_SID", {"TWILIO_ACCOUNT_SID": None}),
         ("TWILIO_API_KEY_SECRET", {"TWILIO_API_KEY_SECRET": None}),
+        ("SUPPORT_CONTACT", {"SUPPORT_CONTACT": None}),
+        ("SUPPORT_CONTACT", {"SUPPORT_CONTACT": ""}),
+        ("SUPPORT_CONTACT", {"SUPPORT_CONTACT": "   "}),
     ],
 )
 def test_boot_check_refuses_a_missing_value_and_names_it(prod, name, override):
@@ -185,6 +189,57 @@ def test_boot_check_refuses_a_missing_value_and_names_it(prod, name, override):
     with pytest.raises(RuntimeError) as exc:
         assert_production_security_config()
     assert name in str(exc.value)
+
+
+def test_a_missing_support_contact_is_named_and_alone_in_the_error(prod):
+    _full_production(prod, SUPPORT_CONTACT=None)
+    problems = config.missing_for_production()
+    assert [p.split(" ")[0] for p in problems] == ["SUPPORT_CONTACT"]
+    with pytest.raises(RuntimeError) as exc:
+        assert_production_security_config()
+    assert "SUPPORT_CONTACT" in str(exc.value)
+    assert "help@sarraficars.example" not in str(exc.value)
+
+
+def test_a_set_support_contact_leaves_nothing_missing_and_the_error_never_holds_it(prod):
+    _full_production(prod)
+    assert config.missing_for_production() == []
+    _full_production(prod, SUPPORT_CONTACT="help@sarraficars.example", TURNSTILE_SECRET_KEY=None)
+    with pytest.raises(RuntimeError) as exc:
+        assert_production_security_config()
+    assert "SUPPORT_CONTACT" not in str(exc.value)  # it is set, so only the real gap is named
+    assert "help@sarraficars.example" not in str(exc.value)
+
+
+def test_support_contact_is_not_required_while_the_flag_is_off(prod):
+    _full_production(prod, AUTH_PHONE_LOGIN_ENABLED="0", SUPPORT_CONTACT=None)
+    assert config.missing_for_production() == []
+    assert_production_security_config()
+
+
+def test_support_contact_is_trimmed_and_cut_at_200_characters(monkeypatch):
+    assert config.support_contact() == ""
+    monkeypatch.setenv("SUPPORT_CONTACT", "  help@sarraficars.example  ")
+    assert config.support_contact() == "help@sarraficars.example"
+    monkeypatch.setenv("SUPPORT_CONTACT", "h" * 250)
+    assert config.support_contact() == "h" * 200
+
+
+def test_the_consent_contact_follows_the_config_contact(monkeypatch):
+    from backend.auth.phone import consent
+
+    assert consent.support_contact() == ""
+    monkeypatch.setenv("SUPPORT_CONTACT", "https://sarraficars.example/help")
+    assert consent.support_contact() == config.support_contact() == "https://sarraficars.example/help"
+    monkeypatch.setattr(config, "support_contact", lambda: "from-the-config-module")
+    assert consent.support_contact() == "from-the-config-module"  # delegates, does not read the variable itself
+
+
+def test_the_consent_contact_is_cut_at_200_characters_like_the_config_one(monkeypatch):
+    from backend.auth.phone import consent
+
+    monkeypatch.setenv("SUPPORT_CONTACT", "x" * 250)
+    assert consent.support_contact() == "x" * 200
 
 
 def test_boot_check_message_never_holds_a_value(prod):

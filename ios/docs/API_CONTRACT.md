@@ -9,6 +9,9 @@ The iOS app consumes these routes from `backend/main.py`. Website HTML routes ar
 | POST | `/api/auth/login` | Login |
 | POST | `/api/auth/register` | Create account (same `users.db` as `/register`) |
 | POST | `/api/auth/logout` | Logout |
+| POST | `/api/auth/phone/start` | Text a sign-in code to a mobile number (phone login; 404 while `AUTH_PHONE_LOGIN_ENABLED` is off) |
+| POST | `/api/auth/phone/verify` | Check the code and sign in (same flag) |
+| POST | `/api/auth/phone/resend` | Text a fresh code (same flag) |
 | GET | `/api/listings/cars` | Grid JSON for one area (v2: `zip`/`radius`, or the session area) |
 | GET | `/api/listings/filter-options` | Facet metadata |
 | GET | `/api/listings/geo-coords` | ZIP + dealer coordinates |

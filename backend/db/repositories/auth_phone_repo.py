@@ -859,6 +859,39 @@ def detach_dormant(identity_id: int, *, now: datetime, conn: Any = None) -> bool
 
 
 @_clean_errors()
+def delete_identity_for_user(user_id: int, *, now: datetime | None = None, conn: Any = None) -> bool:
+    """Erase the phone identity of a deleted account (card S7: deleting an account frees its number).
+
+    In one transaction: end the open code challenges of that number (the challenge keeps no number
+    once it has ended), delete the identity row that holds the account, and clear the old-account
+    link of a dormant row. A number that was handed to a newer account after going dormant is not
+    touched: only the row whose ``user_id`` is this account goes. ``auth_phone_sends`` hash rows stay
+    on purpose (they expire at 30 days; deleting them would let a person dodge the caps).
+    Returns True when an identity row was removed.
+    """
+    when = _utc(now or datetime.now(timezone.utc))
+    uid = int(user_id)
+    with _tx(conn) as c:
+        row = c.execute(
+            "SELECT phone_hash FROM public.auth_phone_identities WHERE user_id = %s", (uid,)
+        ).fetchone()
+        if row is not None:
+            c.execute(
+                "UPDATE public.auth_phone_challenges SET status = 'cancelled', phone_e164 = NULL, "
+                "finished_at = %s WHERE phone_hash = %s AND status = 'open'",
+                (when, row[0]),
+            )
+        deleted = c.execute(
+            "DELETE FROM public.auth_phone_identities WHERE user_id = %s RETURNING id", (uid,)
+        ).fetchone()
+        c.execute(
+            "UPDATE public.auth_phone_identities SET dormant_user_id = NULL WHERE dormant_user_id = %s",
+            (uid,),
+        )
+    return deleted is not None
+
+
+@_clean_errors()
 def max_identity_user_id(*, conn: Any = None) -> int:
     """Highest account id any identity points at (active or dormant); 0 when there is none."""
     with _tx(conn) as c:

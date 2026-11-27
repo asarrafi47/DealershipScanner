@@ -7,9 +7,10 @@ hook in ``backend/web/security.py`` matches endpoints by bare name.
 
 from __future__ import annotations
 
-from flask import jsonify, redirect, render_template, request, session, url_for
+from flask import abort, jsonify, redirect, render_template, request, session, url_for
 
 from backend.auth import oauth_link
+from backend.auth.phone.accounts import is_placeholder_email
 from backend.auth.session import finalize_app_session as _finalize_app_session
 from backend.auth.session import post_login_redirect as _post_login_redirect
 from backend.billing import access as paid_access
@@ -78,28 +79,32 @@ def _refund_login_slot(key: str) -> None:
 _LOCKED_MSG = "Too many failed attempts. Try again in 15 minutes."
 
 
-def login_page():
+def _password_login_page(extra: dict | None = None):
+    """The email and password form and its POST handler (``/login``; ``/staff/login`` while phone
+    sign-in is on). ``extra`` is added to the template context and is empty on ``/login``, so the
+    page that was served before phone sign-in existed is byte for byte the same."""
+    extra = extra or {}
     # A Google/Apple sign-in whose email matched an unverified account waits here
     # for this account's password (backend.auth.oauth_link); the notice says so.
     notice = oauth_link.pending_link_notice()
     if request.method == "GET":
         err = request.args.get("_error", "")
         if err == "session_expired":
-            return render_template("login.html", error="Your session expired — please log in again.", notice=notice)
+            return render_template("login.html", error="Your session expired — please log in again.", notice=notice, **extra)
         oauth_err = session.pop("oauth_error", None)
         if oauth_err:
-            return render_template("login.html", error=oauth_err, notice=notice)
+            return render_template("login.html", error=oauth_err, notice=notice, **extra)
     if request.method == "POST":
         ip = _client_ip()
         if not allow_request(f"login:{_login_ip_key(ip)}", max_events=Config.RATE_LIMIT_LOGIN_PER_MIN, window_seconds=60.0):
-            return render_template("login.html", error="Too many login attempts. Try again in a minute.", notice=notice), 429
+            return render_template("login.html", error="Too many login attempts. Try again in a minute.", notice=notice, **extra), 429
         login_input = (request.form.get("login") or "").strip()
         attempts = submitted_password_attempts(request.form.get("password"))
         if not login_input or not attempts:
-            return render_template("login.html", error="Enter username/email and password.", notice=notice)
+            return render_template("login.html", error="Enter username/email and password.", notice=notice, **extra)
         slot = _reserve_login_slot(login_input)
         if slot is None:
-            return render_template("login.html", error=_LOCKED_MSG, notice=notice), 429
+            return render_template("login.html", error=_LOCKED_MSG, notice=notice, **extra), 429
         u = next((x for x in (authenticate_app_user(login_input, pw) for pw in attempts) if x), None)
         if u:
             _refund_login_slot(slot)
@@ -107,11 +112,33 @@ def login_page():
             pending_link = oauth_link.pop_pending_link()
             session.clear()
             if not _finalize_app_session(int(u["id"])):
-                return render_template("login.html", error="Login failed. Try again.")
+                return render_template("login.html", error="Login failed. Try again.", **extra)
             oauth_link.complete_pending_link(pending_link, int(u["id"]))
             return _post_login_redirect()
-        return render_template("login.html", error="Invalid username/email or password.", notice=notice)
-    return render_template("login.html", notice=notice)
+        return render_template("login.html", error="Invalid username/email or password.", notice=notice, **extra)
+    return render_template("login.html", notice=notice, **extra)
+
+
+def login_page():
+    """``/login``. With phone sign-in on (``AUTH_PHONE_LOGIN_ENABLED``) it is the phone page and never
+    reads a password; with it off it is the email and password form, unchanged."""
+    from backend.auth.phone import config as phone_config
+
+    if phone_config.enabled():
+        from backend.auth.phone.routes import render_login_entry
+
+        return render_login_entry()
+    return _password_login_page()
+
+
+def staff_login_page():
+    """``/staff/login``: the email and password form, reachable while phone sign-in is on (it is the
+    fallback for accounts that have a password; any role works here). 404 while the flag is off."""
+    from backend.auth.phone import config as phone_config
+
+    if not phone_config.enabled():
+        abort(404)
+    return _password_login_page({"login_action": "/staff/login", "phone_login_url": "/login"})
 
 
 def register_page():
@@ -245,7 +272,7 @@ def _auth_user_payload(u: dict) -> dict:
     return {
         "id": int(u["id"]),
         "username": u.get("username"),
-        "email": u.get("email"),
+        "email": "" if is_placeholder_email(u.get("email")) else u.get("email"),
         "role": normalize_role(u.get("role")),
         "is_premium": bool(u.get("is_premium")),
         "has_paid_access": paid_access.sees_paid_ui(),
@@ -367,6 +394,7 @@ def mfa_qr_confirm_gone(token):
 def register(app) -> None:
     """Attach the auth routes to ``app`` keeping the original bare endpoint names."""
     app.add_url_rule("/login", endpoint="login_page", view_func=login_page, methods=["GET", "POST"])
+    app.add_url_rule("/staff/login", endpoint="staff_login_page", view_func=staff_login_page, methods=["GET", "POST"])
     app.add_url_rule("/register", endpoint="register_page", view_func=register_page, methods=["GET", "POST"])
     app.add_url_rule("/verify-email", endpoint="verify_email_page", view_func=verify_email_page)
     app.add_url_rule("/resend-verification", endpoint="resend_verification", view_func=resend_verification, methods=["POST"])

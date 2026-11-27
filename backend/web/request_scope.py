@@ -34,6 +34,10 @@ _log = logging.getLogger(__name__)
 
 _TIMED_TYPES = ("text/html", "application/json")
 
+# A view sets ``request.environ[NO_SERVER_TIMING_KEY] = True`` to keep the header off its answer (the
+# phone sign-in routes do, so connection counts cannot tell a known number from an unknown one).
+NO_SERVER_TIMING_KEY = "ds.no_server_timing"
+
 
 def server_timing_enabled() -> bool:
     raw = (os.environ.get("SERVER_TIMING") or "").strip().lower()
@@ -129,8 +133,11 @@ class RequestScopeMiddleware:
         def _start_response(status: str, headers: list, exc_info: Any = None):
             if timing:
                 try:
-                    if _content_type(headers) in _TIMED_TYPES and not _shared_cacheable(headers) and not any(
-                        k.lower() == "server-timing" for k, _ in headers
+                    if (
+                        not environ.get(NO_SERVER_TIMING_KEY)
+                        and _content_type(headers) in _TIMED_TYPES
+                        and not _shared_cacheable(headers)
+                        and not any(k.lower() == "server-timing" for k, _ in headers)
                     ):
                         value = request_timing.header_value()
                         if value:

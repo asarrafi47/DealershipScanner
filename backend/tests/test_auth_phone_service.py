@@ -728,3 +728,86 @@ def test_the_tab_that_loses_the_identity_race_signs_in_as_the_winner(env, monkey
     assert out.reason == expect
     if state == "active":
         assert (out.ok, out.user_id) == (True, 1600)
+
+
+# ------------------------------------------------------------ a double submit is not a wrong-code lock
+
+
+def _close_as_approved(clock, out):
+    assert repo.close_approved(out.public_id, out.session_nonce, now=clock()) is not None
+
+
+def _cancel(clock, out):
+    assert repo.finish_challenge(out.public_id, "cancelled", now=clock(), session_nonce=out.session_nonce)
+
+
+def _delete_row(clock, out):
+    from backend.db.connect import connect
+
+    with connect() as c:
+        c.execute("DELETE FROM public.auth_phone_challenges WHERE public_id = %s", (out.public_id,))
+        c.commit()
+
+
+@pytest.mark.parametrize(
+    "closer,status",
+    [
+        pytest.param(_close_as_approved, "approved", id="approved_by_the_twin_request"),
+        pytest.param(_cancel, "cancelled", id="cancelled_by_use_a_different_number"),
+        pytest.param(_delete_row, None, id="row_gone"),
+    ],
+)
+def test_a_challenge_closed_between_the_read_and_the_attempt_says_start_again_not_locked(
+    env, monkeypatch, caplog, closer, status
+):
+    """Two requests for one challenge (a double submit): the loser read it open, the winner closed it, and
+    the loser's reserve_attempt then finds nothing to reserve. That is not five wrong codes."""
+    s, prov, clock = make()
+    out = start(s, 34)
+    real = repo.reserve_attempt
+    calls = []
+
+    def closed_first(public_id, session_nonce, **kw):
+        calls.append(public_id)
+        if len(calls) == 1:
+            closer(clock, out)  # the other request gets in between the loser's read and its reserve
+        return real(public_id, session_nonce, **kw)
+
+    monkeypatch.setattr(repo, "reserve_attempt", closed_first)
+    with caplog.at_level(logging.INFO, logger="auth_phone"):
+        lost = s.check(out.public_id, out.session_nonce, FAKE_CODE, device_hash=None)
+    assert len(calls) == 1
+    assert (lost.approved, lost.reason, lost.sentence) == (False, svc_mod.R_NO_CHALLENGE, svc_mod.START_AGAIN)
+    assert "event=check_locked" not in caplog.text
+    assert "reason=closed_meanwhile" in caplog.text
+    after = repo.fetch_challenge(out.public_id, out.session_nonce)
+    assert (after.status if after else None) == status  # not 'failed': the loser changed nothing
+    assert prov.check_calls == 0  # and never asked the vendor
+
+
+def test_five_wrong_codes_on_an_open_challenge_still_lock_it_as_failed(env, caplog):
+    s, prov, clock = make()
+    out = start(s, 35)
+    dev = numbers.hash_device("dev35")
+    with caplog.at_level(logging.INFO, logger="auth_phone"):
+        got = [s.check(out.public_id, out.session_nonce, WRONG, device_hash=dev) for _ in range(5)]
+    assert [g.reason for g in got] == [svc_mod.R_WRONG] * 4 + [svc_mod.R_LOCKED]
+    assert got[-1].sentence == svc_mod.CODE_LOCKED
+    assert repo.fetch_challenge(out.public_id, out.session_nonce).status == "failed"
+    assert "event=check_locked" in caplog.text
+
+
+def test_attempts_used_up_while_the_challenge_is_still_open_end_it_as_a_lock(env, caplog):
+    """Five checks in flight at once have taken every attempt before any of them closed the challenge: the
+    sixth finds it open with nothing left to reserve. That is the lock, and it fails the challenge."""
+    s, prov, clock = make()
+    out = start(s, 36)
+    for _ in range(5):
+        assert repo.reserve_attempt(out.public_id, out.session_nonce, now=clock(), max_attempts=5) is not None
+    assert repo.fetch_challenge(out.public_id, out.session_nonce).status == "open"
+    with caplog.at_level(logging.INFO, logger="auth_phone"):
+        last = s.check(out.public_id, out.session_nonce, FAKE_CODE, device_hash=None)
+    assert (last.approved, last.reason, last.sentence) == (False, svc_mod.R_TOO_MANY, svc_mod.CODE_LOCKED)
+    assert repo.fetch_challenge(out.public_id, out.session_nonce).status == "failed"
+    assert "event=check_locked" in caplog.text and "why=attempts" in caplog.text
+    assert prov.check_calls == 0
