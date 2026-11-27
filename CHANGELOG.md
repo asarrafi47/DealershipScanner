@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.56] - 2026-11-27
+
 - **Phone sign-in stage 1 on top of the S7/S8 build (#61): boot behaviour (review R5).** With `AUTH_PHONE_LOGIN_ENABLED` on in production, a bad phone setting no longer stops the site from starting or restarting. Only the fake provider and a missing or short `PHONE_HASH_PEPPER` still refuse to start. Every other problem logs one CRITICAL line, `event=phone_login_boot_disabled`, with names only, and turns phone sign-in off for that process. That covers missing Twilio or Turnstile values, `SUPPORT_CONTACT`, `LEGAL_PAGES_APPROVED_VERSION` not matching, an unparsable allow-list entry, a spoofable proxy chain, unreadable V031 tables, a Postgres error, and missing legal pages. Password, admin, dealer and `/dev` sign-in are unaffected. New `config.boot_disabled_reason()`, `flag_set()`, `hard_problems_for_production()` and `soft_problems_for_production()`; `enabled()` is the flag and not boot-disabled. DESIGN.md section 18 "Boot behaviour (R5)". Tests: `test_auth_phone_boot.py`; `test_auth_phone_config.py` and `test_auth_phone_restore_guard.py` updated.
 - **Phone sign-in: review fixes R1, R4, R7, R8 and R13.**
   - R1: a Twilio start that may have sent a text (read timeout, reset, 5xx) is recorded as `provider_error` at its reserved cost. It counts toward the day cap, the spend cap, the pools, every per-number and per-source limit, and the breaker. A definite refusal stays at cost 0 and never trips the breaker.
