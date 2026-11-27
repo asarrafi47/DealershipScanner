@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- **Phone login: Twilio error shapes pinned (tests only).** `test_auth_phone_twilio_error_shapes.py` raises every Twilio failure shape (21608, 20003/401, 8021, 60200, 60202, 60203, 60212, 20404, bare 429, an HTML body with no status or code, timeouts, connection errors, OSError) through a fake client and pins the reason code, the one log line (op, reason, integer status, vendor code; never the number, vendor text, service SID or credentials), the shopper sentence (generic and the same for known and unknown numbers) and that nothing which may have sent a text is retried.
+
 ## [1.5.53] - 2026-11-21
 
 - release, migrations and deploys no longer need a Mac: `.github/workflows/release.yml` (manual) runs the release guard, an encrypted pre-migration `pg_dump`, `migrate --apply`, the main fast-forward plus annotated tag, the guarded web and scanner-nightly deploys, and the supervised scan, with a Railway project token held as a repository secret. `OWNER_SETUP.md` and `CLOUD.md` updated.
