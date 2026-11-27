@@ -365,6 +365,9 @@ def _finish_login(approved: Any) -> _Result:
     out, err = _guard(_sign_in)
     if err:
         return _Result(False, err, drop=True)
+    if not out.ok and out.reason == "ineligible":
+        # The service refused the stored account before any login stamp or dormant detach (review R8).
+        return _refuse("ineligible", ps.CODE_FAILED)
     if not out.ok or not out.user_id:
         return _refuse("retry_exhausted", ps.TRY_AGAIN)
 
