@@ -49,6 +49,7 @@ def phone_app(pg_db, app_factory, monkeypatch):
         SERVER_TIMING="1",  # on, so the Server-Timing tests prove an absence the middleware could have filled
     )
     registry.reset()
+    monkeypatch.setattr(routes, "_pad_sleep", lambda s: None)  # the R7 floor, without the wait
     routes.reset_service()
     turnstile.set_verifier(turnstile.FakeTurnstileVerifier(frozenset(f"ts-{n}" for n in range(1, 500))))
     yield main

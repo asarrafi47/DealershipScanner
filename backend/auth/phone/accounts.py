@@ -81,16 +81,55 @@ class PhoneAccounts:
 
         found = find_users_by_email(email, limit=2)
         if found:
-            return int(found[0]["id"])
+            return _adoptable(found, email, username)
         try:
             return int(save_user(username, email, secrets.token_urlsafe(48), role=ROLE_GENERAL, org_id=None))
         except Exception as exc:
             again = find_users_by_email(email, limit=2)
             if again:
-                return int(again[0]["id"])
+                return _adoptable(again, email, username)
             # Never the email, the username or the driver text: only the exception class.
             _log.warning("event=account_create_failed reason=%s", type(exc).__name__)
             raise
+
+
+    def is_eligible(self, user_id: int) -> bool:
+        """The service's eligibility check before a login stamp or a dormant detach (review R8).
+
+        A missing row answers True on purpose: the number then points at a deleted account, and the
+        route releases that identity and makes a fresh account (``identity_orphan_healed``); users ids
+        are never reused, so nobody else can be reached that way. A row that exists must pass
+        :func:`is_phone_eligible`. A read error raises, and the route answers with its generic failure.
+        """
+        from backend.db.users_db import get_user_profile
+
+        row = get_user_profile(int(user_id))
+        return True if row is None else is_phone_eligible(row)
+
+
+class PlaceholderTaken(Exception):
+    """An account already holds this placeholder email but was not made by phone sign-in (review R13)."""
+
+
+def _adoptable(rows: list[dict], email: str, username: str) -> int:
+    """The id of the account to adopt for a retry, only if phone sign-in itself made it (review R13).
+
+    The placeholder email and username both carry an HMAC tag from the pepper and the identity id, and
+    the ``.invalid`` domain is refused on every other way to set an email, so a match should only ever be
+    the account an earlier try of this same sign-up created. Defence in depth: the row must also be a
+    plain shopper with no Google or Apple link; anything else is refused and
+    never adopted.
+    """
+    row = rows[0]
+    if len(rows) != 1 or not is_placeholder_email(row.get("email")):
+        raise PlaceholderTaken()
+    if str(row.get("role") or "").strip().lower() not in (ROLE_GENERAL, ""):
+        raise PlaceholderTaken()
+    if str(row.get("google_sub") or "").strip() or str(row.get("apple_sub") or "").strip():
+        raise PlaceholderTaken()
+    if str(row.get("email") or "").strip().lower() != (email or "").strip().lower():
+        raise PlaceholderTaken()
+    return int(row["id"])
 
 
 def purge_phone_identity(user_id: int) -> None:
@@ -116,3 +155,14 @@ def purge_phone_identity(user_id: int) -> None:
             return  # no Postgres here (a plain development box): no identity can exist
     except Exception as exc:  # the account is gone already; report, never raise
         _log.warning("event=identity_purge_failed reason=%s", type(exc).__name__)
+
+
+def touch_phone_last_login(user_id: int, *, now: Any = None) -> bool:
+    """Stamp the phone identity's last sign-in (review R4). The session hook calls it at most once a day
+    for a phone session, so a person who stays signed in is never detached as dormant after 180 days.
+    Raises on a database error; the caller swallows it."""
+    from datetime import datetime, timezone
+
+    from backend.db.repositories import auth_phone_repo
+
+    return auth_phone_repo.touch_login_for_user(int(user_id), now=now or datetime.now(timezone.utc))

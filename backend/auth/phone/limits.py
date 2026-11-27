@@ -30,6 +30,10 @@ SHOPPER_POOLS = (POOL_KNOWN, POOL_NEW, POOL_RESEND)
 
 # Rows that are (or may become) a real text: they use the day's sends and the person's allowance.
 REAL_SEND_OUTCOMES = ("pending", "sent")
+# Rows that count as a real text only when they carry a cost (review R1): a ``provider_error`` after
+# which a text may have gone out (read timeout, vendor 5xx) keeps its estimated cost, while a
+# definite vendor refusal is recorded at 0 and uses none of the day's sends.
+COSTED_SEND_OUTCOMES = ("provider_error",)
 # Rows a number is charged for: real texts and vendor refusals of a real attempt. Turnstile,
 # limit and cap refusals are left out, so a stranger cannot use up someone else's number.
 PHONE_COUNTED_OUTCOMES = ("pending", "sent", "provider_error", "blocked_voip")
@@ -57,6 +61,11 @@ PHONE_WIDE_LOCK_MINUTES = 60
 
 # Breaker (card S6 (e)): after this many ``unavailable`` answers in a row, skip the vendor this long.
 BREAKER_RUN = 5
+# What ``auth_phone_repo.recent_vendor_outcomes`` reports for a ``provider_error`` row with a cost
+# (a start that may have sent, review R1). A read label only, never stored.
+MAYBE_SENT = "maybe_sent"
+# Vendor answers that count as failures for the breaker.
+BREAKER_FAILURES = ("unavailable", "pending", MAYBE_SENT)
 BREAKER_SKIP = timedelta(minutes=5)
 
 
@@ -132,7 +141,10 @@ def day_start(now: datetime, tz_name: str) -> datetime:
 
 class Window(Protocol):
     def count(self, *, since: datetime, until: datetime | None = None, outcomes: Any = None,
-              exclude_outcomes: Any = None, **filters: Any) -> int: ...
+              exclude_outcomes: Any = None, costed_outcomes: Any = None, **filters: Any) -> int:
+        """Rows matching the filters. With ``outcomes``, a row also matches when its outcome is in
+        ``costed_outcomes`` and its ``est_cost_cents`` is above 0."""
+        ...
 
     def cost_cents(self, *, since: datetime, until: datetime | None = None, **filters: Any) -> Decimal: ...
 
@@ -184,7 +196,7 @@ def decide(window: Window, ask: SendAsk, limits: Limits, now: datetime) -> str |
 
     # --- pools and site caps (calendar day in the reset time zone) ------------------------------
     def real(**f: Any) -> int:
-        return window.count(since=day, outcomes=REAL_SEND_OUTCOMES, **f)
+        return window.count(since=day, outcomes=REAL_SEND_OUTCOMES, costed_outcomes=COSTED_SEND_OUTCOMES, **f)
 
     if ask.pool == POOL_SELLER:
         if real(pool=POOL_SELLER) >= limits.reserved_sends:

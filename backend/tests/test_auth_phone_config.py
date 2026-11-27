@@ -23,6 +23,16 @@ def _clean(monkeypatch):
     for name in _NAMES:
         monkeypatch.delenv(name, raising=False)
     config.reset_warnings()
+    monkeypatch.setattr(config, "_boot_disabled", None)  # restored after the test
+
+
+def _soft_disabled() -> str:
+    """Run the production boot check, which must NOT raise (review R5), and return why phone sign-in is off."""
+    assert_production_security_config()
+    reason = config.boot_disabled_reason()
+    assert reason, "the boot check should have turned phone sign-in off"
+    assert config.enabled() is False
+    return reason
 
 
 def _full_production(mp, **override):
@@ -61,6 +71,9 @@ def prod(monkeypatch):
     # S5 restore guard: these tests have no databases; test_auth_phone_restore_guard.py covers it
     monkeypatch.setattr(restore_guard, "max_identity_user_id", lambda: 0)
     monkeypatch.setattr(restore_guard, "max_users_id", lambda: 0)
+    from backend.auth.phone import legal
+
+    monkeypatch.setattr(legal, "missing_legal_pages", lambda *a, **k: [])  # card S14's pages: own tests
     return monkeypatch
 
 
@@ -161,6 +174,7 @@ def test_boot_check_accepts_a_complete_production_setup(prod):
     _full_production(prod)
     assert_production_security_config()
     assert config.missing_for_production() == []
+    assert config.boot_disabled_reason() is None and config.enabled() is True
 
 
 def test_boot_check_refuses_flag_on_with_the_fake_provider(prod):
@@ -169,11 +183,17 @@ def test_boot_check_refuses_flag_on_with_the_fake_provider(prod):
         assert_production_security_config()
 
 
+@pytest.mark.parametrize("override", [{"PHONE_HASH_PEPPER": None}, {"PHONE_HASH_PEPPER": "short"}])
+def test_boot_check_refuses_a_missing_or_short_pepper(prod, override):
+    _full_production(prod, **override)
+    with pytest.raises(RuntimeError) as exc:
+        assert_production_security_config()
+    assert "PHONE_HASH_PEPPER" in str(exc.value)
+
+
 @pytest.mark.parametrize(
     "name,override",
     [
-        ("PHONE_HASH_PEPPER", {"PHONE_HASH_PEPPER": None}),
-        ("PHONE_HASH_PEPPER", {"PHONE_HASH_PEPPER": "short"}),
         ("TURNSTILE_SECRET_KEY", {"TURNSTILE_SECRET_KEY": None}),
         ("TURNSTILE_SITE_KEY", {"TURNSTILE_SITE_KEY": None}),
         ("TWILIO_VERIFY_SERVICE_SID", {"TWILIO_VERIFY_SERVICE_SID": None}),
@@ -184,31 +204,28 @@ def test_boot_check_refuses_flag_on_with_the_fake_provider(prod):
         ("SUPPORT_CONTACT", {"SUPPORT_CONTACT": "   "}),
     ],
 )
-def test_boot_check_refuses_a_missing_value_and_names_it(prod, name, override):
+def test_boot_check_turns_phone_off_for_a_missing_value_and_names_it(prod, name, override):
+    # Review R5: the site starts; phone sign-in is off for the process and the reason names the variable.
     _full_production(prod, **override)
-    with pytest.raises(RuntimeError) as exc:
-        assert_production_security_config()
-    assert name in str(exc.value)
+    assert name in _soft_disabled()
 
 
 def test_a_missing_support_contact_is_named_and_alone_in_the_error(prod):
     _full_production(prod, SUPPORT_CONTACT=None)
     problems = config.missing_for_production()
     assert [p.split(" ")[0] for p in problems] == ["SUPPORT_CONTACT"]
-    with pytest.raises(RuntimeError) as exc:
-        assert_production_security_config()
-    assert "SUPPORT_CONTACT" in str(exc.value)
-    assert "help@sarraficars.example" not in str(exc.value)
+    reason = _soft_disabled()  # review R5: phone sign-in turns off, the site still starts
+    assert "SUPPORT_CONTACT" in reason
+    assert "help@sarraficars.example" not in reason
 
 
 def test_a_set_support_contact_leaves_nothing_missing_and_the_error_never_holds_it(prod):
     _full_production(prod)
     assert config.missing_for_production() == []
     _full_production(prod, SUPPORT_CONTACT="help@sarraficars.example", TURNSTILE_SECRET_KEY=None)
-    with pytest.raises(RuntimeError) as exc:
-        assert_production_security_config()
-    assert "SUPPORT_CONTACT" not in str(exc.value)  # it is set, so only the real gap is named
-    assert "help@sarraficars.example" not in str(exc.value)
+    reason = _soft_disabled()
+    assert "SUPPORT_CONTACT" not in reason  # it is set, so only the real gap is named
+    assert "help@sarraficars.example" not in reason
 
 
 def test_support_contact_is_not_required_while_the_flag_is_off(prod):
@@ -242,18 +259,18 @@ def test_the_consent_contact_is_cut_at_200_characters_like_the_config_one(monkey
     assert consent.support_contact() == "x" * 200
 
 
-def test_boot_check_message_never_holds_a_value(prod):
+def test_boot_check_message_never_holds_a_value(prod, caplog):
     _full_production(prod, TURNSTILE_SECRET_KEY=None)
-    with pytest.raises(RuntimeError) as exc:
-        assert_production_security_config()
+    with caplog.at_level("CRITICAL", logger="auth_phone"):
+        reason = _soft_disabled()
     for secret in ("keysecret-test", "site-x", "p" * 40):
-        assert secret not in str(exc.value)
+        assert secret not in reason and secret not in caplog.text
 
 
-def test_boot_check_refuses_an_unknown_provider(prod):
+def test_boot_check_turns_phone_off_for_an_unknown_provider(prod):
     _full_production(prod, AUTH_PHONE_PROVIDER="carrier-pigeon")
-    with pytest.raises(RuntimeError, match="unknown provider"):
-        assert_production_security_config()
+    reason = _soft_disabled()
+    assert "unknown provider" in reason and "carrier-pigeon" not in reason
 
 
 def test_boot_check_accepts_the_auth_token_style(prod):
@@ -284,21 +301,21 @@ def test_the_fake_provider_is_opt_in_the_registry_refuses_when_unset(monkeypatch
 
 
 def test_boot_check_requires_the_legal_approval_version(prod):
+    # Still required: until the owner approves the legal pages, production keeps phone sign-in off.
     _full_production(prod, LEGAL_PAGES_APPROVED_VERSION=None)
-    with pytest.raises(RuntimeError, match="LEGAL_PAGES_APPROVED_VERSION"):
-        assert_production_security_config()
+    assert "LEGAL_PAGES_APPROVED_VERSION" in _soft_disabled()
     _full_production(prod, LEGAL_PAGES_APPROVED_VERSION="999")
-    with pytest.raises(RuntimeError, match="LEGAL_PAGES_APPROVED_VERSION"):
-        assert_production_security_config()
+    assert "LEGAL_PAGES_APPROVED_VERSION" in _soft_disabled()
     _full_production(prod)
     assert_production_security_config()
+    assert config.boot_disabled_reason() is None and config.enabled() is True
 
 
-def test_the_legal_check_names_the_variable_and_never_a_value(prod):
+def test_the_legal_check_names_the_variable_and_never_a_value(prod, caplog):
     _full_production(prod, LEGAL_PAGES_APPROVED_VERSION="secret-looking-9")
-    with pytest.raises(RuntimeError) as exc:
-        assert_production_security_config()
-    assert "secret-looking-9" not in str(exc.value)
+    with caplog.at_level("CRITICAL", logger="auth_phone"):
+        reason = _soft_disabled()
+    assert "secret-looking-9" not in reason and "secret-looking-9" not in caplog.text
 
 
 def test_a_malformed_send_cap_logs_one_warning_without_the_value_and_falls_back(monkeypatch, caplog):
@@ -373,11 +390,12 @@ def test_lookup_cost_is_read_and_a_bad_value_falls_back_to_1(monkeypatch, value,
 def test_boot_check_refuses_an_allow_list_entry_that_is_not_a_number(prod):
     # A typo in the first-test-days list must stop the start, never open sign-in to every number.
     _full_production(prod, AUTH_PHONE_ALLOWED_NUMBERS="+12025550123, notanumber")
-    with pytest.raises(RuntimeError, match="AUTH_PHONE_ALLOWED_NUMBERS") as err:
-        assert_production_security_config()
-    assert "notanumber" not in str(err.value) and "2025550123" not in str(err.value)
+    reason = _soft_disabled()
+    assert "AUTH_PHONE_ALLOWED_NUMBERS" in reason
+    assert "notanumber" not in reason and "2025550123" not in reason
     _full_production(prod, AUTH_PHONE_ALLOWED_NUMBERS="+12025550123")
     assert_production_security_config()
+    assert config.enabled() is True
 
 
 def test_allow_list_set_counts_any_entry():
@@ -398,10 +416,10 @@ def test_boot_check_refuses_a_spoofable_proxy_chain(prod):
     prod.setenv("TRUST_PROXY_HEADERS", "1")
     prod.setenv("TRUSTED_PROXY_HOPS", "2")
     prod.delenv("TRUSTED_PROXY_CIDRS", raising=False)
-    with pytest.raises(RuntimeError, match="TRUSTED_PROXY_CIDRS"):
-        assert_production_security_config()
+    assert "TRUSTED_PROXY_CIDRS" in _soft_disabled()
     prod.setenv("TRUSTED_PROXY_CIDRS", "cloudflare")
     assert_production_security_config()
+    assert config.enabled() is True
     prod.setenv("TRUSTED_PROXY_HOPS", "1")
     prod.delenv("TRUSTED_PROXY_CIDRS")
     assert_production_security_config()  # one hop: the right-most entry is the proxy's own view

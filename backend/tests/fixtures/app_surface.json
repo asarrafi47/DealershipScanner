@@ -1171,6 +1171,13 @@
    ]
   ],
   [
+   "/dev/phone/caps",
+   "dev.dev_phone_caps",
+   [
+    "GET"
+   ]
+  ],
+  [
    "/dev/register",
    "dev.admin_register",
    [
@@ -1489,6 +1496,13 @@
    ]
   ],
   [
+   "/privacy",
+   "privacy",
+   [
+    "GET"
+   ]
+  ],
+  [
    "/register",
    "register_page",
    [
@@ -1519,6 +1533,13 @@
    ]
   ],
   [
+   "/sms-consent",
+   "sms_consent",
+   [
+    "GET"
+   ]
+  ],
+  [
    "/staff/login",
    "staff_login_page",
    [
@@ -1529,6 +1550,13 @@
   [
    "/static/<path:filename>",
    "static",
+   [
+    "GET"
+   ]
+  ],
+  [
+   "/terms",
+   "terms",
    [
     "GET"
    ]

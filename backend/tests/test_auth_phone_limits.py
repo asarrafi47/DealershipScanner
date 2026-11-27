@@ -46,17 +46,20 @@ class FakeWindow:
         for _ in range(n):
             self.rows.append(dict(base, at=at, outcome=outcome))
 
-    def _match(self, r, since, until, filters, outcomes=None, exclude=None):
+    def _match(self, r, since, until, filters, outcomes=None, exclude=None, costed=None):
         if r["at"] < since or (until is not None and r["at"] >= until):
             return False
-        if outcomes and r["outcome"] not in outcomes:
+        paid = bool(costed) and r["outcome"] in costed and r["cost"] > 0
+        if outcomes and r["outcome"] not in outcomes and not paid:
             return False
         if exclude and r["outcome"] in exclude:
             return False
         return all(r[k] == v for k, v in filters.items())
 
-    def count(self, *, since, until=None, outcomes=None, exclude_outcomes=None, **filters):
-        return sum(1 for r in self.rows if self._match(r, since, until, filters, outcomes, exclude_outcomes))
+    def count(self, *, since, until=None, outcomes=None, exclude_outcomes=None, costed_outcomes=None, **filters):
+        return sum(
+            1 for r in self.rows if self._match(r, since, until, filters, outcomes, exclude_outcomes, costed_outcomes)
+        )
 
     def cost_cents(self, *, since, until=None, **filters):
         return sum((r["cost"] for r in self.rows if self._match(r, since, until, filters)), Decimal(0))
@@ -322,3 +325,91 @@ def test_new_pool_refusals_count_against_the_source_so_probing_is_not_free():
     assert decide(w, ask(pool="new", phone_hash="ab" * 32)) == lim.BLOCKED_LIMIT
     assert decide(w, ask(pool="known", phone_hash="ac" * 32)) == lim.BLOCKED_LIMIT  # the source is spent
     assert lim.outcome_for(lim.BLOCKED_CAP) == lim.BLOCKED_CAP and lim.outcome_for(None) is None
+
+
+# ------------------------------------------------------------ review R1: a start that may have sent
+
+
+def _maybe_sent(w, n=1, **kw):
+    """``provider_error`` rows with their cost: what the service records after a timeout or 5xx."""
+    kw.setdefault("cost", Decimal(6))
+    w.add(n, outcome="provider_error", **kw)
+
+
+def _day_of(outcome, cost, n):
+    w = FakeWindow()
+    for k in range(n):
+        w.rows.append(dict(
+            phone_hash="%064x" % k, ip_hash="%064x" % (k + 100), ip_prefix_hash="%064x" % (k + 200),
+            device_hash="%064x" % (k + 300), pool="known", has_device_cookie=True, cost=Decimal(cost),
+            at=NOW - timedelta(minutes=1), outcome=outcome))
+    return w
+
+
+# Spend and prepaid caps out of the way, so only the send counts decide.
+BIG = replace(L, daily_spend_cap_cents=10_000, prepaid_cents=1_000_000, dealer_share_pct=0)
+
+
+def test_a_costed_provider_error_counts_against_the_day_send_cap():
+    assert decide(_day_of("provider_error", 6, BIG.daily_send_cap - 1), limits=BIG) is None
+    assert decide(_day_of("provider_error", 6, BIG.daily_send_cap), limits=BIG) == lim.BLOCKED_CAP
+
+
+def test_a_definite_provider_refusal_at_cost_zero_uses_none_of_the_day_sends():
+    assert decide(_day_of("provider_error", 0, BIG.daily_send_cap), limits=BIG) is None
+
+
+def test_a_costed_provider_error_counts_against_the_spend_cap():
+    w = FakeWindow()
+    _maybe_sent(w, phone_hash="0" * 64, ip_hash="1" * 64, ip_prefix_hash="2" * 64, device_hash="3" * 64,
+                cost=Decimal(L.daily_spend_cap_cents - 5))
+    assert decide(w) == lim.BLOCKED_CAP  # 295 spent + 6 asked > 300
+
+
+def test_a_costed_provider_error_counts_against_the_number():
+    w = FakeWindow()
+    _maybe_sent(w, 2, phone_hash=PH, ip_hash="1" * 64, ip_prefix_hash="2" * 64, device_hash="3" * 64)
+    assert decide(w) == lim.BLOCKED_LIMIT  # 2 in 15 minutes
+
+
+@pytest.mark.parametrize("field,limit", [("ip_hash", "ip_per_hour"), ("device_hash", "device_per_day"),
+                                         ("ip_prefix_hash", "prefix_per_day")])
+def test_a_costed_provider_error_counts_against_the_source(field, limit):
+    w = FakeWindow()
+    value = {"ip_hash": IP, "device_hash": DEV, "ip_prefix_hash": PFX}[field]
+    for k in range(getattr(L, limit)):
+        row = dict(phone_hash="%064x" % k, ip_hash="%064x" % (k + 100), ip_prefix_hash="%064x" % (k + 200),
+                   device_hash="%064x" % (k + 300))
+        row[field] = value
+        _maybe_sent(w, **row)
+    assert decide(w) == lim.BLOCKED_LIMIT
+
+
+def test_a_costed_provider_error_fills_the_new_number_pool():
+    w = FakeWindow()
+    for k in range(BIG.new_pool_sends):
+        _maybe_sent(w, pool="new", phone_hash="%064x" % k, ip_hash="%064x" % (k + 100),
+                    ip_prefix_hash="%064x" % (k + 200), device_hash="%064x" % (k + 300))
+    assert decide(w, ask(pool="new"), limits=BIG) == lim.POOL_BUSY
+
+
+def test_refused_blocked_rows_still_count_as_before():
+    # blocked_limit and blocked_turnstile count against the source; blocked_cap does not; none uses the day's sends.
+    w = FakeWindow()
+    w.add(L.ip_per_hour, outcome="blocked_limit", phone_hash="0" * 64, ip_hash=IP, ip_prefix_hash="2" * 64,
+          device_hash="3" * 64, cost=Decimal(0))
+    assert decide(w) == lim.BLOCKED_LIMIT
+    w = FakeWindow()
+    w.add(L.ip_per_hour, outcome="blocked_turnstile", phone_hash="0" * 64, ip_hash=IP, ip_prefix_hash="2" * 64,
+          device_hash="3" * 64, cost=Decimal(0))
+    assert decide(w) == lim.BLOCKED_LIMIT
+    w = FakeWindow()
+    w.add(50, outcome="blocked_cap", phone_hash=PH, ip_hash=IP, ip_prefix_hash=PFX, device_hash=DEV, cost=Decimal(0))
+    assert decide(w) is None
+
+
+def test_the_breaker_failure_set_names_the_repo_label():
+    from backend.db.repositories import auth_phone_repo as repo
+
+    assert repo.MAYBE_SENT == lim.MAYBE_SENT and lim.MAYBE_SENT in lim.BREAKER_FAILURES
+    assert "provider_error" not in lim.BREAKER_FAILURES  # a definite refusal never trips the breaker

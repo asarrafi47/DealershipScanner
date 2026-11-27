@@ -342,6 +342,15 @@ All phone routes answer 404 while `AUTH_PHONE_LOGIN_ENABLED` is off. New POST ro
 - `AUTH_PHONE_ALLOWED_NUMBERS` (optional list) restricts phone sign-in to named numbers for the first test days (owner and friends) while the old form is still the default for everyone else; with it set, only listed numbers can use the phone page and the old form stays visible.
 - Rollout is card S18. Rollback: flag off puts the old form back for shoppers whose accounts still have a password; accounts created by phone have no usable password and **cannot sign in until the flag is back on**; warn before rolling back after launch.
 
+### Boot behaviour (R5)
+
+Owner decision, 2026-11-27 (issue #45, finding R5): with `AUTH_PHONE_LOGIN_ENABLED` on in production, a bad phone setting no longer stops the site from starting or restarting.
+
+- **Still refuses to start** (RuntimeError at boot) for only two problems: `AUTH_PHONE_PROVIDER=fake` in production, and `PHONE_HASH_PEPPER` missing or shorter than 32 characters (`PEPPER_MIN_LENGTH`).
+- **Every other problem turns phone sign-in off for that process and lets the site start.** That covers missing Twilio or Turnstile values, an unknown provider, `LEGAL_PAGES_APPROVED_VERSION` not equal to the consent text version, an allow-list entry that is not a number, a spoofable proxy chain, the restore guard failing or not being able to read its tables (V031 missing, a Postgres blip), and missing legal pages (`legal.missing_legal_pages()`, or that check failing). Phone routes then answer as if the flag were off: `config.enabled()` is False and `config.boot_disabled_reason()` holds the reason. Admin, dealer and password sign-in are not affected, and the boot refusals that have nothing to do with phone (DEV_CONSOLE and the rest) are unchanged.
+- The legal approval is still required. Until the owner sets `LEGAL_PAGES_APPROVED_VERSION` to the consent text version, production keeps phone sign-in off, now without crashing. Nothing in the repository sets or documents an approved value.
+- **After every deploy or restart with the flag on, the owner must check the logs for one CRITICAL line starting `event=phone_login_boot_disabled`.** It names the variables or the reason, never a value. If it is there, phone sign-in is off on that process even though the flag says on. Fix the named items and restart. The check runs once per process, so each worker logs its own line.
+
 ## 19. Pay structure and this design
 
 With everything free (free means no plan gating; every feature still needs a phone sign-in in production), there are no plans, trials or Stripe flows to protect: `users.id` is the only key. The plan columns, `B/billing/` and the checkout pages stay in the repository, dormant, with `BILLING_STRIPE_ENABLED` off (a test keeps it off and keeps the paid pages hidden). Phone verification is still useful later if paid plans or trials return: the verified, unique number is a good "one trial per person" key. See `PAY_AND_STRIPE_AUDIT.md` (kept as the revival checklist).

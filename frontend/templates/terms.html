@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Terms of Use — Sarrafi Cars</title>
+    {% include "_head_css.html" %}
+    {% include "_head_meta.html" %}
+</head>
+<body class="lp-body">
+{# Card S14: a draft for the owner to approve (backend/auth/phone/legal.py). Plain headings, one column. #}
+<div class="page">
+
+    {% include "_nav_public.html" %}
+
+    <main class="legal-page" style="max-width: 42rem; margin: 0 auto; padding: 24px 16px 48px; line-height: 1.6;">
+        {% if legal_draft %}
+        <p id="legal-draft"><strong>DRAFT.</strong> This page is a draft pending the owner's approval. It is not in force yet and it is not legal advice.</p>
+        {% endif %}
+
+        <h1>Terms of Use</h1>
+        <p>Last updated {{ legal_last_updated }}. Version {{ legal_version }}.</p>
+
+        <p>These terms cover your use of Sarrafi Cars (the website and the app). By using Sarrafi Cars you agree to them. If you do not agree, please do not use the site.</p>
+
+        <h2>What Sarrafi Cars is</h2>
+        <p>Sarrafi Cars shows cars for sale from dealerships and from private sellers, with details such as price, mileage and equipment. We do not sell cars ourselves, we are not a party to any sale, and we do not handle money between a buyer and a seller.</p>
+
+        <h2>Who can use it</h2>
+        <p>You must be 13 or older to use Sarrafi Cars. If you are under 18, use the site with a parent or guardian's permission. Buying or selling a car may have other age rules where you live.</p>
+
+        <h2>Your account and signing in</h2>
+        <p>Shoppers sign in with a mobile phone number: we text a one-time code to the number and you type it on the site. Use only a number that is yours. Do not share a code with anyone; we will never ask you for one. Staff and dealership accounts sign in with a password and must keep it private.</p>
+        <p>You are responsible for what happens under your account. Tell us at the contact below if you think someone else has used it or if you lose access to your number.</p>
+
+        <h2>Text messages</h2>
+        <p>Sign-in codes are sent by text message under the terms on the <a href="/sms-consent">text message consent page</a>: message and data rates may apply, you get a message only when you ask for a code, reply STOP to opt out and HELP for help. Carriers are not liable for delayed or undelivered messages.</p>
+
+        <h2>Acceptable use</h2>
+        <p>Do not use Sarrafi Cars to break the law, to harass anyone, or to post anything false, hateful or someone else's private information. Do not try to get around sign-in, rate limits or other protections, create accounts in bulk, send automated traffic, or copy the site's data at scale.</p>
+        <p>The car assistant (chat) has limits on how many messages each account, device and network can send per hour and per day, and a site-wide daily budget. When a limit is reached the assistant says so and when it resets. Answers from the assistant can be wrong: check anything important with the seller.</p>
+
+        <h2>Information on the site</h2>
+        <p>Listing details come from dealerships, private sellers and public sources such as the NHTSA vehicle database. We try to keep them correct, but they can be out of date or wrong. Always confirm the price, condition, history and equipment with the seller before you buy.</p>
+
+        <h2>Selling a car on Sarrafi Cars</h2>
+        <p>If you list a car on Sarrafi Cars, you agree that:</p>
+        <ul>
+            <li>your description and photos are true and complete, including known damage, accidents and title brands such as salvage or rebuilt;</li>
+            <li>you own the car or are authorised to sell it for its owner, and you have the title in hand (or can show who holds it, such as a lender);</li>
+            <li>you are not in the business of selling cars while posing as a private seller (curbstoning); dealerships list as dealerships;</li>
+            <li>the car is really for sale at the price shown, and you remove the listing once it is sold.</li>
+        </ul>
+        <p>These listings are not allowed: stolen cars or cars with a hidden salvage, flood or rebuilt history; cars that are not for sale (for example to collect contact details); services, parts-only offers, rentals or anything that is not a car for sale; and anything illegal.</p>
+        <p>We may review, hide or remove any listing, and suspend or close any account, that breaks these terms or that we reasonably believe is fraudulent or unsafe, with or without notice.</p>
+        <p>You keep the copyright in the photos and text you post, and you confirm you have the right to post them. You give Sarrafi Cars a non-exclusive, royalty-free licence to store, resize and show them on the site and the app, and in links to your listing, for as long as the listing is up (and in backups until they are overwritten). Do not post photos taken by someone else without their permission.</p>
+        <p>Sarrafi Cars never handles money between buyer and seller. Arrange payment and the transfer of title directly with the other party, and be careful of anyone who asks for a deposit before you have seen the car.</p>
+
+        <h2>Ending your account</h2>
+        <p>You can ask us to delete your account at any time through the contact below. Account data is deleted within 30 days of a request, as the <a href="/privacy">Privacy Policy</a> explains. We may suspend or close an account that breaks these terms.</p>
+
+        <h2>No warranty and limits on liability</h2>
+        <p>Sarrafi Cars is provided as is, without any warranty. We are not responsible for the cars listed, for what buyers and sellers do, or for any loss from relying on information on the site, to the extent the law allows.</p>
+
+        <h2>Changes to these terms</h2>
+        <p>We may update these terms. The date and version at the top change when we do; for a significant change we will tell signed-in users on the site before it applies.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about these terms: {% if legal_support_missing %}{{ legal_support_contact }}{% else %}<a href="{{ legal_support_href }}">{{ legal_support_contact }}</a>{% endif %}.</p>
+        <p>See also the <a href="/privacy">Privacy Policy</a> and the <a href="/sms-consent">text message consent page</a>.</p>
+    </main>
+
+</div>
+
+{% include "_footer_version.html" %}
+</body>
+</html>

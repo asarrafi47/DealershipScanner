@@ -161,7 +161,7 @@ class CheckOutcome:
 @dataclass(frozen=True)
 class SignInOutcome:
     ok: bool
-    reason: str  # signed_in | signed_up | dormant_fresh | retry | wrong_purpose
+    reason: str  # signed_in | signed_up | dormant_fresh | retry | wrong_purpose | ineligible
     user_id: int | None = None
     identity_id: int | None = None
 
@@ -174,6 +174,10 @@ class Accounts(Protocol):
     """
 
     def adopt_or_create(self, *, email: str, username: str) -> int: ...
+
+    def is_eligible(self, user_id: int) -> bool:
+        """False for an account phone sign-in must never open (card S7 review (a))."""
+        ...
 
 
 class Turnstile(Protocol):
@@ -266,9 +270,9 @@ class AuthPhoneService:
         recent = self.repo.recent_vendor_outcomes(limit=lim.BREAKER_RUN)
         if len(recent) < lim.BREAKER_RUN:
             return False
-        # ``pending`` rows among the newest vendor rows are sends whose outcome is unknown (a timeout
-        # that may have sent): they count as failures, like ``unavailable``.
-        if any(outcome not in ("unavailable", "pending") for outcome, _ in recent):
+        # A start that may have sent (``provider_error`` with a cost, read as ``maybe_sent``, review R1)
+        # and a ``pending`` row whose outcome never came count as failures, like ``unavailable``.
+        if any(outcome not in lim.BREAKER_FAILURES for outcome, _ in recent):
             return False
         newest = max(at for _, at in recent)
         return newest > now - lim.BREAKER_SKIP
@@ -301,7 +305,7 @@ class AuthPhoneService:
     def _alerts(self, limits: lim.Limits, now: datetime) -> None:
         """``cap_50pct`` once a day at the alert level, prepaid 50 and 75 percent once per top-up."""
         day = lim.day_start(now, limits.reset_tz)
-        sent = self.repo.count_sends(since=day, outcomes=lim.REAL_SEND_OUTCOMES)
+        sent = self.repo.count_sends(since=day, outcomes=lim.REAL_SEND_OUTCOMES, costed_outcomes=lim.COSTED_SEND_OUTCOMES)
         threshold = phone_config._int("SMS_ALERT_SEND_THRESHOLD", limits.daily_send_cap // 2, minimum=0)
         mark = ("cap_50pct", day.isoformat())
         if threshold and sent >= threshold and mark not in self._alerted:
@@ -424,9 +428,12 @@ class AuthPhoneService:
                 if info.reason != p.LINE_LOOKUP_FAILED:
                     self.lookup_cache.put(phone_hash, info, LOOKUP_CACHE_TTL_S)
             if info.reason == p.LINE_LOOKUP_FAILED:
-                # blocked_cap, not unavailable: a Lookup outage must not trip the Verify breaker,
-                # so known numbers (which skip Lookup) keep getting codes. Costs nothing to the person.
-                self.repo.set_send_outcome(send_id, "blocked_cap", est_cost_cents=0)
+                # Not unavailable: a Lookup outage must not trip the Verify breaker, so known numbers
+                # (which skip Lookup) keep getting codes. Recorded as ``blocked_limit`` at no cost
+                # (the failed Lookup was not billed), so it does not drain the day's spend cap, and it
+                # counts against the source's address, device and group limits: a free refusal for
+                # unknown numbers would be a cheap way to probe which numbers have accounts.
+                self.repo.set_send_outcome(send_id, lim.BLOCKED_LIMIT, est_cost_cents=0, lookup_cost_cents=0)
                 _event("provider_error", purpose=purpose, step="lookup")
                 return StartOutcome(False, R_UNAVAILABLE, UNAVAILABLE)
             if not info.ok:
@@ -459,9 +466,14 @@ class AuthPhoneService:
 
     def _start_failed(self, send_id: int, result: p.StartResult, purpose: str) -> StartOutcome:
         if result.maybe_sent:
-            # A text may have gone out (read timeout, reset after sending, vendor 5xx): the row stays
-            # ``pending`` at its reserved cost, so it counts against the day's sends and spend, the
-            # number and the source like a real text. The breaker treats it as a vendor failure.
+            # Review R1: a text may have gone out (read timeout, reset after sending, vendor 5xx). The
+            # row becomes ``provider_error`` WITH its cost (at least 1 cent per vendor call, the marker
+            # that tells it from a definite refusal at 0), so the day's send cap and pools, the spend
+            # cap, the number, address, device and group limits and the breaker all count it.
+            self.repo.set_send_outcome(
+                send_id, "provider_error",
+                est_cost_cents=max(1, self.config.est_cost_cents) * max(1, int(result.attempts or 1)),
+            )
             _event("provider_unavailable" if result.reason == p.START_UNAVAILABLE else "provider_error",
                    purpose=purpose, reason=result.reason, maybe_sent=1)
             if result.reason in (p.START_INVALID_NUMBER, p.START_BLOCKED):
@@ -683,6 +695,9 @@ class AuthPhoneService:
         now = self._now()
         ident = self.repo.find_identity_by_phone(e164)
         if ident is not None and ident.state == "active" and ident.user_id is not None:
+            # Eligibility first (contract #2): an ineligible account is never detached or stamped.
+            if not accounts.is_eligible(int(ident.user_id)):
+                return _ineligible()
             last = ident.last_login_at or ident.verified_at
             if last is not None and last < now - timedelta(days=self.config.dormant_days):
                 self.repo.detach_dormant(ident.id, now=now)
@@ -710,6 +725,8 @@ class AuthPhoneService:
                 if ident is None:
                     return SignInOutcome(False, "retry")
                 if ident.state == "active" and ident.user_id is not None:
+                    if not accounts.is_eligible(int(ident.user_id)):
+                        return _ineligible()
                     self.repo.touch_login(ident.id, now=now)
                     return SignInOutcome(True, "signed_in", int(ident.user_id), ident.id)
                 return SignInOutcome(False, "retry")  # the other tab is creating the account
@@ -722,6 +739,8 @@ class AuthPhoneService:
         if not self.repo.activate_identity(ident.id, user_id, now=now):
             again = self.repo.find_identity_by_phone(e164)
             if again is not None and again.state == "active" and again.user_id is not None:
+                if not accounts.is_eligible(int(again.user_id)):
+                    return _ineligible()
                 return SignInOutcome(True, "signed_in", int(again.user_id), again.id)
             return SignInOutcome(False, "retry")
         _event("signup", purpose=approved.purpose)
@@ -729,6 +748,11 @@ class AuthPhoneService:
 
 
 # ---------------------------------------------------------------- module helpers
+
+
+def _ineligible() -> SignInOutcome:
+    _event("sign_in_refused", why="ineligible")
+    return SignInOutcome(False, "ineligible")
 
 
 def placeholder_for(ident: Any) -> tuple[str, str]:

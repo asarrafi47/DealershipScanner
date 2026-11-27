@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+- **Phone sign-in stage 1 on top of the S7/S8 build (#61): boot behaviour (review R5).** With `AUTH_PHONE_LOGIN_ENABLED` on in production, a bad phone setting no longer stops the site from starting or restarting. Only the fake provider and a missing or short `PHONE_HASH_PEPPER` still refuse to start. Every other problem logs one CRITICAL line, `event=phone_login_boot_disabled`, with names only, and turns phone sign-in off for that process. That covers missing Twilio or Turnstile values, `SUPPORT_CONTACT`, `LEGAL_PAGES_APPROVED_VERSION` not matching, an unparsable allow-list entry, a spoofable proxy chain, unreadable V031 tables, a Postgres error, and missing legal pages. Password, admin, dealer and `/dev` sign-in are unaffected. New `config.boot_disabled_reason()`, `flag_set()`, `hard_problems_for_production()` and `soft_problems_for_production()`; `enabled()` is the flag and not boot-disabled. DESIGN.md section 18 "Boot behaviour (R5)". Tests: `test_auth_phone_boot.py`; `test_auth_phone_config.py` and `test_auth_phone_restore_guard.py` updated.
+- **Phone sign-in: review fixes R1, R4, R7, R8 and R13.**
+  - R1: a Twilio start that may have sent a text (read timeout, reset, 5xx) is recorded as `provider_error` at its reserved cost. It counts toward the day cap, the spend cap, the pools, every per-number and per-source limit, and the breaker. A definite refusal stays at cost 0 and never trips the breaker.
+  - A failed line-type Lookup is now `blocked_limit` at no cost, so it counts against the source. It used to be a free `blocked_cap` row that kept its lookup cent and drained the spend cap.
+  - R8: `sign_in` checks eligibility of an existing account before any dormant detach or login stamp (`Accounts.is_eligible`, `PhoneAccounts.is_eligible`). A deleted account still heals through the route.
+  - R13: `PhoneAccounts.adopt_or_create` adopts a row holding the placeholder email only if it is a plain shopper with no Google or Apple link; otherwise it raises `PlaceholderTaken`.
+  - R4: the session hook stamps `last_login_at` for a phone session at most once a day (`auth_phone_repo.touch_login_for_user`). It is best effort and makes no call while the flag is off.
+  - A phone session ends (`reason=phone_session_not_shopper`) when its account becomes admin, dealer or staff.
+  - R7: start and resend answers are padded to 2.5 s (`routes.START_MIN_SECONDS`).
+- **Phone sign-in stage 1: `/login` keeps the password form while `AUTH_PHONE_ALLOWED_NUMBERS` is set** (card S9's allow-list rule, DESIGN section 18). With the flag on and an allow-list, `/login` is the email and password form for everyone, with a link to `/login/phone`. Without an allow-list it is the phone page, as in #61. The rest of S9 (removing shopper password sign-in) is not in this release.
+- **Draft Terms, Privacy Policy and text-message consent pages (card S14).** New public `/terms`, `/privacy` and `/sms-consent` (`backend/auth/phone/legal.py`, `backend/routes/site_misc.py`).
+  - Each page starts with a plain DRAFT sentence until the owner approves it by setting `LEGAL_PAGES_APPROVED_VERSION`. Nothing in the repository sets or documents an approved value, and production keeps phone sign-in off until it matches.
+  - `/sms-consent` shows the same words as the phone page (`consent.CONSENT_TEXT`), plus STOP, START and HELP and the `SUPPORT_CONTACT` help line (a visible placeholder while unset).
+  - The footer links appear only while phone sign-in is on.
+  - The boot check reports missing templates (`legal.missing_legal_pages`).
+  - Bracketed owner placeholders remain for provider, log and backup retention.
+  - Tests: `test_terms_privacy.py`, `test_auth_phone_legal.py`.
+- **Phone sign-in: nightly retention purge and totals (card S16).** `python -m backend.scripts.auth_phone_nightly` (`backend/auth/phone/retention.py`):
+  - It deletes challenges 7 days after they end, send rows after 30 days, wrong-try rows 24 hours after unlock, and expired lookup-cache rows, in batches, with counts only in the log.
+  - It writes yesterday's totals.
+  - It exits 2 at the alert level (half the send cap, or under 50 percent approvals over 20 or more sends) and 3 at a cap hit, emailing `OWNER_ALERT_EMAIL`.
+  - `--dry-run` and `--no-purge` are supported.
+  - Cron scheduling is an owner step.
+  - New plain-text `/dev/phone/caps` shows today's sends against the caps and the prepaid guard. It answers 404 while the flag is off.
+  - Tests: `test_auth_phone_nightly.py`, `test_auth_phone_caps_page.py`, `test_auth_phone_retention_pg.py` (pg).
+
 ## [1.5.55] - 2026-11-27
 
 - **Phone login: Twilio error shapes pinned (tests only).** `test_auth_phone_twilio_error_shapes.py` raises every Twilio failure shape (21608, 20003/401, 8021, 60200, 60202, 60203, 60212, 20404, bare 429, an HTML body with no status or code, timeouts, connection errors, OSError) through a fake client and pins the reason code, the one log line (op, reason, integer status, vendor code; never the number, vendor text, service SID or credentials), the shopper sentence (generic and the same for known and unknown numbers) and that nothing which may have sent a text is retried.
