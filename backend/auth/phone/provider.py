@@ -59,6 +59,9 @@ class StartResult:
     retry_after_s: int | None
     reason: str  # one of START_REASONS
     attempts: int = 1  # vendor create calls made: 2 means a second text may have gone out
+    # The request may have reached the vendor (read timeout, reset after sending, a 5xx), so a paid
+    # text may have gone out. The service keeps such a send counted against every cap.
+    maybe_sent: bool = False
 
 
 @dataclass(frozen=True)

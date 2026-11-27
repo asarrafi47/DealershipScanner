@@ -461,6 +461,30 @@ def test_breaker_skips_the_vendor_for_five_minutes_after_five_unavailable(env):
     assert start(s, 93).ok
 
 
+
+def test_a_start_that_may_have_sent_stays_pending_and_counts_against_the_number(env):
+    # Review R1: a read timeout after the request went out may have produced a paid text. The row stays
+    # pending at its full cost, so the number's limit (2 in 15 minutes) and the day's caps see it.
+    s, prov, clock = make()
+    prov.fail_next_start("unavailable", times=2, maybe_sent=True)
+    assert start(s, 80, nonce="a", ip="10.80.0.1").sentence == svc_mod.UNAVAILABLE
+    assert start(s, 80, nonce="b", ip="10.81.0.1", device="x").sentence == svc_mod.UNAVAILABLE
+    assert [(r[0], r[2]) for r in rows()] == [("pending", 6), ("pending", 6)]
+    third = start(s, 80, nonce="c", ip="10.82.0.1", device="y")
+    assert third.reason == svc_mod.R_LIMIT and prov.outbox == []
+
+
+def test_maybe_sent_failures_open_the_breaker_like_unavailable(env):
+    s, prov, clock = make()
+    prov.fail_next_start("network_error", times=5, maybe_sent=True)
+    for k in range(5):
+        start(s, 87 + k)
+    calls = prov.start_calls
+    assert start(s, 92).sentence == svc_mod.UNAVAILABLE
+    assert prov.start_calls == calls  # skipped
+    clock.tick(minutes=5, seconds=1)
+    assert start(s, 93).ok
+
 def test_lookup_is_skipped_for_known_numbers_and_when_down_known_proceed(env):
     s, prov, clock = make()
     known(94, 94)
@@ -495,6 +519,30 @@ def _approved(s, i, **kw):
     out = start(s, i, **kw)
     return s.check(out.public_id, out.session_nonce, FAKE_CODE, device_hash=None)
 
+
+@pytest.mark.parametrize("purpose", ["link", "claim", "step_up", "change", "seller_verify"])
+def test_only_a_login_code_signs_anyone_in(env, purpose):
+    # Review R8: a code proven for another flow never creates, adopts or signs in to an account, and
+    # never runs the dormant detach.
+    s, prov, clock = make()
+    known(62, 62)
+    accounts = FakeAccounts()
+    for i in (62, 63):
+        approved = svc_mod.CheckOutcome(True, svc_mod.R_APPROVED, "", phone_e164=num(i), purpose=purpose)
+        out = s.sign_in(approved, accounts)
+        assert (out.ok, out.reason, out.user_id) == (False, "wrong_purpose", None)
+    assert accounts.calls == 0
+    assert repo.find_identity_by_phone(num(63)) is None
+
+
+def test_challenge_and_identity_reprs_never_show_the_number(env):
+    s, prov, clock = make()
+    ident = known(64, 64)
+    assert num(64) not in repr(ident) and num(64)[2:] not in repr(ident)
+    out = start(s, 65)
+    ch = repo.fetch_challenge(out.public_id, out.session_nonce)
+    assert ch is not None and ch.phone_e164 == num(65)
+    assert num(65) not in repr(ch) and num(65)[2:] not in repr(ch)
 
 def test_new_number_signs_up_and_second_visit_signs_in_as_the_same_account(env):
     s, prov, clock = make()

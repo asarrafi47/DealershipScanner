@@ -334,3 +334,19 @@ def test_allow_list_set_with_only_unparsable_entries(monkeypatch):
     monkeypatch.setenv("AUTH_PHONE_ALLOWED_NUMBERS", "notanumber, 123")
     assert config.allow_list_set() is True
     assert config.allow_list_unparsable_count() == 2
+
+
+def test_boot_check_refuses_a_spoofable_proxy_chain(prod):
+    # TRUSTED_PROXY_HOPS=2 without TRUSTED_PROXY_CIDRS: a request straight to the origin picks its own
+    # address, so the per-address phone limits would key on what the client wrote (review R2).
+    _full_production(prod)
+    prod.setenv("TRUST_PROXY_HEADERS", "1")
+    prod.setenv("TRUSTED_PROXY_HOPS", "2")
+    prod.delenv("TRUSTED_PROXY_CIDRS", raising=False)
+    with pytest.raises(RuntimeError, match="TRUSTED_PROXY_CIDRS"):
+        assert_production_security_config()
+    prod.setenv("TRUSTED_PROXY_CIDRS", "cloudflare")
+    assert_production_security_config()
+    prod.setenv("TRUSTED_PROXY_HOPS", "1")
+    prod.delenv("TRUSTED_PROXY_CIDRS")
+    assert_production_security_config()  # one hop: the right-most entry is the proxy's own view

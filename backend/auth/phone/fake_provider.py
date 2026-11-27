@@ -59,8 +59,10 @@ class FakePhoneProvider:
         self._approved: set[str] = set()
 
     # --- test controls -------------------------------------------------------------------
-    def fail_next_start(self, reason: str = p.START_PROVIDER_ERROR, *, times: int = 1) -> None:
-        self._start_failures.extend([reason] * times)
+    def fail_next_start(self, reason: str = p.START_PROVIDER_ERROR, *, times: int = 1, maybe_sent: bool = False) -> None:
+        """Fail the next ``times`` starts with ``reason``; ``maybe_sent`` marks a failure after which a
+        text may have gone out (a read timeout at the vendor)."""
+        self._start_failures.extend([("maybe:" if maybe_sent else "") + reason] * times)
 
     def throttle_next_start(self, retry_after_s: int = 30) -> None:
         self._start_failures.append("throttled:%d" % retry_after_s)
@@ -103,6 +105,8 @@ class FakePhoneProvider:
             raw = self._start_failures.pop(0)
             if raw.startswith("throttled:"):
                 return p.StartResult(False, None, int(raw.split(":", 1)[1]), p.START_THROTTLED)
+            if raw.startswith("maybe:"):
+                return p.StartResult(False, None, None, raw[len("maybe:"):], maybe_sent=True)
             return p.StartResult(False, None, None, raw)
         ref = "FAKE%04d" % (len(self._refs) + 1)
         self._refs[ref] = e164
