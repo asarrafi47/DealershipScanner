@@ -55,6 +55,13 @@ def _revoke_sessions(user_id: int, reason: str) -> None:
     revoke_user_sessions(int(user_id), reason=reason)
 
 
+def _purge_phone_identity(user_id: int) -> None:
+    """Card S7: a deleted account gives its phone number back (never raises)."""
+    from backend.auth.phone.accounts import purge_phone_identity
+
+    purge_phone_identity(int(user_id))
+
+
 def _redirect_users(q: str = "") -> str:
     if q.strip():
         return url_for("store_admin.admin_users_hub", q=q.strip())
@@ -104,6 +111,7 @@ def admin_users_hub():
                 ok, err = delete_user_by_id(target_id)
                 if ok:
                     _revoke_sessions(target_id, "delete")
+                    _purge_phone_identity(target_id)
                     flash(f"Deleted user #{target_id}.", "success")
                 else:
                     flash(err or "Could not delete user.", "error")
@@ -217,6 +225,7 @@ def admin_users_edit(user_id: int):
                 ok, err = delete_user_by_id(user_id)
                 if ok:
                     _revoke_sessions(user_id, "delete")
+                    _purge_phone_identity(user_id)
                     flash(f"Deleted user #{user_id}.", "success")
                     return redirect(url_for("store_admin.admin_users_hub"))
                 flash(err or "Could not delete user.", "error")

@@ -9,6 +9,7 @@ import secrets
 import time
 from urllib.parse import urlencode
 
+from backend.auth.phone.accounts import is_placeholder_email
 from backend.db.users_db import (
     clear_user_password_reset_token,
     get_user_id_by_password_reset_token_hash,
@@ -94,8 +95,8 @@ def request_password_reset(*, login_input: str) -> bool:
         return True
     uid = int(user["id"])
     email = (user.get("email") or "").strip().lower()
-    if not email or "@" not in email:
-        return True
+    if not email or "@" not in email or is_placeholder_email(email):
+        return True  # a phone account has no mailbox (card S7)
     # Throttle before issuing a token: a throttled request must not rotate the token and
     # invalidate the link already emailed. The response stays the same (no enumeration).
     if not allow_request(

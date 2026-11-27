@@ -28,7 +28,7 @@
                 <div class="success-box" role="status" id="oauth-link-notice">{{ notice }}</div>
                 {% endif %}
 
-                <form method="POST" action="/login" class="auth-form">
+                <form method="POST" action="{{ login_action|default('/login') }}" class="auth-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="field-group">
                         <label>Username or Email</label>
@@ -49,7 +49,8 @@
 
                 {% include "_oauth_signin.html" %}
 
-                <p class="auth-footer">Don't have an account? <a href="/register">Create one</a></p>
+                <p class="auth-footer">Don't have an account? <a href="/register">Create one</a></p>{% if phone_login_url %}
+                <p class="auth-footer"><a href="{{ phone_login_url }}">Sign in with your phone number instead</a></p>{% endif %}
             </div>
         </section>
 

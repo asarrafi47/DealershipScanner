@@ -240,9 +240,11 @@ register_device_cookie(app)
 
 # Auth pages + /api/auth/* + MFA stubs, then account pages (bare endpoint names kept).
 from backend.auth import pages as _auth_pages  # noqa: E402
+from backend.auth.phone import routes as _phone_routes  # noqa: E402
 from backend.routes import account as _account_routes  # noqa: E402
 
 _auth_pages.register(app)
+_phone_routes.register(app)
 _account_routes.register(app)
 
 # Outermost WSGI layer, registered last: Server-Timing on HTML/JSON responses and one

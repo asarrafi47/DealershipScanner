@@ -9,6 +9,7 @@ import secrets
 import time
 from urllib.parse import urlencode
 
+from backend.auth.phone.accounts import is_placeholder_email
 from backend.db.users_db import (
     clear_user_email_verify_token,
     get_user_email_verification_state,
@@ -87,8 +88,8 @@ def issue_and_send_verification_email(*, user_id: int, to_email: str) -> bool:
     if not email_verification_enabled():
         return False
     email = (to_email or "").strip().lower()
-    if not email or "@" not in email:
-        return False
+    if not email or "@" not in email or is_placeholder_email(email):
+        return False  # a phone account has no mailbox (card S7)
     token = secrets.token_urlsafe(32)
     token_hash = hash_verify_token(token)
     expires_at = int(time.time()) + (_VERIFY_TTL_HOURS * 3600)

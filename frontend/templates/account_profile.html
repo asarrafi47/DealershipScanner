@@ -66,14 +66,17 @@
                     <label for="profile-username">Username</label>
                     <input id="profile-username" type="text" name="username" value="{{ username }}" required autocomplete="username">
                 </div>
+                {%- if not phone_account %}
                 <div class="field-group">
                     <label for="profile-email">Email</label>
                     <input id="profile-email" type="email" name="email" value="{{ email }}" required autocomplete="email">
                 </div>
+                {%- endif %}
                 <button type="submit" class="primary-button">Save profile</button>
             </form>
         </section>
 
+        {% if not phone_account -%}
         <section class="hub-section db-reveal" id="password" aria-labelledby="profile-password-heading">
             <h2 id="profile-password-heading" class="hub-section__title">Password</h2>
             <p class="hub-section__sub">Choose a strong password you have not used elsewhere.</p>
@@ -95,6 +98,7 @@
                 <button type="submit" class="primary-button">Save new password</button>
             </form>
         </section>
+        {%- endif %}
 
         <section class="hub-section db-reveal" id="sign-out-everywhere" aria-labelledby="profile-signout-heading">
             <h2 id="profile-signout-heading" class="hub-section__title">Sign out everywhere</h2>

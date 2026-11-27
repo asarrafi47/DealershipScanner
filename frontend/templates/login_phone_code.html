@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enter your code</title>
+    {% include "_head_css.html" %}
+    {% include "_head_meta.html" %}
+    {% include "_head_perf.html" %}
+</head>
+<body class="lp-body">
+
+    <div class="page">
+
+        {% set nav_active = "login" %}
+        {% include "_nav_public.html" %}
+
+        <main class="ph-page">
+            <h1 class="ph-heading">Enter your code</h1>
+            <p class="ph-lede" id="ph-sent">{{ sent_message }}</p>
+
+            <form method="POST" action="/login/phone/code" class="ph-form" id="ph-code-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <label class="ph-label" for="ph-code">6-digit code</label>
+                <div class="ph-line">
+                    <input id="ph-code" name="code" type="text" autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autofocus aria-describedby="ph-status">
+                </div>
+                <p id="ph-status" class="ph-error" aria-live="polite">{{ error or "" }}</p>
+
+                <button type="submit" class="ph-submit" id="ph-verify">Sign in</button>
+            </form>
+
+            <form method="POST" action="/login/phone/resend" class="ph-form ph-form-again" id="ph-resend-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                {% if turnstile_site_key %}
+                <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}" data-size="compact"></div>
+                <p id="ph-check-missing" class="ph-error" role="status" hidden>The check that you are a person did not load. Reload the page{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p>
+                <noscript><p class="ph-error">The check that you are a person needs JavaScript. Please turn it on{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p></noscript>
+                {% else %}
+                <p class="ph-error">The check that you are a person is not available right now. Please try again later{% if support_contact %}, or contact {{ support_contact }}{% endif %}.</p>
+                {% endif %}
+                <button type="submit" class="ph-link" id="ph-resend" data-wait="{{ resend_wait_s }}"{% if resend_wait_s > 0 %} aria-disabled="true"{% endif %} aria-describedby="ph-wait">Send again</button>
+                <span id="ph-wait" class="ph-hint" aria-live="off">{% if resend_wait_s > 0 %}You can ask for another code in {{ resend_wait_s }} seconds.{% else %}You can ask for another code now.{% endif %}</span>
+                <span id="ph-wait-live" class="ph-sr" role="status" aria-live="polite"></span>
+            </form>
+
+            <form method="POST" action="/login/phone/change" class="ph-form ph-form-again" id="ph-change-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="ph-link" id="ph-change">Use a different number</button>
+            </form>
+        </main>
+
+    </div>
+
+    {% if turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer nonce="{{ csp_nonce }}"></script>
+    {% endif %}
+    <script src="{{ url_for('static', filename='phone_login.js') }}?v={{ static_cache_ver }}" defer nonce="{{ csp_nonce }}"></script>
+{% include "_footer_version.html" %}
+</body>
+</html>

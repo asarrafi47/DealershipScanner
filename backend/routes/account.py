@@ -10,6 +10,7 @@ import logging
 
 from flask import redirect, render_template, request, session, url_for
 
+from backend.auth.phone.accounts import is_placeholder_email, public_email
 from backend.billing import access as paid_access
 from backend.billing.catalog import FEATURE_SAVED_SEARCHES
 from backend.config import Config
@@ -37,7 +38,8 @@ def _account_profile_context(uid: int, **extra):
     }
     ctx = {
         "username": (u.get("username") or "").strip(),
-        "email": (u.get("email") or "").strip(),
+        "email": public_email((u.get("email") or "").strip()),
+        "phone_account": is_placeholder_email(u.get("email")),
         "role": role,
         "role_label": role_labels.get(role, role.replace("_", " ").title()),
         "is_premium": bool(u.get("is_premium")),
@@ -159,6 +161,11 @@ def account_profile_page():
 
         username_in = (request.form.get("username") or "").strip()
         email_in = (request.form.get("email") or "").strip()
+        _before = get_user_profile(uid) or {}
+        if is_placeholder_email(_before.get("email")):
+            # A phone account has no email to edit (card S7): the form has no email field, and a
+            # posted one is ignored, so the placeholder is neither shown nor replaced.
+            email_in = (_before.get("email") or "").strip()
         err = update_user_profile(uid, username_in, email_in)
         if err:
             return render_template(
@@ -167,13 +174,13 @@ def account_profile_page():
                     uid,
                     profile_error=err,
                     username=username_in,
-                    email=email_in,
+                    email=public_email(email_in),
                 ),
             )
         sync_env_admin_user_row(uid)
         u = get_user_profile(uid) or {}
         session["username"] = u.get("username")
-        session["user_email"] = (u.get("email") or "").strip()
+        session["user_email"] = public_email((u.get("email") or "").strip())
         session["user_role"] = normalize_role(u.get("role"))
         return render_template(
             "account_profile.html",
