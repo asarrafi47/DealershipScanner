@@ -19,7 +19,7 @@ import functools
 import secrets
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from typing import Any
@@ -124,7 +124,7 @@ class Challenge:
     id: int
     public_id: str
     phone_hash: str
-    phone_e164: str | None
+    phone_e164: str | None = field(repr=False)
     purpose: str
     user_id: int | None
     session_nonce: str
@@ -149,7 +149,7 @@ _CHALLENGE_COLS = (
 class Identity:
     id: int
     user_id: int | None
-    phone_e164: str
+    phone_e164: str = field(repr=False)
     phone_hash: str
     country: str
     line_type: str | None
@@ -648,7 +648,9 @@ def reserve_send(
     return SendReservation(send_id=send_id, outcome=final.outcome)
 
 
-VENDOR_OUTCOMES = ("sent", "provider_error", "unavailable")
+# ``pending`` is included so a send whose vendor outcome is unknown (kept pending after a timeout
+# that may have sent) counts for the breaker; the service reads it as a failure.
+VENDOR_OUTCOMES = ("sent", "provider_error", "unavailable", "pending")
 
 
 @_clean_errors()

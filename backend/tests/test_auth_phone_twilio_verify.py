@@ -470,3 +470,31 @@ def test_a_timeout_on_start_is_reported_as_unavailable_not_as_a_retry_loop():
     fc, prov = make()
     _queue(fc, "verifications", requests.ReadTimeout("slow"))
     assert prov.start(NUMBER, locale="en").reason == p.START_UNAVAILABLE
+
+
+# ---- may a failed start have sent a text? (review R1) ----------------------------------------
+
+@pytest.mark.parametrize(
+    "exc, maybe",
+    [
+        (requests.ReadTimeout("slow"), True),  # the request was sent: a text may have gone out
+        (requests.ConnectionError("reset after send"), True),
+        (vendor_error(503), True),
+        (vendor_error(500, 20500), True),
+        (vendor_error(403, 21608), False),  # a refusal: nothing was sent
+        (vendor_error(429, 60203), False),
+        (vendor_error(400, 60200), False),
+    ],
+)
+def test_a_failed_start_says_whether_a_text_may_have_gone_out(exc, maybe):
+    fc, prov = make()
+    _queue(fc, "verifications", exc)
+    result = prov.start(NUMBER, locale="en")
+    assert not result.ok and result.maybe_sent is maybe
+
+
+def test_a_connect_failure_never_counts_as_maybe_sent():
+    fc, prov = make()
+    _queue(fc, "verifications", requests.ConnectTimeout("down"), requests.ConnectTimeout("down"))
+    result = prov.start(NUMBER, locale="en")
+    assert not result.ok and result.attempts == 2 and result.maybe_sent is False

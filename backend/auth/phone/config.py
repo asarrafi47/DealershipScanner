@@ -89,6 +89,19 @@ def allowed_numbers() -> frozenset[str]:
     return frozenset(p.strip() for p in raw.split(",") if p.strip())
 
 
+def allow_list_set() -> bool:
+    """True when ``AUTH_PHONE_ALLOWED_NUMBERS`` holds anything at all. A set list is a restriction even
+    when none of its entries parse: a typo must close sign-in, never open it to every number."""
+    return bool(allowed_numbers())
+
+
+def allow_list_unparsable_count() -> int:
+    """How many allow-list entries are not a number the site would send to (never which ones)."""
+    from backend.auth.phone import numbers  # numbers imports this module
+
+    return sum(1 for raw in allowed_numbers() if numbers.try_normalize(raw) is None)
+
+
 # First-month launch values (owner decision 2026-11-14): 30 texts and 300 cents a day. They are
 # the code defaults on purpose, so an unset variable on release day can never mean a bigger day.
 # 300 sends and 1500 cents are only later targets the owner may choose after a month of real numbers.
@@ -210,6 +223,14 @@ def twilio_ready() -> bool:
     return twilio_credentials() is not None and bool(twilio_verify_service_sid())
 
 
+def _proxy_chain_spoofable() -> bool:
+    """True when X-Forwarded-For is trusted for 2+ hops with no trusted ranges (backend/utils/client_ip.py):
+    the per-address phone limits would then key on an address the client wrote itself."""
+    from backend.utils import client_ip as cip  # imported here: keeps this module import-light
+
+    return cip.trust_proxy_headers() and cip.trusted_proxy_hops() >= 2 and cip.trusted_proxy_cidrs() is None
+
+
 def support_contact() -> str:
     """``SUPPORT_CONTACT``: where a person can get help (an address or a link), shown beside the consent text
     and the person-check message. CTIA asks for a HELP contact, so production refuses the flag without it."""
@@ -228,8 +249,15 @@ def missing_for_production() -> list[str]:
         problems.append("AUTH_PHONE_PROVIDER (the fake provider is not allowed in production)")
     if len(pepper()) < PEPPER_MIN_LENGTH:
         problems.append("PHONE_HASH_PEPPER (missing or shorter than %d characters)" % PEPPER_MIN_LENGTH)
+    if allow_list_unparsable_count():
+        problems.append("AUTH_PHONE_ALLOWED_NUMBERS (an entry is not a valid number in SMS_ALLOWED_COUNTRIES)")
     if legal_pages_approved_version() != CONSENT_TEXT_VERSION:
         problems.append("LEGAL_PAGES_APPROVED_VERSION (must equal the consent text version)")
+    if _proxy_chain_spoofable():
+        problems.append(
+            "TRUSTED_PROXY_CIDRS (set it to cloudflare: with TRUSTED_PROXY_HOPS of 2 or more and no trusted "
+            "ranges, a request sent straight to the origin picks its own address and escapes every per-address limit)"
+        )
     if not turnstile_secret_key():
         problems.append("TURNSTILE_SECRET_KEY")
     if not turnstile_site_key():

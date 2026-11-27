@@ -7,7 +7,8 @@
   keyed by phone hash for 30 days.
 
 Vendor error text never leaves this file: every failure becomes one of our short reason codes, and
-the only things logged are an event name, the operation, the reason and an integer status. The
+the only things logged are an event name, the operation, the reason, the integer status and vendor
+code, and (when one applies) a fixed owner hint such as ``hint=twilio_key_permission``. The
 Twilio HTTP client logs request URLs (which hold the number) and bodies at INFO level, so it is
 given a disabled logger.
 """
@@ -84,25 +85,75 @@ def _is_connect_failure(exc: BaseException) -> bool:
     return False
 
 
-def _vendor_error(exc: BaseException) -> tuple[int | None, int | None] | None:
-    """(http status, vendor error number) when ``exc`` is a Twilio API error, else None."""
-    from twilio.base.exceptions import TwilioRestException
+def _int_or_none(value: Any) -> int | None:
+    """An int as given, else None. ``bool`` is an int subclass and is refused: ``True`` is not a status."""
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
 
-    if not isinstance(exc, TwilioRestException):
+
+def _vendor_error(exc: BaseException) -> tuple[int | None, int | None] | None:
+    """(http status, vendor error number) when ``exc`` is a Twilio API error, else None.
+
+    The client raises ``TwilioRestException`` for the legacy error body and ``TwilioServiceException``
+    (twilio 9.x, not a subclass of it) for an RFC 9457 problem body; both carry ``status`` and ``code``.
+    """
+    from twilio.base import exceptions as tx
+
+    vendor_types = tuple(t for t in (tx.TwilioRestException, getattr(tx, "TwilioServiceException", None)) if t)
+    if not isinstance(exc, vendor_types):
         return None
-    status = exc.status if isinstance(exc.status, int) else None
-    code = exc.code if isinstance(exc.code, int) else None
-    return status, code
+    return _int_or_none(getattr(exc, "status", None)), _int_or_none(getattr(exc, "code", None))
+
+
+# Owner-facing hints: what to fix in the Twilio console. They name a cause, never the number or the
+# vendor's text, and they change nothing the shopper sees.
+HINT_TRIAL_UNVERIFIED = "twilio_trial_unverified_recipient"  # trial account: verify the recipient or upgrade
+HINT_KEY_PERMISSION = "twilio_key_permission"  # restricted API key lacks this API (Verify or Lookup)
+HINT_AUTH_FAILED = "twilio_auth_failed"  # wrong SID, key or secret
+HINT_ACCOUNT_INACTIVE = "twilio_account_inactive"  # account suspended or balance empty
+_HINT_BY_CODE = {
+    21608: HINT_TRIAL_UNVERIFIED,
+    8021: HINT_KEY_PERMISSION,
+    20003: HINT_AUTH_FAILED,
+    20005: HINT_ACCOUNT_INACTIVE,
+}
+_HINT_BY_STATUS = {401: HINT_AUTH_FAILED, 402: HINT_ACCOUNT_INACTIVE, 403: HINT_KEY_PERMISSION}
+
+
+def owner_hint(status: int | None, code: int | None) -> str | None:
+    """A fixed hint for the owner, or None. A known vendor code wins; a bare 401, 402 or 403 (no code,
+    or the code Twilio's client fills in from the status when the body is not JSON) falls back to the
+    status. A 403 with any other code (60410 fraud block, for one) gets no hint."""
+    if code is not None and code in _HINT_BY_CODE:
+        return _HINT_BY_CODE[code]
+    if code is None or code == status:
+        return _HINT_BY_STATUS.get(status) if status is not None else None
+    return None
 
 
 def _log_failure(op: str, reason: str, exc: BaseException) -> None:
-    """One line: event, operation, reason and the integer numbers. Never the exception text."""
+    """One line: event, operation, reason and the integer numbers, plus an owner hint when one applies.
+    Never the exception text."""
     vendor = _vendor_error(exc)
     status, code = vendor if vendor else (None, None)
+    hint = owner_hint(status, code) if vendor else None
     _log.warning(
-        "event=provider_error provider=twilio_verify op=%s reason=%s http_status=%s vendor_code=%s",
-        op, reason, status, code,
+        "event=provider_error provider=twilio_verify op=%s reason=%s http_status=%s vendor_code=%s%s",
+        op, reason, status, code, " hint=%s" % hint if hint else "",
     )
+
+
+def _may_have_sent(exc: BaseException, never_reached: bool) -> bool:
+    """True when the create call may have produced a text although it failed for us: a read timeout,
+    a reset after sending, or a vendor 5xx. A 4xx is a refusal (nothing sent); a failed connect never
+    reached the vendor. Unknown exceptions count as sent: over-counting costs a cap slot, under-counting
+    lets real texts escape every cap."""
+    if never_reached:
+        return False
+    vendor = _vendor_error(exc)
+    if vendor is not None:
+        status = vendor[0]
+        return status is None or status >= 500
+    return True
 
 
 class TwilioVerifyProvider:
@@ -142,7 +193,9 @@ class TwilioVerifyProvider:
         except Exception as exc:  # noqa: BLE001 - every failure becomes a reason code
             reason = self._start_reason(exc)
             _log_failure("start", reason, exc)
-            return p.StartResult(False, None, None, reason), _is_connect_failure(exc)
+            never_reached = _is_connect_failure(exc)
+            result = p.StartResult(False, None, None, reason, maybe_sent=_may_have_sent(exc, never_reached))
+            return result, never_reached
         ref = getattr(verification, "sid", None)
         return p.StartResult(True, ref if isinstance(ref, str) and ref else None, None, p.START_SENT), False
 

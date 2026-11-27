@@ -368,3 +368,40 @@ def test_phone_libraries_are_pinned_with_upper_bounds_and_the_lite_phone_build()
 def test_lookup_cost_is_read_and_a_bad_value_falls_back_to_1(monkeypatch, value, expected):
     monkeypatch.setenv("SMS_EST_LOOKUP_CENTS", value)
     assert config.est_lookup_cents() == expected
+
+
+def test_boot_check_refuses_an_allow_list_entry_that_is_not_a_number(prod):
+    # A typo in the first-test-days list must stop the start, never open sign-in to every number.
+    _full_production(prod, AUTH_PHONE_ALLOWED_NUMBERS="+12025550123, notanumber")
+    with pytest.raises(RuntimeError, match="AUTH_PHONE_ALLOWED_NUMBERS") as err:
+        assert_production_security_config()
+    assert "notanumber" not in str(err.value) and "2025550123" not in str(err.value)
+    _full_production(prod, AUTH_PHONE_ALLOWED_NUMBERS="+12025550123")
+    assert_production_security_config()
+
+
+def test_allow_list_set_counts_any_entry():
+    assert config.allow_list_set() is False
+    assert config.allow_list_unparsable_count() == 0
+
+
+def test_allow_list_set_with_only_unparsable_entries(monkeypatch):
+    monkeypatch.setenv("AUTH_PHONE_ALLOWED_NUMBERS", "notanumber, 123")
+    assert config.allow_list_set() is True
+    assert config.allow_list_unparsable_count() == 2
+
+
+def test_boot_check_refuses_a_spoofable_proxy_chain(prod):
+    # TRUSTED_PROXY_HOPS=2 without TRUSTED_PROXY_CIDRS: a request straight to the origin picks its own
+    # address, so the per-address phone limits would key on what the client wrote (review R2).
+    _full_production(prod)
+    prod.setenv("TRUST_PROXY_HEADERS", "1")
+    prod.setenv("TRUSTED_PROXY_HOPS", "2")
+    prod.delenv("TRUSTED_PROXY_CIDRS", raising=False)
+    with pytest.raises(RuntimeError, match="TRUSTED_PROXY_CIDRS"):
+        assert_production_security_config()
+    prod.setenv("TRUSTED_PROXY_CIDRS", "cloudflare")
+    assert_production_security_config()
+    prod.setenv("TRUSTED_PROXY_HOPS", "1")
+    prod.delenv("TRUSTED_PROXY_CIDRS")
+    assert_production_security_config()  # one hop: the right-most entry is the proxy's own view
