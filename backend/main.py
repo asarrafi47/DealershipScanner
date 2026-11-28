@@ -81,6 +81,11 @@ app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=14)
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
+# Cache headers on responses that set cookies (see backend/web/session_cache_guard.py).
+from backend.web.session_cache_guard import CookieSafeSessionInterface
+
+app.session_interface = CookieSafeSessionInterface()
+
 # Static assets: year-long cache, ?v= cache-buster, precompressed siblings.
 register_static(app)
 

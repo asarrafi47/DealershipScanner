@@ -535,6 +535,9 @@ def api_listings_cars():
         hidden = tuple(sorted(hidden_dealer_ids_for_user(session.get("user_id")) or ()))
     except Exception:
         hidden = ()
+    # Signed-in responses use private cache headers: the session cookie is refreshed
+    # on them, and the body may depend on the account.
+    private = bool(hidden) or from_session or bool(session.get("user_id"))
 
     from backend.db.repositories.grid_cards_repo import grid_scope_token
 
@@ -548,7 +551,7 @@ def api_listings_cars():
         if stale is not None:
             # P19: serve the body we have, rebuild once off the request.
             _kick_scope_rebuild(key, zip_code, (float(origin[0]), float(origin[1])), radius, hidden)
-            return _cars_json_response(stale, private=bool(hidden) or from_session)
+            return _cars_json_response(stale, private=private)
     if not _cars_scope_entry_valid(entry, token):
         with _cars_scope_build_lock(key):
             entry = _cars_scope_get(key)
@@ -558,7 +561,7 @@ def api_listings_cars():
                 )
                 _cars_scope_put(key, entry)
     # A session-derived area makes the body depend on the cookie: never shared-cache it.
-    return _cars_json_response(entry, private=bool(hidden) or from_session)
+    return _cars_json_response(entry, private=private)
 
 
 def api_listings_market_stats():

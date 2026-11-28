@@ -5,7 +5,11 @@ import pytest
 from flask import Flask
 
 import backend.routes.ai_narrate_bp as bp_mod
+from backend.billing import access as paid_access
 from backend.routes.ai_narrate_bp import ai_narrate_bp
+from backend.utils.csrf import _SESSION_KEY
+
+_TOKEN = "n" * 32
 
 
 @pytest.fixture(autouse=True)
@@ -27,10 +31,23 @@ def client(monkeypatch):
         bp_mod, "narrate_vehicle", lambda row: "A tidy 2022 BMW M3."
     )
 
+    # The narrate endpoint requires sign-in and the CSRF header.
+    monkeypatch.setattr(
+        paid_access,
+        "current_access",
+        lambda: paid_access.AccessContext(logged_in=True, user_id=1, profile={"id": 1}),
+    )
+
     app = Flask(__name__)
+    app.secret_key = "narrate-test-secret"
     app.register_blueprint(ai_narrate_bp)
     app.testing = True
-    return app.test_client()
+    c = app.test_client()
+    with c.session_transaction() as sess:
+        sess["user_id"] = 1
+        sess[_SESSION_KEY] = _TOKEN
+    c.environ_base["HTTP_X_CSRF_TOKEN"] = _TOKEN
+    return c
 
 
 def test_narrate_found(client):
