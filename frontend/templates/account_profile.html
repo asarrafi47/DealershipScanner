@@ -71,6 +71,8 @@
                     <label for="profile-email">Email</label>
                     <input id="profile-email" type="email" name="email" value="{{ email }}" required autocomplete="email">
                 </div>
+                {% from '_password_field.html' import password_field %}
+                {{ password_field('current_password', id='profile-current-password', label='Current password (needed only to change your email)', required=false, autocomplete='current-password') }}
                 {%- endif %}
                 <button type="submit" class="primary-button">Save profile</button>
             </form>

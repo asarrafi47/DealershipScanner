@@ -84,6 +84,10 @@ from urllib.parse import urljoin, urlsplit
 # The dev hash pepper is opt-in (never implied by a missing PHONE_HASH_PEPPER); tests opt in once here.
 # A test about the unset case removes this variable itself.
 os.environ.setdefault("ALLOW_DEV_PHONE_PEPPER", "1")
+# Account mail (reset links, verification, email-change notices) runs on the request thread in
+# tests, so a test can assert on it at once (backend/utils/background_mail.py). Tests of the
+# background path set AUTH_MAIL_INLINE=0 and call background_mail.drain().
+os.environ.setdefault("AUTH_MAIL_INLINE", "1")
 
 import pytest
 
@@ -1290,6 +1294,25 @@ def app_factory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Callable[...
         return main
 
     return _make
+
+
+def seed_dev_operator_session(
+    client: Any, *, admin_id: int = 1, username: str = "operator", auth_at: float | None = None
+) -> None:
+    """Put a signed-in /dev operator into ``client``'s cookie, as ``/dev/login`` would: the id, the
+    sign-in time and the password fingerprint of that operator's stored hash (an operator cookie
+    without one is refused). ``admin_id`` 1 is the env admin that ``init_admin_db`` seeds."""
+    from backend.auth import session as auth_session
+    from backend.db.admin_users_db import get_admin_by_id
+
+    row = get_admin_by_id(admin_id)
+    assert row, f"no operator {admin_id} in this test's dev users store"
+    fp = auth_session.dev_password_fingerprint(row["password"], secret_key=client.application.secret_key)
+    with client.session_transaction() as s:
+        s["admin_user_id"] = admin_id
+        s["admin_username"] = username
+        s[auth_session.DEV_AUTH_AT] = auth_session._now() if auth_at is None else auth_at
+        s[auth_session.DEV_PW_FP] = fp
 
 
 # ---------------------------------------------------------------------------

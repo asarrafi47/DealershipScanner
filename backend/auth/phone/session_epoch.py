@@ -52,6 +52,34 @@ REASON_PASSWORD_CHANGE = "password_change"
 REASON_PASSWORD_RESET = "password_reset"
 REASON_SUSPEND = "suspend"
 REASON_DELETE = "delete"
+REASON_LOGOUT = "logout"
+
+
+# Row keys in ``auth_session_epochs`` (BIGINT, no foreign key, so no migration):
+#   app users            id                         > 0
+#   /dev operators       -id                        [-2**62, -1]
+#   /dev/manifest console sessions (by nonce)       [-2**63, -2**62 - 1]
+# The ranges are disjoint by construction, so an operator key never equals a console key.
+_OPERATOR_ID_MAX = 2**62
+_CONSOLE_KEY_SPAN = 2**62
+
+
+def dev_operator_epoch_id(admin_user_id: int) -> int:
+    """The row key of a /dev operator (``admin_users`` id): the NEGATIVE of its id."""
+    aid = abs(int(admin_user_id))
+    if not 0 < aid <= _OPERATOR_ID_MAX:
+        raise ValueError("operator id out of range")
+    return -aid
+
+
+def console_epoch_id(nonce: str) -> int:
+    """The row key of one /dev/manifest console session (a random nonce in its cookie), below every
+    operator key."""
+    import hashlib
+
+    digest = int(hashlib.sha256(("dev_console:" + str(nonce)).encode("utf-8")).hexdigest()[:16], 16)
+    return -_OPERATOR_ID_MAX - 1 - (digest % _CONSOLE_KEY_SPAN)
+
 
 _lock = threading.Lock()
 # user_id -> (stored_at monotonic, valid_after epoch seconds or None)

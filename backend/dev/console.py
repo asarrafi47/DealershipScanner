@@ -29,9 +29,19 @@ logger = logging.getLogger(__name__)
 
 
 @bp.before_request
-def _dev_console_csrf() -> None:
+def _dev_console_csrf():
+    """Every console request: console requests follow the /dev ``DEV_IP_ALLOWLIST`` setting first
+    (/dev/manifest/* and /api/dev/*, the same rule as ``dev_bp``), then CSRF on mutating methods.
+    One hook, so the app surface golden keeps its hook names."""
+    from backend.dev.routes import _dev_client_ip_allowed
     from backend.utils.csrf import validate_csrf_form, validate_csrf_header
 
+    if not _dev_client_ip_allowed(request):
+        if request.path.startswith("/api/"):
+            return jsonify({"ok": False, "error": "forbidden", "reason": "dev_ip_allowlist"}), 403
+        from werkzeug.exceptions import Forbidden
+
+        raise Forbidden()
     ep = request.endpoint or ""
     if request.method not in ("POST", "PUT", "PATCH", "DELETE"):
         return
@@ -55,8 +65,45 @@ def _secret_configured() -> bool:
     return bool((os.environ.get("DEV_CONSOLE_SECRET") or "").strip())
 
 
+_CONSOLE_AT = "dev_console_at"
+_CONSOLE_NONCE = "dev_console_nonce"  # names this console session's logout mark (session_epoch)
+_CONSOLE_LOGIN_PER_MIN = 10  # per client IP, every attempt
+_CONSOLE_FAILS_GLOBAL_PER_MIN = 60  # wrong secrets from all IPs together; counts wrong secrets only
+
+
+def _end_console_session() -> None:
+    for key in ("dev_console_ok", _CONSOLE_AT, _CONSOLE_NONCE):
+        session.pop(key, None)
+
+
 def _session_ok() -> bool:
-    return bool(session.get("dev_console_ok"))
+    """The secret was given in this session less than SESSION_HOURS_ADMIN hours ago, and the session
+    was not logged out (its valid_after mark). A failed mark lookup refuses (fail closed)."""
+    if not session.get("dev_console_ok"):
+        return False
+    from backend.auth.phone import session_epoch
+    from backend.auth.session import _CLOCK_SKEW_S, _as_time, _now, session_hours_admin
+
+    at = _as_time(session.get(_CONSOLE_AT))
+    nonce = session.get(_CONSOLE_NONCE)
+    now = _now()
+    if (
+        at is None
+        or not isinstance(nonce, str)
+        or not nonce
+        or at > now + _CLOCK_SKEW_S
+        or now - at > session_hours_admin() * 3600.0
+    ):
+        _end_console_session()
+        return False
+    try:
+        mark = session_epoch.get_valid_after(session_epoch.console_epoch_id(nonce), strict=True)
+    except session_epoch.EpochLookupFailed:
+        return False
+    if mark is not None and at < mark:
+        _end_console_session()
+        return False
+    return True
 
 
 _DISABLED_API = (
@@ -124,13 +171,31 @@ def dev_login():
         return redirect(url_for("dev_console.dev_home"))
     error = None
     if request.method == "POST":
+        from backend.utils.client_ip import client_ip
+        from backend.utils.ip_rate_limit import allow_request
+
+        too_many = render_template("dev_login.html", error="Too many attempts. Try again in a minute.")
+        if not allow_request(
+            f"dev_console_login:{client_ip(request)}", max_events=_CONSOLE_LOGIN_PER_MIN, window_seconds=60.0
+        ):
+            return too_many, 429
         provided = (request.form.get("secret") or "").strip()
         expected = (os.environ.get("DEV_CONSOLE_SECRET") or "").strip()
         if provided and expected and secrets.compare_digest(provided, expected):
+            from backend.auth.session import _now
+
             session["dev_console_ok"] = True
+            session[_CONSOLE_AT] = _now()
+            session[_CONSOLE_NONCE] = secrets.token_urlsafe(16)
             raw_next = request.args.get("next") or url_for("dev_console.dev_home")
             nxt = _safe_manifest_next_url(raw_next, default=url_for("dev_console.dev_home"))
             return redirect(nxt)
+        # The all-IP cap counts wrong secrets only.
+        if not allow_request(
+            "dev_console_login_fail:global", max_events=_CONSOLE_FAILS_GLOBAL_PER_MIN, window_seconds=60.0
+        ):
+            logger.warning("event=dev_console_login_global_cap")
+            return too_many, 429
         error = "Invalid secret."
     return render_template("dev_login.html", error=error)
 
@@ -139,7 +204,13 @@ def dev_login():
 def dev_logout():
     if not dev_console_enabled():
         return render_template("dev_disabled.html"), 200
-    session.pop("dev_console_ok", None)
+    nonce = session.get(_CONSOLE_NONCE)
+    if isinstance(nonce, str) and nonce:
+        # Logout ends the console session server-side (no store needed per secret).
+        from backend.auth.phone import session_epoch
+
+        session_epoch.revoke_user_sessions(session_epoch.console_epoch_id(nonce), reason=session_epoch.REASON_LOGOUT)
+    _end_console_session()
     return redirect(url_for("dev_console.dev_login") if _secret_configured() else "/")
 
 

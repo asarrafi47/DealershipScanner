@@ -92,6 +92,65 @@ def _saved_searches_for_profile(uid: int) -> list[dict]:
         return []
 
 
+_EMAIL_CHANGE_FRESH_SIGN_IN_S = 600.0  # accounts with no usable password: Google/Apple sign-in this recent
+
+
+def _email_change_reauth_error(uid: int) -> str | None:
+    """Why this email change may not go ahead, or None. Email change confirmation: a change needs
+    the current password. A Google or Apple account (random password hash) instead needs a Google
+    or Apple sign-in in the last 10 minutes."""
+    from backend.auth.session import AUTH_AT, AUTH_METHOD, AUTH_ORIGIN_AT, _as_time, _now
+    from backend.db.users_db.auth import user_has_oauth_identity, verify_user_password
+    from backend.utils.ip_rate_limit import allow_request
+
+    pw = request.form.get("current_password") or ""
+    if pw.strip():
+        if not allow_request(f"email_change_pw:{int(uid)}", max_events=10, window_seconds=900.0):
+            return "Too many attempts. Try again in 15 minutes."
+        if verify_user_password(uid, pw):
+            return None
+        return "Current password is incorrect."
+    if user_has_oauth_identity(uid):
+        times = [t for t in (_as_time(session.get(AUTH_AT)), _as_time(session.get(AUTH_ORIGIN_AT))) if t is not None]
+        signed_in_at = min(times) if times else None  # sign out everywhere never refreshes it
+        if (
+            session.get(AUTH_METHOD) in ("google", "apple")
+            and signed_in_at is not None
+            and 0 <= _now() - signed_in_at <= _EMAIL_CHANGE_FRESH_SIGN_IN_S
+        ):
+            return None
+        return (
+            "To change the email of an account that signs in with Google or Apple, sign out, "
+            "sign in again with Google or Apple, and change it within 10 minutes."
+        )
+    return "Enter your current password to change your email."
+
+
+def _notify_old_email(old_email: str) -> None:
+    """Tell the previous address that the account email changed. Never fails the request."""
+    try:
+        em = (old_email or "").strip()
+        if not em or "@" not in em or is_placeholder_email(em):
+            return
+        from backend.utils.mfa_delivery import send_transactional_email
+
+        text = (
+            "The email address on your Sarrafi Collection account was just changed, and this "
+            "address will no longer receive messages about it.\n\n"
+            "If you did not make this change, reply to this message or contact support right away.\n"
+        )
+        # Inline, never the background pool (which drops mail when full): this request is signed
+        # in, and the provider calls have their own timeouts.
+        send_transactional_email(
+            to_email=em,
+            subject="Your Sarrafi Collection email was changed",
+            text=text,
+            log_surface="email_change_notice",
+        )
+    except Exception as exc:  # noqa: BLE001 - a notice never fails the change
+        _logger.warning("email change notice failed: %s", type(exc).__name__)
+
+
 def account_password_page():
     """Backward-compatible alias for the password section on the profile page."""
     if request.method == "POST":
@@ -166,7 +225,11 @@ def account_profile_page():
             # A phone account has no email to edit (card S7): the form has no email field, and a
             # posted one is ignored, so the placeholder is neither shown nor replaced.
             email_in = (_before.get("email") or "").strip()
-        err = update_user_profile(uid, username_in, email_in)
+        old_email = (_before.get("email") or "").strip()
+        email_changing = email_in.strip().lower() != old_email.lower()
+        err = _email_change_reauth_error(uid) if email_changing else None
+        if not err:
+            err = update_user_profile(uid, username_in, email_in)
         if err:
             return render_template(
                 "account_profile.html",
@@ -179,6 +242,8 @@ def account_profile_page():
             )
         sync_env_admin_user_row(uid)
         u = get_user_profile(uid) or {}
+        if email_changing and (u.get("email") or "").strip().lower() != old_email.lower():
+            _notify_old_email(old_email)
         session["username"] = u.get("username")
         session["user_email"] = public_email((u.get("email") or "").strip())
         session["user_role"] = normalize_role(u.get("role"))

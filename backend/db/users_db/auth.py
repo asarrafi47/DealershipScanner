@@ -225,7 +225,14 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
     if email_changed:
         cursor.execute("PRAGMA table_info(users)")
         cols = {r[1] for r in cursor.fetchall()}
-        for col in ("email_verified_at", "email_verify_token_hash", "email_verify_expires_at"):
+        # A pending reset link is cleared with the change as well.
+        for col in (
+            "email_verified_at",
+            "email_verify_token_hash",
+            "email_verify_expires_at",
+            "password_reset_token_hash",
+            "password_reset_expires_at",
+        ):
             if col in cols:
                 sets.append(f"{col} = NULL")
     cursor.execute(
@@ -238,6 +245,41 @@ def update_user_profile(user_id: int, username: str, email: str) -> str | None:
     conn.commit()
     conn.close()
     return None
+
+
+def _stored_password_hash(cursor, uid: int) -> tuple[bool, str]:
+    """(row exists, stored hash) for one account (shared by the password check and change)."""
+    cursor.execute("SELECT password FROM users WHERE id = ?", (uid,))
+    row = cursor.fetchone()
+    return (row is not None, (row[0] or "") if row else "")
+
+
+def verify_user_password(user_id: int, password: str) -> bool:
+    """True when ``password`` (stripped, as every login path does) matches the account's hash.
+
+    Consistent login handling: same path for every attempt."""
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return False
+    pw = (password or "").strip()
+    if uid <= 0 or not pw:
+        return False
+    conn = get_conn()
+    try:
+        _found, stored = _stored_password_hash(conn.cursor(), uid)
+    finally:
+        conn.close()
+    if not stored:
+        verify_or_legacy(pw, _timing_safe_dummy_hash())
+        return False
+    return bool(verify_or_legacy(pw, stored))
+
+
+def user_has_oauth_identity(user_id: int) -> bool:
+    """True when the account carries a Google or Apple subject (its password hash is random)."""
+    state = get_user_email_verification_state(user_id) or {}
+    return any(str(state.get(k) or "").strip() for k in ("google_sub", "apple_sub"))
 
 
 def change_user_password(user_id: int, current_password: str, new_password: str) -> str | None:
@@ -259,12 +301,10 @@ def change_user_password(user_id: int, current_password: str, new_password: str)
 
     conn = get_conn()
     cursor = conn.cursor()
-    cursor.execute("SELECT password FROM users WHERE id = ?", (uid,))
-    row = cursor.fetchone()
-    if not row:
+    found, stored = _stored_password_hash(cursor, uid)
+    if not found:
         conn.close()
         return "Account not found."
-    stored = row[0]
     if not verify_or_legacy(cur_pw, stored):
         conn.close()
         return "Current password is incorrect."

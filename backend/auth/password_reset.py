@@ -118,6 +118,13 @@ def request_password_reset(*, login_input: str) -> bool:
         f"{link}\n\n"
         "If you did not request this, you can ignore this message.\n"
     )
+    # The route runs this whole function off the request thread (backend/utils/background_mail.py),
+    # so the send is inline here.
+    _send_reset_email(uid, email, subject, text)
+    return True
+
+
+def _send_reset_email(uid: int, email: str, subject: str, text: str) -> None:
     try:
         send_transactional_email(
             to_email=email,
@@ -127,7 +134,6 @@ def request_password_reset(*, login_input: str) -> bool:
         )
     except Exception as e:  # noqa: BLE001
         _log.warning("password reset send failed user_id=%s: %s", uid, type(e).__name__)
-    return True
 
 
 def complete_password_reset(*, token: str, new_password: str) -> tuple[bool, str]:
