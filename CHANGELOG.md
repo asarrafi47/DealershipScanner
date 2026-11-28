@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [1.5.60] - 2026-11-28
+
+- **Release workflow pushes `main` with a deploy key, not the `GITHUB_TOKEN`.** The `protect-main` ruleset lets only a DeployKey bypass it, so `github-actions[bot]` could not fast-forward `main`. The `release` job of `.github/workflows/release.yml` now fails early when the new secret `RELEASE_DEPLOY_KEY` is empty, checks out with `actions/checkout@v4` `ssh-key` (origin over SSH, key kept for that job only), and pushes `main` and the annotated tag `v<VERSION>` over SSH. Its token drops to `contents: read`. The release guard, the fast-forward ancestry check, the existing-tag check, the bot tag identity and `main-released` are unchanged; nothing force-pushes.
+  - Action `check` gains a read-only step: with the secret set it runs `ssh -T git@github.com` against GitHub's pinned ed25519 host key (`StrictHostKeyChecking=yes`, key file mode 600 in `RUNNER_TEMP`, removed afterwards) and reports `deploy key authenticates as <repo>`; unset, it only warns.
+  - Owner steps (ed25519 key without passphrase, deploy key with write access, the secret, delete the local files): `docs/scan_loop/OWNER_SETUP.md` section 1 and `docs/RELEASING.md` "Releasing from GitHub Actions: the deploy key".
+  - Tests: `backend/tests/test_release_workflow.py` (offline) pins the SSH checkout, that only `release` and `check` see the secret, no token or forced push, and the host-key fingerprint.
+
 ## [1.5.59] - 2026-11-28
 
 - test only, no migration and no runtime change: the pg tier no longer fails a clone because an autovacuum worker is inside the template. `backend/tests/pg_harness.py` `_connections` (the check before `CREATE DATABASE ... TEMPLATE`) counted autovacuum workers as open connections, so a worker that came to a freshly built template (catalog tables churn while a chain is applied) made `clone` raise "template ... has 1 open connection(s)" if it stayed more than 2 s; CI hit it on PR #60 (`test_a_waiting_v028_queues_new_readers...`, setup error, 302 passed). Postgres terminates such a worker itself when the template is copied (tried here: `CREATE DATABASE` succeeded in 0.4 s with a slow worker in the source), so the check now ignores `backend_type = 'autovacuum worker'`. New pg test `test_clone_is_not_stopped_by_an_autovacuum_worker_in_the_template` puts a real worker in a private template and fails without the change. The rehearsal fixture now runs `VACUUM (ANALYZE)` on the whole template, not only `cars`.
