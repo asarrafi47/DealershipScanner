@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [1.5.13] - 2026-11-28
+
+### Fixed
+- Profile update now validates reserved identities (`APP_ADMIN_EMAILS` /
+  `APP_ADMIN_USERNAMES`); a value the account already holds is still accepted.
+- The dealer inventory portal (`/inventory/*`) requires a dealership role or an app admin;
+  other accounts get 403.
+- `GET /api/car/<id>/narrate` requires sign-in to an active account, the `X-CSRF-Token`
+  header, and the car-chat feature gate when billing is on.
+- Cache headers: `/api/listings/cars` answers `private, no-cache` to a signed-in session; a
+  new session interface (`backend/web/session_cache_guard.py`) sets `private` on responses
+  that set the session cookie (removing `public` / `s-maxage`, keeping `max-age`).
+  Anonymous responses are unchanged.
+- The `/dev` app-admin pass-through re-reads the account's stored role and active flag.
+- **Before deploying**, confirm every dealer-portal vehicle owner holds a dealership role;
+  `dealer_staff` accounts no longer open `/inventory`.
+
 ## [1.5.11] - 2026-11-13
 
 ### Fixed

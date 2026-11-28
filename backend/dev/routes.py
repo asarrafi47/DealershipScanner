@@ -325,7 +325,24 @@ def _admin_session_ok() -> bool:
 
     if not app_admin_dev_pass_through_allowed():
         return False
-    return bool(session.get("user_id")) and is_admin_role(session.get("user_role"))
+    try:
+        uid = int(session.get("user_id") or 0)
+    except (TypeError, ValueError):
+        return False
+    if uid <= 0:
+        return False
+    # Role re-read: the pass-through reads the stored account's role and active flag;
+    # the account must exist, be active and hold the admin role.
+    from backend.db.users_db import _user_row_is_active, get_user_profile
+
+    try:
+        profile = get_user_profile(uid)
+    except Exception:
+        logger.warning("dev pass-through: get_user_profile(%s) failed", uid, exc_info=True)
+        return False
+    if not profile or not _user_row_is_active(profile):
+        return False
+    return is_admin_role(profile.get("role"))
 
 
 def _finalize_dev_session(*, user_id: int, username: str) -> bool:

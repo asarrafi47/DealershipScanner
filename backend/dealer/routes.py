@@ -50,6 +50,7 @@ from backend.utils.roles import (
     ROLE_DEALERSHIP_OWNER,
     REGISTRATION_ADMIN_BLOCKED_MSG,
     is_admin_role,
+    is_dealer_portal_role,
     normalize_role,
     registration_blocked_by_env_admin,
 )
@@ -167,6 +168,11 @@ def _require_login() -> int:
     profile = get_user_profile(uid)
     if not profile or not profile.get("is_active", True):
         return 0
+    # Inventory role check: a dealer role (dealership_*) or an app admin passes;
+    # other roles return -1 and the routes answer 403.
+    role = normalize_role(profile.get("role"))
+    if not (is_dealer_portal_role(role) or is_admin_role(role)):
+        return -1
     return uid
 
 
@@ -187,6 +193,8 @@ def _safe_upload_basename(name: str) -> str | None:
 @bp.route("/inventory")
 def inventory_dashboard():
     uid = _require_login()
+    if uid == -1:
+        abort(403)
     if not uid:
         return redirect(url_for("dealer_portal.dealer_login"))
     vehicles = ddb.list_vehicles_for_user(uid)
@@ -200,6 +208,8 @@ def inventory_dashboard():
 @bp.route("/inventory/listings")
 def inventory_listings():
     uid = _require_login()
+    if uid == -1:
+        abort(403)
     if not uid:
         return redirect(url_for("dealer_portal.dealer_login"))
     vehicles = ddb.list_vehicles_for_user(uid)
