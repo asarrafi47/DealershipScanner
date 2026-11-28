@@ -251,6 +251,34 @@ same SHA. Expect about three runs per release SHA. The repo is public (D-REL5), 
 GitHub-hosted runners cost nothing for public repos, so the duplication costs wall time,
 not minutes.
 
+## Releasing from GitHub Actions: the deploy key
+
+`.github/workflows/release.yml` (action `release` or `full`) fast-forwards `main` to `<ref>` and pushes the
+annotated tag `v<VERSION>`. It pushes over SSH with a repository **deploy key**, not with the default
+`GITHUB_TOKEN`. The `protect-main` ruleset (rules deletion, non_fast_forward and update on `refs/heads/main`)
+has exactly one bypass actor, type DeployKey, mode always, and a personal-account repository cannot add the
+GitHub Actions app to that list, so a push as `github-actions[bot]` with the token is refused. The release
+guard, the ancestry (fast-forward only) check, the existing-tag check and the final `main-released` check run
+as before; nothing force-pushes.
+
+One-time owner setup (also `docs/scan_loop/OWNER_SETUP.md`, section 1, step 4):
+
+1. On any machine, create an ed25519 key pair with no passphrase, in a temporary folder:
+   `ssh-keygen -t ed25519 -N "" -C release-deploy-key -f ./release_deploy_key`
+   (it writes `release_deploy_key` and `release_deploy_key.pub`).
+2. GitHub, `asarrafi47/DealershipScanner`, **Settings > Deploy keys > Add deploy key**: title
+   `release`, key the contents of `release_deploy_key.pub`, tick **Allow write access**.
+3. **Settings > Secrets and variables > Actions > New repository secret**: name `RELEASE_DEPLOY_KEY`,
+   value the whole contents of `release_deploy_key` (the private half, including the
+   `-----BEGIN`/`-----END` lines).
+4. Delete both local files (`rm release_deploy_key release_deploy_key.pub`). Nothing else needs the key;
+   if it is lost, delete the deploy key and repeat these steps.
+
+Verify: action `check` prints `deploy key authenticates as asarrafi47/DealershipScanner` (a warning, not a
+failure, while the secret is unset). `ssh -T` cannot test write access; a key added without **Allow write
+access** fails at the push of action `release`. Only the `release` job (to push) and the `check` job (to
+test, read-only) read the secret; `backend/tests/test_release_workflow.py` pins that.
+
 ## Release checklist
 
 Run these from the branch being released, in the main checkout, with a clean tree. That
