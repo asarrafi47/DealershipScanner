@@ -841,6 +841,19 @@ def touch_login(identity_id: int, *, now: datetime, conn: Any = None) -> None:
 
 
 @_clean_errors()
+def record_consent(identity_id: int, *, consent_at: datetime, consent_text_version: str, conn: Any = None) -> bool:
+    """Store the consent version and time a returning person just agreed to. A no-op when the row
+    already holds that version. True when a row changed."""
+    with _tx(conn) as c:
+        row = c.execute(
+            "UPDATE public.auth_phone_identities SET consent_at = %s, consent_text_version = %s "
+            "WHERE id = %s AND consent_text_version IS DISTINCT FROM %s RETURNING id",
+            (_utc(consent_at), str(consent_text_version), int(identity_id), str(consent_text_version)),
+        ).fetchone()
+    return row is not None
+
+
+@_clean_errors()
 def touch_login_for_user(user_id: int, *, now: datetime, conn: Any = None) -> bool:
     """Stamp the active identity of an account as used now (review R4: the session hook, once a day).
 

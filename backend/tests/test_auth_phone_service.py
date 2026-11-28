@@ -934,3 +934,42 @@ def test_attempts_used_up_while_the_challenge_is_still_open_end_it_as_a_lock(env
     assert repo.fetch_challenge(out.public_id, out.session_nonce).status == "failed"
     assert "event=check_locked" in caplog.text and "why=attempts" in caplog.text
     assert prov.check_calls == 0
+
+
+def test_a_returning_person_gets_the_new_consent_version_stored(env, caplog):
+    # The page asks again when the consent version changes, and the stored version and time follow.
+    s, prov, clock = make(consent_text_version="2")
+    known(88, 8800, last_login=T0 - timedelta(days=2))
+    clock.tick(hours=2)
+    with caplog.at_level(logging.INFO, logger="auth_phone"):
+        out = s.sign_in(_approved(s, 88), FakeAccounts())
+    assert (out.ok, out.reason, out.user_id) == (True, "signed_in", 8800)
+    after = repo.find_identity_by_phone(num(88))
+    assert after.consent_text_version == "2"
+    assert after.consent_at > T0 - timedelta(days=1)
+    assert "event=consent_updated" in caplog.text
+    stamped = after.consent_at
+    clock.tick(hours=1)
+    caplog.clear()
+    with caplog.at_level(logging.INFO, logger="auth_phone"):
+        s.sign_in(_approved(s, 88), FakeAccounts())
+    again = repo.find_identity_by_phone(num(88))
+    assert (again.consent_text_version, again.consent_at) == ("2", stamped)
+    assert "event=consent_updated" not in caplog.text
+
+
+def test_same_consent_version_leaves_the_record_alone(env):
+    s, prov, clock = make(consent_text_version="1")
+    known(89, 8900, last_login=T0 - timedelta(days=2))
+    out = s.sign_in(_approved(s, 89), FakeAccounts())
+    assert out.ok
+    after = repo.find_identity_by_phone(num(89))
+    assert (after.consent_text_version, after.consent_at) == ("1", T0 - timedelta(days=1))
+
+
+def test_record_consent_is_a_no_op_for_the_stored_version(env):
+    ident = known(90, 9000)
+    assert repo.record_consent(ident.id, consent_at=T0, consent_text_version="1") is False
+    assert repo.record_consent(ident.id, consent_at=T0, consent_text_version="2") is True
+    after = repo.find_identity_by_phone(num(90))
+    assert (after.consent_text_version, after.consent_at) == ("2", T0)

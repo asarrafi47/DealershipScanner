@@ -548,7 +548,11 @@ def test_number_page_consent_text_and_links(on):
 
 def test_consent_text_is_pinned_to_its_version():
     """Any change to the words must bump CONSENT_TEXT_VERSION (and the owner approves the new version)."""
-    pinned = {"1": "f5782ed66e31382549c1d763ddafd9973b9e7ea1d9e8b793ebceac37d65f1a58"}
+    pinned = {
+        "1": "f5782ed66e31382549c1d763ddafd9973b9e7ea1d9e8b793ebceac37d65f1a58",
+        # Same words; the linked Terms and Privacy Policy changed.
+        "2": "f5782ed66e31382549c1d763ddafd9973b9e7ea1d9e8b793ebceac37d65f1a58",
+    }
     digest = hashlib.sha256(consent.CONSENT_TEXT.encode("utf-8")).hexdigest()
     assert pinned.get(CONSENT_TEXT_VERSION) == digest, (
         "the consent wording changed: bump backend/auth/phone/config.py CONSENT_TEXT_VERSION and add the new hash here"

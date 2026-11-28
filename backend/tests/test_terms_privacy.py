@@ -97,7 +97,7 @@ def test_privacy_content(client) -> None:
         "We treat it as personal data",
         "Only to send you sign-in codes",
         "We do not sell or share your phone number or opt-in data with third parties for marketing",
-        "Twilio", "line type", "Cloudflare", "Turnstile", "Railway", "Our email provider", "Our chat model provider",
+        "Twilio", "line type", "Cloudflare", "Turnstile", "Railway", "Resend", "Anthropic",
         "7 days after they end", "30 days", "24 hours after", "35 days", "until your account is deleted",
         "Account data is deleted within 30 days of a request",
         "Rate-limit counters keyed by a one-way hash are kept up to 35 days",
@@ -124,10 +124,13 @@ def _footer(client) -> str:
     return re.search(r'<div class="app-version-footer">.*?</div>', html, re.S).group(0)
 
 
-def test_footer_unchanged_while_flag_off(client) -> None:
+def test_footer_links_terms_and_privacy_while_flag_off(client) -> None:
     from backend.routes.site_misc import _app_version
 
-    assert _footer(client) == '<div class="app-version-footer">v%s</div>' % _app_version()
+    assert _footer(client) == (
+        '<div class="app-version-footer">v%s &middot; <a href="/terms">Terms</a> &middot; '
+        '<a href="/privacy">Privacy</a></div>' % _app_version()
+    )
 
 
 def test_footer_links_when_phone_login_enabled(client, monkeypatch) -> None:
@@ -138,4 +141,6 @@ def test_footer_links_when_phone_login_enabled(client, monkeypatch) -> None:
     for path in PAGES:
         assert 'href="%s"' % path in footer
     monkeypatch.setitem(app.jinja_env.globals, "phone_login_enabled", lambda: False)
-    assert "href=" not in _footer(client)
+    footer = _footer(client)
+    assert 'href="/sms-consent"' not in footer
+    assert 'href="/terms"' in footer and 'href="/privacy"' in footer

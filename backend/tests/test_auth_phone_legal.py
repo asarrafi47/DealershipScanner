@@ -35,9 +35,9 @@ def test_consent_text_carries_every_required_item() -> None:
         assert piece in t
 
 
-def test_consent_version_unchanged() -> None:
-    # Nothing was ever approved, so the wording change keeps version "1".
-    assert phone_config.CONSENT_TEXT_VERSION == "1"
+def test_consent_version_is_two() -> None:
+    # The linked Terms and Privacy Policy were rewritten, so returning people are asked again.
+    assert phone_config.CONSENT_TEXT_VERSION == "2"
 
 
 def test_consent_html_same_words_with_real_links() -> None:
@@ -73,7 +73,7 @@ def test_support_contact_placeholder_when_unset() -> None:
 
 def test_legal_approved_only_on_exact_version(monkeypatch: pytest.MonkeyPatch) -> None:
     assert legal.legal_approved() is False
-    monkeypatch.setenv("LEGAL_PAGES_APPROVED_VERSION", "2")
+    monkeypatch.setenv("LEGAL_PAGES_APPROVED_VERSION", "1")
     assert legal.legal_approved() is False
     monkeypatch.setenv("LEGAL_PAGES_APPROVED_VERSION", phone_config.CONSENT_TEXT_VERSION)
     assert legal.legal_approved() is True
