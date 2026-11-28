@@ -268,9 +268,9 @@ One-time owner setup (also `docs/scan_loop/OWNER_SETUP.md`, section 1, step 4):
    (it writes `release_deploy_key` and `release_deploy_key.pub`).
 2. GitHub, `asarrafi47/DealershipScanner`, **Settings > Deploy keys > Add deploy key**: title
    `release`, key the contents of `release_deploy_key.pub`, tick **Allow write access**.
-3. **Settings > Secrets and variables > Actions > New repository secret**: name `RELEASE_DEPLOY_KEY`,
+3. **Settings > Environments > production > Add environment secret**: name `RELEASE_DEPLOY_KEY`,
    value the whole contents of `release_deploy_key` (the private half, including the
-   `-----BEGIN`/`-----END` lines).
+   `-----BEGIN`/`-----END` lines). See [The production environment](#the-production-environment).
 4. Delete both local files (`rm release_deploy_key release_deploy_key.pub`). Nothing else needs the key;
    if it is lost, delete the deploy key and repeat these steps.
 
@@ -278,6 +278,124 @@ Verify: action `check` prints `deploy key authenticates as asarrafi47/Dealership
 failure, while the secret is unset). `ssh -T` cannot test write access; a key added without **Allow write
 access** fails at the push of action `release`. Only the `release` job (to push) and the `check` job (to
 test, read-only) read the secret; `backend/tests/test_release_workflow.py` pins that.
+
+## The production environment
+
+Every job of `.github/workflows/release.yml` declares `environment: production`, and each secret is set
+at **step level** only, on the steps that call Railway or push (`backend/tests/test_release_workflow.py`
+pins both). The release secrets belong in the environment, not in the repository: an environment secret
+is readable only by a job that names the environment and passes its protection rules. If the environment
+does not exist yet, GitHub creates `production` on the first run without rules; the steps below set it up.
+
+Owner runbook (browser; nothing here is done by a cloud session). Do the steps in this order:
+
+0. **Tag ruleset first** ([Release protection: expected state](#release-protection-expected-state)):
+   create `protect-release-tags`, so that only the release job's deploy key can create a `v*` tag and no
+   tag can be moved or deleted. The `deploy` and `scan` jobs also refuse a tag that is not the commit
+   `main` points at. Recommended in the same visit: a branch ruleset on `dev` (block deletion and force
+   pushes), since releases are cut from `dev`.
+1. **Settings > Environments > New environment** `production` (or open it if a run already created it).
+2. **Required reviewers**: add the release owner(s). With a single reviewer, leave **Prevent
+   self-review** off so that reviewer can approve their own runs. Leave **Allow administrators to bypass
+   configured protection rules** off. Every job that holds a secret then waits for an approval (in a
+   `full` run, each of backup, migrate, release and deploy asks when it starts). Approve only runs you
+   started. **Before approving, read the run name**: it shows the action, `ref=` and who started
+   it (`run-name`). The workflow's first job, `gate`, holds no secret and refuses any `ref` other than
+   `dev`, `main` or `hotfix/<x.y.z>`.
+3. **Deployment branches and tags: Selected branches and tags**, rule `main`. The rule is checked against
+   the branch the workflow is *run from* (the "Use workflow from" menu), not the `ref` input. `main` does
+   not carry this `release.yml` until the first release made with it (bootstrap). Either make that first
+   release before you add this rule (steps 1 and 2 only, run from `dev`), or add `dev` to the rule for
+   that one run and remove it as soon as `main` carries the workflow. From then on run the workflow from
+   `main`; `ref` still names the branch to release.
+4. **Environment secrets**: add `RAILWAY_TOKEN` and `RELEASE_DEPLOY_KEY` to the environment (a new
+   Railway project token is fine). Keep them only there: neither belongs under **Settings > Secrets and
+   variables > Actions > Repository secrets**. The workflow uses no other secret.
+5. Add the repository variable `RELEASE_BACKUP_PUBKEY` ([Pre-migration backup](#pre-migration-backup)).
+6. Optional: the age public key is not a secret, but the variable may live in the environment instead
+   (**Environment variables**); the workflow reads `vars.RELEASE_BACKUP_PUBKEY` either way.
+
+Verify: run action `check` from `main` (from `dev` during the bootstrap). The run waits for your
+approval, then prints `deploy key authenticates as asarrafi47/DealershipScanner`, `railway: linked` and
+`release rulesets: match docs/RELEASING.md`. Once the rule is `main` only, a run of a job naming
+`production` from any other branch fails at once ("not allowed to deploy to production").
+**Settings > Secrets and variables > Actions > Repository secrets** holds none of the release secrets.
+
+## Pre-migration backup
+
+Action `backup` (and `full`) dumps prod with `pg_dump -Fc`, checks the dump has a table of contents,
+encrypts it with [age](https://age-encryption.org) to the public key(s) in the repository **variable**
+`RELEASE_BACKUP_PUBKEY`, and uploads only the ciphertext `prod_pre_migrate.dump.age` as the run's artifact
+`prod-pre-migrate-<run id>`, kept 7 days. GitHub holds no key that can decrypt it. If the variable is unset
+or is not an age recipient, the job stops before anything is dumped; there is no passphrase or plaintext
+fallback.
+
+One-time owner setup, on your own machine (keep the private key offline, e.g. in your password manager
+and on an offline disk; it never goes into GitHub, Railway or a cloud session):
+
+```bash
+age-keygen -o release_backup.agekey     # prints "Public key: age1..."
+age-keygen -y release_backup.agekey     # the public key again
+```
+
+Then **Settings > Secrets and variables > Actions > Variables > New repository variable**: name
+`RELEASE_BACKUP_PUBKEY`, value the `age1...` public key. Several keys separated by spaces are allowed
+(for example a second offline copy).
+
+Restore or inspect a backup (on your machine, after the run; needs `age` and a PostgreSQL 18 client):
+
+```bash
+gh run download <run id> -R asarrafi47/DealershipScanner -n prod-pre-migrate-<run id>
+age -d -i release_backup.agekey -o prod.dump prod_pre_migrate.dump.age
+pg_restore -l prod.dump | head      # check; restore with pg_restore --clean --if-exists -d <dsn> prod.dump
+```
+
+Once the migration is known good, delete the artifact rather than wait 7 days:
+
+```bash
+gh api repos/asarrafi47/DealershipScanner/actions/artifacts --paginate \
+  --jq '.artifacts[] | select(.name | startswith("prod-pre-migrate-")) | "\(.id) \(.name) \(.created_at) expired=\(.expired)"'
+gh api -X DELETE repos/asarrafi47/DealershipScanner/actions/artifacts/<id>
+```
+
+## Release protection: expected state
+
+The `check` action runs `scripts/check_release_protection.py`, which reads the live rulesets through the
+GitHub API (read-only) and prints a warning for every difference from the block below; it never fails the
+run. The workflow token cannot see bypass actors (admin only), so those are compared only when the owner
+runs the script with an admin token: `GH_TOKEN=$(gh auth token) python3 scripts/check_release_protection.py
+--repo asarrafi47/DealershipScanner --strict`.
+
+- `protect-main`: deletion, non-fast-forward and update on `main`; one bypass actor, the DeployKey.
+- `protect-release-tags` (owner step): **Settings > Rules > Rulesets > New tag ruleset**, name
+  `protect-release-tags`, enforcement Active, target `refs/tags/v*` (include pattern `v*`), rules Restrict
+  creations, Restrict updates, Restrict deletions and Block force pushes, bypass list **Deploy keys**
+  (always). Only the release job's deploy key can then create a `v*` tag, and nobody can move or delete
+  one. `check` warns when a ruleset is missing or differs.
+
+<!-- release-protection:expected -->
+```json
+{
+  "rulesets": [
+    {
+      "name": "protect-main",
+      "target": "branch",
+      "enforcement": "active",
+      "include": ["refs/heads/main"],
+      "rules": ["deletion", "non_fast_forward", "update"],
+      "bypass_actor_types": ["DeployKey"]
+    },
+    {
+      "name": "protect-release-tags",
+      "target": "tag",
+      "enforcement": "active",
+      "include": ["refs/tags/v*"],
+      "rules": ["creation", "deletion", "non_fast_forward", "update"],
+      "bypass_actor_types": ["DeployKey"]
+    }
+  ]
+}
+```
 
 ## Release checklist
 

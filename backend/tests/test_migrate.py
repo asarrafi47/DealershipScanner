@@ -529,6 +529,19 @@ def test_target_is_logged_without_credentials(tmp_path, run, caplog, monkeypatch
     assert "sslmode" not in caplog.text
 
 
+def test_target_is_hidden_when_migrate_hide_target_is_set(tmp_path, run, caplog, monkeypatch):
+    chain = _chain(tmp_path, 2)
+    monkeypatch.setenv(
+        "INVENTORY_DATABASE_URL",
+        "postgresql://scanner:s3cr3t-pw@db.example.net:6543/railway?sslmode=require",
+    )
+    monkeypatch.setenv("MIGRATE_HIDE_TARGET", "1")
+    assert run(_FakePg(applied=_applied(chain, {1}), relations=_SHARED), "--apply") == 0
+    assert caplog.records[0].getMessage() == "target: remote (host hidden) (apply)"
+    for needle in ("db.example.net", "6543", "s3cr3t", "scanner", "sslmode"):
+        assert needle not in caplog.text, needle
+
+
 # --- cars_cleanroom is never written (P4.3b, D-N1) --------------------------------
 
 

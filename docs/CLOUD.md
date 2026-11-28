@@ -155,7 +155,7 @@ Do not set any of these in a cloud environment (or anywhere a session can read):
   `MERGE_SPECS_GOLDEN_DB_URL`. A session works against its own throwaway cluster only, and
   `scripts/pg_test_up.sh` and the pg harness refuse a real database anyway.
 - Deploy and vault credentials: `VAULT_TOKEN`, `VAULT_TOKEN_LOCAL`, `RAILWAY_VAULT_TOKEN`, and any
-  `RAILWAY_*` variable or Railway token. Deploys run in the `Release and deploy` GitHub Actions workflow, which holds the Railway project token as a repository secret (docs/scan_loop/OWNER_SETUP.md, section 1).
+  `RAILWAY_*` variable or Railway token. Deploys run in the `Release and deploy` GitHub Actions workflow, which reads the Railway project token from the GitHub environment `production` (owner-approved runs from `main` only; docs/RELEASING.md, "The production environment", and docs/scan_loop/OWNER_SETUP.md, section 1).
 - Application secrets: `SECRET_KEY`, `FLASK_SECRET_KEY`, `ADMIN_PASSWORD`, `USERS_DB_ENCRYPTION_KEY`,
   `DEV_USERS_DB_ENCRYPTION_KEY`, `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `GOOGLE_MAPS_API_KEY`.
   Code work and every test run without them.
