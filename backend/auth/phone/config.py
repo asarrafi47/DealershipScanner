@@ -20,7 +20,9 @@ _TRUE = ("1", "true", "yes", "on")
 PEPPER_MIN_LENGTH = 32
 # Version of the consent text the phone page shows. The legal pages (card S14) are approved by the owner
 # by setting LEGAL_PAGES_APPROVED_VERSION to this same value; until then the flag may not be on in production.
-CONSENT_TEXT_VERSION = "1"
+# "2": the Privacy Policy and Terms the consent text links to were rewritten (same consent words). A returning
+# person who ticks the box gets the new version and time stored (service._refresh_consent).
+CONSENT_TEXT_VERSION = "2"
 PROVIDER_FAKE = "fake"
 PROVIDER_TWILIO = "twilio_verify"
 KNOWN_PROVIDERS = (PROVIDER_FAKE, PROVIDER_TWILIO)

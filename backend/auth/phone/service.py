@@ -236,6 +236,17 @@ class AuthPhoneService:
         now = self.clock()
         return now if now.tzinfo else now.replace(tzinfo=timezone.utc)
 
+    def _refresh_consent(self, ident: Any, approved: CheckOutcome, now: datetime) -> None:
+        """A returning person ticked the consent box for the current wording: when the stored version
+        differs, store the new version and when they agreed (the page promises to ask again and to
+        record which version was agreed to)."""
+        stored = getattr(ident, "consent_text_version", None)
+        wanted = self.config.consent_text_version
+        if stored is None or not wanted or stored == wanted:
+            return
+        self.repo.record_consent(ident.id, consent_at=approved.consent_at or now, consent_text_version=wanted)
+        _event("consent_updated")
+
     def _parse(self, raw: str | None) -> tuple[str | None, str | None, str | None]:
         """(e164, country, refusal reason). A number from a country not on the list still gets its
         E.164 form, so its refusal can be counted by hash."""
@@ -705,6 +716,7 @@ class AuthPhoneService:
                 ident = self.repo.find_identity_by_phone(e164)
             else:
                 self.repo.touch_login(ident.id, now=now)
+                self._refresh_consent(ident, approved, now)
                 _event("login", purpose=approved.purpose)
                 return SignInOutcome(True, "signed_in", int(ident.user_id), ident.id)
         fresh_from_dormant = ident is not None and ident.dormant_user_id is not None
@@ -728,6 +740,7 @@ class AuthPhoneService:
                     if not accounts.is_eligible(int(ident.user_id)):
                         return _ineligible()
                     self.repo.touch_login(ident.id, now=now)
+                    self._refresh_consent(ident, approved, now)
                     return SignInOutcome(True, "signed_in", int(ident.user_id), ident.id)
                 return SignInOutcome(False, "retry")  # the other tab is creating the account
         elif ident.state == "reserving" and not fresh_from_dormant:
@@ -741,8 +754,10 @@ class AuthPhoneService:
             if again is not None and again.state == "active" and again.user_id is not None:
                 if not accounts.is_eligible(int(again.user_id)):
                     return _ineligible()
+                self._refresh_consent(again, approved, now)
                 return SignInOutcome(True, "signed_in", int(again.user_id), again.id)
             return SignInOutcome(False, "retry")
+        self._refresh_consent(ident, approved, now)
         _event("signup", purpose=approved.purpose)
         return SignInOutcome(True, "dormant_fresh" if fresh_from_dormant else "signed_up", user_id, ident.id)
 

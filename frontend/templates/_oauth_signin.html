@@ -7,5 +7,6 @@
     {% if apple_signin_enabled %}
     <a href="{{ url_for('apple_oauth.start', intent=oauth_intent) if oauth_intent else url_for('apple_oauth.start') }}" class="secondary-button full-width auth-oauth-btn auth-oauth-btn--apple"{% if not apple_signin_visible %} hidden{% endif %}>Sign in with Apple</a>
     {% endif %}
+    {% with signup_legal_lead="If signing in with Google or Apple creates a new account, by creating it" %}{% include "_signup_legal_notice.html" %}{% endwith %}
 </div>
 {% endif %}

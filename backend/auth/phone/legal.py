@@ -22,8 +22,9 @@ from markupsafe import Markup, escape
 
 from backend.auth.phone import config as phone_config
 from backend.auth.phone import consent
+from backend.web import data_recipients
 
-LAST_UPDATED = "2026-11-27"
+LAST_UPDATED = "2026-11-28"
 PROGRAM_NAME = "Sarrafi Cars"
 SUPPORT_PLACEHOLDER = "[support contact to be added by the owner]"
 
@@ -92,6 +93,7 @@ def page_context() -> dict[str, Any]:
         "legal_support_href": support_href(),
         "consent_text": CONSENT_TEXT,
         "consent_html": consent_html(),
+        "data_recipients": data_recipients.RECIPIENTS,
     }
 
 

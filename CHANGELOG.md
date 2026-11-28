@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [1.5.66] - 2026-11-28
+
+- **Terms and Privacy pages (draft) and consent version.** No migration.
+  - `/privacy` names every outside party the site sends visitor data to, rendered from one list (`backend/web/data_recipients.py`): Railway, Cloudflare (network and Turnstile), Anthropic (assistants), DuckDuckGo (assistant web search), Google (Places dealer finder and Sign in with Google), Apple (Sign in with Apple), Stripe, Resend, Twilio, NHTSA (VIN recall look-up), OpenStreetMap/CARTO/Esri map tiles, dealer image hosts and outbound links. It lists account fields, search records, what reviews show, which database is encrypted in production and which is not, and the retention the code implements; owner decisions are bracketed placeholders.
+  - `/terms` covers every sign-in method and has operator and governing-law placeholders.
+  - The footer links Terms and Privacy on every page (the text-message page link still shows only with phone sign-in on); the landing footer links both. Sign-up (`/register`, `/dealer/register`) and the Google/Apple buttons show a notice linking both, with the 13-or-older rule.
+  - `CONSENT_TEXT_VERSION` is `2` (same consent words; the linked pages changed). A returning phone user who ticks the box gets the new version and time stored (`auth_phone_repo.record_consent`); before, only new identities stored it. The owner approves the drafts with `LEGAL_PAGES_APPROVED_VERSION=2`.
+  - Tests: `backend/tests/test_data_recipients.py` scans the web request path and browser pages for outbound hosts and SDKs and fails when one is not in the list or the policy; consent refresh tests in `backend/tests/test_auth_phone_service.py`.
+
 ## [1.5.65] - 2026-11-28
 
 - **Session and login updates.** No migration; password login at `/login` and `/staff/login`, phone sign-in (flag), Google/Apple OAuth and sign out everywhere keep working.

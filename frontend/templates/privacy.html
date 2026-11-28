@@ -21,17 +21,21 @@
         <h1>Privacy Policy</h1>
         <p>Last updated {{ legal_last_updated }}. Version {{ legal_version }}.</p>
 
-        <p>This policy explains what Sarrafi Cars keeps about you, why, who helps us run the site, how long things are kept and how to have them deleted.</p>
+        <p>This policy explains what Sarrafi Cars keeps about you, why, who receives it, how long things are kept and how to have them deleted. Sarrafi Cars is run by [OPERATOR NAME], [OPERATOR POSTAL ADDRESS].</p>
 
         <h2>What we keep</h2>
         <ul>
-            <li><strong>Your phone number.</strong> We treat it as personal data. It is stored in full because we need it to text you a sign-in code and to show you its last digits. We also store when you agreed to receive codes, which version of the consent text you agreed to, and the line type (mobile, landline or internet number) the number had when it was checked.</li>
-            <li><strong>Your account.</strong> A username, an email address if you gave one, your role, and for staff a password stored as a one-way hash. The account database is encrypted.</li>
-            <li><strong>What you save and do on the site.</strong> Saved cars and searches, hidden dealerships, recent searches, cars you viewed or compared, and comments and reviews you post.</li>
-            <li><strong>Counters for limits.</strong> To stop abuse we count sign-in codes and chat messages per phone number, device and network address. These counters store a one-way hash of the number or address, never the number or address itself, and never the text of a message.</li>
-            <li><strong>Cookies.</strong> A signed sign-in cookie, a security token for forms, and a random device cookie used only to count requests for rate limits.</li>
+            <li><strong>Your account.</strong> A username, an email address, your role, and a password stored as a one-way hash. If you sign in with Google or Apple, the account id that service gives us. If you sign in with a phone number, the account gets a made-up placeholder email address. For accounts that use an authenticator app for two-step sign-in, the app's secret. If paid plans are on and you pay, the Stripe customer and subscription ids for your account.</li>
+            <li><strong>Your phone number</strong>, if you sign in with one. We treat it as personal data. It is stored in full because we need it to text you a sign-in code and to show you its last digits. We also store when you agreed to receive codes, which version of the consent text you agreed to, and the line type (mobile, landline or internet number) the number had when it was checked.</li>
+            <li><strong>What you save and do on the site.</strong> Saved cars and searches, hidden dealerships, your recent searches, cars you viewed or compared, and comments, photos and reviews you post.</li>
+            <li><strong>Searches.</strong> Each search on the site (its text, filters, ZIP code and state, and the number of results) is recorded with a random session key, also for visitors who are not signed in.</li>
+            <li><strong>Counters for limits.</strong> To stop abuse we count sign-in codes and chat messages per account, phone number, device and network address. These counters store a one-way hash of the number or address, never the number or address itself, and never the text of a message. Comments store a one-way hash of the network address they came from.</li>
+            <li><strong>Cookies and your browser.</strong> A signed sign-in cookie, a security token for forms, and a random device cookie used to count requests for limits. Your browser keeps the sidebar assistant's recent conversation in its own local storage on your device.</li>
         </ul>
         <p>We never see or keep your sign-in codes (our text-message provider creates and checks them) and we do not keep the text of the messages sent to you.</p>
+
+        <h2>What others can see</h2>
+        <p>A review you post shows your username unless you tick "Post anonymously". If you signed up with Google or Apple, your username starts as the part of your email address before the "@". A private seller's listing shows the car, its photos and description, and a ZIP code area. It never shows the seller's street address, phone number or email address.</p>
 
         <h2>How we use your phone number</h2>
         <p>Only to send you sign-in codes and to tell your account apart from others. We do not use it for marketing and we do not text you anything you did not ask for.</p>
@@ -39,42 +43,43 @@
         <h2>No sale and no sharing for marketing</h2>
         <p>We do not sell your personal data. We do not sell or share your phone number or opt-in data with third parties for marketing.</p>
 
-        <h2>Who helps us run the site</h2>
-        <p>These companies process data for us, each only for the purpose listed:</p>
-        <ul>
-            <li><strong>Twilio</strong>: sends and checks sign-in codes by text message, and looks up a number's line type.</li>
-            <li><strong>Cloudflare</strong>: the Turnstile check against automated sign-ups (it reads signals from your browser) and the network that delivers the site.</li>
-            <li><strong>Railway</strong>: hosts the site, its databases and its logs.</li>
-            <li><strong>Our email provider</strong>: sends account emails such as email confirmation and password reset.</li>
-            <li><strong>Our chat model provider</strong>: receives the messages you type to the car assistant, with the listing details needed to answer them.</li>
+        <h2>Who receives your data</h2>
+        <p>These companies and services receive data about you when you use the site, each only for the purpose listed:</p>
+        <ul id="data-recipients">
+            {% for r in data_recipients %}
+            <li><strong>{{ r.name }}</strong>: {{ r.purpose }} What they get: {{ r.data }} When: {{ r.when }}</li>
+            {% endfor %}
         </ul>
-        <p>Each provider keeps its own records under its own policy. [The owner confirms each provider's retention before approval.]</p>
-
-        <h2>What a seller's listing shows</h2>
-        <p>A private seller's listing shows the car, its photos and description, and a ZIP code area. It never shows the seller's street address, phone number or email address.</p>
+        <p>Each of them keeps its own records under its own policy. [OWNER: confirm each provider's retention before approval.]</p>
 
         <h2>How long we keep things</h2>
         <ul>
             <li>Sign-in code requests: 7 days after they end.</li>
             <li>Records of each code we sent: 30 days.</li>
             <li>Records of wrong code attempts: 24 hours after the lock they caused ends.</li>
+            <li>A number's line type check: 30 days.</li>
             <li>Chat usage counters: 35 days.</li>
-            <li>Your phone number and sign-in identity: until your account is deleted.</li>
-            <li>Server logs: as long as our hosting provider keeps them. [The owner confirms this period.] Logs never contain your phone number or a code.</li>
+            <li>Recent searches on your account: the last 100; you can clear them at any time.</li>
+            <li>Search records, and the cars you viewed or compared: [RETENTION PERIOD FOR SEARCH RECORDS AND VIEW AND COMPARE HISTORY].</li>
+            <li>Your account, phone number and sign-in identity: until your account is deleted.</li>
+            <li>Server logs: as long as our hosting provider keeps them, [SERVER LOG RETENTION PERIOD]. Logs never contain your phone number or a code. When the assistant refuses or cuts short an answer, the first 120 characters of your message can be written to the log.</li>
         </ul>
-        <p>A nightly job deletes records once they pass these ages.</p>
+        <p>The site deletes chat counters once they pass that age. Sign-in records are deleted by a cleanup job once they pass these ages. [OWNER: schedule the phone sign-in cleanup job before phone sign-in is turned on.]</p>
 
         <h2>Deleting your data</h2>
-        <p>You can ask us to delete your account through the contact below. Account data is deleted within 30 days of a request. Rate-limit counters keyed by a one-way hash are kept up to 35 days, because deleting them early would reset the limits. Backups are overwritten on the provider's schedule. [The owner states the backup retention.]</p>
+        <p>You can ask us to delete your account through the contact below. Account data is deleted within 30 days of a request. Rate-limit counters keyed by a one-way hash are kept up to 35 days, because deleting them early would reset the limits. Backups are overwritten on the provider's schedule, [BACKUP RETENTION PERIOD]. A review keeps the name it was posted under until the review itself is deleted.</p>
 
         <h2>Children</h2>
         <p>You must be 13 or older to use Sarrafi Cars. We do not knowingly keep data about anyone younger; if you believe a child under 13 has an account, tell us and we will delete it.</p>
 
         <h2>Security</h2>
-        <p>The account database is encrypted, limits are keyed by one-way hashes and sign-in codes are never stored by us. No system is perfectly secure.</p>
+        <p>In production, the database that holds accounts (usernames, email addresses and password hashes), search records and view and compare history is encrypted on disk with a key the application holds. Phone numbers, saved cars and searches, hidden dealerships and recent searches are kept in a separate database that the application does not encrypt itself. [OWNER: state whether the hosting provider encrypts that database's disk.] Limits are keyed by one-way hashes and sign-in codes are never stored by us. No system is perfectly secure.</p>
 
         <h2>Changes to this policy</h2>
-        <p>The date and version at the top change when we update this policy. If the text-message consent wording changes, we ask for your agreement again the next time you sign in.</p>
+        <p>The date and version at the top change when we update this policy. If you sign in with a phone number, we ask for your agreement again the next time you sign in after the version changes, and we record the new version and when you agreed.</p>
+
+        <h2>Your rights</h2>
+        <p>[OWNER: the rights that apply where Sarrafi Cars operates ([JURISDICTION]), for example access, correction and deletion, and how to use them.]</p>
 
         <h2>Contact</h2>
         <p>Privacy questions and deletion requests: {% if legal_support_missing %}{{ legal_support_contact }}{% else %}<a href="{{ legal_support_href }}">{{ legal_support_contact }}</a>{% endif %}.</p>
