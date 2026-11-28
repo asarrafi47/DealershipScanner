@@ -845,28 +845,33 @@ def test_bootstrap_and_fleet_scan_load_through_the_same_function() -> None:
         assert "load_kmac_vault_secrets()" in (ROOT / loop).read_text(encoding="utf-8")
 
 
-def test_bootstrap_site_admin_uses_the_vault_admin_password(role_env, tmp_path) -> None:
-    """End to end: the admin bootstrap (a subprocess before gunicorn) sees the vault value."""
+def test_bootstrap_site_admin_uses_the_vault_admin_password(role_env) -> None:
+    """End to end: the admin bootstrap's vault step (a subprocess before gunicorn) sees the vault value.
+
+    Runs the bootstrap module's own load step in a fresh interpreter, then reports only whether
+    ADMIN_PASSWORD now holds the vault value (never the value itself); no users database is opened.
+    """
     vault, addr = role_env
     vault.values[KEY_PREFIX + "ADMIN_PASSWORD"] = "vault-admin-password-123"
-    db = tmp_path / "users.db"
     env = {
         **os.environ,
         "PYTHONPATH": str(ROOT),
-        "USERS_DB_PATH": str(db),
-        "ALLOW_UNENCRYPTED_USER_DB": "1",
-        "APP_ADMIN_USERNAMES": "asarrafi",
-        "APP_ADMIN_EMAILS": "admin@example.com",
-        "ALLOW_DEFAULT_APP_USER": "1",
         "ADMIN_PASSWORD": "env-admin-password-456",
         "FLASK_ENV": "development",
         "VAULT_BOOT_WAIT_SECONDS": "2",
     }
+    code = (
+        "import os, runpy, sys\n"
+        "mod = runpy.run_path(sys.argv[1], run_name='bootstrap_probe')\n"
+        "mod['_load_vault_role_secrets']()\n"
+        "print('VAULT_VALUE_APPLIED' if os.environ.get('ADMIN_PASSWORD') == sys.argv[2] else 'NOT_APPLIED')\n"
+    )
     proc = subprocess.run(
-        [sys.executable, str(ROOT / "scripts/bootstrap_site_admin.py")],
+        [sys.executable, "-c", code, str(ROOT / "scripts/bootstrap_site_admin.py"), "vault-admin-password-123"],
         capture_output=True, text=True, env=env, check=False, timeout=120,
     )
     assert proc.returncode == 0, proc.stderr[-2000:]
+    assert "VAULT_VALUE_APPLIED" in proc.stdout
     assert len(vault.logins()) == 1
     assert "/get/dealershipscanner:ADMIN_PASSWORD" in vault.gets()
     for secret in ("vault-admin-password-123", ROLE_ID, SECRET_ID, TOKEN):

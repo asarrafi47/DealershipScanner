@@ -131,7 +131,7 @@ _EFFECTIVE_ALIASES: dict[str, tuple[str, ...]] = {"SECRET_KEY": ("SECRET_KEY", "
 _TRUE = ("1", "true", "yes", "on")
 
 # Response kinds
-_OK = "ok"
+_SUCCESS = "ok"
 _MISSING = "missing"  # 404
 _UNAUTHORIZED = "unauthorized"  # 401
 _FORBIDDEN = "forbidden"  # 403
@@ -262,7 +262,7 @@ def _send(opener, req: urllib.request.Request, timeout: float) -> _Resp:
             data = json.loads(body.decode("utf-8"))
         except Exception:
             return _Resp(_BAD, status)
-        return _Resp(_OK, status, data)
+        return _Resp(_SUCCESS, status, data)
     except urllib.error.HTTPError as err:
         return _classify_http_error(err)
     except (urllib.error.URLError, TimeoutError, ConnectionError, OSError):
@@ -376,7 +376,7 @@ class _Loader:
             )
 
         r = self._call(build)
-        if r.kind == _OK and isinstance(r.data, dict):
+        if r.kind == _SUCCESS and isinstance(r.data, dict):
             tok = r.data.get("access_token")
             if isinstance(tok, str) and tok.strip():
                 ttl = r.data.get("expires_in")
@@ -451,12 +451,12 @@ class _Loader:
             return (_MISSING, None)
         if r.kind in _RETRYABLE:
             return ("stopped", None)
-        if r.kind == _OK and isinstance(r.data, dict):
+        if r.kind == _SUCCESS and isinstance(r.data, dict):
             got_key = r.data.get("key")
             value = r.data.get("value")
             if (got_key is None or got_key == key) and isinstance(value, str):
                 value = value.strip()
-                return (_OK, value) if value else (_MISSING, None)
+                return (_SUCCESS, value) if value else (_MISSING, None)
         self.bad_answers += 1
         return (_BAD, None)
 
@@ -517,7 +517,7 @@ def _fetch_all(loader_args: dict, out: _Fetched, lock: threading.Lock) -> None:
             if loader.stopped:
                 break
             kind, value = loader.fetch(name)
-            if kind == _OK and value:
+            if kind == _SUCCESS and value:
                 values[name] = value
             elif kind == _FORBIDDEN:
                 forbidden.append(name)
