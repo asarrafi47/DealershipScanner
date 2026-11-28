@@ -8,8 +8,8 @@
 # so a new pytest or plugin release cannot turn a green branch red on its own.
 # backend/tests/test_requirements_hygiene.py accepts these names for imports
 # under backend/tests/ only, and backend/tests/test_ci_workflow.py pins the file.
-pytest==9.1.1
+pytest==9.2.0
 # --timeout in the CI pytest step (.github/workflows/ci.yml).
 pytest-timeout==2.4.0
 # backend/tests/test_ci_workflow.py parses ci.yml with it.
-pyyaml==6.0.3
+pyyaml==6.0.4
