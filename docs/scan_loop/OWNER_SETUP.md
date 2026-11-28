@@ -21,15 +21,33 @@ One-time setup, in the browser:
 3. Same page, a second secret `BACKUP_PASSPHRASE`: any long random string (it encrypts the pre-migration dump,
    because artifacts of a public repository are downloadable by anyone). Keep a copy in your password manager;
    without it the dump cannot be opened.
+4. A **deploy key** for the `release` action, secret `RELEASE_DEPLOY_KEY`. Why: the `protect-main` ruleset
+   (deletion, non-fast-forward and update on `main`) lists one bypass actor, **DeployKey**, and a personal
+   repository cannot add the GitHub Actions app to it, so the default `GITHUB_TOKEN` cannot move `main`. The
+   `release` job checks out over SSH with this key and pushes `main` and the tag with it; no other job sees it.
+   1. On any machine, create an ed25519 key pair with no passphrase, in a temporary folder:
+      `ssh-keygen -t ed25519 -N "" -C release-deploy-key -f ./release_deploy_key`
+      (it writes `release_deploy_key` and `release_deploy_key.pub`).
+   2. GitHub, `asarrafi47/DealershipScanner`, **Settings > Deploy keys > Add deploy key**: title
+      `release`, key the contents of `release_deploy_key.pub`, tick **Allow write access**.
+   3. **Settings > Secrets and variables > Actions > New repository secret**: name `RELEASE_DEPLOY_KEY`,
+      value the whole contents of `release_deploy_key` (the private half, including the
+      `-----BEGIN`/`-----END` lines).
+   4. Delete both local files (`rm release_deploy_key release_deploy_key.pub`). Nothing else needs the key;
+      if it is lost, delete the deploy key and repeat these steps.
+
+   Check: run the workflow with action `check`. The step "Release deploy key authenticates (read-only)" prints
+   `deploy key authenticates as asarrafi47/DealershipScanner` (while the secret is unset it only warns). It
+   cannot see write access, so step 2's checkbox matters: without it `release` fails at the push.
 
 Then run **Actions > Release and deploy > Run workflow** (`.github/workflows/release.yml`):
 
 | action | what it does |
 |---|---|
-| `check` | read-only: release guard, migrate dry run against prod |
+| `check` | read-only: deploy key authenticates (`ssh -T`), release guard, migrate dry run against prod |
 | `backup` | encrypted `pg_dump` of prod, kept 90 days as a workflow artifact |
 | `migrate` | `migrate --apply --target <N>` against prod (run `backup` first) |
-| `release` | fast-forward `main` to `<ref>` and push the annotated tag `v<VERSION>` |
+| `release` | fast-forward `main` to `<ref>` and push the annotated tag `v<VERSION>`, over SSH with the deploy key |
 | `deploy` | deploy web, check `/api/health` and that `/api/loop/list` is 401, then scanner-nightly |
 | `scan` | supervised scan: `SCAN_DEALERS=<ids>`, `SCAN_FLEET=0`, no cron |
 | `full` | `backup`, `migrate`, `release`, `deploy` in order |

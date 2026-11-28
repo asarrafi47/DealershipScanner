@@ -6,6 +6,11 @@ name: Release and deploy
 # Needs two repository secrets (docs/scan_loop/OWNER_SETUP.md, section 1):
 #   RAILWAY_TOKEN       a Railway PROJECT token for the production environment
 #   BACKUP_PASSPHRASE   any long random string; encrypts the pre-migration dump
+# and, for action release/full, one more:
+#   RELEASE_DEPLOY_KEY  private half of a write-enabled repository deploy key. The
+#                       protect-main ruleset lets only a DeployKey bypass it, so the
+#                       default GITHUB_TOKEN cannot fast-forward main. Only the
+#                       release job pushes with it; check only tests it (ssh -T).
 #
 # action:
 #   check     read-only: release guard, migrate dry run against prod, deploy dry runs
@@ -65,6 +70,42 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
+      # Read-only: proves RELEASE_DEPLOY_KEY authenticates, never pushes. GitHub's
+      # ed25519 host key is pinned (published fingerprint
+      # SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU), no ssh-keyscan.
+      # ssh -T cannot see write access; "Allow write access" is an owner step.
+      - name: Release deploy key authenticates (read-only)
+        env:
+          RELEASE_DEPLOY_KEY: ${{ secrets.RELEASE_DEPLOY_KEY }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ -z "$RELEASE_DEPLOY_KEY" ]; then
+            echo "::warning::RELEASE_DEPLOY_KEY secret is not set: action release will fail until it is (docs/scan_loop/OWNER_SETUP.md, section 1)"
+            exit 0
+          fi
+          key="$RUNNER_TEMP/release_deploy_key"
+          known="$RUNNER_TEMP/release_known_hosts"
+          trap 'rm -f "$key" "$known"' EXIT
+          umask 077
+          printf '%s\n' "$RELEASE_DEPLOY_KEY" | tr -d '\r' > "$key"
+          chmod 600 "$key"
+          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$known"
+          out=$(ssh -T -i "$key" -o IdentitiesOnly=yes -o BatchMode=yes \
+                -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$known" \
+                git@github.com 2>&1 || true)
+          who=$(printf '%s\n' "$out" | sed -n 's/^Hi \([^!]*\)! You.ve successfully authenticated.*/\1/p' | head -1)
+          if [ -z "$who" ]; then
+            echo "RELEASE_DEPLOY_KEY does not authenticate to github.com:"
+            printf '%s\n' "$out" | grep -v '^Warning: Permanently added' | head -5
+            exit 1
+          fi
+          if [ "$who" != "$REPO" ]; then
+            echo "RELEASE_DEPLOY_KEY authenticates as $who, not as the deploy key of $REPO: use a repository deploy key"
+            exit 1
+          fi
+          echo "deploy key authenticates as $who"
+          echo "deploy key authenticates as $who" >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -146,13 +187,26 @@ jobs:
     if: ${{ !cancelled() && !failure() && (inputs.action == 'release' || inputs.action == 'full') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # main and the tag are pushed with the deploy key over SSH, not with the
+    # GITHUB_TOKEN: protect-main's bypass list holds only a DeployKey actor.
+    # The token needs no write permission.
     permissions:
-      contents: write
+      contents: read
     steps:
+      - name: Deploy key secret is set
+        env:
+          RELEASE_DEPLOY_KEY: ${{ secrets.RELEASE_DEPLOY_KEY }}
+        run: |
+          test -n "$RELEASE_DEPLOY_KEY" || { echo "RELEASE_DEPLOY_KEY secret is not set (docs/scan_loop/OWNER_SETUP.md, section 1)"; exit 1; }
+      # ssh-key makes origin git@github.com:<repo>.git with GitHub's known host
+      # keys (ssh-strict). persist-credentials keeps the key, in RUNNER_TEMP,
+      # for the next step of this job only; checkout's post step removes it.
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
+          ssh-key: ${{ secrets.RELEASE_DEPLOY_KEY }}
+          persist-credentials: true
       - name: Release guard, fast-forward main, annotated tag
         run: |
           set -euo pipefail
