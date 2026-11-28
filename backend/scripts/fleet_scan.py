@@ -634,5 +634,18 @@ def _scan(roster: list[str], window_spec: str | None, started: datetime, t_start
     return summary["exit"]
 
 
+def _load_vault_role_secrets() -> None:
+    """Role-login vault load before anything reads a secret (ANTHROPIC_API_KEY in the post
+    steps); the shard subprocesses inherit the resolved environment. No-op unless the role
+    login is configured; the static-token path was never run here and still is not."""
+    try:
+        from backend.utils.kmac_vault import load_kmac_vault_secrets
+
+        load_kmac_vault_secrets(static_token=False)
+    except Exception:
+        pass
+
+
 if __name__ == "__main__":
+    _load_vault_role_secrets()
     sys.exit(main())

@@ -23,7 +23,14 @@ export KMAC_VAULT_AUTO="${KMAC_VAULT_AUTO:-1}"
 # to surface a vault problem early via the WARN line. The real, single load
 # that workers actually run on happens later, once, in the gunicorn master
 # (see --preload on the exec gunicorn call).
-if [ "${KMAC_VAULT_AUTO}" != "0" ]; then
+# With the role login configured (VAULT_ROLE_ID set; backend/utils/vault_role.py) the
+# check is skipped: it would spend the whole VAULT_BOOT_WAIT_SECONDS budget on a sealed
+# vault and then the gunicorn master would spend it again. The role load reports for
+# itself (one INFO summary line, CRITICAL lines by name), and the admin bootstrap below
+# runs its own capped role load so it sees the resolved ADMIN_PASSWORD and SQLCipher keys.
+if [ -n "${VAULT_ROLE_ID:-}" ]; then
+  :
+elif [ "${KMAC_VAULT_AUTO}" != "0" ]; then
   python3 -c "from backend.utils.kmac_vault import load_kmac_vault_secrets; load_kmac_vault_secrets()" \
     || echo "WARN: kmac vault preload skipped (vault unreachable or token missing)" >&2
 fi
@@ -36,6 +43,9 @@ if [ "${MIGRATE_ON_BOOT:-1}" != "0" ]; then
     || echo "WARN: migration apply FAILED — booting on the existing schema" >&2
 fi
 
+# Reads ADMIN_PASSWORD and the users.db SQLCipher key: with the role login configured it
+# loads them from the vault itself first (capped at 10 s of wall time in total, so boot never pays the full
+# budget twice; values stay inside that Python process, nothing is echoed or exported).
 python3 scripts/bootstrap_site_admin.py \
   || echo "WARN: site admin bootstrap skipped" >&2
 

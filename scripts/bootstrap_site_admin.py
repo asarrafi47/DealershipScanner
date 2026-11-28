@@ -107,7 +107,26 @@ def _reset_passwords(pw_plain: str) -> list[str]:
     return updated
 
 
+# The web entrypoint runs this before gunicorn, and the gunicorn master loads the vault
+# again: cap this load so a sealed vault costs the boot at most this much extra.
+BOOTSTRAP_VAULT_WAIT_CAP_S = 10.0
+
+
+def _load_vault_role_secrets() -> None:
+    """Role-login vault load (no-op unless VAULT_ADDR, VAULT_ROLE_ID, VAULT_SECRET_ID are set).
+
+    The static-token path is not run here, as before. Never raises.
+    """
+    try:
+        from backend.utils.kmac_vault import load_kmac_vault_secrets
+
+        load_kmac_vault_secrets(static_token=False, max_wait_seconds=BOOTSTRAP_VAULT_WAIT_CAP_S)
+    except Exception:
+        pass
+
+
 def main() -> int:
+    _load_vault_role_secrets()
     if not is_production_env():
         os.environ.setdefault("ALLOW_UNENCRYPTED_USER_DB", "1")
     init_users_db()

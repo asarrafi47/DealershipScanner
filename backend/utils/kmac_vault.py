@@ -1,9 +1,16 @@
 """Load DealershipScanner secrets from the kmac vault into ``os.environ``.
 
-Vault is the source of truth locally (Docker → host kmac-vault) and on Railway
-(web service → ``kmac-vault.railway.internal`` in the same project).
+Static-token path: locally Docker reaches the host vault. Its Railway fallback
+addresses below come from a design production never ran (there is no such service;
+``deploy/railway/README.md``); production uses the role login instead.
 
 Only fills env vars that are empty so explicit exports / platform vars always win.
+
+Role login (``backend/utils/vault_role.py``): when ``VAULT_ADDR``, ``VAULT_ROLE_ID`` and
+``VAULT_SECRET_ID`` are all set (and ``KMAC_VAULT_DISABLE`` is off),
+:func:`load_kmac_vault_secrets` runs the role-login load instead of the static-token
+path below, whatever ``KMAC_VAULT_AUTO`` says. Without them the static-token path runs
+exactly as before. Every boot entry point calls :func:`load_kmac_vault_secrets`.
 """
 
 from __future__ import annotations
@@ -166,11 +173,28 @@ def vault_get(vault_key: str, *, token: str | None = None, timeout: float | None
     return None
 
 
-def load_kmac_vault_secrets(*, force: bool = False) -> list[str]:
+def load_kmac_vault_secrets(
+    *,
+    force: bool = False,
+    static_token: bool = True,
+    max_wait_seconds: float | None = None,
+) -> list[str]:
     """
-    Populate empty env vars from vault. Returns env names that were set.
+    Populate env vars from vault. Returns env names whose value came from the vault.
+
+    Role login configured (see module docstring): the role-login load runs (never
+    raises, ``max_wait_seconds`` caps its boot budget) and the static-token path does not.
+    Otherwise, with ``static_token=False`` nothing is fetched (entry points that never
+    used the static-token path, such as the fleet scan and the admin bootstrap, keep not
+    using it); with the default the static-token path runs unchanged.
     """
     if _vault_disabled():
+        return []
+    from backend.utils import vault_role
+
+    if vault_role.role_path_configured():
+        return list(vault_role.load_role_secrets(max_wait_seconds=max_wait_seconds).from_vault)
+    if not static_token:
         return []
     if not force and not _vault_auto_enabled():
         return []
