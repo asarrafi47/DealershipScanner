@@ -1,30 +1,38 @@
 name: Release and deploy
+# The approval screen shows this line: check the action and the ref before approving.
+run-name: "${{ inputs.action }} ref=${{ inputs.ref }} by ${{ github.actor }}"
 
 # Cloud release path (decided 2026-11-21: no Mac steps). Manual only: run it from
 # Actions > "Release and deploy" > Run workflow. It never runs on a push.
 #
-# Needs two repository secrets (docs/scan_loop/OWNER_SETUP.md, section 1):
+# Every job runs in the GitHub environment `production` (owner runbook:
+# docs/RELEASING.md, "The production environment"). The secrets it reads:
 #   RAILWAY_TOKEN       a Railway PROJECT token for the production environment
-#   BACKUP_PASSPHRASE   any long random string; encrypts the pre-migration dump
-# and, for action release/full, one more:
 #   RELEASE_DEPLOY_KEY  private half of a write-enabled repository deploy key. The
 #                       protect-main ruleset lets only a DeployKey bypass it, so the
 #                       default GITHUB_TOKEN cannot fast-forward main. Only the
 #                       release job pushes with it; check only tests it (ssh -T).
+# and one repository VARIABLE (not a secret, it is a public key):
+#   RELEASE_BACKUP_PUBKEY  age recipient(s) (age1...) the pre-migration dump is
+#                          encrypted to. The private key stays offline with the owner.
+#
+# Secrets are set at STEP level only, on the steps that need them; no job- or
+# workflow-level env carries one. backend/tests/test_release_workflow.py pins that.
 #
 # action:
-#   check     read-only: release guard, migrate dry run against prod, deploy dry runs
-#   backup    pg_dump of prod, encrypted, kept as a workflow artifact (90 days)
+#   check     read-only: release guard, ruleset check, migrate dry run against prod
+#   backup    pg_dump of prod, encrypted to RELEASE_BACKUP_PUBKEY, kept 7 days as an artifact
 #   migrate   migrate --apply --target <target> against prod (run backup first)
 #   release   fast-forward main to <ref>, push the annotated tag v<VERSION>
 #   deploy    deploy web, then scanner-nightly, from the tag at main
 #   scan      supervised scan: SCAN_DEALERS=<scan_dealers>, SCAN_FLEET=0, no cron
 #   full      backup, migrate, release, deploy, in that order (not scan)
 #
-# The artifact is encrypted because this repository is public: anyone can
-# download a public repo's artifacts. Web boot also applies pending migrations
-# (MIGRATE_ON_BOOT=1), so the explicit migrate step exists to run AFTER the
-# backup and BEFORE the new web code boots.
+# This repository is public, so its logs and artifacts are readable by anyone:
+# the dump is encrypted to a public key (no decryption secret exists in GitHub),
+# and steps print only short status lines, never Railway status, hosts or logs.
+# Web boot also applies pending migrations (MIGRATE_ON_BOOT=1), so the explicit
+# migrate step exists to run AFTER the backup and BEFORE the new web code boots.
 
 on:
   workflow_dispatch:
@@ -55,21 +63,43 @@ concurrency:
   group: release-and-deploy
   cancel-in-progress: false
 
+# No secrets here: only public, non-sensitive values.
 env:
-  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
   HEALTH_URL: https://sarraficars.com/api/health
   LOOP_URL: https://sarraficars.com/api/loop/list
+  # Railway CLI: exact npm version, installed with --ignore-scripts; the binary its
+  # postinstall would fetch is downloaded here instead and checked against a pinned
+  # SHA-256 (release asset railway-v<version>-x86_64-unknown-linux-musl.tar.gz).
+  RAILWAY_CLI_VERSION: "5.74.0"
+  RAILWAY_CLI_SHA256: 0fc8d11c416b666d4963e9727581b62ad136f5bd83df79dbd85d66f9e4b845f7
 
 jobs:
+  # No secrets, no environment: refuses a ref outside the allowlist before any
+  # job that holds a secret runs code from it. dev, main, or hotfix/<x.y.z>.
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ref is dev, main or hotfix/<x.y.z>
+        env:
+          REF: ${{ inputs.ref }}
+        run: |
+          printf '%s' "$REF" | grep -Eq '^(dev|main|hotfix/[0-9]+\.[0-9]+\.[0-9]+)$' \
+            || { echo "::error::ref must be dev, main or hotfix/<x.y.z>"; exit 1; }
+          echo "ref: $REF"
+
   check:
+    needs: [gate]
     if: ${{ inputs.action == 'check' }}
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
+          persist-credentials: false
       # Read-only: proves RELEASE_DEPLOY_KEY authenticates, never pushes. GitHub's
       # ed25519 host key is pinned (published fingerprint
       # SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU), no ssh-keyscan.
@@ -106,86 +136,179 @@ jobs:
           fi
           echo "deploy key authenticates as $who"
           echo "deploy key authenticates as $who" >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/setup-python@v5
+      # Read-only (L5-4): the live protect-main ruleset and the release-tag
+      # ruleset against the block in docs/RELEASING.md. Differences are warnings.
+      - name: Rulesets match docs/RELEASING.md (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: python3 scripts/check_release_protection.py --repo "$REPO"
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
-      - name: Tools
+      - name: Tools (no secrets in this step)
         run: |
-          npm install -g @railway/cli
-          pip install "psycopg[binary]>=3.2"
-          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          set -euo pipefail
+          npm install -g --ignore-scripts --no-audit --no-fund "@railway/cli@${RAILWAY_CLI_VERSION}"
+          tgz="$RUNNER_TEMP/railway.tgz"
+          curl -fsSL -o "$tgz" "https://github.com/railwayapp/cli/releases/download/v${RAILWAY_CLI_VERSION}/railway-v${RAILWAY_CLI_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          echo "${RAILWAY_CLI_SHA256}  $tgz" | sha256sum -c --quiet -
+          tar -xzf "$tgz" -C "$(npm root -g)/@railway/cli/bin" railway
+          rm -f "$tgz"
+          railway --version
+          pip install -q "psycopg[binary]>=3.2"
       - name: Release guard against main
         run: python3 scripts/release_guard.py --base origin/main
-      - name: Railway reachable and target is remote
-        run: railway status
+      - name: Railway reachable (output hidden)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          railway status >/dev/null 2>&1 || { echo "railway status failed (output hidden: this log is public)"; exit 1; }
+          echo "railway: linked"
       - name: Migrate dry run against prod
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          MIGRATE_HIDE_TARGET: "1"
         run: |
           railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; case "$INVENTORY_DATABASE_URL" in ""|*@localhost*|*@127.0.0.1*) echo "target: LOCAL, stopping"; exit 1 ;; *) echo "target: remote" ;; esac; python -m backend.scripts.migrate --dry-run'
 
   backup:
+    needs: [gate]
     if: ${{ inputs.action == 'backup' || inputs.action == 'full' }}
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 45
     steps:
-      - name: PostgreSQL 18 client
+      # Fails before anything runs when the public key is missing: there is no
+      # weaker fallback (no passphrase, no plaintext).
+      - name: Backup public key is set
+        env:
+          RELEASE_BACKUP_PUBKEY: ${{ vars.RELEASE_BACKUP_PUBKEY }}
         run: |
+          set -euo pipefail
+          if [ -z "${RELEASE_BACKUP_PUBKEY// /}" ]; then
+            echo "::error::Repository variable RELEASE_BACKUP_PUBKEY is not set. The backup is encrypted only to an age public key and is never published otherwise. Set it (docs/RELEASING.md, \"Pre-migration backup\") and run again."
+            exit 1
+          fi
+          n=0
+          for r in $RELEASE_BACKUP_PUBKEY; do
+            if ! printf '%s' "$r" | grep -Eq '^age1[02-9ac-hj-np-z]{58}$'; then
+              echo "::error::RELEASE_BACKUP_PUBKEY holds a value that is not an age X25519 recipient (age1 followed by 58 characters)"
+              exit 1
+            fi
+            n=$((n+1))
+          done
+          echo "backup recipients: $n"
+      - name: Tools (no secrets in this step)
+        run: |
+          set -euo pipefail
           sudo install -d /usr/share/postgresql-common/pgdg
           sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
-          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          # PGDG signing key, fingerprint pinned (as scripts/cloud/setup.sh does).
+          gpg --show-keys --with-colons /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc | grep -q '^fpr:::::::::B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8:$' \
+            || { echo "PGDG key fingerprint mismatch"; exit 1; }
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
           sudo apt-get update -qq
-          sudo apt-get install -y -qq postgresql-client-18
-          npm install -g @railway/cli
-          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
-          test -n "$BACKUP_PASSPHRASE" || { echo "BACKUP_PASSPHRASE secret is not set"; exit 1; }
+          sudo apt-get install -y -qq postgresql-client-18 age >/dev/null
+          npm install -g --ignore-scripts --no-audit --no-fund "@railway/cli@${RAILWAY_CLI_VERSION}"
+          tgz="$RUNNER_TEMP/railway.tgz"
+          curl -fsSL -o "$tgz" "https://github.com/railwayapp/cli/releases/download/v${RAILWAY_CLI_VERSION}/railway-v${RAILWAY_CLI_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          echo "${RAILWAY_CLI_SHA256}  $tgz" | sha256sum -c --quiet -
+          tar -xzf "$tgz" -C "$(npm root -g)/@railway/cli/bin" railway
+          rm -f "$tgz"
+          railway --version
+          age --version
+      - name: Dump prod, check it, encrypt it to the public key
         env:
-          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
-      - name: Dump prod, check it, encrypt it
-        env:
-          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RELEASE_BACKUP_PUBKEY: ${{ vars.RELEASE_BACKUP_PUBKEY }}
         run: |
+          set -euo pipefail
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
           PGBIN=/usr/lib/postgresql/18/bin
-          railway run -s Postgres -- sh -c "$PGBIN/pg_dump -Fc \"\$DATABASE_PUBLIC_URL\"" > prod.dump
-          test -s prod.dump
-          $PGBIN/pg_restore -l prod.dump | head -5
-          ls -l prod.dump
-          openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BACKUP_PASSPHRASE -in prod.dump -out prod_pre_migrate.dump.enc
-          rm prod.dump
-          ls -l prod_pre_migrate.dump.enc
-      - uses: actions/upload-artifact@v4
+          plain="$RUNNER_TEMP/prod.dump"
+          umask 077
+          trap 'rm -f "$plain" "$RUNNER_TEMP/recipients" "$RUNNER_TEMP/toc"' EXIT
+          # stderr hidden: pg_dump errors name the database host, and this log is public.
+          railway run -s Postgres -- sh -c "$PGBIN/pg_dump -Fc \"\$DATABASE_PUBLIC_URL\"" > "$plain" 2>/dev/null \
+            || { echo "pg_dump failed (stderr hidden: this log is public)"; exit 1; }
+          test -s "$plain"
+          $PGBIN/pg_restore -l "$plain" > "$RUNNER_TEMP/toc" 2>/dev/null \
+            || { echo "pg_restore -l cannot read the dump"; exit 1; }
+          entries=$(grep -vc '^;' "$RUNNER_TEMP/toc" || true)
+          test "$entries" -gt 0 || { echo "dump has no TOC entries"; exit 1; }
+          echo "dump: $(stat -c %s "$plain") bytes, $entries TOC entries"
+          printf '%s\n' $RELEASE_BACKUP_PUBKEY > "$RUNNER_TEMP/recipients"
+          age -R "$RUNNER_TEMP/recipients" -o prod_pre_migrate.dump.age "$plain"
+          rm -f "$plain"
+          head -c 21 prod_pre_migrate.dump.age | grep -q '^age-encryption.org/v1' || { echo "output is not an age file"; exit 1; }
+          echo "encrypted: $(stat -c %s prod_pre_migrate.dump.age) bytes"
+      # Only the age ciphertext is uploaded (no decryption secret exists in
+      # GitHub). Short retention; docs/RELEASING.md says how to fetch, decrypt and
+      # delete it, and how to prune artifacts from earlier runs.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: prod-pre-migrate-${{ github.run_id }}
-          path: prod_pre_migrate.dump.enc
-          retention-days: 90
+          path: prod_pre_migrate.dump.age
+          retention-days: 7
           if-no-files-found: error
+      - name: Where the backup is
+        run: |
+          {
+            echo "Pre-migration backup: artifact prod-pre-migrate-${GITHUB_RUN_ID} (age-encrypted, kept 7 days)."
+            echo "Decrypt offline with the private key: docs/RELEASING.md, \"Pre-migration backup\"."
+          } >> "$GITHUB_STEP_SUMMARY"
 
   migrate:
-    needs: [backup]
+    needs: [gate, backup]
     if: ${{ !cancelled() && !failure() && (inputs.action == 'migrate' || inputs.action == 'full') }}
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ inputs.ref }}
-      - uses: actions/setup-python@v5
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
-      - name: Tools
+      - name: Tools (no secrets in this step)
+        env:
+          TARGET: ${{ inputs.target }}
         run: |
-          npm install -g @railway/cli
-          pip install "psycopg[binary]>=3.2"
-          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          set -euo pipefail
+          printf '%s' "$TARGET" | grep -Eq '^[0-9]{1,4}$' || { echo "target must be a migration number"; exit 1; }
+          npm install -g --ignore-scripts --no-audit --no-fund "@railway/cli@${RAILWAY_CLI_VERSION}"
+          tgz="$RUNNER_TEMP/railway.tgz"
+          curl -fsSL -o "$tgz" "https://github.com/railwayapp/cli/releases/download/v${RAILWAY_CLI_VERSION}/railway-v${RAILWAY_CLI_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          echo "${RAILWAY_CLI_SHA256}  $tgz" | sha256sum -c --quiet -
+          tar -xzf "$tgz" -C "$(npm root -g)/@railway/cli/bin" railway
+          rm -f "$tgz"
+          railway --version
+          pip install -q "psycopg[binary]>=3.2"
       - name: Apply migrations to prod
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          TARGET: ${{ inputs.target }}
+          MIGRATE_HIDE_TARGET: "1"
         run: |
-          railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; case "$INVENTORY_DATABASE_URL" in ""|*@localhost*|*@127.0.0.1*) echo "target: LOCAL, stopping"; exit 1 ;; *) echo "target: remote" ;; esac; python -m backend.scripts.migrate --apply --target ${{ inputs.target }}'
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; case "$INVENTORY_DATABASE_URL" in ""|*@localhost*|*@127.0.0.1*) echo "target: LOCAL, stopping"; exit 1 ;; *) echo "target: remote" ;; esac; python -m backend.scripts.migrate --apply --target "$TARGET"'
       - name: Dry run after apply
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          TARGET: ${{ inputs.target }}
+          MIGRATE_HIDE_TARGET: "1"
         run: |
-          railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; python -m backend.scripts.migrate --dry-run --target ${{ inputs.target }}'
+          railway run -s Postgres -- sh -c 'export INVENTORY_DATABASE_URL="$DATABASE_PUBLIC_URL"; python -m backend.scripts.migrate --dry-run --target "$TARGET"'
 
   release:
-    needs: [migrate]
+    needs: [gate, migrate]
     if: ${{ !cancelled() && !failure() && (inputs.action == 'release' || inputs.action == 'full') }}
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 15
     # main and the tag are pushed with the deploy key over SSH, not with the
     # GITHUB_TOKEN: protect-main's bypass list holds only a DeployKey actor.
@@ -201,18 +324,20 @@ jobs:
       # ssh-key makes origin git@github.com:<repo>.git with GitHub's known host
       # keys (ssh-strict). persist-credentials keeps the key, in RUNNER_TEMP,
       # for the next step of this job only; checkout's post step removes it.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
           ssh-key: ${{ secrets.RELEASE_DEPLOY_KEY }}
           persist-credentials: true
       - name: Release guard, fast-forward main, annotated tag
+        env:
+          REF: ${{ inputs.ref }}
         run: |
           set -euo pipefail
           git fetch origin main:refs/remotes/origin/main
           python3 scripts/release_guard.py --base origin/main
-          git merge-base --is-ancestor origin/main HEAD || { echo "main is not an ancestor of ${{ inputs.ref }}: not a fast-forward"; exit 1; }
+          git merge-base --is-ancestor origin/main HEAD || { echo "main is not an ancestor of $REF: not a fast-forward"; exit 1; }
           V=$(tr -d '[:space:]' < VERSION)
           if git ls-remote --exit-code --tags origin "refs/tags/v$V" >/dev/null 2>&1; then
             echo "tag v$V already exists on origin"; exit 1
@@ -222,33 +347,53 @@ jobs:
           git push origin HEAD:refs/heads/main
           git tag -a "v$V" -m "Release $V"
           git push origin "v$V"
-          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)" && echo main-released
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)" \
+            || { echo "main on origin is not at HEAD after the push"; exit 1; }
+          echo main-released
           echo "released v$V" >> "$GITHUB_STEP_SUMMARY"
 
   deploy:
-    needs: [release]
+    needs: [gate, release]
     if: ${{ !cancelled() && !failure() && (inputs.action == 'deploy' || inputs.action == 'full') }}
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: main
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
-      - name: Tools and checkout the release tag
+      - name: Tools and checkout the release tag (no secrets in this step)
         run: |
-          npm install -g @railway/cli
-          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          set -euo pipefail
+          npm install -g --ignore-scripts --no-audit --no-fund "@railway/cli@${RAILWAY_CLI_VERSION}"
+          tgz="$RUNNER_TEMP/railway.tgz"
+          curl -fsSL -o "$tgz" "https://github.com/railwayapp/cli/releases/download/v${RAILWAY_CLI_VERSION}/railway-v${RAILWAY_CLI_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          echo "${RAILWAY_CLI_SHA256}  $tgz" | sha256sum -c --quiet -
+          tar -xzf "$tgz" -C "$(npm root -g)/@railway/cli/bin" railway
+          rm -f "$tgz"
+          railway --version
           git fetch --tags origin
           V=$(tr -d '[:space:]' < VERSION)
+          # Deploy only the tag that main points at: a moved or re-created tag stops here.
+          test "$(git rev-parse "v$V^{commit}")" = "$(git rev-parse origin/main)" \
+            || { echo "tag v$V is not the commit main points at: not deploying"; exit 1; }
           git checkout --detach "v$V"
           git status --short --untracked-files=no
-      - name: Link the Railway project
-        run: railway status
+      - name: Link the Railway project (output hidden)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
+          railway status >/dev/null 2>&1 || { echo "railway status failed (output hidden: this log is public)"; exit 1; }
+          echo "railway: linked"
       - name: Deploy web (dry run, deploy)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           deploy/railway/deploy_web.sh --dry-run
           deploy/railway/deploy_web.sh
@@ -266,34 +411,59 @@ jobs:
           echo "/api/loop/list without a token: $code"
           test "$code" = 401
       - name: Deploy scanner-nightly (idles unless SCAN_FLEET or SCAN_DEALERS is set)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           deploy/railway/deploy_scanner_nightly.sh --dry-run
           deploy/railway/deploy_scanner_nightly.sh
 
   scan:
+    needs: [gate]
     if: ${{ inputs.action == 'scan' }}
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: main
           fetch-depth: 0
-      - name: Tools and checkout the release tag
+          persist-credentials: false
+      - name: Tools and checkout the release tag (no secrets in this step)
+        env:
+          SCAN_DEALERS: ${{ inputs.scan_dealers }}
         run: |
-          npm install -g @railway/cli
-          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
-          test -n "${{ inputs.scan_dealers }}" || { echo "scan_dealers is empty"; exit 1; }
+          set -euo pipefail
+          printf '%s' "$SCAN_DEALERS" | grep -Eq '^[A-Za-z0-9_.-]+(,[A-Za-z0-9_.-]+)*$' \
+            || { echo "scan_dealers must be comma-separated dealer ids"; exit 1; }
+          npm install -g --ignore-scripts --no-audit --no-fund "@railway/cli@${RAILWAY_CLI_VERSION}"
+          tgz="$RUNNER_TEMP/railway.tgz"
+          curl -fsSL -o "$tgz" "https://github.com/railwayapp/cli/releases/download/v${RAILWAY_CLI_VERSION}/railway-v${RAILWAY_CLI_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          echo "${RAILWAY_CLI_SHA256}  $tgz" | sha256sum -c --quiet -
+          tar -xzf "$tgz" -C "$(npm root -g)/@railway/cli/bin" railway
+          rm -f "$tgz"
+          railway --version
           git fetch --tags origin
           V=$(tr -d '[:space:]' < VERSION)
+          # Deploy only the tag that main points at: a moved or re-created tag stops here.
+          test "$(git rev-parse "v$V^{commit}")" = "$(git rev-parse origin/main)" \
+            || { echo "tag v$V is not the commit main points at: not deploying"; exit 1; }
           git checkout --detach "v$V"
       - name: Set the scan variables (fleet off, no cron) without redeploying
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          SCAN_DEALERS: ${{ inputs.scan_dealers }}
         run: |
+          test -n "$RAILWAY_TOKEN" || { echo "RAILWAY_TOKEN secret is not set"; exit 1; }
           railway variables -s scanner-nightly --skip-deploys \
-            --set "SCAN_DEALERS=${{ inputs.scan_dealers }}" --set "SCAN_FLEET=0"
+            --set "SCAN_DEALERS=$SCAN_DEALERS" --set "SCAN_FLEET=0" >/dev/null
+          echo "scanner-nightly: SCAN_DEALERS set, SCAN_FLEET=0"
       - name: Start one deployment of scanner-nightly
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: deploy/railway/deploy_scanner_nightly.sh
-      - name: Recent logs
+      # Scanner logs are not copied into this public log: read them in the
+      # Railway dashboard, or through the loop store (/api/loop) once the run ends.
+      - name: Where the scan logs are
         run: |
-          sleep 60
-          railway logs -s scanner-nightly 2>&1 | tail -40 || true
+          echo "scan started: read scanner-nightly logs in Railway, or the run bundle in the loop store" >> "$GITHUB_STEP_SUMMARY"

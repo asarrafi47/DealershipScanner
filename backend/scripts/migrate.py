@@ -55,6 +55,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import logging
+import os
 import re
 import sys
 from collections import Counter
@@ -683,12 +684,17 @@ def main(argv: list[str] | None = None) -> int:
                       ", ".join(f"V{v:03d}" for v in above), args.target)
             return 2
 
-    log.info("target: %s (%s)", describe_target(_inventory_dsn()),
+    # MIGRATE_HIDE_TARGET=1 (the release workflow, whose log is public) keeps the
+    # host, port and database name out of the log, also from connect errors.
+    hide_target = os.environ.get("MIGRATE_HIDE_TARGET") == "1"
+    target = "remote (host hidden)" if hide_target else describe_target(_inventory_dsn())
+    log.info("target: %s (%s)", target,
              "apply" if apply else "dry run, no writes")
     try:
         conn = _connect()
     except Exception as exc:  # SystemExit (not a Postgres DSN) passes through
-        log.error("could not connect to inventory Postgres: %s", exc)
+        log.error("could not connect to inventory Postgres: %s",
+                  type(exc).__name__ if hide_target else exc)
         return 2
     try:
         cur = conn.cursor()

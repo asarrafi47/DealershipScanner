@@ -1,0 +1,36 @@
+# Dependabot version updates (security updates are enabled separately in the
+# repository settings). PRs target dev, never main: main moves only by
+# fast-forward to a tagged release (docs/RELEASING.md).
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    target-branch: dev
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      pip-minor-and-patch:
+        update-types: [minor, patch]
+
+  # Only the Railway CLI pin. A bump here must also update RAILWAY_CLI_VERSION
+  # and RAILWAY_CLI_SHA256 in .github/workflows/release.yml; the release
+  # workflow test fails until it does.
+  - package-ecosystem: npm
+    directory: "/deploy/railway/cli"
+    target-branch: dev
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+
+  # Actions are pinned by commit SHA with the version in a comment; Dependabot
+  # updates both.
+  - package-ecosystem: github-actions
+    directory: "/"
+    target-branch: dev
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns: ["*"]

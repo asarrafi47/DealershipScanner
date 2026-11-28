@@ -16,11 +16,15 @@ One-time setup, in the browser:
 
 1. Railway, project `dealership-scanner`, **Settings > Tokens**: create a **project token** for the
    `production` environment. Copy it once.
-2. GitHub, `asarrafi47/DealershipScanner`, **Settings > Secrets and variables > Actions > New repository
-   secret**: name `RAILWAY_TOKEN`, value the token.
-3. Same page, a second secret `BACKUP_PASSPHRASE`: any long random string (it encrypts the pre-migration dump,
-   because artifacts of a public repository are downloadable by anyone). Keep a copy in your password manager;
-   without it the dump cannot be opened.
+2. GitHub, `asarrafi47/DealershipScanner`, **Settings > Environments > production**: set it up as
+   `docs/RELEASING.md`, "The production environment", says (you as required reviewer, deployments from
+   `main` only), then **Add environment secret** `RAILWAY_TOKEN` with the token. Do not keep it as a
+   repository secret: any workflow on any branch can read those.
+3. An **age** key pair for the pre-migration dump (`docs/RELEASING.md`, "Pre-migration backup"): run
+   `age-keygen -o release_backup.agekey` on your machine, keep that file offline, and add the printed
+   `age1...` public key as the repository **variable** `RELEASE_BACKUP_PUBKEY` (**Settings > Secrets and
+   variables > Actions > Variables**). It is a public key, not a secret. The old `BACKUP_PASSPHRASE`
+   secret is no longer used: delete it. Without the variable, action `backup` fails and publishes nothing.
 4. A **deploy key** for the `release` action, secret `RELEASE_DEPLOY_KEY`. Why: the `protect-main` ruleset
    (deletion, non-fast-forward and update on `main`) lists one bypass actor, **DeployKey**, and a personal
    repository cannot add the GitHub Actions app to it, so the default `GITHUB_TOKEN` cannot move `main`. The
@@ -30,7 +34,7 @@ One-time setup, in the browser:
       (it writes `release_deploy_key` and `release_deploy_key.pub`).
    2. GitHub, `asarrafi47/DealershipScanner`, **Settings > Deploy keys > Add deploy key**: title
       `release`, key the contents of `release_deploy_key.pub`, tick **Allow write access**.
-   3. **Settings > Secrets and variables > Actions > New repository secret**: name `RELEASE_DEPLOY_KEY`,
+   3. **Settings > Environments > production > Add environment secret**: name `RELEASE_DEPLOY_KEY`,
       value the whole contents of `release_deploy_key` (the private half, including the
       `-----BEGIN`/`-----END` lines).
    4. Delete both local files (`rm release_deploy_key release_deploy_key.pub`). Nothing else needs the key;
@@ -44,8 +48,8 @@ Then run **Actions > Release and deploy > Run workflow** (`.github/workflows/rel
 
 | action | what it does |
 |---|---|
-| `check` | read-only: deploy key authenticates (`ssh -T`), release guard, migrate dry run against prod |
-| `backup` | encrypted `pg_dump` of prod, kept 90 days as a workflow artifact |
+| `check` | read-only: deploy key authenticates (`ssh -T`), rulesets match `docs/RELEASING.md`, release guard, migrate dry run against prod |
+| `backup` | `pg_dump` of prod encrypted to the age key in `RELEASE_BACKUP_PUBKEY`, kept 7 days as a workflow artifact |
 | `migrate` | `migrate --apply --target <N>` against prod (run `backup` first) |
 | `release` | fast-forward `main` to `<ref>` and push the annotated tag `v<VERSION>`, over SSH with the deploy key |
 | `deploy` | deploy web, check `/api/health` and that `/api/loop/list` is 401, then scanner-nightly |
