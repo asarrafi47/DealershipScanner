@@ -3,6 +3,6 @@
   "private": true,
   "description": "Pins the Railway CLI used by .github/workflows/release.yml so Dependabot can propose updates. The workflow's RAILWAY_CLI_VERSION and RAILWAY_CLI_SHA256 must match (backend/tests/test_release_workflow.py).",
   "dependencies": {
-    "@railway/cli": "5.74.0"
+    "@railway/cli": "5.75.0"
   }
 }
