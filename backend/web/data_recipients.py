@@ -59,10 +59,11 @@ RECIPIENTS: tuple[Recipient, ...] = (
     ),
     Recipient(
         name="DuckDuckGo",
-        purpose="web search for the car assistant.",
+        purpose="web search for the car, compare and sidebar assistants.",
         data=(
-            "A search query built from the listing's year, make and model and, for some questions, up to "
-            "the first six words of your message. Our server sends it, so DuckDuckGo sees our address, "
+            "A search query built from the listing's year, make, model and trim (in the compare assistant, "
+            "also the other cars' year, make and model), plus a fixed topic phrase or, when your question "
+            "matches none, up to the first six words of your message. Our server sends it, so DuckDuckGo sees our address, "
             "not yours. The assistant may then open pages from the results; those sites get the page "
             "address from our server and nothing about you."
         ),
@@ -80,7 +81,8 @@ RECIPIENTS: tuple[Recipient, ...] = (
             "For the dealership finder: the centre point of your search, which is the location your "
             "browser shares if you allow it, or the centre of the ZIP code or city you typed. Our server "
             "sends it, so Google does not get your network address with it. For Sign in with Google: "
-            "Google tells us your Google account id and email address and whether the email is verified."
+            "Google tells us your Google account id, your email address and whether it is verified, and "
+            "your name and profile picture address; we keep the account id and the email address."
         ),
         when="When you search for dealerships near you; when you sign in with Google.",
         hosts=(
@@ -93,7 +95,10 @@ RECIPIENTS: tuple[Recipient, ...] = (
     Recipient(
         name="Apple",
         purpose="Sign in with Apple if you choose it.",
-        data="Apple tells us your Apple account id and email address (which can be an Apple relay address).",
+        data=(
+            "Apple tells us your Apple account id and email address (which can be an Apple relay address), "
+            "and can send your name the first time; we keep the account id and the email address."
+        ),
         when="When you sign in with Apple.",
         hosts=("appleid.apple.com",),
     ),
@@ -101,8 +106,9 @@ RECIPIENTS: tuple[Recipient, ...] = (
         name="Stripe",
         purpose="payments for paid plans.",
         data=(
-            "Your email address and our id for your account. You enter card details on Stripe's own "
-            "checkout page; we never see them."
+            "Your email address, our id for your account (and your dealership's, for a dealership plan) "
+            "and any promotion code you use. You enter card details on Stripe's own checkout page; we "
+            "never see them."
         ),
         when="Only if paid plans are turned on and you start a checkout.",
         modules=("stripe",),
@@ -136,7 +142,7 @@ RECIPIENTS: tuple[Recipient, ...] = (
     ),
     Recipient(
         name="OpenStreetMap, CARTO and Esri",
-        purpose="the map pictures (tiles) on dealership and car pages.",
+        purpose="the map pictures (tiles) on the dealership finder, dealership and car pages.",
         data=(
             "Your browser loads the tiles straight from them, so they get your network address, browser "
             "details and the map area shown, which can be near your location."
@@ -146,12 +152,32 @@ RECIPIENTS: tuple[Recipient, ...] = (
     ),
     Recipient(
         name="Dealership websites and their image hosts",
-        purpose="the photos of the cars listed.",
+        purpose="the photos of the cars listed, and window-sticker images.",
         data=(
             "Your browser loads listing photos straight from the dealership's website or image service, "
             "so it gets your network address, browser details and our site's address."
         ),
         when="When a page shows listing photos.",
+    ),
+    Recipient(
+        name="Carmaker window-sticker sites",
+        purpose=(
+            "the original window sticker of a car (Ford, Lincoln, GM and Stellantis brand sites, and "
+            "window-sticker services)."
+        ),
+        data=(
+            "Our server asks them for a car's sticker by the listing's VIN, which carries nothing about "
+            "you. If you open the sticker link, your browser goes to that site with the VIN in the address."
+        ),
+        when="When a car page offers its window sticker.",
+        hosts=(
+            "windowsticker.forddirect.com",
+            "windowsticker.lincolnvehicles.com",
+            "cws.gm.com",
+            "gmwindowsticker.com",
+            "djapi.autoipacket.com",
+            "webicon.autoipacket.com",
+        ),
     ),
     Recipient(
         name="Sites you open from a link",
@@ -191,6 +217,7 @@ NOT_USER_DATA: dict[str, str] = {
     "kmac-vault.railway.internal": "secret store for the server, no visitor data",
     "host.docker.internal": "local development secret store",
     "www.longotoyota.com": "example in a docstring",
+    "www.w3.org": "SVG namespace in a stylesheet",
     "www.example-dealer.com": "placeholder text in an operator form",
     "www.example-bmw.com": "placeholder text in an operator form",
     "www.other-dealer.com": "placeholder text in an operator form",

@@ -28,9 +28,9 @@
             <li><strong>Your account.</strong> A username, an email address, your role, and a password stored as a one-way hash. If you sign in with Google or Apple, the account id that service gives us. If you sign in with a phone number, the account gets a made-up placeholder email address. For accounts that use an authenticator app for two-step sign-in, the app's secret. If paid plans are on and you pay, the Stripe customer and subscription ids for your account.</li>
             <li><strong>Your phone number</strong>, if you sign in with one. We treat it as personal data. It is stored in full because we need it to text you a sign-in code and to show you its last digits. We also store when you agreed to receive codes, which version of the consent text you agreed to, and the line type (mobile, landline or internet number) the number had when it was checked.</li>
             <li><strong>What you save and do on the site.</strong> Saved cars and searches, hidden dealerships, your recent searches, cars you viewed or compared, and comments, photos and reviews you post.</li>
-            <li><strong>Searches.</strong> Each search on the site (its text, filters, ZIP code and state, and the number of results) is recorded with a random session key, also for visitors who are not signed in.</li>
-            <li><strong>Counters for limits.</strong> To stop abuse we count sign-in codes and chat messages per account, phone number, device and network address. These counters store a one-way hash of the number or address, never the number or address itself, and never the text of a message. Comments store a one-way hash of the network address they came from.</li>
-            <li><strong>Cookies and your browser.</strong> A signed sign-in cookie, a security token for forms, and a random device cookie used to count requests for limits. Your browser keeps the sidebar assistant's recent conversation in its own local storage on your device.</li>
+            <li><strong>Searches.</strong> Each search on the site (its text, filters, ZIP code and state, and the number of results) is recorded with your account id if you are signed in, or with a random session key if you are not.</li>
+            <li><strong>Counters for limits.</strong> To stop abuse we count sign-in codes and chat messages per account, phone number, device and network address. These counters store a one-way hash of the number or address, never the number or address itself, and never the text of a message. Comments, reviews and the reports you file store a one-way hash of the network address they came from.</li>
+            <li><strong>Cookies and your browser.</strong> A signed sign-in cookie, a security token for forms, and a random device cookie used to count requests for limits. Your browser keeps, in its own storage on your device: the sidebar assistant's recent conversation and last search, the ZIP code found from your location, your compare list, finance calculator inputs and display settings.</li>
         </ul>
         <p>We never see or keep your sign-in codes (our text-message provider creates and checks them) and we do not keep the text of the messages sent to you.</p>
 
@@ -62,7 +62,7 @@
             <li>Recent searches on your account: the last 100; you can clear them at any time.</li>
             <li>Search records, and the cars you viewed or compared: [RETENTION PERIOD FOR SEARCH RECORDS AND VIEW AND COMPARE HISTORY].</li>
             <li>Your account, phone number and sign-in identity: until your account is deleted.</li>
-            <li>Server logs: as long as our hosting provider keeps them, [SERVER LOG RETENTION PERIOD]. Logs never contain your phone number or a code. When the assistant refuses or cuts short an answer, the first 120 characters of your message can be written to the log.</li>
+            <li>Server logs: as long as our hosting provider keeps them, [SERVER LOG RETENTION PERIOD]. Logs never contain your phone number or a code. If an account email cannot be sent, the log can contain the email address. When the assistant refuses or cuts short an answer, the first 120 characters of your message can be written to the log.</li>
         </ul>
         <p>The site deletes chat counters once they pass that age. Sign-in records are deleted by a cleanup job once they pass these ages. [OWNER: schedule the phone sign-in cleanup job before phone sign-in is turned on.]</p>
 
@@ -73,7 +73,7 @@
         <p>You must be 13 or older to use Sarrafi Cars. We do not knowingly keep data about anyone younger; if you believe a child under 13 has an account, tell us and we will delete it.</p>
 
         <h2>Security</h2>
-        <p>In production, the database that holds accounts (usernames, email addresses and password hashes), search records and view and compare history is encrypted on disk with a key the application holds. Phone numbers, saved cars and searches, hidden dealerships and recent searches are kept in a separate database that the application does not encrypt itself. [OWNER: state whether the hosting provider encrypts that database's disk.] Limits are keyed by one-way hashes and sign-in codes are never stored by us. No system is perfectly secure.</p>
+        <p>In production, the database that holds accounts (usernames, email addresses and password hashes), search records and view and compare history is encrypted on disk with a key the application holds. Everything else, including phone numbers, saved cars and searches, hidden dealerships, recent searches, reviews, comments and photos, private sellers' listings and the limit counters, is kept in a separate database that the application does not encrypt itself. [OWNER: state whether the hosting provider encrypts that database's disk.] Limits are keyed by one-way hashes and sign-in codes are never stored by us. No system is perfectly secure.</p>
 
         <h2>Changes to this policy</h2>
         <p>The date and version at the top change when we update this policy. If you sign in with a phone number, we ask for your agreement again the next time you sign in after the version changes, and we record the new version and when you agreed.</p>

@@ -29,6 +29,7 @@ SCAN_DIRS = (
     "backend/listings",
     "backend/llm",
     "backend/mobile",
+    "backend/reviews",
     "backend/routes",
     "backend/utils",
     "backend/vision",
@@ -42,9 +43,12 @@ SCAN_FILES = (
     "backend/enrichment/nhtsa_vpic.py",
     "backend/enrichment/recalls_lookup.py",
     "backend/enrichment/vehicle_history_intelligence.py",
+    "backend/enrichment/window_sticker_service.py",
+    "backend/scanner/post_scan/window_sticker.py",
+    "backend/settings_store.py",
 )
 SKIP_PARTS = ("vendor", "__pycache__", "tests")
-SUFFIXES = (".py", ".js", ".html")
+SUFFIXES = (".py", ".js", ".html", ".css")
 
 # Modules that send data to an outside service when imported and used.
 OUTBOUND_MODULES = (
