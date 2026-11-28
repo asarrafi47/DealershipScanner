@@ -3,7 +3,8 @@
 DealershipScanner is its own Railway project, `dealership-scanner`, environment
 `production`. The service list below is the current one. The vault material in sections
 2 and 3 and in "Local vs Railway" describes a kmac-vault design that prod does not use;
-see the note under the service table.
+see the note under the service table. The role login that replaces it is described in
+[Vault role login](#vault-role-login).
 
 ## Services
 
@@ -25,7 +26,78 @@ Their leftover config files in the repo leave in P15B.6 (N4).
 **Vault:** there is no kmac-vault service in this project or any visible one (P0A.1). Web
 carries its secrets as Railway variables, plus `REVEST_VAULT_*` names that point at
 `vault-api` in the separate `revest-vault` project; no code in this repo reads those names
-(`backend/utils/kmac_vault.py` reads `VAULT_ADDR` / `VAULT_TOKEN`, which the P0A.1 variable list does not show on web).
+(`backend/utils/kmac_vault.py` reads `VAULT_ADDR` with either `VAULT_TOKEN`, the static-token
+path, or `VAULT_ROLE_ID` / `VAULT_SECRET_ID`, the role login below; the P0A.1 variable list
+shows none of them on web, and web runs `KMAC_VAULT_AUTO=0`, so prod loads nothing from a
+vault until the role variables are set).
+
+## Vault role login
+
+Web and the fleet scan load their secrets from the vault at boot with a role login, and
+keep their Railway variables as the fallback. Code: `backend/utils/vault_role.py`, reached
+through `load_kmac_vault_secrets()` (`backend/utils/kmac_vault.py`) by every entry point:
+`backend/main.py` (module level, so once in the gunicorn master under `--preload`; every
+worker inherits the result), `scripts/bootstrap_site_admin.py` (run by the web entrypoint
+before gunicorn), `backend/scripts/fleet_scan.py` (the scanner job; its shard processes
+inherit the result), the retired scanner worker and scheduler loops, and
+`scripts/seed_dealer_catalog.py`. Resolved values go into that process's `os.environ`;
+nothing is exported from a shell, echoed or written to disk.
+
+| Variable | Meaning |
+|---|---|
+| `VAULT_ADDR` | Base URL of the vault (`http://` or `https://`). The role login uses this address only. |
+| `VAULT_ROLE_ID` | The service's role id. Secret: never logged. |
+| `VAULT_SECRET_ID` | The role's secret id. Secret: never logged. |
+| `VAULT_BOOT_WAIT_SECONDS` | Total wait for a sealed or unreachable vault during one boot load, default `40`; an invalid value means `40`, and the value is clamped to 0..120. |
+| `KMAC_VAULT_DISABLE` | `1` turns off every vault load, the role login included. |
+
+The role login runs only when `VAULT_ADDR`, `VAULT_ROLE_ID` and `VAULT_SECRET_ID` are all
+non-empty, whatever `KMAC_VAULT_AUTO` says. Without them the static-token path runs exactly
+as before (and with `KMAC_VAULT_AUTO=0`, as on prod today, nothing is fetched).
+
+How it works:
+
+- `POST {VAULT_ADDR}/auth/token` with the role id and secret id returns an access token
+  that lives only in process memory, is refreshed 60 s (or half its lifetime, if shorter)
+  before it expires, and is never put
+  in the environment, a file or a log.
+- Each secret is read with `GET {VAULT_ADDR}/get/dealershipscanner:<NAME>`, where `<NAME>`
+  is the environment variable name, for example `dealershipscanner:ANTHROPIC_API_KEY`. The
+  names are the tuple `VAULT_ROLE_SECRET_NAMES` in `backend/utils/vault_role.py`; database
+  URLs and the vault's own variables are not among them.
+- **Precedence:** the vault value wins when the vault has the key. Protected names keep a
+  non-empty environment value when the vault's value differs, and log a CRITICAL line with
+  the name only: `SECRET_KEY` and its legacy alias `FLASK_SECRET_KEY` (a changed session key
+  signs everyone out; `SECRET_KEY` is compared against the effective key, `SECRET_KEY` or
+  else `FLASK_SECRET_KEY`), `USERS_DB_ENCRYPTION_KEY` and `DEV_USERS_DB_ENCRYPTION_KEY`
+  (the SQLCipher keys; a different key cannot open the database) and `PHONE_HASH_PEPPER`
+  (a different pepper orphans every stored phone hash). To change one of these, change it
+  in the vault and on the service together.
+- **Fallback:** the environment value is used whenever the vault lacks the key (404),
+  refuses the login or the token (401, one re-login is tried), refuses a key outside the
+  role's scope (403), or stays sealed (503) or unreachable past the budget. Sealed and
+  unreachable are retried with backoff 1, 2, 4, 8, 15, 15 ... s inside the one budget for
+  the whole load, then the boot continues on the environment. A name with neither a vault
+  nor an environment value is listed on one CRITICAL line.
+- **The vault re-seals after its own deploys** and stays sealed until a person unseals it.
+  That is why every secret also stays a Railway variable: a sealed vault costs a boot at
+  most `VAULT_BOOT_WAIT_SECONDS` and then the service runs on its variables.
+- **Logs:** exactly one INFO line per load, `vault role load (<state>): N from vault, M kept
+  env, K missing; ...` with names only, plus CRITICAL or WARNING lines that carry names and
+  HTTP status codes. No value, role id, secret id, token, vault address or response text is
+  ever logged.
+- **Web boot:** with `VAULT_ROLE_ID` set, `scripts/docker-entrypoint-web.sh` skips its
+  throwaway reachability check (it would spend the whole budget once more). The admin
+  bootstrap runs its own load capped at 10 s of wall time in total, so it sees the resolved
+  `ADMIN_PASSWORD` and SQLCipher key; the gunicorn master then runs the full load. Every
+  load is cut off at `VAULT_BOOT_WAIT_SECONDS` + 10 s of wall time (the network part runs
+  in a worker thread joined with that timeout, so slow DNS or a server that drips bytes
+  cannot hold it longer; a cut-off load applies nothing). Worst case for the vault on one
+  web boot: 10 s + (40 + 10) s = 60 s at the default, 10 s + (120 + 10) s = 140 s at the
+  maximum, both inside the 300 s healthcheck timeout. Migrations read only the database URL
+  and do not load the vault.
+- **Rollback:** unset `VAULT_ROLE_ID` (or set `KMAC_VAULT_DISABLE=1`) and redeploy; the
+  service is back to the previous behaviour, its Railway variables.
 
 ## Prerequisites
 
@@ -255,6 +327,8 @@ curl -fsS https://sarraficars.com/api/health   # version = VERSION (the tag with
 railway logs --service web
 ```
 
-Look for: `Loaded N secret(s) from kmac vault: GOOGLE_MAPS_API_KEY, ...`
+Look for: `Loaded N secret(s) from kmac vault: GOOGLE_MAPS_API_KEY, ...` (static-token path),
+or, with the role login, the one `vault role load (ok): N from vault, M kept env, K missing`
+line and no CRITICAL `vault` line ([Vault role login](#vault-role-login)).
 
 Dealer finder API should report `google_available: true` when `Dealer:google_maps_api_key` is in Railway vault.
