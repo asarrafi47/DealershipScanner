@@ -18,13 +18,12 @@ One-time setup, in the browser:
    `production` environment. Copy it once.
 2. GitHub, `asarrafi47/DealershipScanner`, **Settings > Environments > production**: set it up as
    `docs/RELEASING.md`, "The production environment", says (you as required reviewer, deployments from
-   `main` only), then **Add environment secret** `RAILWAY_TOKEN` with the token. Do not keep it as a
-   repository secret: any workflow on any branch can read those.
+   `main` only), then **Add environment secret** `RAILWAY_TOKEN` with the token. Keep it in the
+   environment only, not as a repository secret.
 3. An **age** key pair for the pre-migration dump (`docs/RELEASING.md`, "Pre-migration backup"): run
    `age-keygen -o release_backup.agekey` on your machine, keep that file offline, and add the printed
    `age1...` public key as the repository **variable** `RELEASE_BACKUP_PUBKEY` (**Settings > Secrets and
-   variables > Actions > Variables**). It is a public key, not a secret. The old `BACKUP_PASSPHRASE`
-   secret is no longer used: delete it. Without the variable, action `backup` fails and publishes nothing.
+   variables > Actions > Variables**). It is a public key, not a secret. Without the variable, action `backup` fails and publishes nothing.
 4. A **deploy key** for the `release` action, secret `RELEASE_DEPLOY_KEY`. Why: the `protect-main` ruleset
    (deletion, non-fast-forward and update on `main`) lists one bypass actor, **DeployKey**, and a personal
    repository cannot add the GitHub Actions app to it, so the default `GITHUB_TOKEN` cannot move `main`. The

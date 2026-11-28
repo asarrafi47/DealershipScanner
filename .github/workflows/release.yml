@@ -136,7 +136,7 @@ jobs:
           fi
           echo "deploy key authenticates as $who"
           echo "deploy key authenticates as $who" >> "$GITHUB_STEP_SUMMARY"
-      # Read-only (L5-4): the live protect-main ruleset and the release-tag
+      # Read-only: the live protect-main ruleset and the release-tag
       # ruleset against the block in docs/RELEASING.md. Differences are warnings.
       - name: Rulesets match docs/RELEASING.md (read-only)
         env:
@@ -206,7 +206,11 @@ jobs:
           sudo install -d /usr/share/postgresql-common/pgdg
           sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
           # PGDG signing key, fingerprint pinned (as scripts/cloud/setup.sh does).
-          gpg --show-keys --with-colons /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc | grep -q '^fpr:::::::::B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8:$' \
+          # Captured first (no grep -q in a pipe under pipefail), throwaway GNUPGHOME.
+          gnupg_tmp=$(mktemp -d)
+          fpr=$(GNUPGHOME="$gnupg_tmp" gpg --show-keys --with-colons /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc 2>/dev/null | awk -F: '/^fpr:/ && !seen {print $10; seen = 1}')
+          rm -rf "$gnupg_tmp"
+          test "$fpr" = "B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8" \
             || { echo "PGDG key fingerprint mismatch"; exit 1; }
           echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
           sudo apt-get update -qq
@@ -246,7 +250,7 @@ jobs:
           echo "encrypted: $(stat -c %s prod_pre_migrate.dump.age) bytes"
       # Only the age ciphertext is uploaded (no decryption secret exists in
       # GitHub). Short retention; docs/RELEASING.md says how to fetch, decrypt and
-      # delete it, and how to prune artifacts from earlier runs.
+      # delete it.
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: prod-pre-migrate-${{ github.run_id }}

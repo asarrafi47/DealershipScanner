@@ -385,3 +385,32 @@ def test_release_fails_when_main_is_not_at_head_after_the_push(jobs):
     script = _release_script(jobs["release"])
     assert 'main on origin is not at HEAD after the push"; exit 1' in script
     assert "&& echo main-released" not in script
+
+
+PGDG_FPR = "B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8"
+
+
+def test_backup_checks_the_pgdg_key_fingerprint_before_apt(jobs):
+    tools = next(s["run"] for s in jobs["backup"]["steps"] if "apt-get install" in s.get("run", ""))
+    assert "set -euo pipefail" in tools
+    check = tools.index(f'test "$fpr" = "{PGDG_FPR}"')
+    assert check < tools.index("apt-get update")
+    # Captured with a throwaway GNUPGHOME and an awk that reads all input: no
+    # early-exiting reader in a pipe that pipefail could turn into a failure.
+    assert "GNUPGHOME=" in tools and "--show-keys --with-colons" in tools
+    assert "grep -q '^fpr" not in tools
+    assert "exit}" not in tools
+    assert re.search(r"apt-get install -y -qq postgresql-client-18 age\b", tools)
+
+
+PUBLIC_TEXT = (
+    RELEASE_YML,
+    REPO_ROOT / "docs" / "RELEASING.md",
+    REPO_ROOT / "docs" / "scan_loop" / "OWNER_SETUP.md",
+)
+
+
+@pytest.mark.parametrize("path", PUBLIC_TEXT, ids=lambda p: p.name)
+def test_public_release_text_names_no_internal_finding_ids(path):
+    text = path.read_text(encoding="utf-8")
+    assert not re.search(r"\b[A-Z]\d+-\d+\b", text), path.name
