@@ -627,6 +627,21 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
         _spawn_vector_reindex_background()
 
 
+def _dev_login_slot_key(login_input: str) -> str:
+    """Login attempt limit bucket: the operator id when the login names one (username and email
+    share it), else the lowercased login. One indexed lookup per attempt."""
+    from backend.db.admin_users_db import resolve_admin_id
+
+    try:
+        aid = resolve_admin_id(login_input)
+    except Exception as exc:  # noqa: BLE001 - the string bucket still applies the limit
+        logger.warning("dev login id lookup failed: %s", type(exc).__name__)
+        aid = None
+    if aid:
+        return f"dev_login_acct:id:{int(aid)}"
+    return f"dev_login_acct:{(login_input or '').strip().lower()[:254]}"
+
+
 @dev_bp.route("/login", methods=["GET", "POST"])
 def admin_login():
     if _admin_session_ok():
@@ -645,14 +660,38 @@ def admin_login():
             )
         login_input = (request.form.get("login") or "").strip()
         password = (request.form.get("password") or "").strip()
+        # Per-account login attempt limit across IPs, the app login's window and limits. The slot
+        # is claimed before the password check and refunded on success.
+        from backend.auth.pages import _LOCKED_MSG, _refund_login_slot, reserve_account_slot
+
+        slot = _dev_login_slot_key(login_input)
+        if login_input and not reserve_account_slot(slot):
+            return (
+                render_template(
+                    "admin_login.html",
+                    error=_LOCKED_MSG,
+                    registration_open=dev_public_registration_allowed(),
+                ),
+                429,
+            )
         auth = authenticate_admin(login_input, password)
         if auth:
+            _refund_login_slot(slot)
             uid, uname = auth
             session.clear()
             raw_next = (request.form.get("next") or request.args.get("next") or "").strip()
             nxt = _safe_dev_next_url(raw_next)
-            if not _finalize_dev_session(user_id=int(uid), username=str(uname)):
+            from backend.auth.session import stamp_dev_password_fingerprint
+
+            if not _finalize_dev_session(user_id=int(uid), username=str(uname)) or not (
+                stamp_dev_password_fingerprint(int(uid))
+            ):
+                session.clear()
                 return redirect(url_for("dev.admin_login"))
+            from backend.auth.phone.session_epoch import dev_operator_epoch_id
+            from backend.auth.session import DEV_AUTH_AT, raise_auth_at_to_valid_after
+
+            raise_auth_at_to_valid_after(dev_operator_epoch_id(int(uid)), DEV_AUTH_AT)
             return redirect(nxt)
         return render_template(
             "admin_login.html",
@@ -711,6 +750,15 @@ def admin_register():
 
 @dev_bp.post("/logout")
 def admin_logout():
+    # Logout ends this operator's session server-side (the session_epoch valid_after mark), then here.
+    from backend.auth.phone import session_epoch
+
+    try:
+        aid = int(session.get("admin_user_id") or 0)
+    except (TypeError, ValueError):
+        aid = 0
+    if aid > 0:
+        session_epoch.revoke_user_sessions(session_epoch.dev_operator_epoch_id(aid), reason=session_epoch.REASON_LOGOUT)
     session.pop("admin_user_id", None)
     session.pop("admin_username", None)
     for k in (

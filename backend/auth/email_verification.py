@@ -83,8 +83,11 @@ def build_verify_email_url(token: str) -> str:
     return f"{base}/verify-email?{q}"
 
 
-def issue_and_send_verification_email(*, user_id: int, to_email: str) -> bool:
-    """Create a verify token and send email. Returns True when send attempted/succeeded."""
+def issue_and_send_verification_email(*, user_id: int, to_email: str, background: bool = False) -> bool:
+    """Create a verify token and send email. Returns True when send attempted/succeeded.
+
+    ``background=True`` hands the send to ``backend.utils.background_mail`` and returns once the
+    token is stored (the resend route: mail is sent in the background)."""
     if not email_verification_enabled():
         return False
     email = (to_email or "").strip().lower()
@@ -103,6 +106,14 @@ def issue_and_send_verification_email(*, user_id: int, to_email: str) -> bool:
         f"{link}\n\n"
         "If you did not create this account, you can ignore this message.\n"
     )
+    if background:
+        from backend.utils import background_mail
+
+        return background_mail.submit(_send_verify_email, user_id, email, subject, text, surface="email_verify")
+    return _send_verify_email(user_id, email, subject, text)
+
+
+def _send_verify_email(user_id: int, email: str, subject: str, text: str) -> bool:
     try:
         send_transactional_email(
             to_email=email,

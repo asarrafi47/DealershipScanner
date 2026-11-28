@@ -38,6 +38,39 @@ _TIMED_TYPES = ("text/html", "application/json")
 # phone sign-in routes do, so connection counts cannot tell a known number from an unknown one).
 NO_SERVER_TIMING_KEY = "ds.no_server_timing"
 
+# Sign-in, sign-up and recovery routes never carry the header, whatever the method (no
+# Server-Timing on auth routes). Other anonymous pages keep it (it is how slow pages are
+# found). The phone routes opt out with NO_SERVER_TIMING_KEY.
+_NO_TIMING_PATHS = frozenset(
+    {
+        "/login",
+        "/staff/login",
+        "/register",
+        "/forgot-password",
+        "/reset-password",
+        "/resend-verification",
+        "/verify-email",
+        "/api/auth/login",
+        "/api/auth/register",
+        "/dev/login",
+        "/dev/register",
+        "/dev/manifest/login",
+        # Google and Apple sign-in and their callbacks.
+        "/auth/google",
+        "/auth/google/callback",
+        "/auth/apple",
+        "/auth/apple/callback",
+        "/dealer/login",
+    }
+)
+
+
+def _timing_suppressed_path(environ: dict) -> bool:
+    path = environ.get("PATH_INFO") or "/"
+    if len(path) > 1:
+        path = path.rstrip("/")
+    return path in _NO_TIMING_PATHS
+
 
 def server_timing_enabled() -> bool:
     raw = (os.environ.get("SERVER_TIMING") or "").strip().lower()
@@ -135,6 +168,7 @@ class RequestScopeMiddleware:
                 try:
                     if (
                         not environ.get(NO_SERVER_TIMING_KEY)
+                        and not _timing_suppressed_path(environ)
                         and _content_type(headers) in _TIMED_TYPES
                         and not _shared_cacheable(headers)
                         and not any(k.lower() == "server-timing" for k, _ in headers)

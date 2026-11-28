@@ -559,11 +559,10 @@ def test_dev_session_ends_12_hours_after_sign_in(main, clock):
 
 
 def test_dev_session_11h59_after_sign_in_is_kept(main, clock):
+    from backend.tests.conftest import seed_dev_operator_session
+
     with main.app.test_client() as c:
-        with c.session_transaction() as s:
-            s["admin_user_id"] = 1
-            s["admin_username"] = "operator"
-            s[auth_session.DEV_AUTH_AT] = NOW - (11 * HOUR + 59 * 60)
+        seed_dev_operator_session(c, auth_at=NOW - (11 * HOUR + 59 * 60))
         r = c.get("/dev/")
         assert "/dev/login" not in r.headers.get("Location", "")
         with c.session_transaction() as s:

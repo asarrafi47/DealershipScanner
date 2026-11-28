@@ -121,6 +121,8 @@ def _pg_authenticate(li: str, password: str) -> tuple[int, str] | None:
                     row = lookup()
                 if not row:
                     conn.rollback()
+                    # Consistent login handling: same path for every attempt.
+                    verify_or_legacy(password, _dummy_hash())
                     return None
             uid, uname, stored = row
             ok = verify_or_legacy(password, stored)
@@ -291,8 +293,92 @@ def save_dev_admin_user(username: str, email: str, password: str) -> None:
         conn.close()
 
 
+def _dummy_hash() -> str:
+    """The app login's precomputed dummy hash (made by ``hash_password``)."""
+    from backend.db.users_db.auth import _timing_safe_dummy_hash
+
+    return _timing_safe_dummy_hash()
+
+
+def get_admin_by_id(user_id: int) -> dict | None:
+    """``{"id", "username", "password"}`` of one operator (the stored hash), or None when no row.
+
+    Raises when the store cannot answer: the /dev session check fails closed on that."""
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return None
+    if uid <= 0:
+        return None
+    if _use_pg():
+        conn = _pg_conn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT id, username, password FROM admin_users WHERE id = %s", (uid,))
+                row = cur.fetchone()
+        finally:
+            conn.close()
+    else:
+        row = _sqlite_admin_columns(uid, ("id", "username", "password"))
+    if not row:
+        return None
+    return {"id": int(row[0]), "username": str(row[1] or ""), "password": str(row[2] or "")}
+
+
+def _sqlite_admin_columns(uid: int, cols: tuple[str, ...]) -> tuple | None:
+    """One operator row's ``cols`` (fixed column names from this module, never input)."""
+    conn = get_dev_users_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT {', '.join(cols)} FROM admin_users WHERE id = ?", (int(uid),))
+        return cursor.fetchone()
+    finally:
+        conn.close()
+
+
 def check_admin(login_input: str, password: str) -> bool:
     return authenticate_admin(login_input, password) is not None
+
+
+def _sqlite_admin_by_login(cursor, li: str):
+    """(id, username, password) of the operator a username or email names (case-insensitive)."""
+    cursor.execute(
+        """
+        SELECT id, username, password FROM admin_users
+        WHERE lower(username) = lower(?) OR lower(email) = lower(?)
+        """,
+        (li, li),
+    )
+    return cursor.fetchone()
+
+
+def resolve_admin_id(login_input: str) -> int | None:
+    """Id of the operator a username or email names, by the same rule as sign-in. No password check.
+
+    The /dev login attempt limit keys on this id. Raises when the
+    store cannot answer (the caller falls back to the login string)."""
+    li = (login_input or "").strip()
+    if not li:
+        return None
+    if _use_pg():
+        conn = _pg_conn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT id FROM admin_users WHERE lower(username) = lower(%s) OR lower(email) = lower(%s) "
+                    "ORDER BY id LIMIT 1",
+                    (li, li),
+                )
+                row = cur.fetchone()
+        finally:
+            conn.close()
+        return int(row[0]) if row else None
+    conn = get_dev_users_conn()
+    try:
+        row = _sqlite_admin_by_login(conn.cursor(), li)
+    finally:
+        conn.close()
+    return int(row[0]) if row else None
 
 
 def authenticate_admin(login_input: str, password: str) -> tuple[int, str] | None:
@@ -303,16 +389,11 @@ def authenticate_admin(login_input: str, password: str) -> tuple[int, str] | Non
         return _pg_authenticate(li, password)
     conn = get_dev_users_conn()
     cursor = conn.cursor()
-    cursor.execute(
-        """
-        SELECT id, username, password FROM admin_users
-        WHERE lower(username) = lower(?) OR lower(email) = lower(?)
-        """,
-        (li, li),
-    )
-    row = cursor.fetchone()
+    row = _sqlite_admin_by_login(cursor, li)
     if not row:
         conn.close()
+        # Consistent login handling: same path for every attempt.
+        verify_or_legacy(password, _dummy_hash())
         return None
     uid, uname, stored = row
     ok = verify_or_legacy(password, stored)
@@ -351,9 +432,8 @@ def get_admin_totp(user_id: int) -> dict | None:
     if "totp_secret" not in cols:
         conn.close()
         return {"enabled": False, "secret": ""}
-    cursor.execute("SELECT totp_secret, totp_enabled FROM admin_users WHERE id = ?", (uid,))
-    row = cursor.fetchone()
     conn.close()
+    row = _sqlite_admin_columns(uid, ("totp_secret", "totp_enabled"))
     if not row:
         return None
     sec, en = row

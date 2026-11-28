@@ -67,9 +67,13 @@ def _reserve_login_slot(login_input: str) -> str | None:
     account is locked. A successful login refunds the slot (``_refund_login_slot``).
     The memory store is per process."""
     key = _acct_key(login_input)
-    if not allow_request(key, max_events=_ACCT_FAIL_MAX, window_seconds=_ACCT_FAIL_WINDOW):
-        return None
-    return key
+    return key if reserve_account_slot(key) else None
+
+
+def reserve_account_slot(key: str) -> bool:
+    """One failure slot of ``key``'s per-account window (the app login and the /dev operator
+    login share the limits: ``_ACCT_FAIL_MAX`` per ``_ACCT_FAIL_WINDOW`` seconds, sliding)."""
+    return allow_request(key, max_events=_ACCT_FAIL_MAX, window_seconds=_ACCT_FAIL_WINDOW)
 
 
 def _refund_login_slot(key: str) -> None:
@@ -189,6 +193,10 @@ def verify_email_page():
     return render_template("verify_email.html", ok=ok, message=message)
 
 
+_RESEND_PER_USER_MAX = 3
+_RESEND_SENT_MSG = "Verification email sent. Check your inbox."
+
+
 def resend_verification():
     uid = session.get("user_id")
     if not uid:
@@ -208,19 +216,19 @@ def resend_verification():
             ok=True,
             message="Your email is already verified.",
         )
+    # Per-account cap next to the per-IP one (as forgot_pw_user does): a capped request sends
+    # nothing, keeps the link already mailed, and shows the usual "sent" page.
+    if not allow_request(f"resend_verify_user:{int(uid)}", max_events=_RESEND_PER_USER_MAX, window_seconds=3600.0):
+        return render_template("verify_email.html", ok=True, message=_RESEND_SENT_MSG)
     profile = get_user_profile(int(uid)) or {}
     email = (profile.get("email") or "").strip()
-    if not issue_and_send_verification_email(user_id=int(uid), to_email=email):
+    if not issue_and_send_verification_email(user_id=int(uid), to_email=email, background=True):
         return render_template(
             "verify_email.html",
             ok=False,
             message="Could not send verification email. Try again later.",
         ), 503
-    return render_template(
-        "verify_email.html",
-        ok=True,
-        message="Verification email sent. Check your inbox.",
-    )
+    return render_template("verify_email.html", ok=True, message=_RESEND_SENT_MSG)
 
 
 def forgot_password_page():
@@ -238,7 +246,11 @@ def forgot_password_page():
                 "forgot_password.html",
                 error="Too many requests. Try again later.",
             ), 429
-        request_password_reset(login_input=request.form.get("login", ""))
+        # Mail is sent in the background (backend/utils/background_mail.py).
+        from backend.utils import background_mail
+
+        login_input = request.form.get("login", "")
+        background_mail.submit(request_password_reset, login_input=login_input, surface="password_reset")
         return render_template(
             "forgot_password.html",
             success=True,
@@ -270,6 +282,9 @@ def reset_password_page():
 
 
 def logout_page():
+    from backend.auth.session import revoke_current_sessions
+
+    revoke_current_sessions()
     session.clear()
     return redirect(url_for("login_page"))
 
@@ -376,6 +391,9 @@ def api_auth_register():
 
 
 def api_auth_logout():
+    from backend.auth.session import revoke_current_sessions
+
+    revoke_current_sessions()
     session.clear()
     return jsonify({"ok": True})
 

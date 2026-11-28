@@ -11,6 +11,7 @@ from __future__ import annotations
 import logging
 import math
 import os
+import threading
 import time
 
 from flask import current_app, g, redirect, request, session, url_for
@@ -117,6 +118,7 @@ def finalize_app_session(user_id: int, auth_method: str = "password") -> bool:
         session.pop(_stale, None)
     session["mfa_ok"] = True
     stamp_login(auth_method=auth_method, auth_role=session_class_for_user(u))
+    raise_auth_at_to_valid_after(int(u["id"]), AUTH_AT, AUTH_SEEN_AT)
     session["org_subscription_status"] = None
     if session.get("org_id"):
         try:
@@ -149,6 +151,9 @@ AUTH_METHOD = "auth_method"  # password, google, apple, phone, legacy (stamped b
 AUTH_ROLE = "auth_role"  # the lifetime class at sign-in; the hook keeps it current
 AUTH_SEEN_AT = "auth_seen_at"  # shoppers only: last request, for the sliding limit
 DEV_AUTH_AT = "dev_auth_at"  # /dev operator sign-in (separate users table, separate key)
+# /dev operator: a keyed fingerprint of the stored password hash at sign-in (never the hash). A
+# password change (or reset) changes the hash, which ends every earlier operator session.
+DEV_PW_FP = "dev_pw_fp"
 # Set only by sign_out_everywhere: the original sign-in time, so re-minting the session for the
 # valid_after check never restarts an absolute (admin, dealer, staff) limit or the mfa_ok window.
 AUTH_ORIGIN_AT = "auth_origin_at"
@@ -206,6 +211,25 @@ def session_class_for_user(u: dict) -> str:
     return CLASS_SHOPPER
 
 
+def raise_auth_at_to_valid_after(epoch_id: int, *keys: str) -> None:
+    """A fresh sign-in: lift the stamped time to an existing valid_after mark that is ahead of this
+    clock (another instance wrote it, clock skew), as sign_out_everywhere does, so the new session
+    is not refused on its next request. One read of the mark (it is then cached); a failed read
+    changes nothing (the hook decides on the next request)."""
+    from backend.auth.phone import session_epoch
+
+    try:
+        mark = session_epoch.get_valid_after(int(epoch_id), strict=True)
+    except session_epoch.EpochLookupFailed:
+        return
+    if mark is None:
+        return
+    for key in keys:
+        at = _as_time(session.get(key))
+        if at is not None and at < mark:
+            session[key] = mark
+
+
 def stamp_login(*, auth_method: str, auth_role: str) -> None:
     """Write the sign-in time, method and lifetime class into the current session."""
     now = _now()
@@ -250,6 +274,71 @@ def _load_user(uid: int) -> dict | None:
     return get_user_profile(uid)
 
 
+_DEV_OPERATOR_CACHE_S = 5.0
+_dev_operator_lock = threading.Lock()
+# (store, operator id) -> (monotonic stored at, row or None)
+_dev_operator_cache: dict[tuple[str, int], tuple[float, dict | None]] = {}
+
+
+def _monotonic() -> float:
+    return time.monotonic()
+
+
+def clear_dev_operator_cache() -> None:
+    with _dev_operator_lock:
+        _dev_operator_cache.clear()
+
+
+def _dev_operator_store_key() -> str:
+    from backend.db import admin_users_db
+    from backend.db.dev_users_sqlite import dev_users_db_path
+
+    if admin_users_db.dev_users_backend() == "pg":
+        return "pg"
+    return "sqlite:" + dev_users_db_path()  # reads DEV_USERS_DB_PATH now, not at import
+
+
+def _load_dev_operator(uid: int) -> dict | None:
+    """The operator row (cached a few seconds per process). Raises when the store cannot answer."""
+    from backend.db import admin_users_db
+
+    key = (_dev_operator_store_key(), int(uid))
+    now = _monotonic()
+    with _dev_operator_lock:
+        hit = _dev_operator_cache.get(key)
+    if hit is not None and now - hit[0] < _DEV_OPERATOR_CACHE_S:
+        return hit[1]
+    row = admin_users_db.get_admin_by_id(int(uid))
+    with _dev_operator_lock:
+        _dev_operator_cache[key] = (now, row)
+    return row
+
+
+def dev_password_fingerprint(stored_hash: str, *, secret_key: str | None = None) -> str:
+    """HMAC of an operator's stored password hash under the app secret (a prefix, never the hash)."""
+    import hashlib
+    import hmac
+
+    secret = str(current_app.secret_key if secret_key is None else secret_key or "").encode("utf-8")
+    mac = hmac.new(secret, b"dev_pw_fp:" + str(stored_hash or "").encode("utf-8"), hashlib.sha256)
+    return mac.hexdigest()[:32]
+
+
+def stamp_dev_password_fingerprint(admin_user_id: int) -> bool:
+    """Write :data:`DEV_PW_FP` for a fresh /dev sign-in. False when the row cannot be read."""
+    from backend.db import admin_users_db
+
+    try:
+        row = admin_users_db.get_admin_by_id(int(admin_user_id))
+    except Exception as exc:  # noqa: BLE001
+        _log.warning("event=dev_operator_lookup_failed err=%s", type(exc).__name__)
+        return False
+    if not row:
+        return False
+    session[DEV_PW_FP] = dev_password_fingerprint(row["password"])
+    return True
+
+
 def _check_dev_session(now: float) -> str | None:
     auth_at = _as_time(session.get(DEV_AUTH_AT))
     if auth_at is None:
@@ -258,7 +347,50 @@ def _check_dev_session(now: float) -> str | None:
         return "dev_inconsistent"
     if now - auth_at > session_hours_admin() * 3600.0:
         return "dev_expired"
-    return None
+    try:
+        uid = int(session.get("admin_user_id"))
+    except (TypeError, ValueError):
+        return "dev_bad_id"
+    if uid <= 0:
+        return "dev_bad_id"
+    # The operator row on every request (cached 5 s): a deleted operator is signed out, and a
+    # password change ends earlier sessions. Any lookup failure fails closed.
+    try:
+        row = _load_dev_operator(uid)
+    except Exception as exc:  # noqa: BLE001
+        _log.warning("event=dev_operator_lookup_failed err=%s", type(exc).__name__)
+        return "dev_lookup_failed"
+    if not row:
+        return "dev_operator_missing"
+    import hmac
+
+    fp = session.get(DEV_PW_FP)
+    # No fingerprint (a cookie from before it existed) counts as a mismatch: sign in again once.
+    if not isinstance(fp, str) or not hmac.compare_digest(fp, dev_password_fingerprint(row["password"])):
+        return "dev_credentials_changed"
+    from backend.auth.phone import session_epoch
+
+    return _epoch_refuses(session_epoch.dev_operator_epoch_id(uid), auth_at, strict=True)
+
+
+def revoke_current_sessions() -> None:
+    """Logout ends the server-side session of this browser's accounts.
+
+    Writes the ``valid_after`` mark (session_epoch) for the app user and for the /dev
+    operator this session holds. This signs that account out on every device (there is no
+    per-session store); a failed write is logged by session_epoch and never blocks the logout."""
+    from backend.auth.phone import session_epoch
+
+    for key, epoch_id in (
+        ("user_id", lambda v: v),
+        ("admin_user_id", session_epoch.dev_operator_epoch_id),
+    ):
+        try:
+            uid = int(session.get(key))
+        except (TypeError, ValueError):
+            continue
+        if uid > 0:
+            session_epoch.revoke_user_sessions(epoch_id(uid), reason=session_epoch.REASON_LOGOUT)
 
 
 def _check_app_session(now: float) -> str | None:

@@ -554,8 +554,10 @@ def test_two_browsers_finishing_the_same_new_number_make_one_account(phone_app, 
 
 def test_phone_answers_carry_no_server_timing_for_a_known_or_an_unknown_number(phone_app, pg_db):
     """The header's db_connect count differs between a number with an account and one without, so the
-    phone routes keep it off every answer. The staff form (control) still has it."""
-    control = _client(phone_app.app).get("/staff/login")
+    phone routes keep it off every answer. An HTML page outside the auth routes (control) still has it; the
+    staff form is an auth route and has none."""
+    assert "Server-Timing" not in _client(phone_app.app).get("/staff/login").headers
+    control = _client(phone_app.app).get("/terms")
     assert control.headers.get("Server-Timing"), "the middleware is off, so an absence below proves nothing"
     assert _client(phone_app.app).get("/api/auth/csrf").headers.get("Server-Timing")  # JSON carries it too
 

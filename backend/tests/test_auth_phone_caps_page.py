@@ -42,11 +42,10 @@ def main(app_factory, monkeypatch):
 
 
 def _dev_client(main):
+    from backend.tests.conftest import seed_dev_operator_session
+
     c = main.app.test_client()
-    with c.session_transaction() as s:
-        s["admin_user_id"] = 1
-        s["admin_username"] = "operator"
-        s[auth_session.DEV_AUTH_AT] = auth_session._now()
+    seed_dev_operator_session(c)
     return c
 
 

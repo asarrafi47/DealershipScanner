@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [1.5.65] - 2026-11-28
+
+- **Session and login updates.** No migration; password login at `/login` and `/staff/login`, phone sign-in (flag), Google/Apple OAuth and sign out everywhere keep working.
+  - Logout (`/logout`, `/api/auth/logout`, `/dev/logout`, `/dev/manifest/logout`) ends the session server-side through the existing `valid_after` store (new reason `logout`). For app users this signs the account out on every device; a fresh sign-in is lifted to a mark that is ahead of this host's clock.
+  - `/dev` operator login: per-account attempt limit (same window as the app login, keyed by the resolved operator), consistent login handling, and each request re-reads the operator row (5 s cache, fail closed). The session carries an HMAC fingerprint of the stored hash, so a password change or deletion ends existing operator sessions.
+  - `/dev/manifest` console: per-IP and global rate limits on login (the global cap counts only failures), `DEV_IP_ALLOWLIST` applies to every console request, and the console session expires after `SESSION_HOURS_ADMIN`.
+  - Email change confirmation on `/account/profile` asks for the current password (OAuth-only accounts: a sign-in within 10 minutes); a confirmed change clears any pending reset link and notifies the previous address.
+  - Verification resends are capped per account (3 per hour).
+  - Mail is sent in the background: reset and verification mail go through a small bounded pool (`backend/utils/background_mail.py`; `AUTH_MAIL_INLINE=1` sends inline).
+  - No `Server-Timing` on auth routes.
+  - Tests: `backend/tests/test_session_login_updates.py`, `backend/tests/test_account_mail_updates.py`.
+
 ## [1.5.64] - 2026-11-28
 
 - Release workflow, follow-up to 1.5.63 (no runtime change): the `backup` job reads the PGDG key fingerprint into a variable (throwaway `GNUPGHOME`, awk reads all input) and compares it, instead of `grep -q` at the end of a pipe under `pipefail`. `docs/RELEASING.md` "The production environment" and `docs/scan_loop/OWNER_SETUP.md` state the owner setup as requirements and steps. `backend/tests/test_release_workflow.py` pins the fingerprint check and that the release docs and workflow carry no internal reference ids.

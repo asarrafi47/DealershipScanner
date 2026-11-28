@@ -406,6 +406,7 @@ _FLAG_RESETS: tuple[tuple[str, str, str], ...] = (
     ("backend.routes.car_detail.packages_ensure", "_packages_ensure_panel_cache", "clear"),
     ("backend.auth.phone.session_epoch", "_cache", "clear"),  # valid_after per user (card S10)
     ("backend.auth.phone.session_epoch", "_redis_skip_until", "clear"),  # card R4
+    ("backend.auth.session", "_dev_operator_cache", "clear"),  # /dev operator rows (5 s)
 )
 
 # Module-level state that is database-independent (static files, wall-clock
@@ -413,6 +414,7 @@ _FLAG_RESETS: tuple[tuple[str, str, str], ...] = (
 # helper functions below. The sweep fails on anything not in _FLAG_RESETS and
 # not here, so a new "table ready" flag cannot slip through.
 _SWEEP_REVIEWED: dict[str, str] = {
+    "backend.auth.session._DEV_OPERATOR_CACHE_S": "constant",
     "backend.web.css_bundle._memo": "whether the static CSS bundle file is current; files on disk, no DB",
     "backend.listings.dealer_locator._GOOGLE_CACHE_MAX": "constant (audit F04, SEC-A-008)",
     "backend.listings.dealer_locator._GOOGLE_CACHE_TTL_SECONDS": "constant",

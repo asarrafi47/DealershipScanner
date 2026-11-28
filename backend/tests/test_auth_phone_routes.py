@@ -1450,13 +1450,14 @@ def test_json_exception_is_a_503(on, stub, caplog):
 
 
 def test_the_nine_phone_answers_carry_no_server_timing_while_other_pages_do(on, stub, monkeypatch):
-    """Its db_connect count would tell a number that has an account from one that has not. The staff form and a JSON
+    """The phone routes send no Server-Timing header. An HTML page and a JSON
     page outside the feature are the controls: they carry the header in this very app, so the test cannot pass
-    just because timing is off."""
+    just because the header is off. (The staff form is itself an auth route and carries no header either.)"""
     monkeypatch.setattr(routes.Config, "RATE_LIMIT_LOGIN_PER_MIN", 1000)
     answers = {}
     with on.test_client() as c:
-        controls = {"GET /staff/login": c.get("/staff/login"), "GET /api/auth/csrf": c.get("/api/auth/csrf")}
+        controls = {"GET /terms": c.get("/terms"), "GET /api/auth/csrf": c.get("/api/auth/csrf")}
+        answers["GET /staff/login"] = c.get("/staff/login")
         answers["GET /login/phone"] = c.get("/login/phone")
         answers["POST /login/phone"] = post_form(c, "/login/phone", START_FORM)
         answers["GET /login/phone/code"] = c.get("/login/phone/code")
@@ -1468,7 +1469,7 @@ def test_the_nine_phone_answers_carry_no_server_timing_while_other_pages_do(on, 
         answers["POST /api/auth/phone/resend"] = post_json(c, "/api/auth/phone/resend", {"turnstile_token": "pass-2"})
     for label, rv in controls.items():
         assert rv.status_code == 200 and "Server-Timing" in rv.headers, f"control {label}: timing is off in this app"
-    assert len(answers) == 9
+    assert len(answers) == 10
     assert [label for label, rv in answers.items() if rv.status_code >= 500] == []
     assert [label for label, rv in answers.items() if "Server-Timing" in rv.headers] == []
 
