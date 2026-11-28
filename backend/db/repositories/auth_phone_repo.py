@@ -502,12 +502,14 @@ def set_send_outcome(
     outcome: str,
     *,
     est_cost_cents: Decimal | int | None = None,
+    lookup_cost_cents: Decimal | int | None = None,
     conn: Any = None,
 ) -> bool:
     """Move a ``pending`` row to its result (``sent``, ``provider_error``, ``unavailable``, ``blocked_voip``...).
 
-    ``est_cost_cents`` replaces the text estimate (0 when the vendor refused). The lookup cost
-    is never changed here: it was spent at reserve time. False if the row is not pending.
+    ``est_cost_cents`` replaces the text estimate (0 when the vendor refused). The lookup cost is
+    normally left as reserved (it was spent); ``lookup_cost_cents`` replaces it only when the
+    lookup itself failed and was not billed. False if the row is not pending.
     """
     _check(outcome, SEND_OUTCOMES, "outcome")
     sql = "UPDATE public.auth_phone_sends SET outcome = %s"
@@ -515,6 +517,9 @@ def set_send_outcome(
     if est_cost_cents is not None:
         sql += ", est_cost_cents = %s"
         params.append(Decimal(str(est_cost_cents)))
+    if lookup_cost_cents is not None:
+        sql += ", lookup_cost_cents = %s"
+        params.append(Decimal(str(lookup_cost_cents)))
     sql += " WHERE id = %s AND outcome = 'pending' RETURNING id"
     params.append(int(send_id))
     with _tx(conn) as c:
@@ -527,6 +532,7 @@ def _send_where(
     filters: dict[str, Any],
     outcomes: tuple[str, ...] | None,
     exclude_outcomes: tuple[str, ...] | None,
+    costed_outcomes: tuple[str, ...] | None = None,
 ) -> tuple[str, list[Any]]:
     clauses = ["at >= %s"]
     params: list[Any] = [_utc(since)]
@@ -541,7 +547,11 @@ def _send_where(
             continue
         clauses.append(f"{col} = %s")
         params.append(value)
-    if outcomes:
+    if outcomes and costed_outcomes:
+        # review R1: a costed outcome (a provider_error that may have sent) counts like a real text
+        clauses.append("(outcome = ANY(%s) OR (outcome = ANY(%s) AND est_cost_cents > 0))")
+        params.extend([list(outcomes), list(costed_outcomes)])
+    elif outcomes:
         clauses.append("outcome = ANY(%s)")
         params.append(list(outcomes))
     if exclude_outcomes:
@@ -564,9 +574,12 @@ class SendWindow:
         until: datetime | None = None,
         outcomes: tuple[str, ...] | None = None,
         exclude_outcomes: tuple[str, ...] | None = None,
+        costed_outcomes: tuple[str, ...] | None = None,
         **filters: Any,
     ) -> int:
-        where, params = _send_where(since, until, filters, outcomes, exclude_outcomes)
+        """With ``outcomes``, rows whose outcome is in ``costed_outcomes`` count too when their text
+        cost is above 0 (a start that may have sent, review R1)."""
+        where, params = _send_where(since, until, filters, outcomes, exclude_outcomes, costed_outcomes)
         return int(self._c.execute("SELECT count(*) FROM public.auth_phone_sends WHERE " + where, params).fetchone()[0])
 
     def seller_challenges(self, *, user_id: int, since: datetime) -> int:
@@ -597,6 +610,7 @@ def count_sends(
     until: datetime | None = None,
     outcomes: tuple[str, ...] | None = None,
     exclude_outcomes: tuple[str, ...] | None = None,
+    costed_outcomes: tuple[str, ...] | None = None,
     conn: Any = None,
     **filters: Any,
 ) -> int:
@@ -606,7 +620,8 @@ def count_sends(
     sends without a device); leave a filter out to not filter on it."""
     with _tx(conn) as c:
         return SendWindow(c).count(
-            since=since, until=until, outcomes=outcomes, exclude_outcomes=exclude_outcomes, **filters
+            since=since, until=until, outcomes=outcomes, exclude_outcomes=exclude_outcomes,
+            costed_outcomes=costed_outcomes, **filters
         )
 
 
@@ -648,17 +663,24 @@ def reserve_send(
     return SendReservation(send_id=send_id, outcome=final.outcome)
 
 
-# ``pending`` is included so a send whose vendor outcome is unknown (kept pending after a timeout
-# that may have sent) counts for the breaker; the service reads it as a failure.
+# ``pending`` is included so a send whose vendor outcome never came counts for the breaker; the
+# service reads it as a failure.
 VENDOR_OUTCOMES = ("sent", "provider_error", "unavailable", "pending")
+# How a ``provider_error`` row WITH a text cost (a start that may have sent, review R1) is reported
+# to the breaker; equal to ``backend.auth.phone.limits.MAYBE_SENT``. Never stored.
+MAYBE_SENT = "maybe_sent"
 
 
 @_clean_errors()
 def recent_vendor_outcomes(*, limit: int = 5, conn: Any = None) -> list[tuple[str, datetime]]:
-    """(outcome, at) of the newest rows where the vendor was asked, newest first (the S6 breaker)."""
+    """(outcome, at) of the newest rows where the vendor was asked, newest first (the S6 breaker).
+
+    A ``provider_error`` with a text cost above 0 is reported as ``maybe_sent`` (review R1): the vendor
+    may have sent after a timeout or 5xx, which the breaker counts as a failure; a definite refusal
+    (cost 0) stays ``provider_error``."""
     with _tx(conn) as c:
         rows = c.execute(
-            "SELECT outcome, at FROM public.auth_phone_sends WHERE outcome = ANY(%s) ORDER BY at DESC, id DESC LIMIT %s",
+            "SELECT CASE WHEN outcome = 'provider_error' AND est_cost_cents > 0 THEN '" + MAYBE_SENT + "' ELSE outcome END, at FROM public.auth_phone_sends WHERE outcome = ANY(%s) ORDER BY at DESC, id DESC LIMIT %s",
             (list(VENDOR_OUTCOMES), int(limit)),
         ).fetchall()
     return [(r[0], r[1]) for r in rows]
@@ -816,6 +838,21 @@ def touch_login(identity_id: int, *, now: datetime, conn: Any = None) -> None:
             "UPDATE public.auth_phone_identities SET last_login_at = %s WHERE id = %s",
             (_utc(now), int(identity_id)),
         )
+
+
+@_clean_errors()
+def touch_login_for_user(user_id: int, *, now: datetime, conn: Any = None) -> bool:
+    """Stamp the active identity of an account as used now (review R4: the session hook, once a day).
+
+    Never moves the stamp backwards. True when a row was stamped."""
+    with _tx(conn) as c:
+        row = c.execute(
+            "UPDATE public.auth_phone_identities SET last_login_at = %s "
+            "WHERE user_id = %s AND state = 'active' AND (last_login_at IS NULL OR last_login_at < %s) "
+            "RETURNING id",
+            (_utc(now), int(user_id), _utc(now)),
+        ).fetchone()
+    return row is not None
 
 
 @_clean_errors(unique_is_taken=True)

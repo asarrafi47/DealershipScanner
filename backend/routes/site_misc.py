@@ -1,11 +1,11 @@
-"""Infra routes: health check, favicon, locally-stored car images."""
+"""Infra routes: health check, favicon, locally-stored car images, and the draft legal pages."""
 
 from __future__ import annotations
 
 import re
 from pathlib import Path
 
-from flask import abort, current_app, jsonify, send_from_directory
+from flask import abort, current_app, jsonify, render_template, send_from_directory
 
 # Project root: VERSION lives here, and so does BUILD_COMMIT in a deployed image.
 _ROOT_DIR = Path(__file__).resolve().parent.parent.parent
@@ -64,8 +64,36 @@ def serve_car_image(filename: str):
     return send_from_directory(str(_CAR_IMAGES_DIR), str(Path(*parts)))
 
 
+def _legal_page(template: str):
+    # Public drafts (card S14): served whether or not phone sign-in is on; each shows a DRAFT sentence
+    # until the owner approves the wording (backend/auth/phone/legal.py).
+    from backend.auth.phone import legal
+
+    return render_template(template, **legal.page_context())
+
+
+def terms():
+    return _legal_page("terms.html")
+
+
+def privacy():
+    return _legal_page("privacy.html")
+
+
+def sms_consent():
+    return _legal_page("sms_consent.html")
+
+
 def register(app) -> None:
     """Attach routes to ``app`` keeping the original bare endpoint names."""
     app.add_url_rule("/health", view_func=health)
     app.add_url_rule("/favicon.ico", view_func=favicon)
     app.add_url_rule("/car-images/<path:filename>", view_func=serve_car_image)
+    app.add_url_rule("/terms", view_func=terms)
+    app.add_url_rule("/privacy", view_func=privacy)
+    app.add_url_rule("/sms-consent", view_func=sms_consent)
+    # The footer shows the draft legal links only while phone sign-in is on (card S14): with the flag
+    # off every page's footer stays byte for byte what it was.
+    from backend.auth.phone import config as phone_config
+
+    app.jinja_env.globals.setdefault("phone_login_enabled", phone_config.enabled)

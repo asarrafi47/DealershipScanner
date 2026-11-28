@@ -679,3 +679,40 @@ def test_cleanup_keeps_a_wrong_try_row_that_is_still_locked(pg_db):
         repo.add_wrong_try(hash_c, now=T0 - timedelta(minutes=5))
     repo.cleanup(now=T0)
     assert repo.wrong_try_state(hash_c, now=T0).locked
+
+
+@pg
+def test_a_costed_provider_error_counts_as_a_real_send_and_a_free_one_does_not(pg_db):
+    # Review R1: a start that may have sent keeps its cost; a definite vendor refusal is recorded at 0.
+    repo.record_send(_send(outcome="sent", est_cost_cents=6), now=T0)
+    repo.record_send(_send(outcome="provider_error", est_cost_cents=6), now=T0)
+    repo.record_send(_send(outcome="provider_error", est_cost_cents=0), now=T0)
+    repo.record_send(_send(outcome="blocked_limit", est_cost_cents=0), now=T0)
+    since = T0 - timedelta(hours=1)
+    real = ("pending", "sent")
+    assert repo.count_sends(since=since, outcomes=real) == 1
+    assert repo.count_sends(since=since, outcomes=real, costed_outcomes=("provider_error",)) == 2
+    assert repo.count_sends(since=since, outcomes=real, costed_outcomes=("provider_error",), pool="known") == 0
+    assert repo.sum_cost_cents(since=since) == Decimal(12)
+
+
+@pg
+def test_recent_vendor_outcomes_reports_a_costed_provider_error_as_maybe_sent(pg_db):
+    repo.record_send(_send(outcome="provider_error", est_cost_cents=0), now=T0 - timedelta(minutes=2))
+    repo.record_send(_send(outcome="provider_error", est_cost_cents=6), now=T0 - timedelta(minutes=1))
+    repo.record_send(_send(outcome="blocked_cap", est_cost_cents=0), now=T0)
+    got = [o for o, _ in repo.recent_vendor_outcomes(limit=5)]
+    assert got == [repo.MAYBE_SENT, "provider_error"]
+
+
+@pg
+def test_touch_login_for_user_stamps_the_active_identity_and_never_moves_back(pg_db):
+    # Review R4: the session hook keeps an active person's number from looking dormant.
+    ident = _identity(user_id=4101, state="active")
+    later = T0 + timedelta(days=3)
+    assert repo.touch_login_for_user(4101, now=later) is True
+    assert repo.find_identity_by_phone(PHONE_A).last_login_at == later
+    assert repo.touch_login_for_user(4101, now=T0 + timedelta(days=1)) is False  # never backwards
+    assert repo.find_identity_by_phone(PHONE_A).last_login_at == later
+    assert repo.touch_login_for_user(4102, now=later) is False  # no identity: nothing stamped
+    assert ident.id

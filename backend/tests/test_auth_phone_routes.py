@@ -126,6 +126,7 @@ def _clean_service(monkeypatch):
     routes.reset_service()
     registry.reset()
     monkeypatch.setattr(routes, "_sleep", lambda s: None)
+    monkeypatch.setattr(routes, "_pad_sleep", lambda s: None)  # the R7 floor, without the wait
     yield
     routes.reset_service()
     registry.reset()
@@ -1525,3 +1526,90 @@ def test_module_state_does_not_trip_the_pg_harness_sweep():
     from backend.tests import pg_harness as pgh
 
     assert [k for k in pgh.sweep_cache_flags() if k.startswith("backend.auth.phone.routes.")] == []
+
+
+# ---------------------------------------------------------------- review R7: one timing for every start
+
+
+class _FakeClock:
+    def __init__(self) -> None:
+        self.t = 1000.0
+        self.waits: list[float] = []
+
+    def monotonic(self) -> float:
+        return self.t
+
+    def sleep(self, s: float) -> None:
+        self.waits.append(s)
+        self.t += s
+
+
+@pytest.mark.parametrize(
+    ("outcome", "work_s"),
+    [
+        (ps.StartOutcome(True, ps.R_SENT, ps.SENT_TEMPLATE.format(masked="ending 23"), public_id="cid-1"), 0.2),
+        (ps.StartOutcome(True, ps.R_SENT, ps.SENT_TEMPLATE.format(masked="ending 23"), public_id="cid-1"), 1.9),
+        (ps.StartOutcome(False, ps.R_PROVIDER, ps.COULD_NOT_SEND), 0.05),
+        (ps.StartOutcome(False, ps.R_BUSY, ps.BUSY), 0.01),
+    ],
+)
+def test_every_start_answer_takes_the_same_floor_however_fast_the_service_was(on, stub, monkeypatch, outcome, work_s):
+    # A number with an account skips the line-type lookup, so its start is faster: the floor hides it.
+    clock = _FakeClock()
+    monkeypatch.setattr(routes, "_monotonic", clock.monotonic)
+    monkeypatch.setattr(routes, "_pad_sleep", clock.sleep)
+    stub.start_outcome = outcome
+    real_start = stub.start
+
+    def slow_start(*a, **k):
+        clock.t += work_s
+        return real_start(*a, **k)
+
+    monkeypatch.setattr(stub, "start", slow_start)
+    with on.test_client() as c:
+        t0 = clock.t
+        post_form(c, "/login/phone", START_FORM)
+        assert clock.t - t0 == pytest.approx(routes.START_MIN_SECONDS)
+        t1 = clock.t
+        post_json(c, "/api/auth/phone/start", START_JSON)
+        assert clock.t - t1 == pytest.approx(routes.START_MIN_SECONDS)
+
+
+def test_a_slow_start_is_not_padded_further(on, stub, monkeypatch):
+    clock = _FakeClock()
+    monkeypatch.setattr(routes, "_monotonic", clock.monotonic)
+    monkeypatch.setattr(routes, "_pad_sleep", clock.sleep)
+    real_start = stub.start
+
+    def slow_start(*a, **k):
+        clock.t += routes.START_MIN_SECONDS + 1
+        return real_start(*a, **k)
+
+    monkeypatch.setattr(stub, "start", slow_start)
+    with on.test_client() as c:
+        post_form(c, "/login/phone", START_FORM)
+    assert clock.waits == []
+
+
+# ---------------------------------------------------------------- stage 1: the allow-list keeps /login
+
+
+def test_while_the_allow_list_is_set_login_stays_the_password_form_with_a_phone_link(app_factory, stub):
+    app = app_factory(
+        AUTH_PHONE_LOGIN_ENABLED="1", TURNSTILE_SITE_KEY="site-key-1", SUPPORT_CONTACT="help@example.com",
+        AUTH_PHONE_ALLOWED_NUMBERS="+12025550142",
+    ).app
+    with app.test_client() as c:
+        html = c.get("/login").get_data(as_text=True)
+        assert 'name="password"' in html and 'action="/login"' in html
+        assert 'href="/login/phone"' in html
+        assert c.get("/login/phone").status_code == 200  # the phone page itself is there
+        # a password POST on /login is still read (not redirected to the phone page)
+        rv = post_form(c, "/login", {"username": "nobody@example.com", "password": "wrong-password-1"})
+        assert rv.status_code in (200, 401, 429) and 'name="password"' in rv.get_data(as_text=True)
+
+
+def test_without_the_allow_list_login_is_the_phone_page(on, stub):
+    with on.test_client() as c:
+        html = c.get("/login").get_data(as_text=True)
+        assert 'name="password"' not in html

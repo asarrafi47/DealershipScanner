@@ -369,6 +369,8 @@ backend/tests/test_assess_stamped_rows.py  import_sqlite3  1
 backend/tests/test_assess_stamped_rows.py  qmark_placeholder  3
 backend/tests/test_assess_stamped_rows.py  row_factory  1
 backend/tests/test_assess_stamped_rows.py  sqlite3_attr  3
+backend/tests/test_auth_phone_accounts.py  qmark_placeholder  1
+backend/tests/test_auth_phone_nightly.py  db_path_literal  1
 backend/tests/test_backfill_recipe_saved_at.py  import_sqlite3  1
 backend/tests/test_backfill_recipe_saved_at.py  insert_or  1
 backend/tests/test_backfill_recipe_saved_at.py  qmark_placeholder  1

@@ -1,1 +1,1 @@
-<div class="app-version-footer">v{{ app_version }}</div>
+<div class="app-version-footer">v{{ app_version }}{% if phone_login_enabled is defined and phone_login_enabled() %} &middot; <a href="/terms">Terms</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/sms-consent">Text messages</a>{% endif %}</div>

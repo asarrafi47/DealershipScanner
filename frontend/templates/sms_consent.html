@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Text Message Consent — Sarrafi Cars</title>
+    {% include "_head_css.html" %}
+    {% include "_head_meta.html" %}
+</head>
+<body class="lp-body">
+{# Card S14: a draft for the owner to approve. The consent paragraph is legal.consent_html(): the same words as
+   legal.CONSENT_TEXT, which the phone page shows next to its checkbox. #}
+<div class="page">
+
+    {% include "_nav_public.html" %}
+
+    <main class="legal-page" style="max-width: 42rem; margin: 0 auto; padding: 24px 16px 48px; line-height: 1.6;">
+        {% if legal_draft %}
+        <p id="legal-draft"><strong>DRAFT.</strong> This page is a draft pending the owner's approval. It is not in force yet and it is not legal advice.</p>
+        {% endif %}
+
+        <h1>Text message consent</h1>
+        <p>Last updated {{ legal_last_updated }}. Version {{ legal_version }}.</p>
+
+        <h2>The Sarrafi Cars sign-in program</h2>
+        <p>Sarrafi Cars sends one-time login codes by text message to the mobile number you type on the sign-in page. It sends nothing else: no marketing and no alerts.</p>
+
+        <h2>What you agree to</h2>
+        <p>On the sign-in page you tick an unticked box next to this text before we send a code:</p>
+        <p id="consent-text">{{ consent_html }}</p>
+
+        <h2>How often and what it costs</h2>
+        <p>One message each time you ask for a code, and never otherwise. Message and data rates may apply, depending on your mobile plan.</p>
+
+        <h2>Stopping messages</h2>
+        <p>Reply STOP to any message to opt out; you may get one message confirming it, then no more. Reply START to opt back in. While you are opted out we cannot text you a code.</p>
+
+        <h2 id="help">Help</h2>
+        <p>Reply HELP to any message for help, or contact support: {% if legal_support_missing %}{{ legal_support_contact }}{% else %}<a href="{{ legal_support_href }}">{{ legal_support_contact }}</a>{% endif %}.</p>
+        <p>Carriers are not liable for delayed or undelivered messages.</p>
+
+        <h2>Record of your agreement</h2>
+        <p>We record when you agreed and which version of this text you agreed to. If the text changes, we ask you again the next time you sign in.</p>
+
+        <h2>Age</h2>
+        <p>You must be 13 or older to use Sarrafi Cars.</p>
+
+        <h2>Your number</h2>
+        <p>We do not sell or share your phone number or opt-in data with third parties for marketing. See the <a href="/privacy">Privacy Policy</a> for what we keep and for how long, and the <a href="/terms">Terms of Use</a>.</p>
+    </main>
+
+</div>
+
+{% include "_footer_version.html" %}
+</body>
+</html>

@@ -54,9 +54,15 @@ class Clock:
 
 
 class FakeAccounts:
-    def __init__(self) -> None:
+    def __init__(self, ineligible: frozenset[int] = frozenset()) -> None:
         self.by_email: dict[str, int] = {}
         self.calls = 0
+        self.ineligible = set(ineligible)
+        self.eligibility_asked: list[int] = []
+
+    def is_eligible(self, user_id: int) -> bool:
+        self.eligibility_asked.append(user_id)
+        return user_id not in self.ineligible
 
     def adopt_or_create(self, *, email: str, username: str) -> int:
         self.calls += 1
@@ -270,6 +276,23 @@ def test_voip_and_landline_send_nothing_and_the_lookup_is_still_counted(env, kin
     assert prov.lookup_calls == [num(13)]
 
 
+def test_a_lookup_outage_costs_nothing_and_counts_against_the_source(env):
+    # Review of stage 1 (M1): a failed Lookup was recorded as ``blocked_cap`` with its lookup cost
+    # kept, so refusals for unknown numbers were free for the source and drained the spend cap.
+    s, prov, clock = make()
+    for i in (61, 62, 63):
+        prov.fail_next_lookup()
+        out = start(s, i, ip="10.9.9.9")
+        assert out.sentence == svc_mod.UNAVAILABLE
+        outcome, _pool, est, lookup, _ = rows()[-1]
+        assert (outcome, est, lookup) == ("blocked_limit", Decimal(0), Decimal(0))
+    assert sum(r[2] + r[3] for r in rows()) == 0
+    # the address has used its 3 an hour: the next number is refused without a lookup or a text
+    out = start(s, 64, ip="10.9.9.9")
+    assert out.ok is False and out.sentence == svc_mod.COULD_NOT_SEND
+    assert prov.outbox == [] and num(64) not in prov.lookup_calls
+
+
 def test_sends_paused_stops_sends_with_the_unavailable_sentence(env):
     s, prov, clock = make(paused=True)
     out = start(s, 14)
@@ -462,16 +485,64 @@ def test_breaker_skips_the_vendor_for_five_minutes_after_five_unavailable(env):
 
 
 
-def test_a_start_that_may_have_sent_stays_pending_and_counts_against_the_number(env):
-    # Review R1: a read timeout after the request went out may have produced a paid text. The row stays
-    # pending at its full cost, so the number's limit (2 in 15 minutes) and the day's caps see it.
+def test_a_start_that_may_have_sent_is_a_provider_error_at_full_cost_and_counts_against_the_number(env):
+    # Review R1: a read timeout after the request went out may have produced a paid text. The row is
+    # provider_error at its full cost, so the number's limit (2 in 15 minutes) and the day's caps see it.
     s, prov, clock = make()
     prov.fail_next_start("unavailable", times=2, maybe_sent=True)
     assert start(s, 80, nonce="a", ip="10.80.0.1").sentence == svc_mod.UNAVAILABLE
     assert start(s, 80, nonce="b", ip="10.81.0.1", device="x").sentence == svc_mod.UNAVAILABLE
-    assert [(r[0], r[2]) for r in rows()] == [("pending", 6), ("pending", 6)]
+    assert [(r[0], r[2]) for r in rows()] == [("provider_error", 6), ("provider_error", 6)]
     third = start(s, 80, nonce="c", ip="10.82.0.1", device="y")
     assert third.reason == svc_mod.R_LIMIT and prov.outbox == []
+
+
+def test_a_definite_provider_refusal_is_recorded_at_cost_zero(env):
+    s, prov, clock = make()
+    prov.fail_next_start("invalid_number")
+    assert start(s, 79).sentence == svc_mod.COULD_NOT_SEND
+    assert [(r[0], r[2]) for r in rows()] == [("provider_error", 0)]
+
+
+def test_maybe_sent_rows_count_against_the_day_send_cap(env):
+    s, prov, clock = make(limits=lim.Limits(daily_send_cap=10, dealer_share_pct=0, daily_spend_cap_cents=10_000))
+    fill(9, outcome="provider_error", cost=6)  # nine texts that may have gone out
+    assert start(s, 70).ok  # the tenth send of the day
+    assert start(s, 71).sentence == svc_mod.BUSY
+    assert rows()[-1][0] == "blocked_cap"
+
+
+def test_definite_refusals_at_cost_zero_leave_the_day_send_cap_alone(env):
+    s, prov, clock = make(limits=lim.Limits(daily_send_cap=10, dealer_share_pct=0, daily_spend_cap_cents=10_000))
+    fill(10, outcome="provider_error", cost=0)
+    assert start(s, 70).ok
+
+
+def test_maybe_sent_rows_count_against_the_spend_cap(env):
+    s, prov, clock = make(limits=lim.Limits(daily_spend_cap_cents=60))
+    fill(9, outcome="provider_error", cost=6)  # 54 cents that may have been spent
+    assert start(s, 72).sentence == svc_mod.BUSY  # 54 + 6 + 1 lookup > 60
+
+
+def test_maybe_sent_rows_count_against_the_address(env):
+    s, prov, clock = make()
+    prov.fail_next_start("network_error", times=3, maybe_sent=True)
+    for i in (73, 74, 75):  # three numbers from one address and one device, all timed out
+        start(s, i, ip="10.73.0.1", device="same", nonce="n%d" % i)
+    out = s.start(num(76), consent=True, turnstile_token="pass", ip="10.73.0.1",
+                  device_hash=numbers.hash_device("same73"), session_nonce="n76")
+    assert out.reason == svc_mod.R_LIMIT  # 3 an hour per address
+
+
+def test_maybe_sent_rows_count_against_the_device(env):
+    s2, prov2, _ = make()
+    prov2.fail_next_start("network_error", times=3, maybe_sent=True)
+    dev = numbers.hash_device("one-device")
+    for k, i in enumerate((77, 78, 79)):
+        s2.start(num(i), consent=True, turnstile_token="pass", ip="10.%d.9.1" % (100 + k), device_hash=dev,
+                 session_nonce="m%d" % i)
+    out = s2.start(num(81), consent=True, turnstile_token="pass", ip="10.110.9.1", device_hash=dev, session_nonce="m81")
+    assert out.reason == svc_mod.R_LIMIT  # 3 a day per device
 
 
 def test_maybe_sent_failures_open_the_breaker_like_unavailable(env):
@@ -484,6 +555,15 @@ def test_maybe_sent_failures_open_the_breaker_like_unavailable(env):
     assert prov.start_calls == calls  # skipped
     clock.tick(minutes=5, seconds=1)
     assert start(s, 93).ok
+
+def test_definite_vendor_refusals_never_open_the_breaker(env):
+    s, prov, clock = make()
+    prov.fail_next_start("invalid_number", times=5)
+    for k in range(5):
+        start(s, 87 + k)
+    calls = prov.start_calls
+    assert start(s, 92).ok and prov.start_calls == calls + 1
+
 
 def test_lookup_is_skipped_for_known_numbers_and_when_down_known_proceed(env):
     s, prov, clock = make()
@@ -533,6 +613,49 @@ def test_only_a_login_code_signs_anyone_in(env, purpose):
         assert (out.ok, out.reason, out.user_id) == (False, "wrong_purpose", None)
     assert accounts.calls == 0
     assert repo.find_identity_by_phone(num(63)) is None
+
+
+def test_an_ineligible_account_is_refused_before_the_login_stamp(env, caplog):
+    # Contract #2 (card S7 review (a)): eligibility first; no detach, no touch_login.
+    s, prov, clock = make()
+    known(66, 6600, last_login=T0 - timedelta(days=2))
+    accounts = FakeAccounts(ineligible=frozenset({6600}))
+    with caplog.at_level(logging.INFO, logger="auth_phone"):
+        out = s.sign_in(_approved(s, 66), accounts)
+    assert out == svc_mod.SignInOutcome(False, "ineligible")
+    after = repo.find_identity_by_phone(num(66))
+    assert after.last_login_at == T0 - timedelta(days=2)  # not stamped
+    assert after.user_id == 6600 and accounts.calls == 0
+    assert "event=sign_in_refused why=ineligible" in caplog.text
+
+
+def test_an_ineligible_dormant_account_is_never_detached(env):
+    s, prov, clock = make()
+    known(67, 6700, last_login=T0 - timedelta(days=400))
+    accounts = FakeAccounts(ineligible=frozenset({6700}))
+    out = s.sign_in(_approved(s, 67), accounts)
+    assert out == svc_mod.SignInOutcome(False, "ineligible")
+    after = repo.find_identity_by_phone(num(67))
+    assert (after.user_id, after.dormant_user_id, after.state) == (6700, None, "active")
+    assert accounts.calls == 0
+
+
+def test_a_wrong_purpose_is_refused_before_eligibility_is_asked(env):
+    s, prov, clock = make()
+    known(68, 6800)
+    accounts = FakeAccounts(ineligible=frozenset({6800}))
+    approved = svc_mod.CheckOutcome(True, svc_mod.R_APPROVED, "", phone_e164=num(68), purpose="link")
+    assert s.sign_in(approved, accounts).reason == "wrong_purpose"
+    assert accounts.eligibility_asked == []
+
+
+def test_an_eligible_account_still_signs_in(env):
+    s, prov, clock = make()
+    known(69, 6900)
+    accounts = FakeAccounts()
+    out = s.sign_in(_approved(s, 69), accounts)
+    assert (out.ok, out.reason, out.user_id) == (True, "signed_in", 6900)
+    assert accounts.eligibility_asked == [6900]
 
 
 def test_challenge_and_identity_reprs_never_show_the_number(env):

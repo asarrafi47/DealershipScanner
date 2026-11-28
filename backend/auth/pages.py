@@ -121,10 +121,16 @@ def _password_login_page(extra: dict | None = None):
 
 def login_page():
     """``/login``. With phone sign-in on (``AUTH_PHONE_LOGIN_ENABLED``) it is the phone page and never
-    reads a password; with it off it is the email and password form, unchanged."""
+    reads a password, except while ``AUTH_PHONE_ALLOWED_NUMBERS`` is set (stage 1): then it stays the
+    password form with a link to ``/login/phone``. With the flag off it is the form, unchanged."""
     from backend.auth.phone import config as phone_config
 
     if phone_config.enabled():
+        if phone_config.allow_list_set():
+            # Stage 1 (issue #45, DESIGN section 18): while AUTH_PHONE_ALLOWED_NUMBERS limits phone
+            # sign-in to a few numbers, /login stays the email and password form for everyone and
+            # the phone page is a separate link, so nobody outside the list loses their way in.
+            return _password_login_page({"phone_login_url": "/login/phone"})
         from backend.auth.phone.routes import render_login_entry
 
         return render_login_entry()

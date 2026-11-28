@@ -4,7 +4,12 @@ from __future__ import annotations
 
 import pytest
 
-from backend.auth.phone import restore_guard
+from backend.auth.phone import config, restore_guard
+
+
+@pytest.fixture(autouse=True)
+def _boot_state(monkeypatch):
+    monkeypatch.setattr(config, "_boot_disabled", None)  # restored after each test
 
 
 def _raise():
@@ -27,12 +32,30 @@ def test_guard_fails_closed_when_either_side_cannot_be_read():
     assert restore_guard.restore_guard_problem(identity_max=lambda: 0, users_max=_raise)
 
 
-def test_boot_refuses_production_with_the_flag_on_and_a_restored_users_table(monkeypatch):
+def test_a_restored_users_table_turns_phone_sign_in_off_without_stopping_the_site(monkeypatch, caplog):
+    # Review R5: soft. One critical line, phone sign-in off for the process, no exception.
     monkeypatch.setenv("FLASK_ENV", "production")
     monkeypatch.setenv("AUTH_PHONE_LOGIN_ENABLED", "1")
-    with pytest.raises(RuntimeError, match="restore guard"):
+    with caplog.at_level("CRITICAL", logger="auth_phone"):
         restore_guard.assert_identity_ids_within_users(identity_max=lambda: 9, users_max=lambda: 3)
+    assert "restore guard" in (config.boot_disabled_reason() or "")
+    assert config.enabled() is False
+    assert [r.levelname for r in caplog.records if r.name == "auth_phone"] == ["CRITICAL"]
+    assert not any(ch.isdigit() for ch in config.boot_disabled_reason())  # no ids in the line
+
+
+def test_a_passing_restore_guard_leaves_phone_sign_in_on(monkeypatch):
+    monkeypatch.setenv("FLASK_ENV", "production")
+    monkeypatch.setenv("AUTH_PHONE_LOGIN_ENABLED", "1")
     restore_guard.assert_identity_ids_within_users(identity_max=lambda: 3, users_max=lambda: 3)
+    assert config.boot_disabled_reason() is None and config.enabled() is True
+
+
+def test_unreadable_tables_turn_phone_sign_in_off(monkeypatch):
+    monkeypatch.setenv("FLASK_ENV", "production")
+    monkeypatch.setenv("AUTH_PHONE_LOGIN_ENABLED", "1")
+    restore_guard.assert_identity_ids_within_users(identity_max=_raise, users_max=lambda: 1)
+    assert "could not be read" in (config.boot_disabled_reason() or "")
 
 
 def test_boot_check_does_nothing_with_the_flag_off_or_outside_production(monkeypatch):
@@ -47,7 +70,6 @@ def test_boot_check_does_nothing_with_the_flag_off_or_outside_production(monkeyp
 def test_production_security_runs_the_restore_guard(monkeypatch):
     import backend.db.inventory_pg as inventory_pg
     import backend.utils.production_security as ps
-    from backend.auth.phone import config
 
     monkeypatch.setattr(ps, "assert_credential_db_encryption_config", lambda: None)
     monkeypatch.setattr(inventory_pg, "assert_inventory_backend_configured", lambda: None)
@@ -56,8 +78,10 @@ def test_production_security_runs_the_restore_guard(monkeypatch):
     monkeypatch.setenv("AUTH_PHONE_LOGIN_ENABLED", "1")
     monkeypatch.setattr(restore_guard, "max_identity_user_id", lambda: 5)
     monkeypatch.setattr(restore_guard, "max_users_id", lambda: 4)
-    with pytest.raises(RuntimeError, match="restore guard"):
-        ps.assert_production_security_config()
+    monkeypatch.setenv("PHONE_HASH_PEPPER", "p" * 40)  # device_id's pepper check runs after the guard now
+    ps.assert_production_security_config()  # the site starts
+    assert "restore guard" in (config.boot_disabled_reason() or "")
+    assert config.enabled() is False
 
 
 def test_max_users_id_reads_the_users_table(tmp_path, monkeypatch):

@@ -265,6 +265,29 @@ def test_role_promotion_applies_at_once(main, clock):
         assert not _signed_in(c)
 
 
+@pytest.mark.parametrize("role", ["admin", "dealership_owner", "dealer_staff"])
+def test_a_phone_session_ends_when_its_account_stops_being_a_shopper(main, clock, role):
+    # A text code proves a shopper only: a promoted account must sign in by its own door
+    # (stage 1 review L5), even inside that role's own time limit.
+    uid = _user("phone-promoted-" + role, "general_user")
+    with main.app.test_client() as c:
+        _sign_in(c, uid, role="general_user", auth_at=NOW - 60, seen_at=NOW - 60)
+        with c.session_transaction() as s:
+            s[auth_session.AUTH_METHOD] = "phone"
+        assert _me(c).status_code == 200
+        _set_role(uid, role)
+        assert _me(c).status_code == 401
+        assert not _signed_in(c)
+
+
+def test_a_password_session_keeps_a_promotion_within_the_limit(main, clock):
+    uid = _user("pw-promoted", "general_user")
+    with main.app.test_client() as c:
+        _sign_in(c, uid, role="general_user", auth_at=NOW - 60, seen_at=NOW - 60)
+        _set_role(uid, "admin")
+        assert _me(c).status_code == 200
+
+
 def test_role_promotion_within_the_limit_records_the_new_role(main, clock):
     uid = _user("promoted2", "general_user")
     with main.app.test_client() as c:

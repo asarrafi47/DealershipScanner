@@ -19,7 +19,7 @@ import subprocess
 import threading
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -1228,6 +1228,64 @@ def api_car_debug():
             "analytics_ep merge + serialize_car_for_api (condition/interior merge trace)."
         )
     return jsonify(payload)
+
+
+def _phone_caps_text(now: datetime) -> str:
+    """Card S16: today's phone-code sends against the caps and the prepaid guard. Counts only."""
+    from decimal import Decimal
+
+    from backend import settings_store
+    from backend.auth.phone import config as phone_config
+    from backend.auth.phone import limits as lim
+    from backend.auth.phone import retention
+
+    limits = lim.load_limits()
+    day = lim.day_start(now, limits.reset_tz)
+    t = retention.day_totals(since=day, until=now + timedelta(seconds=1))
+    topup = limits.topup_at
+    spent = retention.spend_since(topup or datetime(2000, 1, 1, tzinfo=timezone.utc))
+    stop_at = Decimal(limits.prepaid_cents) * limits.prepaid_stop_pct / 100
+    alert = phone_config._int("SMS_ALERT_SEND_THRESHOLD", limits.daily_send_cap // 2, minimum=0)
+    paused = bool(settings_store.get("auth_phone.sends_paused"))
+
+    def usd(cents: Any) -> str:
+        return f"${Decimal(cents) / 100:,.2f}"
+
+    p = t.pools
+    lines = [
+        f"Phone codes today (the day starts at midnight {limits.reset_tz})",
+        "",
+        "Sending is paused." if paused else "Sending is on.",
+        f"Texts sent: {t.sends:,} of {limits.daily_send_cap:,} (alert at {alert:,}).",
+        f"Cost estimate: {usd(t.cost_cents)} of {usd(limits.daily_spend_cap_cents)}.",
+        f"Shopper texts: {sum(p.get(k, 0) for k in lim.SHOPPER_POOLS):,} of {limits.shopper_sends:,}"
+        f" (known {p.get('known', 0):,}, new {p.get('new', 0):,} of {limits.new_pool_sends:,},"
+        f" resend {p.get('resend', 0):,} of {limits.resend_pool_sends:,}).",
+        f"Seller and dealer texts: {p.get('seller', 0):,} of {limits.reserved_sends:,}.",
+        f"Approved codes: {t.approvals:,}.",
+        "Refused: " + (", ".join(f"{k} {v:,}" for k, v in t.blocked.items()) if t.blocked else "none") + ".",
+        "",
+        f"Prepaid: {usd(spent)} spent of {usd(limits.prepaid_cents)} since "
+        + (f"the top-up on {topup.date().isoformat()}" if topup else "the start (no top-up date set)")
+        + f"; texts stop at {usd(stop_at)} ({limits.prepaid_stop_pct}%).",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+@dev_bp.route("/phone/caps")
+def dev_phone_caps():
+    """Read-only, plain text, no JavaScript; 404 while phone sign-in is off."""
+    from flask import Response, abort
+
+    from backend.auth.phone import config as phone_config
+
+    if not phone_config.enabled():
+        abort(404)
+    try:
+        body = _phone_caps_text(datetime.now(timezone.utc))
+    except Exception as exc:
+        body = f"Could not read today's sends ({type(exc).__name__}).\n"
+    return Response(body, mimetype="text/plain", headers={"Cache-Control": "no-store"})
 
 
 from backend.dev.scan_lab_routes import register_scan_lab_routes

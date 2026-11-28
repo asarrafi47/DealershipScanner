@@ -76,6 +76,31 @@ _SIGN_IN_TRIES = 6
 _SIGN_IN_PAUSE_S = 0.5
 _sleep = time.sleep  # tests replace it so the retry path does not wait
 
+# Review R7: every start and resend answer is padded to this floor, so its timing does not tell a number
+# with an account (no line-type lookup) from one without. Above the slowest normal path (Turnstile, then
+# Lookup, then the Verify start); a Turnstile or vendor timeout may still run past it.
+START_MIN_SECONDS = 2.5
+_monotonic = time.monotonic  # tests replace both so the floor costs no real time
+_pad_sleep = time.sleep
+
+
+def _padded(fn):
+    """Run ``fn`` and wait until :data:`START_MIN_SECONDS` have passed since it started (review R7)."""
+    import functools
+
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        started = _monotonic()
+        try:
+            return fn(*args, **kwargs)
+        finally:
+            left = START_MIN_SECONDS - (_monotonic() - started)
+            if left > 0:
+                _pad_sleep(left)
+
+    return wrapper
+
+
 # Reasons after which the open challenge is over (the person must ask for a new code).
 _CHALLENGE_ENDED = frozenset({ps.R_NO_CHALLENGE, ps.R_EXPIRED, ps.R_TOO_MANY})
 
@@ -247,6 +272,7 @@ class _Result:
 # ---------------------------------------------------------------- operations shared by HTML and JSON
 
 
+@_padded
 def _do_start(phone: str, consent_ok: bool, token: str) -> _Result:
     if _ip_throttled():
         return _Result(False, ps.TRY_AGAIN, phone_page=True)
@@ -271,6 +297,7 @@ def _do_start(phone: str, consent_ok: bool, token: str) -> _Result:
     return _Result(True, out.sentence)
 
 
+@_padded
 def _do_resend(token: str) -> _Result:
     cid, nonce = _challenge_ids()
     if not cid:
@@ -338,6 +365,9 @@ def _finish_login(approved: Any) -> _Result:
     out, err = _guard(_sign_in)
     if err:
         return _Result(False, err, drop=True)
+    if not out.ok and out.reason == "ineligible":
+        # The service refused the stored account before any login stamp or dormant detach (review R8).
+        return _refuse("ineligible", ps.CODE_FAILED)
     if not out.ok or not out.user_id:
         return _refuse("retry_exhausted", ps.TRY_AGAIN)
 

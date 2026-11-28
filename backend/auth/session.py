@@ -153,6 +153,11 @@ DEV_AUTH_AT = "dev_auth_at"  # /dev operator sign-in (separate users table, sepa
 # valid_after check never restarts an absolute (admin, dealer, staff) limit or the mfa_ok window.
 AUTH_ORIGIN_AT = "auth_origin_at"
 
+# Review R4: a phone session stamps auth_phone_identities.last_login_at at most once per UTC day
+# (the day of the last stamp attempt is kept here), so an active person's number is never
+# detached as dormant while they stay signed in.
+PHONE_TOUCH_DAY = "phone_touch_day"
+
 _SEEN_WRITE_EVERY_S = 300.0  # write auth_seen_at at most this often
 _CLOCK_SKEW_S = 300.0  # an auth_at further in the future than this is inconsistent
 
@@ -322,6 +327,11 @@ def _check_app_session(now: float) -> str | None:
     # The authenticator flag obeys the admin absolute limit for every role.
     if session.get("mfa_ok") and now - signed_in_at > session_hours_admin() * 3600.0:
         session["mfa_ok"] = False
+    if session.get(AUTH_METHOD) == "phone" and cls != CLASS_SHOPPER:
+        # A text code only ever proves a shopper (phone sign-in refuses staff and dealer accounts):
+        # a phone session whose account was later made admin, dealer or staff must sign in again by
+        # that role's own door, never keep the new role on the strength of a text code.
+        return "phone_session_not_shopper"
     if session.get(AUTH_ROLE) != cls:
         session[AUTH_ROLE] = cls  # promotion or demotion applies from this request on
     db_role = normalize_role(u.get("role"))
@@ -331,7 +341,46 @@ def _check_app_session(now: float) -> str | None:
         seen = _as_time(session.get(AUTH_SEEN_AT))
         if seen is None or now - seen >= _SEEN_WRITE_EVERY_S:
             session[AUTH_SEEN_AT] = now
+    _scrub_placeholder_email()
+    _touch_phone_login(uid, now)
     return None
+
+
+def _scrub_placeholder_email() -> None:
+    """A phone account's session carries an empty email (card S7), whatever wrote it."""
+    raw = session.get("user_email")
+    if raw:
+        from backend.auth.phone.accounts import is_placeholder_email
+
+        if is_placeholder_email(str(raw)):
+            session["user_email"] = ""
+
+
+def _touch_phone_login(uid: int, now: float) -> None:
+    """Review R4: stamp the phone identity's last sign-in at most once a day. Best effort.
+
+    A no-op (no database call) unless the session was made by a phone sign-in and phone sign-in
+    is on. A database error is logged by class name and never ends or blocks the session.
+    """
+    if session.get(AUTH_METHOD) != "phone":
+        return
+    from backend.auth.phone import config as phone_config
+
+    if not phone_config.enabled():
+        return
+    from datetime import datetime, timezone
+
+    at = datetime.fromtimestamp(now, tz=timezone.utc)
+    day = at.date().isoformat()
+    if session.get(PHONE_TOUCH_DAY) == day:
+        return
+    session[PHONE_TOUCH_DAY] = day  # set before the call: a failing database is tried once a day
+    try:
+        from backend.auth.phone.accounts import touch_phone_last_login
+
+        touch_phone_last_login(uid, now=at)
+    except Exception as exc:  # noqa: BLE001 - best effort by design
+        _log.warning("event=phone_login_touch_failed err=%s", type(exc).__name__)
 
 
 def enforce_session_policy():

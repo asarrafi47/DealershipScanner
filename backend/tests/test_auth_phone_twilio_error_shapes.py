@@ -277,7 +277,7 @@ class FakeRepo:
     def record_send(self, row, *, now):
         self.outcomes.append(row.get("outcome"))
 
-    def set_send_outcome(self, send_id, outcome, *, est_cost_cents):
+    def set_send_outcome(self, send_id, outcome, *, est_cost_cents, lookup_cost_cents=None):
         self.outcomes.append(outcome)
 
     # check
@@ -382,6 +382,6 @@ def test_lookup_failure_for_a_new_number_refuses_with_a_generic_sentence(shape, 
     assert out.ok is False
     assert out.sentence in (svc.UNAVAILABLE, svc.COULD_NOT_SEND)
     assert vendor_calls(fc, "start") == []
-    expected = "blocked_cap" if shape[6] == p.LINE_LOOKUP_FAILED else "blocked_voip"
+    expected = "blocked_limit" if shape[6] == p.LINE_LOOKUP_FAILED else "blocked_voip"
     assert repo.outcomes == [expected]
     assert_clean(caplog.text)

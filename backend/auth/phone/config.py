@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import os
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from backend.utils.runtime_env import is_production_env
@@ -57,9 +58,43 @@ def _int(name: str, default: int, *, minimum: int = 0) -> int:
     return value
 
 
-def enabled() -> bool:
-    """The master switch. Off (unset) means every phone route answers 404 and nothing is sent."""
+# Set by the production boot check (review R5) when the flag is on but a soft check failed: phone
+# sign-in is then off for this process while the rest of the site starts normally. Per process.
+_boot_disabled: str | None = None
+
+
+def flag_set() -> bool:
+    """``AUTH_PHONE_LOGIN_ENABLED`` as written, before the boot check. Routes use :func:`enabled`."""
     return _env("AUTH_PHONE_LOGIN_ENABLED").lower() in _TRUE
+
+
+def enabled() -> bool:
+    """The master switch. Off (unset) means every phone route answers 404 and nothing is sent.
+
+    Also False while :func:`boot_disabled_reason` is set (the production boot check found a problem)."""
+    return flag_set() and _boot_disabled is None
+
+
+def boot_disabled_reason() -> str | None:
+    """Why the production boot check turned phone sign-in off for this process (names only), or None."""
+    return _boot_disabled
+
+
+def disable_for_boot(reason: str) -> None:
+    """Turn phone sign-in off for this process and say so in ONE critical log line (never a value)."""
+    global _boot_disabled
+    _boot_disabled = reason
+    _log.critical(
+        "event=phone_login_boot_disabled AUTH_PHONE_LOGIN_ENABLED is on but phone sign-in is not safely "
+        "configured, so it is OFF in this process (admin, dealer and password sign-in are unaffected): %s",
+        reason,
+    )
+
+
+def reset_boot_state() -> None:
+    """Forget a boot-time disable (tests, and the start of every boot check)."""
+    global _boot_disabled
+    _boot_disabled = None
 
 
 def provider_name() -> str:
@@ -237,27 +272,60 @@ def support_contact() -> str:
     return _env("SUPPORT_CONTACT")[:200]
 
 
-def missing_for_production() -> list[str]:
-    """Names (never values) of what a production start with the flag on is missing or has wrong."""
-    if not enabled():
+
+def hard_problems_for_production() -> list[str]:
+    """What stops a production start outright (review R5): the fake provider, a missing or short pepper.
+
+    Names only, never values. Empty when the flag is off."""
+    if not flag_set():
         return []
     problems: list[str] = []
-    provider = provider_name()
-    if provider not in KNOWN_PROVIDERS:
-        problems.append("AUTH_PHONE_PROVIDER (unknown provider)")
-    if provider == PROVIDER_FAKE:
+    if provider_name() == PROVIDER_FAKE:
         problems.append("AUTH_PHONE_PROVIDER (the fake provider is not allowed in production)")
     if len(pepper()) < PEPPER_MIN_LENGTH:
         problems.append("PHONE_HASH_PEPPER (missing or shorter than %d characters)" % PEPPER_MIN_LENGTH)
-    if allow_list_unparsable_count():
-        problems.append("AUTH_PHONE_ALLOWED_NUMBERS (an entry is not a valid number in SMS_ALLOWED_COUNTRIES)")
+    return problems
+
+
+def _legal_problems() -> list[str]:
+    """``legal.missing_legal_pages()``, called defensively: a missing module or an error is a problem too."""
+    try:
+        from backend.auth.phone import legal
+    except Exception as exc:  # noqa: BLE001 - the boot check must never crash on it
+        return ["legal pages (the legal module could not be loaded: %s)" % type(exc).__name__]
+    try:
+        missing = list(legal.missing_legal_pages() or [])
+    except Exception as exc:  # noqa: BLE001
+        return ["legal pages (the check failed: %s)" % type(exc).__name__]
+    return ["legal pages missing (%s)" % ", ".join(str(m) for m in missing)] if missing else []
+
+
+def soft_problems_for_production() -> list[str]:
+    """Every other production problem (review R5): it turns phone sign-in off, the site still starts.
+
+    Names only, never values. Empty when the flag is off. A check that raises is reported as a problem."""
+    if not flag_set():
+        return []
+    problems: list[str] = []
+
+    def _try(name: str, check: Callable[[], list[str]]) -> None:
+        try:
+            problems.extend(check())
+        except Exception as exc:  # noqa: BLE001 - a failing check disables phone sign-in, never the site
+            problems.append("%s (the check failed: %s)" % (name, type(exc).__name__))
+
+    provider = provider_name()
+    if provider not in KNOWN_PROVIDERS:
+        problems.append("AUTH_PHONE_PROVIDER (unknown provider)")
+    _try("AUTH_PHONE_ALLOWED_NUMBERS", lambda: [
+        "AUTH_PHONE_ALLOWED_NUMBERS (an entry is not a valid number in SMS_ALLOWED_COUNTRIES)"
+    ] if allow_list_unparsable_count() else [])
     if legal_pages_approved_version() != CONSENT_TEXT_VERSION:
         problems.append("LEGAL_PAGES_APPROVED_VERSION (must equal the consent text version)")
-    if _proxy_chain_spoofable():
-        problems.append(
-            "TRUSTED_PROXY_CIDRS (set it to cloudflare: with TRUSTED_PROXY_HOPS of 2 or more and no trusted "
-            "ranges, a request sent straight to the origin picks its own address and escapes every per-address limit)"
-        )
+    _try("TRUSTED_PROXY_CIDRS", lambda: [
+        "TRUSTED_PROXY_CIDRS (set it to cloudflare: with TRUSTED_PROXY_HOPS of 2 or more and no trusted "
+        "ranges, a request sent straight to the origin picks its own address and escapes every per-address limit)"
+    ] if _proxy_chain_spoofable() else [])
     if not turnstile_secret_key():
         problems.append("TURNSTILE_SECRET_KEY")
     if not turnstile_site_key():
@@ -272,20 +340,37 @@ def missing_for_production() -> list[str]:
             )
         if not twilio_verify_service_sid():
             problems.append("TWILIO_VERIFY_SERVICE_SID")
+    problems.extend(_legal_problems())
     return problems
 
 
-def assert_phone_login_config_for_production() -> None:
-    """Refuse to start in production with the flag on and a missing or unsafe value.
+def missing_for_production() -> list[str]:
+    """Names (never values) of everything a production start with the flag on is missing or has wrong:
+    the hard problems first, then the soft ones."""
+    return hard_problems_for_production() + soft_problems_for_production()
 
-    Does nothing when the flag is off or the process is not production.
+
+def assert_phone_login_config_for_production() -> None:
+    """The production boot check for phone sign-in (review R5).
+
+    Does nothing at all when the process is not production or the flag is off. Otherwise a hard
+    problem (fake provider, missing or short pepper) raises RuntimeError and the start fails; any
+    other problem logs one critical line and turns phone sign-in off for this process
+    (:func:`boot_disabled_reason`), so admin, dealer and password sign-in keep working.
     """
-    if not is_production_env():
+    if not is_production_env() or not flag_set():
         return
-    problems = missing_for_production()
-    if problems:
+    reset_boot_state()
+    hard = hard_problems_for_production()
+    if hard:
         raise RuntimeError(
             "AUTH_PHONE_LOGIN_ENABLED is on but phone sign-in is not safely configured: "
-            + "; ".join(problems)
+            + "; ".join(hard)
             + ". Set these on the service or turn the flag off."
         )
+    try:
+        soft = soft_problems_for_production()
+    except Exception as exc:  # noqa: BLE001 - belt and braces: never crash the site on a soft check
+        soft = ["phone configuration (the check failed: %s)" % type(exc).__name__]
+    if soft:
+        disable_for_boot("; ".join(soft))

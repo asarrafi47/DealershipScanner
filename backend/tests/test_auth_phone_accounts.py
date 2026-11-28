@@ -540,3 +540,43 @@ def test_accounts_module_has_no_sql_and_no_sqlite():
     src = Path(accounts.__file__).read_text(encoding="utf-8")
     for needle in ("sqlite3", "PRAGMA", "lastrowid", "INSERT ", "SELECT ", "UPDATE ", "DELETE "):
         assert needle not in src, needle
+
+
+# ----------------------------------------------------------------- review R13: adopt only what phone sign-in made
+
+
+@pytest.mark.parametrize(
+    "over",
+    [
+        {"role": "admin"},
+        {"role": "dealership_owner"},
+        {"google_sub": "g-123"},
+        {"apple_sub": "a-123"},
+    ],
+)
+def test_adopt_or_create_never_adopts_an_account_phone_sign_in_did_not_make(users, over):
+    # A row holding the placeholder email that is not a plain shopper (or is linked to Google or
+    # Apple) cannot be the account an earlier try of this sign-up made: refuse, never adopt it.
+    from backend.auth.phone.accounts import PlaceholderTaken
+    from backend.db import users_db
+    from backend.db.users_db._common import get_conn
+
+    uid = users_db.save_user(USERNAME, PLACEHOLDER, "x" * 30, role="general_user", org_id=None)
+    conn = get_conn()
+    for col, value in over.items():
+        conn.execute("UPDATE users SET %s = ? WHERE id = ?" % col, (value, uid))
+    conn.commit()
+    conn.close()
+    with pytest.raises(PlaceholderTaken):
+        PhoneAccounts().adopt_or_create(email=PLACEHOLDER, username=USERNAME)
+
+
+def test_is_eligible_reads_the_stored_row_and_lets_a_deleted_account_heal(users):
+    from backend.db import users_db
+
+    shopper = PhoneAccounts().adopt_or_create(email=PLACEHOLDER, username=USERNAME)
+    dealer = users_db.save_user("dealer-r8", "dealer-r8@example.com", "x" * 30, role="dealership_owner")
+    assert PhoneAccounts().is_eligible(shopper) is True
+    assert PhoneAccounts().is_eligible(dealer) is False
+    # No row: the route releases the stale identity and makes a fresh account (identity_orphan_healed).
+    assert PhoneAccounts().is_eligible(10**9) is True
