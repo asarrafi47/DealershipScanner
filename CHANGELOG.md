@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.57] - 2026-11-28
+
 - **Slow-site fixes found while investigating "the site is slow again" (2026-11-25).** Production still runs 1.5.11, so none of the 1.5.4x speed work is live yet; these are the code-side leftovers found on dev, none of them a route, endpoint or signature change.
   - **Static files no longer touch the session.** For a signed-in browser (a permanent session) Flask re-signed the cookie on every response, `/static` included, so each CSS and JS file got `Set-Cookie`, `Vary: Cookie`, and the edge-cache guard then turned its year-long `immutable` header into `private, no-cache`. `EdgeSafeSessionInterface.save_session` now returns early for `static`, `favicon` and `serve_car_image`. Re-applying the same ZIP and radius (`apply_listings_geo_to_session`) no longer marks the session modified, so a reloaded `/listings` stops re-sending the cookie. Tests: `test_edge_cache.py`.
   - **One /dev pgvector reindex at a time.** Every successful `/dev` scan, and every dealer of a bulk import, started its own daemon thread running `reindex_all()` (all ~214k cars loaded and re-embedded on CPU inside the web worker). Overlapping runs now collapse into the running one plus a single follow-up. Tests: `test_dev_vector_reindex_single_flight.py`.
